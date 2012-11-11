@@ -1,0 +1,699 @@
+/**
+ * ============================================
+ * mod/taskchain/locallib/available.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     addtypes_list()
+ *     allowresumes_list()
+ *     attemptgrademethods_list($type='grade')
+ *     attemptlimits_list()
+ *     attempttypes_list()
+ *     delay3s_list()
+ *     feedbacks_list()
+ *     gradelimits_list($type='grade')
+ *     grademethods_list($type='grade')
+ *     gradeweightings_list()
+ *     locations_list()
+ *     mediafilters_list()
+ *     namesources_list()
+ *     navigations_list()
+ *     nexttaskids_list()
+ *     outputformats_list($sourcetype)
+ *     stopbuttontypes_list()
+ *     statuses_list()
+ *     scorelimits_list()
+ *     scoremethods_list()
+ *     scoreweightings_list()
+ *     titles_list()
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/base.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     __construct($dbrecord=null, $objects=null)
+ *     __get($name)
+ *     __set($name, $value)
+ *     property_error($type, $property, $method)
+ *     link_to_object($name, &$object)
+ *     get_methods()
+ *     to_stdclass()
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/can.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     __construct($dbrecord=null, $objects=null)
+ *     __call($name, $params)
+ *     can($type, $require=false, $context=null)
+ *     addinstance($require=false, $context=null)
+ *     attempt($require=false, $context=null)
+ *     deleteallattempts($require=false, $context=null)
+ *     deletemyattempts($require=false, $context=null)
+ *     deleteattempts($require=false, $context=null)
+ *     manage($require=false, $context=null)
+ *     preview($require=false, $context=null)
+ *     regrade($require=false, $context=null)
+ *     reviewallattempts($require=false, $context=null)
+ *     reviewmyattempts($require=false, $context=null)
+ *     reviewattempts($require=false, $context=null)
+ *     view($require=false, $context=null)
+ *     attempts($type, $value=null)
+ *     manageactivities($require=false, $context=null)
+ *     accessallgroups($context=null)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/create.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     chaingrade($grade=0, $status=self::STATUS_INPROGRESS, $duration=0, $chainid=0, $cnumber=0, $userid=0)
+ *     chainattempt($grade=0, $status=self::STATUS_INPROGRESS, $duration=0, $chainid=0, $cnumber=0, $userid=0)
+ *     taskscore($score=0, $status=self::STATUS_INPROGRESS, $duration=0, $taskid=0, $cnumber=0, $userid=0)
+ *     taskattempt()
+ *     attempt($type, $grade=0, $status=self::STATUS_INPROGRESS, $duration=0)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/get.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     cm($type)
+ *     gradeitem()
+ *     field($type, $field, $default, $optional_param=false, $param_type=PARAM_INT)
+ *     id($type)
+ *     userid()
+ *     courseid()
+ *     chainid()
+ *     chainattemptid()
+ *     chaingradeid()
+ *     conditionid()
+ *     lastchainattemptid()
+ *     lasttaskattemptid()
+ *     taskid()
+ *     taskattemptid()
+ *     taskchainid()
+ *     taskscoreid()
+ *     cnumber()
+ *     tnumber()
+ *     lastchainattempttime()
+ *     lasttaskattempttime()
+ *     conditiontype()
+ *     columnlisttype()
+ *     columnlistid()
+ *     popup()
+ *     tab()
+ *     mode()
+ *     mycourses($userid=0)
+ *     mytaskchains($userid=0, $mycourses=null)
+ *     taskchains($userid=0)
+ *     chains($userid=0, $taskchains=null)
+ *     chain($taskchainid=0)
+ *     chaingrades($userid=0, $chainid=0, $cnumber=0, $taskid=0, $tnumber=0)
+ *     chaingrade($userid=0, $chainid=0, $cnumber=0, $taskid=0, $tnumber=0)
+ *     chainattempts($userid=0, $chainid=0)
+ *     maxchainattemptgrade()
+ *     chaincompleted()
+ *     chainattempt($userid=0, $chainid=0, $cnumber=0)
+ *     tasks($chainid=0)
+ *     task()
+ *     taskscores($userid=0, $chainid=0, $cnumber=0)
+ *     taskscore($userid=0, $cnumber=0, $taskid=0)
+ *     taskattempts($userid=0, $chainid=0, $cnumber=0, $taskid=0, $tnumber=0)
+ *     taskattempt($userid=0, $chainid=0, $cnumber=0, $taskid=0, $tnumber=0)
+ *     attempts($type, $userid=0, $chainid=0, $cnumber=0, $taskid=0, $tnumber=0)
+ *     attempt($type, $userid=0, $chainid=0, $cnumber=0, $taskid=0, $tnumber=0)
+ *     grade($type, $userid=0, $chainid=0, $cnumber=0, $taskid=0, $tnumber=0)
+ *     lastattempt($type)
+ *     conditions($conditiontype=0, $taskid=0, $allgroups=0)
+ *     cache_taskattempts($taskid)
+ *     available_tasks()
+ *     available_task($taskid)
+ *     userlist()
+ *     managers()
+ *     students()
+ *     users($returnnames=false)
+ *     groupids($return_array=true)
+ *     all_groups_sql($AND=' AND ', $field='userid')
+ *     all_groups()
+ *     all_groupings()
+ *     userfilter($AND=' AND ', $field='userid')
+
+ *     selected_attempts()
+ *     selected_tasks(&$selected, &$taskchains, &$chains, &$tasks, &$userfilter)
+ *     get_cnumbers(&$chains, &$tasks, &$userfilter)
+ *     attempts($type, $record=null, $cnumber=null, $userid=null)
+ *     chainattempt($chain=null, $cnumber=null, $userid=null, $tasks=null)
+ *     chain()
+ *     task()
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/require.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     access($type)
+ *     subnet($type)
+ *     password($type)
+ *     availability($type)
+ *     isopen($type)
+ *     notclosed($type)
+ *     valid_cnumber()
+ *     valid_tnumber()
+ *     canstart($type)
+ *     delay($type, $delay)
+ *     moreattempts($type, $shorterror=false)
+ *     newattempt($type)
+ *     lastattempt($type)
+ *     canresume($type)
+ *     preconditions($attempt='')
+ *     attempt($type)
+ *     inprogress($type, $attempt='')
+ *     moretime($type, $attempt='')
+ *     cansubmit($type)
+ *     chain_cansubmit()
+ *     task_cansubmit()
+ *     chain_access()
+ *     chain_visibility()
+ *     chain_grouping()
+ *     chain_inpopup()
+ *     chain_availability()
+ *     chain_tasks()
+ *     entrycm()
+ *     exitgrade()
+ *     task_access()
+ *     task_availability()
+ *     next_task()
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_course()
+ *     set_course($value)
+ *     get_name()
+ *     set_name($value)
+ *     get_timecreated()
+ *     set_timecreated($value)
+ *     get_timemodified()
+ *     set_timemodified($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_cache.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_taskid()
+ *     set_taskid($value)
+ *     get_slasharguments()
+ *     set_slasharguments($value)
+ *     get_taskchain_enableobfuscate()
+ *     set_taskchain_enableobfuscate($value)
+ *     get_taskchain_enableswf()
+ *     set_taskchain_enableswf($value)
+ *     get_name()
+ *     set_name($value)
+ *     get_sourcefile()
+ *     set_sourcefile($value)
+ *     get_sourcetype()
+ *     set_sourcetype($value)
+ *     get_sourcelocation()
+ *     set_sourcelocation($value)
+ *     get_sourcelastmodified()
+ *     set_sourcelastmodified($value)
+ *     get_sourceetag()
+ *     set_sourceetag($value)
+ *     get_configfile()
+ *     set_configfile($value)
+ *     get_configlocation()
+ *     set_configlocation($value)
+ *     get_configlastmodified()
+ *     set_configlastmodified($value)
+ *     get_configetag()
+ *     set_configetag($value)
+ *     get_navigation()
+ *     set_navigation($value)
+ *     get_title()
+ *     set_title($value)
+ *     get_stopbutton()
+ *     set_stopbutton($value)
+ *     get_stoptext()
+ *     set_stoptext($value)
+ *     get_usefilters()
+ *     set_usefilters($value)
+ *     get_useglossary()
+ *     set_useglossary($value)
+ *     get_usemediafilter()
+ *     set_usemediafilter($value)
+ *     get_studentfeedback()
+ *     set_studentfeedback($value)
+ *     get_studentfeedbackurl()
+ *     set_studentfeedbackurl($value)
+ *     get_timelimit()
+ *     set_timelimit($value)
+ *     get_delay3()
+ *     set_delay3($value)
+ *     get_clickreporting()
+ *     set_clickreporting($value)
+ *     get_content()
+ *     set_content($value)
+ *     get_timemodified()
+ *     set_timemodified($value)
+ *     get_md5key()
+ *     set_md5key($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_chain.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_parenttype()
+ *     set_parenttype($value)
+ *     get_parentid()
+ *     set_parentid($value)
+ *     get_entrycm()
+ *     set_entrycm($value)
+ *     get_entrygrade()
+ *     set_entrygrade($value)
+ *     get_entrypage()
+ *     set_entrypage($value)
+ *     get_entrytext()
+ *     set_entrytext($value)
+ *     get_entryformat()
+ *     set_entryformat($value)
+ *     get_entryoptions()
+ *     set_entryoptions($value)
+ *     get_exitpage()
+ *     set_exitpage($value)
+ *     get_exittext()
+ *     set_exittext($value)
+ *     get_exitformat()
+ *     set_exitformat($value)
+ *     get_exitoptions()
+ *     set_exitoptions($value)
+ *     get_exitcm()
+ *     set_exitcm($value)
+ *     get_exitgrade()
+ *     set_exitgrade($value)
+ *     get_showpopup()
+ *     set_showpopup($value)
+ *     get_popupoptions()
+ *     set_popupoptions($value)
+ *     get_timeopen()
+ *     set_timeopen($value)
+ *     get_timeclose()
+ *     set_timeclose($value)
+ *     get_timelimit()
+ *     set_timelimit($value)
+ *     get_delay1()
+ *     set_delay1($value)
+ *     get_delay2()
+ *     set_delay2($value)
+ *     get_password()
+ *     set_password($value)
+ *     get_subnet()
+ *     set_subnet($value)
+ *     get_allowresume()
+ *     set_allowresume($value)
+ *     get_allowfreeaccess()
+ *     set_allowfreeaccess($value)
+ *     get_attemptlimit()
+ *     set_attemptlimit($value)
+ *     get_attemptgrademethod()
+ *     set_attemptgrademethod($value)
+ *     get_grademethod()
+ *     set_grademethod($value)
+ *     get_gradeignore()
+ *     set_gradeignore($value)
+ *     get_gradelimit()
+ *     set_gradelimit($value)
+ *     get_gradeweighting()
+ *     set_gradeweighting($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_chain_attempt.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_chainid()
+ *     set_chainid($value)
+ *     get_cnumber()
+ *     set_cnumber($value)
+ *     get_userid()
+ *     set_userid($value)
+ *     get_grade()
+ *     set_grade($value)
+ *     get_status()
+ *     set_status($value)
+ *     get_duration()
+ *     set_duration($value)
+ *     get_timemodified()
+ *     set_timemodified($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_chain_grade.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_parenttype()
+ *     set_parenttype($value)
+ *     get_parentid()
+ *     set_parentid($value)
+ *     get_userid()
+ *     set_userid($value)
+ *     get_grade()
+ *     set_grade($value)
+ *     get_status()
+ *     set_status($value)
+ *     get_duration()
+ *     set_duration($value)
+ *     get_timemodified()
+ *     set_timemodified($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_condition.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_taskid()
+ *     set_taskid($value)
+ *     get_groupid()
+ *     set_groupid($value)
+ *     get_conditiontype()
+ *     set_conditiontype($value)
+ *     get_conditionscore()
+ *     set_conditionscore($value)
+ *     get_conditiontaskid()
+ *     set_conditiontaskid($value)
+ *     get_sortorder()
+ *     set_sortorder($value)
+ *     get_attempttype()
+ *     set_attempttype($value)
+ *     get_attemptcount()
+ *     set_attemptcount($value)
+ *     get_attemptduration()
+ *     set_attemptduration($value)
+ *     get_attemptdelay()
+ *     set_attemptdelay($value)
+ *     get_nexttaskid()
+ *     set_nexttaskid($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_detail.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_attemptid()
+ *     set_attemptid($value)
+ *     get_details()
+ *     set_details($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_question.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_taskid()
+ *     set_taskid($value)
+ *     get_name()
+ *     set_name($value)
+ *     get_md5key()
+ *     set_md5key($value)
+ *     get_type()
+ *     set_type($value)
+ *     get_text()
+ *     set_text($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_response.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_attemptid()
+ *     set_attemptid($value)
+ *     get_questionid()
+ *     set_questionid($value)
+ *     get_score()
+ *     set_score($value)
+ *     get_weighting()
+ *     set_weighting($value)
+ *     get_hints()
+ *     set_hints($value)
+ *     get_clues()
+ *     set_clues($value)
+ *     get_checks()
+ *     set_checks($value)
+ *     get_correct()
+ *     set_correct($value)
+ *     get_wrong()
+ *     set_wrong($value)
+ *     get_ignored()
+ *     set_ignored($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_string.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_string()
+ *     set_string($value)
+ *     get_md5key()
+ *     set_md5key($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_task.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_chainid()
+ *     set_chainid($value)
+ *     get_name()
+ *     set_name($value)
+ *     get_sourcefile()
+ *     set_sourcefile($value)
+ *     get_sourcetype()
+ *     set_sourcetype($value)
+ *     get_sourcelocation()
+ *     set_sourcelocation($value)
+ *     get_configfile()
+ *     set_configfile($value)
+ *     get_configlocation()
+ *     set_configlocation($value)
+ *     get_outputformat()
+ *     set_outputformat($value)
+ *     get_navigation()
+ *     set_navigation($value)
+ *     get_title()
+ *     set_title($value)
+ *     get_stopbutton()
+ *     set_stopbutton($value)
+ *     get_stoptext()
+ *     set_stoptext($value)
+ *     get_usefilters()
+ *     set_usefilters($value)
+ *     get_useglossary()
+ *     set_useglossary($value)
+ *     get_usemediafilter()
+ *     set_usemediafilter($value)
+ *     get_studentfeedback()
+ *     set_studentfeedback($value)
+ *     get_studentfeedbackurl()
+ *     set_studentfeedbackurl($value)
+ *     get_timeopen()
+ *     set_timeopen($value)
+ *     get_timeclose()
+ *     set_timeclose($value)
+ *     get_timelimit()
+ *     set_timelimit($value)
+ *     get_delay1()
+ *     set_delay1($value)
+ *     get_delay2()
+ *     set_delay2($value)
+ *     get_delay3()
+ *     set_delay3($value)
+ *     get_password()
+ *     set_password($value)
+ *     get_subnet()
+ *     set_subnet($value)
+ *     get_allowresume()
+ *     set_allowresume($value)
+ *     get_reviewoptions()
+ *     set_reviewoptions($value)
+ *     get_attemptlimit()
+ *     set_attemptlimit($value)
+ *     get_scoremethod()
+ *     set_scoremethod($value)
+ *     get_scoreignore()
+ *     set_scoreignore($value)
+ *     get_scorelimit()
+ *     set_scorelimit($value)
+ *     get_scoreweighting()
+ *     set_scoreweighting($value)
+ *     get_sortorder()
+ *     set_sortorder($value)
+ *     get_clickreporting()
+ *     set_clickreporting($value)
+ *     get_discarddetails()
+ *     set_discarddetails($value)
+ *     get_source()
+ *     get_config()
+ *     get_file($type=null)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_task_attempt.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_taskid()
+ *     set_taskid($value)
+ *     get_userid()
+ *     set_userid($value)
+ *     get_cnumber()
+ *     set_cnumber($value)
+ *     get_tnumber()
+ *     set_tnumber($value)
+ *     get_status()
+ *     set_status($value)
+ *     get_penalties()
+ *     set_penalties($value)
+ *     get_score()
+ *     set_score($value)
+ *     get_duration()
+ *     set_duration($value)
+ *     get_starttime()
+ *     set_starttime($value)
+ *     get_endtime()
+ *     set_endtime($value)
+ *     get_resumestart()
+ *     set_resumestart($value)
+ *     get_resumefinish()
+ *     set_resumefinish($value)
+ *     get_timestart()
+ *     set_timestart($value)
+ *     get_timefinish()
+ *     set_timefinish($value)
+ *     get_clickreportid()
+ *     set_clickreportid($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/taskchain_task_score.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_id()
+ *     set_id($value)
+ *     get_taskid()
+ *     set_taskid($value)
+ *     get_cnumber()
+ *     set_cnumber($value)
+ *     get_userid()
+ *     set_userid($value)
+ *     get_score()
+ *     set_score($value)
+ *     get_status()
+ *     set_status($value)
+ *     get_duration()
+ *     set_duration($value)
+ *     get_timemodified()
+ *     set_timemodified($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/locallib/url.php:
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     attempt($framename='', $cm=null)
+ *     course($course=null)
+ *     edit($type, $params)
+ *     grades($course=null)
+ *     index($course=null)
+ *     report($mode='', $cm=null)
+ *     review($taskattempt=null)
+ *     submit($taskattempt=null)
+ *     view($cm=null)
+ */

@@ -1,0 +1,475 @@
+/**
+ * ============================================
+ * mod/taskchain/edit/form/columnlists.php
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     definition()
+ *     taskchain_columnlists_sections()
+ *     data_preprocessing(&$defaults)
+ *     validation(&$data)
+ *     createcolumnlist(&$data)
+ *     display()
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/edit/form/condition.php
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     definition()
+ *     data_preprocessing(&$data)
+ *     validation($data, $files)
+ *     get_data()
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/edit/form/task.php
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     definition()
+ *     data_preprocessing(&$data)
+ *     validation($data, $files)
+ *     get_original_value($field, $default)
+ *     get_context()
+ *     get_data()
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/edit/form/tasks.php
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     definition()
+ *     data_preprocessing(&$data)
+ *     validation($data, $files)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/edit/form/helper/base.php
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     __construct(&$mform, &$context, &$record, $multiple=false)
+ *     __get($name)
+ *     __set($name, $value)
+ *
+ *     property_error($type, $property, $method)
+ *     is_add()
+ *     is_update()
+ *
+ *     get_original_value($field, $default)
+ *     get_default_name()
+ *     get_defaultvalue($field, $default=0)
+ *     get_context()
+ *     set_context($context)
+ *     set_type_text($field)
+ *
+ *     update_record()
+ *     delete_record()
+ *
+ *     set_user_preferences()
+ *     get_user_preferences($fields=null)
+ *
+ *     locate_form_elements($section='record', $insertBefore='actionshdr')
+ *     delete_form_element($elementid, $removeRules=true)
+ *     delete_form_elements($recordids, $section='record', $insertBefore='actionshdr')
+ *     sort_form_elements($recordids, $section='record', $insertBefore='actionshdr')
+ *
+ *     prepare_sections(&$data)
+ *     prepare_section(&$data, $section, $fields)
+ *     prepare_field(&$data, $field)
+ *
+ *     get_sections($all=false)
+ *     get_section_label($section)
+ *     get_sectionlabel_hidden()
+ *     get_fieldlabel($field)
+ *     get_field_default($field, $default='')
+ *     get_fieldname($field)
+ *     get_fieldvalue($field) *
+ *     set_fieldvalue($field, $value)
+ *
+ *     add_sections()
+ *     add_section($section, $fields)
+ *     add_section_label($section)
+ *     add_section_headings($section, $fields)
+ *     add_section_hidden($section, $fields)
+ *
+ *     add_field($field)
+ *     add_template_yesno($field, $default=0, $advanced=false)
+ *     add_template_list($field, $default, $advanced=false)
+ *
+ *     validate_sections(&$errors, &$data, &$files)
+ *     validate_section(&$errors, &$data, &$files, $section, $fields)
+ *     validate_field(&$errors, &$data, &$files, $field)
+ *
+ *     fix_sections(&$data)
+ *     fix_section(&$data, $section, $fields)
+ *     fix_field(&$data, $field)
+ *     fix_template_notnull(&$data, $field, $default)
+ *
+ *     format_section_labels()
+ *     format_section_defaults()
+ *     format_section_selects()
+ *
+ *     format_section_label($section)
+ *     format_sectionlabel_labels($section)
+ *     format_sectionlabel_defaults($section)
+ *     format_sectionlabel_selects($section)
+ *     format_sectionlabel_record($section)
+ *     format_sectionlabel_hidden($section)
+ *
+ *     format_fieldlabel($field)
+ *     format_fieldvalue($field, $value)
+ *
+ *     format_field_default($field)
+ *     format_defaultfield_id()
+ *     format_defaultfield_sortorder()
+ *     format_defaultfield_edit()
+ *     format_defaultfield_default()
+ *     format_defaultfield_select()
+ *
+ *     format_field_select($field)
+ *     format_selectfield_id()
+ *     format_selectfield_sortorder()
+ *     format_selectfield_edit()
+ *     format_selectfield_default()
+ *     format_selectfield_select()
+ *
+ *     format_sections()
+ *     format_section($section, $fields)
+ *     format_section_hidden($section, $fields)
+ *
+ *     format_field($field)
+ *     format_field_sortorder($field)
+ *     format_field_edit($field)
+ *
+ *     format_templatevalue_list()
+ *     format_templatevalue_time($value, $fmt='strftimedatetime', $notime='&nbsp;')
+ *     format_templatevalue_timer($value, $fmt='', $notime='&nbsp;')
+ *     format_templatevalue_yesno($field, $value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/edit/form/helper/chain.php
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     __construct($mform, $context, $record, $multiple=false)
+ *     has_grade_item()
+ *
+ *     prepare_field_entrypage(&$data)
+ *     prepare_field_exitpage(&$data)
+ *     prepare_field_showpopup(&$data)
+ *     prepare_template_page(&$data, $type)
+ *
+ *     add_field_entrypage()
+ *     add_field_entrytext()
+ *     add_field_entryoptions()
+ *     add_field_entrycm()
+ *     add_field_entrygrade()
+ *     add_field_exitpage()
+ *     add_field_exittext()
+ *     add_field_exitoptions()
+ *     add_field_exitcm()
+ *     add_field_exitgrade()
+ *     add_field_showpopup()
+ *     add_field_allowfreeaccess()
+ *     add_field_attemptgrademethod()
+ *     add_field_grademethod()
+ *     add_field_gradeignore()
+ *     add_field_gradeweighting()
+ *     add_field_gradelimit()
+ *     add_field_gradeitem()
+ *     add_template_page($type)
+ *     add_template_pagetext($type)
+ *     add_template_page_options($type, $groups)
+ *     add_field_activitylist($type)
+ *
+ *     fix_field_entrypage(&$data)
+ *     fix_field_entrytext(&$data)
+ *     fix_field_entryoptions(&$data)
+ *     fix_field_entrycm(&$data)
+ *     fix_field_entrygrade(&$data)
+ *     fix_field_exitpage(&$data)
+ *     fix_field_exittext(&$data)
+ *     fix_field_exitoptions(&$data)
+ *     fix_field_exitcm(&$data)
+ *     fix_field_exitgrade(&$data)
+ *     fix_field_showpopup(&$data)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/edit/form/helper/condition.php
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     get_conditiontype()
+ *     get_minmax_options()
+ *     get_fieldvalue_taskheading()
+ *     get_fieldvalue_conditionheading()
+ *     get_sectionlabel_condition()
+ *
+ *     add_field_groupid($field)
+ *     add_field_sortorder($field)
+ *     add_field_conditiontaskid($field)
+ *     add_field_conditionscore($field)
+ *     add_field_attemptcount($field)
+ *     disabledIf_attemptcount_zero($name)
+ *     add_field_attempttype($field)
+ *     add_field_attemptduration($field)
+ *     add_field_attemptdelay($field)
+ *     add_field_nexttaskid($field)
+ *
+ *     fix_field_conditionscore(&$data)
+ *     fix_field_attemptcount(&$data)
+ *     fix_field_attemptduration(&$data)
+ *     fix_field_attemptdelay(&$data)
+ *     fix_template_minmax(&$data, $field)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/edit/form/helper/record.php
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     prepare_sections(&$data)
+ *     prepare_field_sourcefile(&$data)
+ *     prepare_field_configfile(&$data)
+ *     prepare_field_timelimit(&$data)
+ *     prepare_template_filearea(&$data, $type)
+ *
+ *     get_sectionlabel_general()
+ *     get_sectionlabel_tasks()
+ *     get_sectionlabel_display()
+ *
+ *     get_fieldlabel_edit()
+ *     get_fieldlabel_default()
+ *     get_fieldlabel_select()
+ *     get_fieldlabel_name()
+ *     get_fieldlabel_attemptlimit()
+ *     get_fieldlabel_password()
+ *     get_fieldlabel_subnet()
+ *
+ *     add_field_sortorder($field)
+ *     add_field_edit($field)
+ *     add_field_default($field)
+ *     add_field_select($select)
+ *     add_field_name($name)
+ *     add_field_sourcefile($field)
+ *     add_field_sourcetype($field)
+ *     add_field_sourcelocation($field)
+ *     add_field_configfile($field)
+ *     add_field_configlocation($field)
+ *     add_field_addtype($field)
+ *     add_field_tasknames($field)
+ *     add_field_timeopen($field)
+ *     add_field_timeclose($field)
+ *     add_field_timelimit($field)
+ *     add_field_delay1($field)
+ *     add_field_delay2($field)
+ *     add_field_attemptlimit($field)
+ *     add_field_allowresume($field)
+ *     add_field_password($field)
+ *     add_field_subnet($field)
+ *
+ *     add_template_time($field)
+ *     add_template_timer($field, $summary=true, $before=false, $after=false, $advanced=true)
+ *     add_template_file($type, $params)
+ *     add_template_location($type)
+ *     add_template_textsource($field, $params)
+ *     add_template_method($type)
+ *     add_template_ignore($type)
+ *     add_template_weighting($type)
+ *     add_template_limit($type)
+ *
+ *     validate_field_sourcefile(&$errors, &$data, &$files)
+ *
+ *     fix_field_name(&$data)
+ *     fix_field_sourcefile(&$data)
+ *     fix_field_configfile(&$data)
+ *     fix_field_tasknames(&$data)
+ *     fix_template_filearea(&$data, $type)
+ *     delete_user_draft_files($itemid)
+ *     fix_template_textsource(&$data, $field, $default='')
+ *     fix_template_page_options(&$data, $type)
+ *
+ *     format_fieldlabel_addtype()
+ *     format_fieldlabel_tasknames()
+ *
+ *     format_defaultfield_addtype()
+ *     format_defaultfield_tasknames()
+ *     format_defaultfield_aftertaskid()
+ *
+ *     format_selectfield_addtype()
+ *     format_selectfield_tasknames()
+ *     format_selectfield_aftertaskid()
+ *
+ *     format_fieldvalue_sourcelocation($value)
+ *     format_fieldvalue_configlocation($value)
+ *     format_fieldvalue_navigation($value)
+ *     format_fieldvalue_title($value)
+ *     format_fieldvalue_stopbutton($value)
+ *     format_fieldvalue_usefilters($value)
+ *     format_fieldvalue_useglossary($value)
+ *     format_fieldvalue_usemediafilter($value)
+ *     format_fieldvalue_studentfeedback($value)
+ *     format_fieldvalue_timeopen($value)
+ *     format_fieldvalue_timeclose($value)
+ *     format_fieldvalue_timelimit($value)
+ *     format_fieldvalue_delay1($value)
+ *     format_fieldvalue_delay2($value)
+ *     format_fieldvalue_delay3($value)
+ *     format_fieldvalue_attemptlimit($value)
+ *     format_fieldvalue_allowresume($value)
+ *     format_fieldvalue_scoremethod($value)
+ *     format_fieldvalue_scoreignore($value)
+ *     format_fieldvalue_scorelimit($value)
+ *     format_fieldvalue_scoreweighting($value)
+ *     format_fieldvalue_clickreporting($value)
+ *     format_fieldvalue_discarddetails($value)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/edit/form/helper/records.php
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     __construct(&$mform, &$context, &$record, &$records)
+ *     is_add()
+ *     is_update()
+ *
+ *     get_sectionlabel_filters()
+ *     get_sectionlabel_actions()
+ *
+ *     add_field_columnlistid($field)
+ *
+ *     add_section_labels($section, $fields)
+ *     add_section_defaults($section, $fields)
+ *     add_section_selects($section, $fields)
+ *     add_section_records($section, $fields)
+ *
+ *     add_field_action($field)
+ *     get_fieldlabel_action()
+ *     fix_field_action(&$data)
+ *     get_actions()
+ *     get_records()
+ *     prepare_records()
+ *     add_records()
+ *     validate_records(&$errors, &$data, &$files)
+ *     fix_records(&$data)
+ *     update_records($ids)
+ *     delete_records($ids)
+ *
+ *     sort_records($field, $direction)
+ *     sort_sortorder_desc(&$a, &$b)
+ *     sort_sortorder_asc(&$a, &$b)
+ *     sort(&$a, &$b, $field, $gt, $lt, $eq=0)
+ *     get_filter(&$data, $formfield, $dbfield)
+ *     get_filter_params($field)
+ *     get_selected_records(&$data, $fullrecord=true)
+ *     fix_action_applydefaults(&$data)
+ *     get_sortfield_fields()
+ *
+ *     add_field_sortfield($field, $nameprefix='')
+ *     add_field_sortdirection($field, $nameprefix='')
+ *     add_field_sortincrement($field, $nameprefix='')
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/edit/form/helper/task.php
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     add_field_addtype($field)
+ *     add_field_outputformat($field)
+ *     add_field_navigation($field)
+ *     add_field_title($field)
+ *     add_field_stopbutton($field)
+ *     add_field_stoptext($field)
+ *     add_field_usefilters($field)
+ *     add_field_useglossary($field)
+ *     add_field_usemediafilter($field)
+ *     add_field_studentfeedback($field)
+ *     add_field_studentfeedbackurl($field)
+ *     add_field_delay3($field)
+ *     add_field_scoremethod($field)
+ *     add_field_scoreignore($field)
+ *     add_field_scorelimit($field)
+ *     add_field_scoreweighting($field)
+ *     add_field_clickreporting($field)
+ *     add_field_discarddetails($field)
+ *
+ *     get_sectionlabel_reviewoptions()
+ *     get_sectionlabel_conditions()
+ *
+ *     get_fieldvalue_aftertaskid()
+ *     validate_field_studentfeedbackurl(&$errors, &$data, &$files)
+ *
+ *     fix_field_title(&$data)
+ *     fix_field_stopbutton(&$data)
+ *     fix_field_delay3(&$data)
+ *
+ *     format_field_addtype()
+ *     format_field_tasknames()
+ *     format_fieldvalue_outputformat()
+ *     format_field_preconditions()
+ *     format_field_postconditions()
+ *
+ *     format_template_conditions($type, $field)
+ *
+ *     format_conditions($taskid, $conditiontype, $return_intro=true, $return_js=false, $return_commands=true, $default='')
+ *     format_condition(&$condition, $return_js=false, $return_commands=true)
+ *     format_condition_details(&$condition, $returnlist=false)
+ *
+ *     format_commands_conditions($conditiontype, $taskid=0)
+ *     format_commands_condition($condition=false)
+ */
+
+/**
+ * ============================================
+ * mod/taskchain/edit/form/helper/tasks.php
+ * ============================================
+ *
+ * this class contains the following methods:
+ *
+ *     add_action_reordertasks_details()
+ *     add_action_addtasks_details()
+ *     add_action_movetasks_details()
+ *     add_action_applydefaults_details()
+ *
+ *     add_field_addtasks_aftertaskid($field)
+ *     add_field_movetasks_aftertaskid($field)
+ *     add_template_aftertaskid($field)
+ *     add_actiontemplate_tasks($type, $show_mytaskchains=false)
+ *
+ *     fix_action_reordertasks(&$data)
+ *     fix_action_reorder_records(&$data, $field, $ids, $sortdirection='asc')
+ *
+ *     get_filter_sql($ids)
+ *     get_filter_params($field)
+ *     get_fieldlabel_coursename()
+ *
+ *     fix_action_movetasks(&$data)
+ *     fix_action_deletetasks(&$data)
+ */

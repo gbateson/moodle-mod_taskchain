@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/taskchain/db" VERSION="20120819" COMMENT="XMLDB file for Moodle mod/taskchain"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="taskchain" COMMENT="details of TaskChain activities" NEXT="taskchain_chains">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="course"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="course" NEXT="timecreated"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="name" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="taskchain_chains" COMMENT="details of TaskChain chains" PREVIOUS="taskchain" NEXT="taskchain_chain_grades">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="parenttype"/>
+        <FIELD NAME="parenttype" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" COMMENT="0 : taskchain : the “parentid” is an “id” in the “taskchain” table 1 : blocks : the “parentid” is an “id” in the “blocks_instance” table" PREVIOUS="id" NEXT="parentid"/>
+        <FIELD NAME="parentid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the “id” of the parent record, in the “TaskChain” or “block_instance” tables, with which this record is associated" PREVIOUS="parenttype" NEXT="entrycm"/>
+        <FIELD NAME="entrycm" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the course module activity that must be completed before this TaskChain can be attempted" PREVIOUS="parentid" NEXT="entrygrade"/>
+        <FIELD NAME="entrygrade" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="the minimum grade required for entrycm" PREVIOUS="entrycm" NEXT="entrypage"/>
+        <FIELD NAME="entrypage" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0 : no : an intro page will not be shown before the TaskChain chain is begun 1 : yes : an intro page will be shown before the TaskChain chain is begun" PREVIOUS="entrygrade" NEXT="entrytext"/>
+        <FIELD NAME="entrytext" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="the text, if any, that is to appear on the intro page, which is shown before a TaskChain chain is begun" PREVIOUS="entrypage" NEXT="entryformat"/>
+        <FIELD NAME="entryformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="format of the entrytext content" PREVIOUS="entrytext" NEXT="entryoptions"/>
+        <FIELD NAME="entryoptions" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="switches to define which elements are shown on the entry page" PREVIOUS="entryformat" NEXT="exitpage"/>
+        <FIELD NAME="exitpage" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="entryoptions" NEXT="exittext"/>
+        <FIELD NAME="exittext" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="text displayed on exit page" PREVIOUS="exitpage" NEXT="exitformat"/>
+        <FIELD NAME="exitformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="format of the exittext content" PREVIOUS="exittext" NEXT="exitoptions"/>
+        <FIELD NAME="exitoptions" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="switches to define which elements are shown on the exit page" PREVIOUS="exitformat" NEXT="exitcm"/>
+        <FIELD NAME="exitcm" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the course module activity to be shown when this TaskChain is completed" PREVIOUS="exitoptions" NEXT="exitgrade"/>
+        <FIELD NAME="exitgrade" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the minimum grade required to show link to exitcm" PREVIOUS="exitcm" NEXT="showpopup"/>
+        <FIELD NAME="showpopup" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0 : no : the TaskChain chain will be shown in the Moodle window 1 : yes : the TaskChain chain will be shown in a new window" PREVIOUS="exitgrade" NEXT="popupoptions"/>
+        <FIELD NAME="popupoptions" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="a comma-delimited list of attributes for the popup window, if any resizable=1,scrollbars=1,directories=1,location=1,menubar=1,toolbar=1,status=1,height=450,width=620" PREVIOUS="showpopup" NEXT="timeopen"/>
+        <FIELD NAME="timeopen" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the day and time, as a UNIX date stamp, at which the chain becomes available to the students" PREVIOUS="popupoptions" NEXT="timeclose"/>
+        <FIELD NAME="timeclose" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the day and time, as a UNIX date stamp, at which the chain ceases to be available to the students" PREVIOUS="timeopen" NEXT="timelimit"/>
+        <FIELD NAME="timelimit" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the time, as a UNIX date stamp, within which a student must complete the chain" PREVIOUS="timeclose" NEXT="delay1"/>
+        <FIELD NAME="delay1" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the minimum time delay, as a UNIX date stamp, between the first and second attempts" PREVIOUS="timelimit" NEXT="delay2"/>
+        <FIELD NAME="delay2" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the minimum time delay, as a UNIX date stamp, between attempts after the second attempt" PREVIOUS="delay1" NEXT="password"/>
+        <FIELD NAME="password" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the password which must be entered by students before they can attempt the chain" PREVIOUS="delay2" NEXT="subnet"/>
+        <FIELD NAME="subnet" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="a comma separated list of full or partial IP addresses that defines which computers can access the TaskChain chain" PREVIOUS="password" NEXT="allowresume"/>
+        <FIELD NAME="allowresume" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="0 : no : attempts at this chain may not be resumed 1 : yes : attempts at this chain may be resumed" PREVIOUS="subnet" NEXT="allowfreeaccess"/>
+        <FIELD NAME="allowfreeaccess" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="allowresume" NEXT="attemptlimit"/>
+        <FIELD NAME="attemptlimit" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0 : unlimited number of attempts are allowed &amp;gt;0 : the maximum number of times this chain may be attempted" PREVIOUS="allowfreeaccess" NEXT="attemptgrademethod"/>
+        <FIELD NAME="attemptgrademethod" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="attemptlimit" NEXT="grademethod"/>
+        <FIELD NAME="grademethod" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="1 : highest : the score of the highest-scoring attempt at this chain by this user 2 : average : the average score of all attempts at this chain by this user 3 : first : the score of the first attempt at this chain by this user 4 : last : the score of the last attempt at this chain by this user" PREVIOUS="attemptgrademethod" NEXT="gradeignore"/>
+        <FIELD NAME="gradeignore" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="grademethod" NEXT="gradelimit"/>
+        <FIELD NAME="gradelimit" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="the maximum grade for an attempt at this chain grades from attempts are assumed to be percentages and are scaled to this score" PREVIOUS="gradeignore" NEXT="gradeweighting"/>
+        <FIELD NAME="gradeweighting" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="the weighting of the grade for this attempt at the chain toward the grade for TaskChain activity &amp;gt;0 : the weighting as a percentage 0 : no contribution -1 : equal : equal weighting as other attempts (at this TaskChain chain) with this setting" PREVIOUS="gradelimit"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain_chains"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="parenttype-parentid" UNIQUE="true" FIELDS="parenttype, parentid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="taskchain_chain_grades" COMMENT="details of TaskChain activity grades" PREVIOUS="taskchain_chains" NEXT="taskchain_chain_attempts">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="parenttype"/>
+        <FIELD NAME="parenttype" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0 : taskchain : the “parentid” is an “id” in the “taskchain” table 1 : blocks : the “parentid” is an “id” in the “blocks_instance” table" PREVIOUS="id" NEXT="parentid"/>
+        <FIELD NAME="parentid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the “id” of the parent record, in the “taskchain” or “block_instance” tables, with which this record is associated" PREVIOUS="parenttype" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the “id” of the “user” to which this grade is associated" PREVIOUS="parentid" NEXT="grade"/>
+        <FIELD NAME="grade" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the grade for this user for this taskchain activity" PREVIOUS="userid" NEXT="status"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the current status of this chain grade 1 : in progress : end of chain has not been reached 2 : timed out : never completed and no more time left 3 : abandoned : never completed and no more attempts left 4 : completed : end of chain has been reached at least once" PREVIOUS="grade" NEXT="duration"/>
+        <FIELD NAME="duration" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the time this user has spent so far on this chain" PREVIOUS="status" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the time at which this record was last modified" PREVIOUS="duration"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain_chain_grades" NEXT="userid"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" PREVIOUS="primary"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="parenttype-parentid" UNIQUE="false" FIELDS="parenttype, parentid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="taskchain_chain_attempts" COMMENT="details of the grades for attempts at TaskChain chains" PREVIOUS="taskchain_chain_grades" NEXT="taskchain_tasks">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id of the table, please edit me" NEXT="chainid"/>
+        <FIELD NAME="chainid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the “id” of the “taskchain_chains” record to which this grade is associated" PREVIOUS="id" NEXT="cnumber"/>
+        <FIELD NAME="cnumber" TYPE="int" LENGTH="6" NOTNULL="true" SEQUENCE="false" COMMENT="the number of this attempt by this user at  this chain" PREVIOUS="chainid" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the “id” of the “user” to which this grade is associated" PREVIOUS="cnumber" NEXT="grade"/>
+        <FIELD NAME="grade" TYPE="int" LENGTH="6" NOTNULL="true" SEQUENCE="false" COMMENT="the grade for this user for this attempt at a taskchain chain" PREVIOUS="userid" NEXT="status"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="the current status of the grade of this attempt at the chain 1 : in progress : end of chain has not been reached 2 : timed out : never completed and no more time left 3 : abandoned : never completed and no more attempts left 4 : completed : end of chain has been reached at least once" PREVIOUS="grade" NEXT="duration"/>
+        <FIELD NAME="duration" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the time this user has spent so far on this attempt at this chain" PREVIOUS="status" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the time at which this record was last modified" PREVIOUS="duration"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the table, please edit me" NEXT="chainid"/>
+        <KEY NAME="chainid" TYPE="foreign" FIELDS="chainid" REFTABLE="taskchain_chains" REFFIELDS="id" PREVIOUS="primary" NEXT="userid"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" PREVIOUS="chainid"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid-chainid-cnumber" UNIQUE="true" FIELDS="userid, chainid, cnumber"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="taskchain_tasks" COMMENT="details of TaskChain tasks" PREVIOUS="taskchain_chain_attempts" NEXT="taskchain_task_scores">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="chainid"/>
+        <FIELD NAME="chainid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the “id” of the “taskchain_chains” record to which this TaskChain task is associated" PREVIOUS="id" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="chainid" NEXT="sourcefile"/>
+        <FIELD NAME="sourcefile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="either the URL or file path (within the Files folder) of the source file for this task" PREVIOUS="name" NEXT="sourcetype"/>
+        <FIELD NAME="sourcetype" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the type of the sourcefile file either “html” or the name of the task creator software, e.g. TaskChain, qedoc, examview each type has its own subfolder beneath the “mod/taskchain/types” folder" PREVIOUS="sourcefile" NEXT="sourcelocation"/>
+        <FIELD NAME="sourcelocation" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sourcetype" NEXT="configfile"/>
+        <FIELD NAME="configfile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcelocation" NEXT="configlocation"/>
+        <FIELD NAME="configlocation" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="configfile" NEXT="outputformat"/>
+        <FIELD NAME="outputformat" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the required output format for this task" PREVIOUS="configlocation" NEXT="navigation"/>
+        <FIELD NAME="navigation" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the navigation used for tasks in this TaskChain chain 1 : bar : Moodle navigation bar 2 : frame : Moodle navigation frame 3 : iframe : embedded IFRAME 4 : original : task’s original navigation 5 : giveup : a single “Give Up” button 6 : none" PREVIOUS="outputformat" NEXT="title"/>
+        <FIELD NAME="title" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="3" SEQUENCE="false" PREVIOUS="navigation" NEXT="stopbutton"/>
+        <FIELD NAME="stopbutton" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="title" NEXT="stoptext"/>
+        <FIELD NAME="stoptext" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="stopbutton" NEXT="usefilters"/>
+        <FIELD NAME="usefilters" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="stoptext" NEXT="useglossary"/>
+        <FIELD NAME="useglossary" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="usefilters" NEXT="usemediafilter"/>
+        <FIELD NAME="usemediafilter" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="useglossary" NEXT="studentfeedback"/>
+        <FIELD NAME="studentfeedback" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="usemediafilter" NEXT="studentfeedbackurl"/>
+        <FIELD NAME="studentfeedbackurl" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="studentfeedback" NEXT="timeopen"/>
+        <FIELD NAME="timeopen" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="studentfeedbackurl" NEXT="timeclose"/>
+        <FIELD NAME="timeclose" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timeopen" NEXT="timelimit"/>
+        <FIELD NAME="timelimit" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="-1" SEQUENCE="false" PREVIOUS="timeclose" NEXT="delay1"/>
+        <FIELD NAME="delay1" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timelimit" NEXT="delay2"/>
+        <FIELD NAME="delay2" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="delay1" NEXT="delay3"/>
+        <FIELD NAME="delay3" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="2" SEQUENCE="false" PREVIOUS="delay2" NEXT="password"/>
+        <FIELD NAME="password" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="delay3" NEXT="subnet"/>
+        <FIELD NAME="subnet" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="password" NEXT="allowresume"/>
+        <FIELD NAME="allowresume" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="subnet" NEXT="reviewoptions"/>
+        <FIELD NAME="reviewoptions" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="allowresume" NEXT="attemptlimit"/>
+        <FIELD NAME="attemptlimit" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="reviewoptions" NEXT="scoremethod"/>
+        <FIELD NAME="scoremethod" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="1 : highest : the score of the highest-scoring attempt at this task by this user 2 : average : the average score of all attempts at this task by this user 3 : first : the score of the first attempt at this task by this user 4 : last : the score of the last attempt at this task by this user" PREVIOUS="attemptlimit" NEXT="scoreignore"/>
+        <FIELD NAME="scoreignore" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="scoremethod" NEXT="scorelimit"/>
+        <FIELD NAME="scorelimit" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="the maximum score for this task scores from tasks are assumed to be percentages and are scaled to this score" PREVIOUS="scoreignore" NEXT="scoreweighting"/>
+        <FIELD NAME="scoreweighting" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="-1" SEQUENCE="false" COMMENT="the weighting of this task score toward the grade for this attempt at the chain &amp;gt;0 : the weighting as a percentage 0 : no contribution -1 : equal : equal weighting as other tasks (in this TaskChain chain) with this setting" PREVIOUS="scorelimit" NEXT="sortorder"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="6" NOTNULL="true" SEQUENCE="false" PREVIOUS="scoreweighting" NEXT="clickreporting"/>
+        <FIELD NAME="clickreporting" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sortorder" NEXT="discarddetails"/>
+        <FIELD NAME="discarddetails" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="clickreporting"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain_tasks" NEXT="chainid"/>
+        <KEY NAME="chainid" TYPE="foreign" FIELDS="chainid" REFTABLE="taskchain_chains" REFFIELDS="id" PREVIOUS="primary"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="sourcelocation-sourcefile" UNIQUE="false" FIELDS="sourcelocation, sourcefile"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="taskchain_task_scores" COMMENT="details of TaskChain task scores" PREVIOUS="taskchain_tasks" NEXT="taskchain_task_attempts">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="taskid"/>
+        <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="cnumber"/>
+        <FIELD NAME="cnumber" TYPE="int" LENGTH="6" NOTNULL="true" SEQUENCE="false" PREVIOUS="taskid" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="cnumber" NEXT="score"/>
+        <FIELD NAME="score" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userid" NEXT="status"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="score" NEXT="duration"/>
+        <FIELD NAME="duration" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="status" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="duration"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain_responses" NEXT="taskid"/>
+        <KEY NAME="taskid" TYPE="foreign" FIELDS="taskid" REFTABLE="taskchain_tasks" REFFIELDS="id" PREVIOUS="primary" NEXT="userid"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" PREVIOUS="taskid"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="taskid-userid-cnumber" UNIQUE="true" FIELDS="taskid, userid, cnumber" NEXT="taskid-userid"/>
+        <INDEX NAME="taskid-userid" UNIQUE="false" FIELDS="taskid, userid" PREVIOUS="taskid-userid-cnumber"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="taskchain_task_attempts" COMMENT="details of TaskChain task attempts" PREVIOUS="taskchain_task_scores" NEXT="taskchain_cache">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="taskid"/>
+        <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="taskid" NEXT="cnumber"/>
+        <FIELD NAME="cnumber" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the number of this attempt by this user at this chain" PREVIOUS="userid" NEXT="tnumber"/>
+        <FIELD NAME="tnumber" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the number of this attempt by this user at this task within this attempt at this chain" PREVIOUS="cnumber" NEXT="status"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="the current status of this attempt 1 : in progress 2 : timed out 3 : abandoned 4 : completed Note that a TaskChain task is only considered completed when a correct answer has been found for ALL questions" PREVIOUS="tnumber" NEXT="penalties"/>
+        <FIELD NAME="penalties" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the number of penalty points that this user picked on this attempt at the task" PREVIOUS="status" NEXT="score"/>
+        <FIELD NAME="score" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the score for this attempt (so far)" PREVIOUS="penalties" NEXT="duration"/>
+        <FIELD NAME="duration" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="score" NEXT="starttime"/>
+        <FIELD NAME="starttime" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="start time as recorded by the client" PREVIOUS="duration" NEXT="endtime"/>
+        <FIELD NAME="endtime" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="End time recorded by the client" PREVIOUS="starttime" NEXT="resumestart"/>
+        <FIELD NAME="resumestart" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the most recent time at which this attempt at this task was resumd" PREVIOUS="endtime" NEXT="resumefinish"/>
+        <FIELD NAME="resumefinish" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the most recent time at which a resumed attempt was finished" PREVIOUS="resumestart" NEXT="timestart"/>
+        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the time, according to the server, that this attempt started" PREVIOUS="resumefinish" NEXT="timefinish"/>
+        <FIELD NAME="timefinish" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the time, according to the server, that this attempt finished" PREVIOUS="timestart" NEXT="clickreportid"/>
+        <FIELD NAME="clickreportid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the attemptid of the first attempt in this click report chain" PREVIOUS="timefinish"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain_task_attempts" NEXT="taskid"/>
+        <KEY NAME="taskid" TYPE="foreign" FIELDS="taskid" REFTABLE="taskchain_tasks" REFFIELDS="id" PREVIOUS="primary" NEXT="userid"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" PREVIOUS="taskid"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="clickreportid" UNIQUE="false" FIELDS="clickreportid" NEXT="taskid-userid-cnumber"/>
+        <INDEX NAME="taskid-userid-cnumber" UNIQUE="false" FIELDS="taskid, userid, cnumber" PREVIOUS="clickreportid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="taskchain_cache" COMMENT="cache for TaskChain tasks" PREVIOUS="taskchain_task_attempts" NEXT="taskchain_conditions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="taskid"/>
+        <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the &quot;id&quot; of the &quot;taskchain_tasks&quot; record to which this cached content is associated" PREVIOUS="id" NEXT="slasharguments"/>
+        <FIELD NAME="slasharguments" TYPE="char" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Moodle's $CFG-&amp;gt;slasharguments setting at the time the cached content was created" PREVIOUS="taskid" NEXT="taskchain_enableobfuscate"/>
+        <FIELD NAME="taskchain_enableobfuscate" TYPE="char" LENGTH="1" NOTNULL="true" SEQUENCE="false" PREVIOUS="slasharguments" NEXT="taskchain_enableswf"/>
+        <FIELD NAME="taskchain_enableswf" TYPE="char" LENGTH="1" NOTNULL="true" SEQUENCE="false" PREVIOUS="taskchain_enableobfuscate" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="task name at the time the cache was created" PREVIOUS="taskchain_enableswf" NEXT="sourcefile"/>
+        <FIELD NAME="sourcefile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the task's &quot;reference&quot; setting at the time the cached content was created" PREVIOUS="name" NEXT="sourcetype"/>
+        <FIELD NAME="sourcetype" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcefile" NEXT="sourcelocation"/>
+        <FIELD NAME="sourcelocation" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcetype" NEXT="sourcelastmodified"/>
+        <FIELD NAME="sourcelastmodified" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcelocation" NEXT="sourceetag"/>
+        <FIELD NAME="sourceetag" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourcelastmodified" NEXT="configfile"/>
+        <FIELD NAME="configfile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="sourceetag" NEXT="configlocation"/>
+        <FIELD NAME="configlocation" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="configfile" NEXT="configlastmodified"/>
+        <FIELD NAME="configlastmodified" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="configlocation" NEXT="configetag"/>
+        <FIELD NAME="configetag" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="configlastmodified" NEXT="navigation"/>
+        <FIELD NAME="navigation" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the task's &quot;navigation&quot; setting when the cached content was created" PREVIOUS="configetag" NEXT="title"/>
+        <FIELD NAME="title" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="navigation" NEXT="stopbutton"/>
+        <FIELD NAME="stopbutton" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="title" NEXT="stoptext"/>
+        <FIELD NAME="stoptext" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="stopbutton" NEXT="usefilters"/>
+        <FIELD NAME="usefilters" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the task's &quot;usefilters&quot; setting when the cached content was created" PREVIOUS="stoptext" NEXT="useglossary"/>
+        <FIELD NAME="useglossary" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the task's &quot;useglossary&quot; setting when the cached content was created" PREVIOUS="usefilters" NEXT="usemediafilter"/>
+        <FIELD NAME="usemediafilter" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the task's &quot;usemediafilter&quot; setting when the cached content was created" PREVIOUS="useglossary" NEXT="studentfeedback"/>
+        <FIELD NAME="studentfeedback" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the task's &quot;studentfeedback&quot; setting when the cached content was created" PREVIOUS="usemediafilter" NEXT="studentfeedbackurl"/>
+        <FIELD NAME="studentfeedbackurl" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the task's &quot;outputformaturl&quot; setting when the cached content was created" PREVIOUS="studentfeedback" NEXT="timelimit"/>
+        <FIELD NAME="timelimit" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="-1" SEQUENCE="false" PREVIOUS="studentfeedbackurl" NEXT="delay3"/>
+        <FIELD NAME="delay3" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="-1" SEQUENCE="false" PREVIOUS="timelimit" NEXT="clickreporting"/>
+        <FIELD NAME="clickreporting" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="delay3" NEXT="content"/>
+        <FIELD NAME="content" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="the cached content for this task - base64_encode(serialize($content))" PREVIOUS="clickreporting" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the time at which this record was last modified" PREVIOUS="content" NEXT="md5key"/>
+        <FIELD NAME="md5key" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" COMMENT="md5 (wwwroot + currenttheme + navigation)" PREVIOUS="timemodified"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain_cache" NEXT="taskid"/>
+        <KEY NAME="taskid" TYPE="foreign" FIELDS="taskid" REFTABLE="taskchain_tasks" REFFIELDS="id" PREVIOUS="primary"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="taskid-md5key" UNIQUE="false" FIELDS="taskid, md5key" COMMENT="taskid + md5(wwwroot + currenttheme + navigation)"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="taskchain_conditions" COMMENT="details of TaskChain conditions" PREVIOUS="taskchain_cache" NEXT="taskchain_details">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="taskid"/>
+        <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the “id” of the “taskchain_tasks” record to which this condition is associated" PREVIOUS="id" NEXT="groupid"/>
+        <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="id of group, if any, to which these conditions apply" PREVIOUS="taskid" NEXT="conditiontype"/>
+        <FIELD NAME="conditiontype" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0 : precondition: a condition that must be satisfied before a student can access this task 1 : postcondition : a condition that defines what happens after a student finishes this task" PREVIOUS="groupid" NEXT="conditionscore"/>
+        <FIELD NAME="conditionscore" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the minimum score at which this condition is satisfied" PREVIOUS="conditiontype" NEXT="conditiontaskid"/>
+        <FIELD NAME="conditiontaskid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the “id” of the “taskchain_tasks” record to which this condition refers &amp;gt;0 : a specific TaskChain task -1 : next : the next TaskChain task, if any, in this TaskChain chain according to “sortorder” -2 : previous : the previous TaskChain task, if any, in this TaskChain chain according to “sortorder” -3 : unseen : an unseen TaskChain task (i.e. no attempts) -4 : unanswered : an unanswered TaskChain task (i.e. no responses)  -5 : incorrect : an incorrectly answered TaskChain task (i.e. score" PREVIOUS="conditionscore" NEXT="sortorder"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="conditiontaskid" NEXT="attempttype"/>
+        <FIELD NAME="attempttype" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0 : any : any attempt(s)  1 : recent : the most recent attempt(s) 2 : consecutive : any block of consecutive attempts" PREVIOUS="sortorder" NEXT="attemptcount"/>
+        <FIELD NAME="attemptcount" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the number of attempts which must satisfy the score condition" PREVIOUS="attempttype" NEXT="attemptduration"/>
+        <FIELD NAME="attemptduration" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0 : no time limit &amp;gt;0 : the total time limit for the attempts which satisfy the score condition" PREVIOUS="attemptcount" NEXT="attemptdelay"/>
+        <FIELD NAME="attemptdelay" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="attemptduration" NEXT="nexttaskid"/>
+        <FIELD NAME="nexttaskid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="attemptdelay"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain_conditions" NEXT="taskid"/>
+        <KEY NAME="taskid" TYPE="foreign" FIELDS="taskid" REFTABLE="taskchain_tasks" REFFIELDS="id" PREVIOUS="primary" NEXT="groupid"/>
+        <KEY NAME="groupid" TYPE="foreign" FIELDS="groupid" REFTABLE="groups" REFFIELDS="id" PREVIOUS="taskid"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="taskid-conditiontype-groupid" UNIQUE="false" FIELDS="taskid, conditiontype, groupid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="taskchain_details" COMMENT="raw details (as XML) of TaskChain task attempts" PREVIOUS="taskchain_conditions" NEXT="taskchain_questions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="attemptid"/>
+        <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="details"/>
+        <FIELD NAME="details" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="the raw XML returned from the browser regarding the attempt at a task" PREVIOUS="attemptid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain_details" NEXT="attemptid"/>
+        <KEY NAME="attemptid" TYPE="foreign" FIELDS="attemptid" REFTABLE="taskchain_task_attempts" REFFIELDS="id" PREVIOUS="primary"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="taskchain_questions" COMMENT="details of questions used in TaskChain tasks" PREVIOUS="taskchain_details" NEXT="taskchain_responses">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="taskid"/>
+        <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="name"/>
+        <FIELD NAME="name" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="a unique name for this question. If the “text”field is empty then this field is displayed as the question to the user" PREVIOUS="taskid" NEXT="md5key"/>
+        <FIELD NAME="md5key" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="type"/>
+        <FIELD NAME="type" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the type of this question.  This field can be whatever is useful to the PHP class for this task type. Questions for TaskChain tasks are given the following values: 1 : JBC 2 : JCloze 3 : JCross 4 : JMatch 5 : JMix 6 : JTask 7 : Rhubarb (TexToys) 8 : Sequitur (TexToys)" PREVIOUS="md5key" NEXT="text"/>
+        <FIELD NAME="text" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the “id” of the “taskchain_strings” record which holds text of the question this field is used in preference to the “name” field when displaying a question" PREVIOUS="type"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain_questions" NEXT="taskid"/>
+        <KEY NAME="taskid" TYPE="foreign" FIELDS="taskid" REFTABLE="taskchain_tasks" REFFIELDS="id" PREVIOUS="primary"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="taskid-md5key" UNIQUE="false" FIELDS="taskid, md5key"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="taskchain_responses" COMMENT="details of responses in TaskChain task attempts" PREVIOUS="taskchain_questions" NEXT="taskchain_strings">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="attemptid"/>
+        <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="questionid"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="attemptid" NEXT="score"/>
+        <FIELD NAME="score" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="questionid" NEXT="weighting"/>
+        <FIELD NAME="weighting" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="score" NEXT="hints"/>
+        <FIELD NAME="hints" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="weighting" NEXT="clues"/>
+        <FIELD NAME="clues" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="hints" NEXT="checks"/>
+        <FIELD NAME="checks" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="clues" NEXT="correct"/>
+        <FIELD NAME="correct" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="checks" NEXT="wrong"/>
+        <FIELD NAME="wrong" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="correct" NEXT="ignored"/>
+        <FIELD NAME="ignored" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="wrong"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain_responses" NEXT="attemptid"/>
+        <KEY NAME="attemptid" TYPE="foreign" FIELDS="attemptid" REFTABLE="taskchain_task_attempts" REFFIELDS="id" PREVIOUS="primary" NEXT="questionid"/>
+        <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="taskchain_questions" REFFIELDS="id" PREVIOUS="attemptid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="taskchain_strings" COMMENT="strings used in TaskChain questions and responses" PREVIOUS="taskchain_responses">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="string"/>
+        <FIELD NAME="string" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="md5key"/>
+        <FIELD NAME="md5key" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" PREVIOUS="string"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain_strings"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="md5key" UNIQUE="false" FIELDS="md5key"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
