@@ -1243,33 +1243,40 @@ class mod_taskchain extends taskchain_base {
     public function set_preferred_pagelayout($PAGE)  {
         // page layouts are defined in theme/xxx/config.php
 
-        if (empty($this->task)) {
-            return;
+        $pagelayout = $PAGE->pagelayout;
+
+        if (isset($this->chain) && $this->chain->showpopup) {
+            $options = explode(',', $this->chain->get_popupoptions());
+            switch (true) {
+                case in_array('MOODLEFOOTER', $options): $pagelayout = 'incourse'; break;
+                case in_array('MOODLEHEADER', $options): $pagelayout = 'popup'; break;
+                default: $pagelayout = 'embedded';
+            }
         }
 
-        switch ($this->task->navigation) {
+        if (isset($this->task)) {
+            switch ($this->task->navigation) {
 
-            case self::NAVIGATION_ORIGINAL:
-            case self::NAVIGATION_NONE:
-                // $PAGE->set_pagelayout('popup');
-                $PAGE->set_pagelayout('embedded');
-                break;
+                case self::NAVIGATION_ORIGINAL:
+                case self::NAVIGATION_NONE:
+                    $pagelayout = 'embedded';
+                    break;
 
-            case self::NAVIGATION_FRAME:
-            case self::NAVIGATION_EMBED:
-                $framename = optional_param('framename', '', PARAM_ALPHA);
-                if ($framename=='top') {
-                    $PAGE->set_pagelayout('frametop');
-                }
-                if ($framename=='main') {
-                    $PAGE->set_pagelayout('embedded');
-                }
-                break;
+                case self::NAVIGATION_FRAME:
+                case self::NAVIGATION_EMBED:
+                    switch (optional_param('framename', '', PARAM_ALPHA)) {
+                        case 'top':  $pagelayout = 'frametop'; break;
+                        case 'main': $pagelayout = 'embedded'; break;
+                    }
+                    break;
 
-            case self::NAVIGATION_TOPBAR:
-                $PAGE->set_pagelayout('login'); // no nav menu
-                break;
+                case self::NAVIGATION_TOPBAR:
+                    $pagelayout = 'login';
+                    break;
+            }
         }
+
+        $PAGE->set_pagelayout($pagelayout);
     }
 
     /**

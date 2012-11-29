@@ -55,10 +55,10 @@ class MoodleQuickForm_heading extends HTML_QuickForm_static{
     /**
      * constructor
      *
-     * @param string $text heading text
-     * @param string $level heading level (optional)
-     * @param string $class heading class (optional)
-     * @param string $cssid heading css id (optional)
+     * @param string $text heading text (optional, default=null)
+     * @param string $level heading level (optional, default=null)
+     * @param string $class heading class (optional, default=null)
+     * @param string $cssid heading css id (optional, default=null)
      */
     function MoodleQuickForm_heading($text=null, $level=null, $class=null, $cssid=null) {
         parent::HTML_QuickForm_static(null, null, $text); // name=null, label=null

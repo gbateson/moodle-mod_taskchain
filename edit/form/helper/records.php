@@ -448,30 +448,37 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             // force bottom borders of final subactions
             $js .= 'function set_bottom_borders() {'."\n";
             $js .= '    var obj = document.getElementById("actionshdr");'."\n";
+            $js .= '    var targetid = new RegExp("^(fitem|fgroup)_id_'.$field.'_('.implode('|', array_keys($actions)).')$");'."\n";
+
+            $js .= '    var divs = null;'."\n";
             $js .= '    if (obj) {'."\n";
-            $js .= '        var divs = obj.getElementsByTagName("DIV");'."\n";
-            $js .= '        if (divs) {'."\n";
-            $js .= '            targetid = new RegExp("^(fitem|fgroup)_id_'.$field.'_('.implode('|', array_keys($actions)).')$");'."\n";
-            $js .= '            var d_max = divs.length;'."\n";
-            $js .= '            for (var d=0; d<d_max; d++) {'."\n";
-            $js .= '                if (divs[d].id.match(targetid)) {'."\n";
-            $js .= '                    var node = divs[d].previousSibling;'."\n";
-            $js .= '                    while (node && node.nodeType==3) {'."\n";
-            $js .= '                        node = node.previousSibling;'."\n";
-            $js .= '                    }'."\n";
-            $js .= '                    if (node) {'."\n";
-            $js .= '                        node.style.borderBottomColor = "#333333";'."\n";
-            $js .= '                        node.style.borderBottomStyle = "solid";'."\n";
-            $js .= '                        node.style.borderBottomWidth = "1px";'."\n";
-            $js .= '                        node.style.paddingBottomWidth = "6px";'."\n";
-            $js .= '                    }'."\n";
-            $js .= '                    node = null;'."\n";
-            $js .= '                }'."\n";
-            $js .= '            }'."\n";
-            $js .= '            targetid = null;'."\n";
-            $js .= '        }'."\n";
-            $js .= '        divs = null;'."\n";
+            $js .= '        divs = obj.getElementsByTagName("DIV");'."\n";
             $js .= '    }'."\n";
+
+            $js .= '    var d_max = 0;'."\n";
+            $js .= '    if (divs) {'."\n";
+            $js .= '        d_max = divs.length;'."\n";
+            $js .= '    }'."\n";
+
+            $js .= '    for (var d=0; d<d_max; d++) {'."\n";
+            $js .= '        var node = null;'."\n";
+            $js .= '        if (divs[d].id.match(targetid)) {'."\n";
+            $js .= '            node = divs[d].previousSibling;'."\n";
+            $js .= '            while (node && node.nodeType==3) {'."\n";
+            $js .= '               node = node.previousSibling;'."\n";
+            $js .= '            }'."\n";
+            $js .= '        }'."\n";
+            $js .= '        if (node) {'."\n";
+            $js .= '            node.style.borderBottomColor = "#333333";'."\n";
+            $js .= '            node.style.borderBottomStyle = "solid";'."\n";
+            $js .= '            node.style.borderBottomWidth = "1px";'."\n";
+            $js .= '            node.style.paddingBottomWidth = "6px";'."\n";
+            $js .= '        }'."\n";
+            $js .= '        node = null;'."\n";
+            $js .= '    }'."\n";
+
+            $js .= '    targetid = null;'."\n";
+            $js .= '    divs = null;'."\n";
             $js .= '    obj = null;'."\n";
             $js .= '}'."\n";
             $js .= 'set_bottom_borders();'."\n";

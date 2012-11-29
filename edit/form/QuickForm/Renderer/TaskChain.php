@@ -66,10 +66,13 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
             // Note: Moodle 2.2 ids are OK, but it does not harm ...
             $type = $element->getType();
             if ($type=='radio' || $type=='checkbox') {
+                // basically, the id is "id_"  followed by the element name
+                // we also fix "[" and "]" e.g. sortorder[1] -> sortorder_1
+                // and for radio buttons, we append "_" and the element value
                 $id = 'id_'.$element->getName();
                 $id = strtr($id, array('[' => '_', ']' => ''));
                 if ($type=='radio') {
-                    $id .= '_'.$element->getValue();
+                    $id .= (is_null($element->getValue()) ? '' : '_'.$element->getValue());
                 }
                 $element->updateAttributes(array('id' => $id));
             }

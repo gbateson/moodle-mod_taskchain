@@ -59,10 +59,10 @@ function taskchain_supports($feature) {
         case FEATURE_GROUPINGS:         return true;
         case FEATURE_GROUPMEMBERSONLY:  return true;
         case FEATURE_BACKUP_MOODLE2:    return true;
+        case FEATURE_SHOW_DESCRIPTION:  return true;
 
         // use default for these features whose default is "false"
         //case FEATURE_RATE:              return false;
-        //case FEATURE_GRADE_HAS_GRADE:   return false;
         //case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
 
         // disable features whose default is "true"
@@ -654,6 +654,76 @@ function taskchain_delete_tasks($taskids) {
     $DB->delete_records_list('taskchain_task_scores', 'taskid', $taskids);
     $DB->delete_records_list('taskchain_tasks',       'id',     $taskids);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Course page links API                                                      //
+////////////////////////////////////////////////////////////////////////////////
+
+/*
+* Given a course_module object, this function returns any
+* "extra" information that may be needed when printing
+* this activity in a course listing.
+*
+* This function is called from: {@link course/lib.php} in {@link get_array_of_activities()}
+*
+* @param object $cm information about this course module
+*         $cm->cm       : id in the "course_modules" table
+*         $cm->section  : the number of the course section (e.g. week or topic)
+*         $cm->mod      : the name of the module (always "taskchain")
+*         $cm->instance : id in the "taskchain" table
+*         $cm->name     : the name of this taskchain
+*         $cm->visible  : is the taskchain visible (=1) or hidden (=0)
+*         $cm->extra    : ""
+* @return object $info
+*         $info->extra  : extra string to include in any link
+*                 (e.g. target="_blank" or class="taskchain_completed")
+*         $info->icon   : an icon for this course module
+*                 allows a different icon for different subtypes of the module
+*                 allows a different icon depending on the status of a taskchain
+*/
+function taskchain_get_coursemodule_info($cm) {
+    global $CFG, $DB;
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+
+    if (! $taskchain = $DB->get_record('taskchain', array('id'=>$cm->instance))) {
+        return false; // shouldn't happen !!
+    }
+    if (! $chain = $DB->get_record('taskchain_chains', array('parenttype'=>mod_taskchain::PARENTTYPE_ACTIVITY, 'parentid'=>$taskchain->id))) {
+        return false; // shouldn't happen !!
+    }
+
+    $info = new cached_cm_info();
+    $info->name = $taskchain->name;
+
+    //$info->customdata =    ''; // 'id="taskchain-'.$cm->instance.'"'
+    //$info->extraclasses =  '';
+    //$info->onclick =       '';
+    //$info->icon =          '';
+    //$info->iconcomponent = '';
+    //$info->iconurl =       '';
+
+    if ($cm->showdescription) {
+        // $context = context_module::instance($cm->id);
+        $context = get_context_instance(CONTEXT_MODULE, $cm->id); // Moodle 2.0 - 2.1
+        $options = array('noclean'=>true, 'para'=>false, 'filter'=>true, 'context'=>$context, 'overflowdiv'=>true);
+        $entrytext = file_rewrite_pluginfile_urls($chain->entrytext, 'pluginfile.php', $context->id, 'mod_taskchain', 'entry', null);
+        $info->content = trim(format_text($entrytext, $chain->entryformat, $options, null));
+    }
+
+    // create popup link, if necessary
+    if ($chain->showpopup) {
+        $fullurl = "$CFG->wwwroot/mod/taskchain/view.php?id=$cm->id&inpopup=1";
+        $options = explode(',', $chain->popupoptions);
+        $options = implode(',', preg_grep('/^MOODLE/', $options, PREG_GREP_INVERT));
+        $info->onclick = "window.open('$fullurl', 'taskchain{$cm->instance}', '$options'); return false;";
+    }
+
+    return $info;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// User activity reports API                                                  //
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Return a small object with summary information about what a
@@ -1644,9 +1714,12 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
     $params = array();
     if ($encodepath) {
         $listing = $repository->get_listing();
-        if (isset($listing['list'][0]['path'])) {
-            $params = file_storage::unpack_reference($listing['list'][0]['path'], true);
+        switch (true) {
+            case isset($listing['list'][0]['source']): $param = 'source'; break; // file
+            case isset($listing['list'][0]['path']):   $param = 'path';   break; // dir
+            default: return false; // shouldn't happen !!
         }
+        $params = file_storage::unpack_reference($listing['list'][0][$param], true);
     }
 
     foreach ($paths as $path => $source) {
@@ -1666,16 +1739,18 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
         $listing = @$repository->get_listing($path);
         foreach ($listing['list'] as $file) {
 
-            if (empty($file['source'])) {
-                continue;
+            switch (true) {
+                case isset($file['source']): $param = 'source'; break; // file
+                case isset($file['path']):   $param = 'path';   break; // dir
+                default: continue; // shouldn't happen !!
             }
 
             if ($encodepath) {
-                $file['source'] = file_storage::unpack_reference($file['source']);
-                $file['source'] = trim($file['source']['filepath'], '/').'/'.$file['source']['filename'];
+                $file[$param] = file_storage::unpack_reference($file[$param]);
+                $file[$param] = trim($file[$param]['filepath'], '/').'/'.$file[$param]['filename'];
             }
 
-            if ($file['source']==$source) {
+            if ($file[$param]==$source) {
 
                 if ($encodepath) {
                     $params['filename'] = $filename;
@@ -1770,22 +1845,24 @@ function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $c
         $TC = new mod_taskchain();
     }
 
-    if ($TC->can->reviewattempts()) {
-        $type = navigation_node::TYPE_SETTING;
-        $icon = new pix_icon('i/report', '');
-        foreach ($TC->get_report_modes() as $mode) {
-            $label = get_string($mode.'report', 'taskchain');
-            $url   = $TC->url->report($mode, $cm);
+    if (isset($TC->can)) {
+        if ($TC->can->reviewattempts()) {
+            $type = navigation_node::TYPE_SETTING;
+            $icon = new pix_icon('i/report', '');
+            foreach ($TC->get_report_modes() as $mode) {
+                $label = get_string($mode.'report', 'taskchain');
+                $url   = $TC->url->report($mode, $cm);
+                $taskchainnode->add($label, $url, $type, null, null, $icon);
+            }
+        }
+
+        if ($TC->can->preview()) {
+            $label = get_string('preview', 'taskchain');
+            $url   = new moodle_url('/mod/taskchain/attempt.php', $TC->merge_params(array('tab'=>'preview', 'cnumber'=>-1)));
+            $type  = navigation_node::TYPE_SETTING;
+            $icon  = new pix_icon('t/preview', '');
             $taskchainnode->add($label, $url, $type, null, null, $icon);
         }
-    }
-
-    if ($TC->can->preview()) {
-        $label = get_string('preview', 'taskchain');
-        $url   = new moodle_url('/mod/taskchain/attempt.php', $TC->merge_params(array('tab'=>'preview', 'cnumber'=>-1)));
-        $type  = navigation_node::TYPE_SETTING;
-        $icon  = new pix_icon('t/preview', '');
-        $taskchainnode->add($label, $url, $type, null, null, $icon);
     }
 }
 
@@ -1809,7 +1886,7 @@ function taskchain_extend_settings_navigation(settings_navigation $settingsnav, 
 
     // create our new nodes
     $nodes = array();
-    if ($TC->can->manage()) {
+    if (isset($TC->can) && $TC->can->manage()) {
         $type = navigation_node::TYPE_SETTING;
         $icon = new pix_icon('t/edit', '');
 

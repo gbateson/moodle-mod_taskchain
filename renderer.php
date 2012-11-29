@@ -842,7 +842,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 $canstart = false;
                 $canresume = false;
             }
-            if ($error = $this->TC->require_chain_entrycm()) {
+            if ($error = $this->TC->require_entrycm()) {
                 // minimum grade for previous activity not satisfied
                 $warnings[] = $error;
                 $canstart = false;
@@ -1386,7 +1386,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
         if ($this->TC->chainattempt->status==mod_taskchain::STATUS_COMPLETED) {
             // next activity, if there is one
-            if ($this->TC->require_exitgrade() && $this->TC->chainattempt->grade < $this->TC->exitgrade) {
+            if ($this->TC->require_exitgrade() && $this->TC->chainattempt->grade < $this->TC->chain->exitgrade) {
                 // insufficient grade to show link to next activity
                 $cm = false;
             } else {

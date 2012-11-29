@@ -48,7 +48,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /** sections and fields in this form **/
     protected $sections = array(
         // Note: "headings" section will be added by mod_moodleform
-        'general'    => array('edit', 'defaultrecord', 'selectrecord', 'name'),
+        'general'    => array('edit', 'defaultrecord', 'selectrecord', 'name', 'showdescription'),
         'tasks'      => array('sourcefile', 'sourcelocation', 'configfile', 'configlocation', 'addtype', 'tasknames'),
         'entrypage'  => array('entrypage', 'entrytext', 'entryoptions', 'entrycm', 'entrygrade'),
         'exitpage'   => array('exitpage', 'exittext', 'exitoptions', 'exitcm', 'exitgrade'),
@@ -101,8 +101,8 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'popup_menubar'      => mod_taskchain::YES,
         'popup_toolbar'      => mod_taskchain::YES,
         'popup_status'       => mod_taskchain::YES,
-        'popup_width'        => 450,
-        'popup_height'       => 620,
+        'popup_width'        => 620,
+        'popup_height'       => 450,
         'timeopen'           => 0,
         'timeclose'          => 0,
         'timelimit'          => 0,
@@ -291,6 +291,15 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      */
     protected function add_field_entrypage($field)  {
         $this->add_template_page('entry');
+    }
+
+    /**
+     * add_field_showdescription
+     *
+     */
+    protected function add_field_showdescription() {
+        $this->mform->addElement('checkbox', 'showdescription', get_string('showdescription', 'taskchain'));
+        $this->mform->addHelpButton('showdescription', 'showdescription', 'taskchain');
     }
 
     /**

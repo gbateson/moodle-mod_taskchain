@@ -57,6 +57,7 @@ if ($PAGE->user_allowed_editing()) {
 $PAGE->set_url($TC->url->view());
 $PAGE->set_title($TC->taskchain->name);
 $PAGE->set_heading($TC->course->fullname);
+$TC->set_preferred_pagelayout($PAGE);
 
 $output = $PAGE->get_renderer('mod_taskchain');
 

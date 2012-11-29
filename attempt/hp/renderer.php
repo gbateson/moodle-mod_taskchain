@@ -942,19 +942,36 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      * @todo Finish documenting this function
      */
     public function convert_url_navbutton($match)  {
-        global $CFG, $DB;
+        global $DB, $output;
 
         $url = $this->convert_url($match[1]);
 
-        // is this a $url for another TaskChain in this course ?
-        if (strpos($url, $this->TC->task->source->baseurl.'/')===0) {
-            $filepath = substr($url, strlen($this->TC->task->source->baseurl));
-            $sourcefile = $this->TC->task->source->xml_locate_file($filepath);
-            if ($records = $DB->get_records('taskchain', array('sourcefile' => $sourcefile), '', 'id', 0, 1)) {
+        $source = $this->TC->task->get_source();
+
+        // is this a $url for another task in this chain ?
+        if (strpos($url, $source->baseurl.'/')===0) {
+            $sourcefile = $source->xml_locate_file(substr($url, strlen($source->baseurl) + 1));
+            $params = array('chainid' => $this->chainid, 'sourcefile' => $sourcefile);
+            if ($records = $DB->get_records('taskchain_tasks', $params, 'sortorder', '*', 0, 1)) {
                 $record = reset($records); // first record - there could be more than one ?!
-                $url = new moodle_url('/mod/taskchain/view.php', array('id' => $record->id));
+                $params = array('taskid'        => $record->id,
+                                'tnumber'       => 0,
+                                'taskattemptid' => 0,
+                                'taskscoreid'   => 0,
+                                'inpopup'       => $this->TC->inpopup);
+                $url = $output->format_url('view.php', '', $params);
             }
         }
+
+        // is this a $url for another TaskChain in this course ?
+        //if (strpos($url, $this->TC->task->source->baseurl.'/')===0) {
+        //    $filepath = substr($url, strlen($this->TC->task->source->baseurl));
+        //    $sourcefile = $this->TC->task->source->xml_locate_file($filepath);
+        //    if ($records = $DB->get_records('taskchain', array('sourcefile' => $sourcefile), '', 'id', 0, 1)) {
+        //        $record = reset($records); // first record - there could be more than one ?!
+        //       $url = new moodle_url('/mod/taskchain/view.php', array('id' => $record->id));
+        //    }
+        //}
 
         return $url;
     }

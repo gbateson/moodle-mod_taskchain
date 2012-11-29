@@ -1,0 +1,16 @@
+.DS_Store
+.svn
+.cvsignore
+.svnignore
+CVS
+add_phpdoc.php
+findbom.php
+fix_collations.php
+redo_upgrade.php
+remake_locallib.php
+remake_renderers.php
+remake_reviews.php
+remake_sources.php
+remake_storages.php
+remake_subplugins.php
+sort_strings.php

@@ -348,6 +348,17 @@ class taskchain_source {
         if (! $repositoryid = $mainfile->get_repository_id()) {
             return false; // not from an external repository
         }
+        // if we are adding a TaskChain using files from a "Private files" repository
+        // we must use the course context, because the get_repository_by_id() method
+        // will try to join the "course_modules" table and the "taskchain" table
+        // but the "taskchain" record has not yet been setup, so we get an error
+        if ($context->contextlevel==CONTEXT_MODULE) {
+            if ($cm = $DB->get_record('course_modules', array('id'=>$context->instanceid))) {
+                if ($cm->instance==0) {
+                    $context = get_context_instance(CONTEXT_COURSE, $data->course);
+                }
+            }
+        }
         if (! $repository = repository::get_repository_by_id($repositoryid, $context)) {
             return false; // $repository is not accessible in this context - shouldn't happen !!
         }
@@ -392,9 +403,12 @@ class taskchain_source {
         $params = array();
         if ($encodepath) {
             $listing = $repository->get_listing();
-            if (isset($listing['list'][0]['path'])) {
-                $params = file_storage::unpack_reference($listing['list'][0]['path'], true);
+            switch (true) {
+                case isset($listing['list'][0]['source']): $param = 'source'; break; // file
+                case isset($listing['list'][0]['path']):   $param = 'path';   break; // dir
+                default: return false; // shouldn't happen !!
             }
+            $params = file_storage::unpack_reference($listing['list'][0][$param], true);
         }
 
         // get file storage
@@ -523,12 +537,12 @@ class taskchain_source {
             return false;
         }
 
-        if (! $files = $this->is('is_chainfile', $mainfile, $data)) {
+        if (! $files = self::is('is_chainfile', $mainfile, $data)) {
             return false;
         }
 
         foreach ($files as $file) {
-            if ($task = $this->is('is_taskfile', $file, $data)) {
+            if ($task = self::is('is_taskfile', $file, $data)) {
                 $sources[] = $task;
             }
         }
@@ -826,12 +840,18 @@ class taskchain_source {
                 }
             }
 
-            // get the file contents
             if (! $this->filecontents = $this->file->get_content()) {
                 $path = '';
                 if (method_exists($this->file, 'get_repository_id')) {
                     if ($repositoryid = $this->file->get_repository_id()) {
-                        if ($repository = repository::get_repository_by_id($repositoryid, $this->file->get_contextid())) {
+                        if (isset($this->TC->coursemodule->context)) {
+                            $context = $this->TC->coursemodule->context;
+                        } else if (isset($this->TC->course->context)) {
+                            $context = $this->TC->course->context;
+                        } else {
+                            $context = null; // shouldn't happen !!
+                        }
+                        if ($repository = repository::get_repository_by_id($repositoryid, $context)) {
                             if (isset($repository->root_path)) {
                                 $path = $repository->root_path;
                             }

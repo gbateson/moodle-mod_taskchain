@@ -1446,8 +1446,9 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             $after  = $match[count($match) - 1];
         }
 
-        $baseurl = $this->TC->task->source->baseurl;
-        $sourcefile = $this->TC->task->source->filepath;
+        $source = $this->TC->task->get_source();
+        $baseurl = $source->baseurl;
+        $sourcefile = $source->filepath;
 
         if ($CFG->slasharguments) {
             $file_php = 'file.php';

@@ -76,7 +76,7 @@ switch ($TC->action) {
 
         // set text confirming task deletion
         $text = get_string('task', 'taskchain');
-        $text = $this->TC->textlib('strtolower', $text);
+        $text = $TC->textlib('strtolower', $text);
         $text = get_string('deletedactivity', '', $text);
 
         // get url of next page

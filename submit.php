@@ -130,6 +130,8 @@ $TC->taskattempt = null;
 $TC->taskscore   = null;
 $TC->cache_available_task = array();
 
+$TC->set_preferred_pagelayout($PAGE);
+
 // decide which task to show
 if ($error = $TC->require_next_task()) {
     $TC->print_error($error);

@@ -659,18 +659,19 @@ class taskchain_require extends taskchain_base {
         $error = '';
         if ($this->TC->chain->showpopup) {
 
-            if (! $this->inpopup) {
+            if (! $this->TC->inpopup) {
 
                 $target = "taskchain{$this->TC->chain->parentid}";
-                $popupurl = $this->format_url('view.php', 'coursemoduleid', array('coursemoduleid'=>$this->TC->coursemodule->id, 'inpopup'=>'true'));
-                $openpopupurl = str_replace('&amp;', '&', substr($popupurl, strlen($CFG->wwwroot)));
+                $params = $this->TC->merge_params(array('id'=>$this->TC->coursemodule->id, 'inpopup'=>'true'));
+                $popupurl = new moodle_url('/mod/taskchain/view.php', $params);
+                $openpopupurl = substr($popupurl->out(true), strlen($CFG->wwwroot));
 
                 $popupoptions = implode(',', preg_grep('/^moodle/i', explode(',', $this->TC->chain->get_popupoptions()), PREG_GREP_INVERT));
                 $openpopup = "openpopup('$openpopupurl','$target','{$popupoptions}')";
                 $error .= "\n".'<script type="text/javascript">'."\n"."//<![CDATA[\n"."$openpopup;\n"."//]]>\n"."</script>\n";
 
                 $onclick = "this.target='$target'; return $openpopup;";
-                $link = "\n".'<a href="'.$popupurl.'" onclick="'.$onclick.'">'.format_string($this->activityrecord->name).'</a>'."\n";
+                $link = "\n".'<a href="'.$popupurl.'" onclick="'.$onclick.'">'.format_string($this->TC->taskchain->name).'</a>'."\n";
                 $error .= get_string('popupresource', 'resource').'<br />'.get_string('popupresourcelink', 'resource', $link);
             }
         }
