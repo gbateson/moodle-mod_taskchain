@@ -1,8 +1,8 @@
 .DS_Store
-.svn
+.svn*
 .cvsignore
 .svnignore
-CVS
+CVS*
 hotpot.gif
 icon-pack
 taskchain.1.png

@@ -1,8 +1,8 @@
 .DS_Store
-.svn
+.svn*
 .cvsignore
 .svnignore
-CVS
+CVS*
 courselinks.js.php
 notes
 svnignore.bat

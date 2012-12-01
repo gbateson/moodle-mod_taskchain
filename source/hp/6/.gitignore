@@ -1,6 +1,6 @@
 .DS_Store
-.svn
+.svn*
 .cvsignore
 .svnignore
-CVS
+CVS*
 masher

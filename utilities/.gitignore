@@ -1,8 +1,8 @@
 .DS_Store
-.svn
+.svn*
 .cvsignore
 .svnignore
-CVS
+CVS*
 add_phpdoc.php
 findbom.php
 fix_collations.php
