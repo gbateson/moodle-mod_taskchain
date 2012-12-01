@@ -53,30 +53,33 @@ defined('MOODLE_INTERNAL') || die();
  * @todo Finish documenting this function
  */
 function taskchain_supports($feature) {
-    switch($feature) {
-        // enable features whose default is "false"
-        case FEATURE_GRADE_HAS_GRADE:   return true;
-        case FEATURE_GROUPINGS:         return true;
-        case FEATURE_GROUPMEMBERSONLY:  return true;
-        case FEATURE_BACKUP_MOODLE2:    return true;
-        case FEATURE_SHOW_DESCRIPTION:  return true;
-
-        // use default for these features whose default is "false"
-        //case FEATURE_RATE:              return false;
-        //case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
-
-        // disable features whose default is "true"
-        case FEATURE_MOD_INTRO:         return false;
-
-        // use default for these features whose default is "true"
-        //case FEATURE_GROUPS:            return true;
-        //case FEATURE_IDNUMBER:          return true;
-        //case FEATURE_GRADE_OUTCOMES:    return true;
-        //case FEATURE_MODEDIT_DEFAULT_COMPLETION: return true;
-
-        // otherwise, this is some feature we do not know about
-        default:                        return null;
+    $constants = array(
+        'FEATURE_ADVANCED_GRADING' => true, // default=false
+        'FEATURE_BACKUP_MOODLE2'   => true, // default=false
+        'FEATURE_COMMENT'          => true,
+        'FEATURE_COMPLETION_HAS_RULES' => true,
+        'FEATURE_COMPLETION_TRACKS_VIEWS' => false,
+        'FEATURE_CONTROLS_GRADE_VISIBILITY' => true,
+        'FEATURE_GRADE_OUTCOMES'   => true,
+        'FEATURE_GRADE_HAS_GRADE'  => true,  // default=false
+        'FEATURE_GROUPS'           => true,
+        'FEATURE_GROUPINGS'        => true,  // default=false
+        'FEATURE_GROUPMEMBERSONLY' => true,  // default=false
+        'FEATURE_IDNUMBER'         => true,
+        'FEATURE_MOD_ARCHETYPE'    => true,
+        'FEATURE_MOD_INTRO'        => false, // default=true
+        'FEATURE_MODEDIT_DEFAULT_COMPLETION' => true,
+        'FEATURE_NO_VIEW_LINK'     => false,
+        'FEATURE_PLAGIARISM'       => false,
+        'FEATURE_RATE'             => false,
+        'FEATURE_SHOW_DESCRIPTION' => true,  // default=false (Moodle 2.2)
+    );
+    foreach ($constants as $constant => $value) {
+        if (defined($constant) && $feature==constant($constant)) {
+            return $value;
+        }
     }
+    return false;
 }
 
 /**
