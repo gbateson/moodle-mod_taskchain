@@ -845,7 +845,7 @@ class taskchain_require extends taskchain_base {
             $this->TC->print_error($error);
         }
 
-        // this whould be somewhere else, shouldn't it?
+        // this should be somewhere else, shouldn't it?
         //switch ($this->TC->action) {
         //    case 'regrade':
         //        $this->TC->regrade_selected_attempts();

@@ -1797,6 +1797,11 @@ class mod_taskchain extends taskchain_base {
         $skip = 0;
         $random = false;
 
+        $userid = $this->get_userid();
+        $chainid = $this->get_chainid();
+        $cnumber = $this->get_cnumber();
+        $sortorder = $this->tasks[$taskid]->sortorder;
+
         switch ($condition->nexttaskid) {
 
             case taskchain::CONDITIONTASKID_SAME:
@@ -1807,7 +1812,7 @@ class mod_taskchain extends taskchain_base {
                 $sql = "
                     SELECT id, sortorder
                     FROM {taskchain_tasks}
-                    WHERE chainid=$this->chainid AND sortorder<".$this->tasks[$taskid]->sortorder."
+                    WHERE chainid=$chainid AND sortorder<$sortorder
                     ORDER BY sortorder DESC
                 ";
                 break;
@@ -1823,7 +1828,7 @@ class mod_taskchain extends taskchain_base {
                 $sql = "
                     SELECT id, sortorder
                     FROM {taskchain_tasks}
-                    WHERE chainid=$this->chainid AND sortorder>".$this->tasks[$taskid]->sortorder."
+                    WHERE chainid=$chainid AND sortorder>$sortorder
                     ORDER BY sortorder ASC
                 ";
                 break;
@@ -1836,10 +1841,10 @@ class mod_taskchain extends taskchain_base {
                         SELECT DISTINCT taskid FROM {taskchain_task_attempts}
                         WHERE taskid IN (
                             # tasks in this chain
-                            SELECT id FROM {taskchain_tasks} WHERE chainid=$this->chainid
-                        ) AND cnumber=$this->cnumber AND userid=$this->userid
+                            SELECT id FROM {taskchain_tasks} WHERE chainid=$chainid
+                        ) AND cnumber=$cnumber AND userid=$userid
                     ) a ON q.id=a.taskid
-                    WHERE chainid=$this->chainid AND a.taskid IS NULL
+                    WHERE chainid=$chainid AND a.taskid IS NULL
                     ORDER BY sortorder ASC
                 ";
                 $random = true;
@@ -1859,12 +1864,12 @@ class mod_taskchain extends taskchain_base {
                                 SELECT id FROM {taskchain_task_attempts}
                                 WHERE taskid IN (
                                     # tasks in this chain
-                                    SELECT id FROM {taskchain_tasks} WHERE chainid=$this->chainid
-                                ) AND cnumber=$this->cnumber AND userid=$this->userid
+                                    SELECT id FROM {taskchain_tasks} WHERE chainid=$chainid
+                                ) AND cnumber=$cnumber AND userid=$userid
                             )
                         )
                     ) a ON q.id=a.taskid
-                    WHERE chainid=$this->chainid AND a.taskid IS NULL
+                    WHERE chainid=$chainid AND a.taskid IS NULL
                     ORDER BY q.sortorder ASC
                 ";
                 $random = true;
@@ -1877,10 +1882,10 @@ class mod_taskchain extends taskchain_base {
                         SELECT DISTINCT taskid FROM {taskchain_task_scores}
                         WHERE taskid IN (
                             # tasks in this chain
-                            SELECT id FROM {taskchain_tasks} WHERE chainid=$this->chainid
-                        ) AND score=100 AND cnumber=$this->cnumber AND userid=$this->userid
+                            SELECT id FROM {taskchain_tasks} WHERE chainid=$chainid
+                        ) AND score=100 AND cnumber=$cnumber AND userid=$userid
                     ) qs ON q.id=qs.taskid
-                    WHERE chainid=$this->chainid AND qs.taskid IS NULL
+                    WHERE chainid=$chainid AND qs.taskid IS NULL
                 ";
                 $random = true;
                 break;
@@ -1889,7 +1894,7 @@ class mod_taskchain extends taskchain_base {
                 $sql = "
                     SELECT q.id, q.sortorder
                     FROM {taskchain_tasks} q
-                    WHERE q.chainid=$this->chainid
+                    WHERE q.chainid=$chainid
                     ORDER BY sortorder ASC
                 ";
                 $random = true;
@@ -1916,7 +1921,7 @@ class mod_taskchain extends taskchain_base {
             // set capability, if necessary
             static $has_capability_preview = null;
             if (is_null($has_capability_preview)) {
-                $has_capability_preview = has_capability('mod/taskchain:preview', $this->modulecontext);
+                $has_capability_preview = has_capability('mod/taskchain:preview', $this->coursemodule->context);
             }
 
             $i = 0;

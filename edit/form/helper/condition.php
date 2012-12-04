@@ -57,15 +57,49 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
     protected $defaultvalues = array(
         'groupid'         => 0, // = any group
         'sortorder'       => 0,
-        'conditiontaskid' => mod_taskchain::CONDITIONTASKID_PREVIOUS,
+        'conditiontaskid' => 0,
         'conditionscore'  => 0,
         'attempttype'     => mod_taskchain::ATTEMPTTYPE_ANY,
         'attemptcount'    => 0,
         'attempttype'     => 0,
         'attemptduration' => 0,
         'attemptdelay'    => 0,
-        'nexttaskid'      => mod_taskchain::CONDITIONTASKID_NEXT1,
+        'nexttaskid'      => 0,
     );
+
+    /**
+     * get_defaultvalue_conditiontaskid
+     *
+     * PRE conditions may use any task or task constant as conditiontaskid
+     * POST conditions always use current (i.e. SAME) task as conditiontaskid
+     *
+     * @param string $field the field name
+     * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
+     * @todo Finish documenting this function
+     */
+    protected function get_defaultvalue_conditiontaskid($field) {
+        if ($this->get_conditiontype()==mod_taskchain::CONDITIONTYPE_POST) {
+            return mod_taskchain::CONDITIONTASKID_SAME;
+        }
+        return $this->get_preference($field, $this->defaultvalues[$field]);
+    }
+
+    /**
+     * get_defaultvalue_nexttaskid
+     *
+     * PRE conditions always use current (i.e. SAME) task as nexttaskid
+     * POST conditions may use any task or task constant as nexttaskid
+     *
+     * @param string $field the field name
+     * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
+     * @todo Finish documenting this function
+     */
+    protected function get_defaultvalue_nexttaskid($field) {
+        if ($this->get_conditiontype()==mod_taskchain::CONDITIONTYPE_PRE) {
+            return mod_taskchain::CONDITIONTASKID_SAME;
+        }
+        return $this->get_preference($field, $this->defaultvalues[$field]);
+    }
 
     /**
      * get_conditiontype

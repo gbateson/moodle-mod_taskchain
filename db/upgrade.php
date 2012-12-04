@@ -131,6 +131,23 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
+    $newversion = 2011040112;
+    if ($oldversion < $newversion) {
+        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+
+        // set nexttaskid for PRE conditions to be current task
+        $taskid = mod_taskchain::CONDITIONTASKID_SAME;
+        $params = array('conditiontype' => mod_taskchain::CONDITIONTYPE_PRE);
+        $DB->set_field('taskchain_conditions', 'nexttaskid', $taskid, $params);
+
+        // set conditionid for POST conditions to be current task
+        $taskid = mod_taskchain::CONDITIONTASKID_SAME;
+        $params = array('conditiontype' => mod_taskchain::CONDITIONTYPE_POST);
+        $DB->set_field('taskchain_conditions', 'conditiontaskid', $taskid, $params);
+
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
     if ($empty_cache) {
         $DB->delete_records('taskchain_cache');
     }
