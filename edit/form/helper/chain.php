@@ -151,7 +151,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                     $this->record->$field = $value;
                 }
             }
-        } else {
+        } else if (isset($record->parentid)) {
             // get "name" field for a chain record
             $this->record->name = $DB->get_field('taskchain', 'name', array('id' => $record->parentid));
         }
@@ -298,8 +298,12 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      */
     protected function add_field_showdescription() {
-        $this->mform->addElement('checkbox', 'showdescription', get_string('showdescription', 'taskchain'));
-        $this->mform->addHelpButton('showdescription', 'showdescription', 'taskchain');
+        if (defined('FEATURE_SHOW_DESCRIPTION')) { // Moodle >= 2.2
+            $this->mform->addElement('checkbox', 'showdescription', get_string('showdescription', 'taskchain'));
+            $this->mform->addHelpButton('showdescription', 'showdescription', 'taskchain');
+        } else {
+            $this->mform->addElement('hidden', 'showdescription', 0);
+        }
     }
 
     /**

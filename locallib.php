@@ -123,7 +123,7 @@ class mod_taskchain extends taskchain_base {
 
     public $conditiontype   = 0;  // CONDITIONTYPE_PRE or CONDITIONTYPE_POST
     public $columnlisttype  = ''; // "task" or "chain"
-    public $columnlistid    = '';
+    public $columnlistid    = ''; // two-digit number e.g. '01'
 
     /** maintain statistics on deleted records */
     public $deleted       = null;
@@ -459,8 +459,8 @@ class mod_taskchain extends taskchain_base {
                                  'update',
                                  'delete',
                                  'deleteall',
-                                 'deleteconfirmed',
-                                 'deletecancelled');
+                                 'deletecancelled',
+                                 'deleteconfirmed');
                 foreach ($actions as $action) {
                     if (optional_param($action, '', PARAM_RAW)) {
                         $this->action = $action;

@@ -66,7 +66,7 @@ function taskchain_supports($feature) {
         'FEATURE_GROUPINGS'        => true,  // default=false
         'FEATURE_GROUPMEMBERSONLY' => true,  // default=false
         'FEATURE_IDNUMBER'         => true,
-        'FEATURE_MOD_ARCHETYPE'    => true,
+        'FEATURE_MOD_ARCHETYPE'    => MOD_ARCHETYPE_OTHER,
         'FEATURE_MOD_INTRO'        => false, // default=true
         'FEATURE_MODEDIT_DEFAULT_COMPLETION' => true,
         'FEATURE_NO_VIEW_LINK'     => false,

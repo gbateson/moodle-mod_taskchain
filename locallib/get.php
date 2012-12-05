@@ -477,7 +477,14 @@ class taskchain_get extends taskchain_base {
     }
 
     /**
-     * columnlists
+     * columnlists are stored in user preferences
+     *     name  : taskchain_($type)_columnlist_($id)
+     *     value : ($name):($columns)
+     * where ...
+     *     $type : 'tasks' or 'chains'
+     *     $id   : a two-digit number (e.g. '01')
+     *     $name : user-supplied alphanumeric string
+     *     $columns : comma-separated list of column (=field) names
      *
      * @param string $type
      * @param boolean $return_columns (optional, default=false)
@@ -486,18 +493,25 @@ class taskchain_get extends taskchain_base {
      */
     public function columnlists($type, $return_columns=false) {
         $columnlists = array();
+        $asort = false;
         if ($preferences = get_user_preferences()) {
             foreach ($preferences as $name => $value) {
                 if (preg_match('/^taskchain_'.$type.'_columnlist_(\d+)$/', $name, $matches)) {
+                    $id = $matches[1];
+                    list($name, $columns) = explode(':', $value, 2);
                     if ($return_columns) {
                         // $columnlistid => array($column1, $column2, ...)
-                        $columnlists[$matches[1]] = explode(',', substr($value, strpos($value, ':')+1));
+                        $columnlists[$id] = explode(',', $columns);
                     } else {
                         // $columnlistid => $columnlistname
-                        $columnlists[$matches[1]] = substr($value, 0, strpos($value, ':'));
+                        $columnlists[$id] = $name;
+                        $asort = true;
                     }
                 }
             }
+        }
+        if ($asort) {
+            asort($columnlists);
         }
         return $columnlists;
     }

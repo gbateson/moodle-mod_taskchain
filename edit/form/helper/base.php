@@ -53,8 +53,8 @@
  *     |    get_default_name, get_default_value,
  *     |    get_context, set_context, set_type_text,
  *     |    prepare_sections, prepare_section, prepare_field,
- *     |    get_sections, get_section_label, get_field_label,
- *     |    add_sections, add_section, add_section_label, add_field,
+ *     |    get_sections, get_sectionlabel, get_fieldlabel,
+ *     |    add_sections, add_section, add_sectionlabel, add_field,
  *     |    validate_sections, validate_section, validate_field
  *     |    fix_sections, fix_section, fix_field, fix_template_notnull
  *     |
@@ -64,9 +64,9 @@
  *     |    |  for fields that are common to task and chain records
  *     |    |
  *     |    |  METHODS:
- *     |    |  get_section_label ...
+ *     |    |  get_sectionlabel ...
  *     |    |      general / tasks / display
- *     |    |  get_field_label ...
+ *     |    |  get_fieldlabel ...
  *     |    |      name / attemptlimit / password / subnet
  *     |    |  add_field ...
  *     |    |      name / sourcefile / sourcelocation
@@ -337,7 +337,7 @@ abstract class taskchain_form_helper_base {
         if (isset($this->defaultvalues[$field])) {
             return $this->defaultvalues[$field];
         }
-        print get_class($this)." - missing default value: $field<br />";
+        // throw new moodle_exception(get_class($this)." - missing default value: $field");
         return null; // shouldn't happen !!
     }
 
@@ -523,15 +523,11 @@ abstract class taskchain_form_helper_base {
      * get_preferencename_columnlistid
      *
      * @param string $field the field name
-     * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
+     * @return string name of the preference setting for this $field
      * @todo Finish documenting this function
      */
     protected function get_preferencename_columnlistid($field) {
-        if ($this->multiple) {
-            $type = $this->recordtype;
-        } else {
-            $type = $this->recordstype;
-        }
+        $type = $this->TC->get_columnlisttype();
         return 'taskchain_'.$type.'_'.$field;
     }
 
@@ -858,7 +854,6 @@ abstract class taskchain_form_helper_base {
                 $data[$field] = $this->get_defaultvalue($field);
             }
         }
-
         $sections = $this->get_sections();
         foreach ($sections as $section => $fields) {
             $this->prepare_section($data, $section, $fields);
@@ -947,7 +942,7 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
-     * get_section_label
+     * get_sectionlabel
      *
      * @param string $section name of section
      * @return xxx
@@ -994,7 +989,7 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
-     * get_field_label
+     * get_fieldlabel
      *
      * @param string $field name of field
      * @return xxx
@@ -1010,7 +1005,7 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
-     * get_field_name
+     * get_fieldname
      *
      * @param string $field name of field
      * @return xxx
@@ -1030,7 +1025,7 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
-     * get_field_value
+     * get_fieldvalue
      *
      * @param string $field name of field
      * @return xxx
@@ -1135,9 +1130,7 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
-     * add section with no section label and containing only hidden fields
-     * each field must have its own "add_hiddenfield_xxx()" method to set the value
-     * typically, the add_hiddenfield_xxx() method calls the "add_hiddenfield()" method
+     * add_section_headings
      *
      * @param string $section name of section
      * @param array $fields names of fields

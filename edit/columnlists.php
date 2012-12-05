@@ -66,30 +66,32 @@ switch ($TC->action) {
     case 'deleteconfirmed' :
         $text = '';
 
-        $columnlists = $TC->get_columnlists($TC->columnlisttype);
-        if (is_numeric($TC->columnlistid) && $TC->columnlistid>0) {
-            if (array_key_exists($TC->columnlistid, $columnlists)) {
+        $id = $TC->get_columnlistid();
+        $type = $TC->get_columnlisttype();
+        $lists = $TC->get_columnlists($type);
+
+        if (is_numeric($id) && $id>0) {
+            if (array_key_exists($id, $lists)) {
                 // delete a single columnlist
-                unset_user_preference('taskchain_'.$TC->columnlisttype.'_columnlist_'.$TC->columnlistid);
-                $text = get_string('columnlist', 'taskchain', $columnlists[$TC->columnlistid]);
+                unset_user_preference('taskchain_'.$type.'_columnlist_'.$id);
+                $text = get_string('columnlist', 'taskchain', $lists[$id]);
             }
         } else {
             // delete all user defined column lists
-            foreach ($columnlists as $id => $name) {
-                if (is_numeric($id)) {
-                    unset_user_preference('taskchain_'.$TC->columnlisttype.'_columnlist_'.$id);
-                    if ($text=='') {
-                        $text = get_string('columnlists'.$TC->columnlisttype, 'taskchain');
-                    }
+            foreach ($lists as $id => $name) {
+                unset_user_preference('taskchain_'.$type.'_columnlist_'.$id);
+                if ($text=='') {
+                    $text = get_string('lists'.$type, 'taskchain');
                 }
             }
         }
-        $text = get_string('deletedactivity', '', $this->TC->textlib('strtolower', $text));
+        $text = get_string('deletedactivity', '', $TC->textlib('strtolower', $text));
         echo $output->page_quick($text, 'close');
         break;
 
     case 'delete' :
-        $text = get_string('confirmdeletecolumnlisttask', 'taskchain');
+        $type = $TC->get_columnlisttype();
+        $text = get_string('confirmdelete'.$type.'columnlist', 'taskchain');
         $params = array('inpopup'        => $TC->inpopup,
                         'chainid'        => $TC->get_chainid(),
                         'columnlistid'   => $TC->get_columnlistid(),
@@ -98,10 +100,11 @@ switch ($TC->action) {
         break;
 
     case 'deleteall' :
-        $text = get_string('confirmdeleteallcolumnliststask', 'taskchain');
+        $type = $TC->get_columnlisttype();
+        $text = get_string('confirmdelete'.$type.'columnlists', 'taskchain');
         $params = array('inpopup'        => $TC->inpopup,
                         'chainid'        => $TC->get_chainid(),
-                        'columnlistid'   => $TC->get_columnlistid(),
+                        'columnlistid'   => '00', // i.e. all
                         'columnlisttype' => $TC->get_columnlisttype());
         echo $output->page_delete($text, 'edit/columnlists.php', $params);
         break;
@@ -157,7 +160,7 @@ switch ($TC->action) {
     case 'edit':
     default:
         // initizialize data in form
-        $defaults = array('columnlisttype' => $TC->columnlisttype);
+        $defaults = array();
         $mform->data_preprocessing($defaults);
         $mform->set_data($defaults);
         unset($defaults);
