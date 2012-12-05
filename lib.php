@@ -705,7 +705,7 @@ function taskchain_get_coursemodule_info($cm) {
     //$info->iconcomponent = '';
     //$info->iconurl =       '';
 
-    if ($cm->showdescription) {
+    if (isset($cm->showdescription) && $cm->showdescription) {
         // $context = context_module::instance($cm->id);
         $context = get_context_instance(CONTEXT_MODULE, $cm->id); // Moodle 2.0 - 2.1
         $options = array('noclean'=>true, 'para'=>false, 'filter'=>true, 'context'=>$context, 'overflowdiv'=>true);
