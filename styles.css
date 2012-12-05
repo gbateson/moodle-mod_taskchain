@@ -671,9 +671,10 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 
 #page-mod-taskchain-edit-columnlists div.advancedbutton {display: none;}
 #page-mod-taskchain-edit-columnlists fieldset.clearfix {width: 240px; margin-left: auto; margin-right: auto;}
+#page-mod-taskchain-edit-columnlists fieldset.clearfix legend {position: relative;}
+#page-mod-taskchain-edit-columnlists fieldset.clearfix legend input {position: absolute; left: 176px;}
 #page-mod-taskchain-edit-columnlists div.fitem div.fitemtitle {width: 160px; margin-right: 12px;}
 #page-mod-taskchain-edit-columnlists fieldset.clearfix:not(#filtershdr) div.fitem div.fitemtitle:after {content: ":";}
-#page-mod-taskchain-edit-columnlists p.allnonelinks {font-size: small; margin: 0px; padding: 0px 8px; text-align: right;}
 
 #page-mod-taskchain-edit-columnlists fieldset#actionshdr div,
 #page-mod-taskchain-edit-columnlists fieldset#actionshdr div.fitem#fgroup_id_action_buttons_elements,

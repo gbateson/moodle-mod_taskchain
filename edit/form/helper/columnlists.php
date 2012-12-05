@@ -270,6 +270,37 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
     }
 
     /**
+     * get_sectionlabel
+     *
+     * @param string $section name of section
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    protected function get_sectionlabel($section) {
+        $method = 'get_sectionlabel_'.$section;
+        if (method_exists($this, $method)) {
+            $label = $this->$method();
+        } else {
+            $label = get_string($section.'hdr', 'taskchain');
+        }
+
+        $uselinks = false;
+        if ($uselinks) {
+            $links = '';
+            $links .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in_element_with_id("'.$section.'hdr", true); return false;'));
+            $links .= ' / ';
+            $links .= html_writer::tag('a', get_string('none'), array('onclick' => 'select_all_in_element_with_id("'.$section.'hdr", false); return false;'));
+            $links = html_writer::tag('span', $links, array('class' => 'allnonelinks'));
+            return $label.' '.$links;
+        } else {
+            $title = get_string('selectall').' / '.get_string('deselectall');
+            $onclick = 'select_all_in_element_with_id("'.$section.'hdr", this.checked);';
+            $checkbox = html_writer::empty_tag('input', array('type' => 'checkbox', 'onclick' => $onclick, 'title' => $title));
+            return $checkbox.' '.$label;
+        }
+    }
+
+    /**
      * get_sectionlabel_conditions
      *
      * @param string $section name of section
