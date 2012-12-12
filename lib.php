@@ -55,7 +55,7 @@ defined('MOODLE_INTERNAL') || die();
 function taskchain_supports($feature) {
     $constants = array(
         'FEATURE_ADVANCED_GRADING' => true, // default=false
-        'FEATURE_BACKUP_MOODLE2'   => true, // default=false
+        'FEATURE_BACKUP_MOODLE2'   => false, // default=false
         'FEATURE_COMMENT'          => true,
         'FEATURE_COMPLETION_HAS_RULES' => true,
         'FEATURE_COMPLETION_TRACKS_VIEWS' => false,
@@ -1850,13 +1850,13 @@ function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $c
 
     if (isset($TC->can)) {
         if ($TC->can->reviewattempts()) {
-            $type = navigation_node::TYPE_SETTING;
-            $icon = new pix_icon('i/report', '');
-            foreach ($TC->get_report_modes() as $mode) {
-                $label = get_string($mode.'report', 'taskchain');
-                $url   = $TC->url->report($mode, $cm);
-                $taskchainnode->add($label, $url, $type, null, null, $icon);
-            }
+        //    $type = navigation_node::TYPE_SETTING;
+        //    $icon = new pix_icon('i/report', '');
+        //    foreach ($TC->get_report_modes() as $mode) {
+        //        $label = get_string($mode.'report', 'taskchain');
+        //        $url   = $TC->url->report($mode, $cm);
+        //        $taskchainnode->add($label, $url, $type, null, null, $icon);
+        //    }
         }
 
         if ($TC->can->preview()) {
