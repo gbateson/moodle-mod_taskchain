@@ -35,6 +35,7 @@ $string['taskchain:deletemyattempts'] = 'Delete your own attempts at a TaskChain
 $string['taskchain:ignoretimelimits'] = 'Ignores time limits on a TaskChain activity';
 $string['taskchain:manage'] = 'Change the settings of a TaskChain activity';
 $string['taskchain:preview'] = 'Preview a TaskChain activity';
+$string['taskchain:regrade'] = 'Regrade a TaskChain activity';
 $string['taskchain:reviewallattempts'] = 'View any user\'s attempts at a TaskChain activity';
 $string['taskchain:reviewmyattempts'] = 'View your own attempts at a TaskChain activity';
 $string['taskchain:view'] = 'View the entry page of a TaskChain activity';

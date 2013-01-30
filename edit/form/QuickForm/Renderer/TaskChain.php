@@ -148,12 +148,7 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
                 $replace = 'id="'.$id.'" $0 fitem_f'.$type;
                 $html = preg_replace($search, $replace, $html, 1);
             } else if ($type=='radio' && isset($value)) {
-                // make id unique for each radio element
-                //     The standard MoodleQuickForm radio elements all have the same id
-                //     which is the value of the first radio element appended to the element name.
-                //     This is not what we want, nor is it what I believe was intended, but anyway...,
-                //     We replace the suffix on the standard id with the value of the current element,
-                //     so that each item of the radio group has a unique id which we can use for CSS.
+                // fix Moodle >= 2.2 (make id unique, by replacing id suffix with $value)
                 $search = '/(?<=id=")([^"]*)(_[^_"]*)(?=")/';
                 $html = preg_replace($search, '$1_'.$value, $html, 1);
             }
