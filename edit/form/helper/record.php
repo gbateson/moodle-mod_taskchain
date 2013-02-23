@@ -1463,7 +1463,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $params = array(
             'chaingradeid' => 0, 'chainattemptid' => 0, 'cnumber' => 0,
             'taskscoreid'  => 0, 'taskattemptid'  => 0, 'tnumber' => 0,
-            'taskid'       => $taskid,  'inpopup' => 0,
+            'taskid'       => $taskid,                  'inpopup' => 0,
             'conditionid'  => 0, 'conditiontype'  => $conditiontype
         );
         return $output->commands($types, 'edit/condition.php', '', $params, 'taskchainpopup', true);
@@ -1484,7 +1484,12 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         }
 
         $types = array('update', 'delete');
-        $params = array('conditionid'=>$condition->id, 'inpopup'=>0);
+        $params = array(
+            'chaingradeid' => 0, 'chainattemptid' => 0, 'cnumber' => 0,
+            'taskscoreid'  => 0, 'taskattemptid'  => 0, 'tnumber' => 0,
+            'taskid'       => $condition->taskid,       'inpopup' => 0,
+            'conditionid'  => $condition->id, 'conditiontype'  => $condition->conditiontype
+        );
         return $output->commands($types, 'edit/condition.php', 'conditionid', $params, 'taskchainpopup', true);
     }
 }

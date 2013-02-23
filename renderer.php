@@ -419,8 +419,15 @@ class mod_taskchain_renderer extends plugin_renderer_base {
         // show exit links
         $output .= $this->exitlinks();
 
-        // show continue button
-        $output .= $this->continue_button($this->TC->url->course());
+        // put everything in a centered box
+        if ($output) {
+            $output = $this->box($output, 'generalbox centeredboxtable');
+        }
+
+        // if there is no link back to the course page, show a continue button
+        if (! $this->TC->chain->exitoptions & mod_taskchain::EXITOPTIONS_COURSE) {
+            $output .= $this->continue_button($this->TC->url->course());
+        }
 
         return $output;
     }
@@ -536,7 +543,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
      * @todo Finish documenting this function
      */
     public function commands($types, $taskchainscriptname, $id, $params, $popup=false)  {
-        // $types : array('add', 'update', 'delete', 'deleteall')
+        // $types : array('add', 'update', 'delete', 'deleteall', 'preview')
         // $params : array('name' => 'value') for url query string
         // $popup : true, false or array('name' => 'something', 'width' => 999, 'height' => 999)
 
@@ -584,6 +591,9 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 break;
             case 'deleteall':
                 $icon = '';
+                break;
+            case 'preview':
+                $icon = 't/preview';
                 break;
             default:
                 // unknown command type !!

@@ -40,7 +40,7 @@ if ($PAGE->user_allowed_editing()) {
 }
 
 // initialize $PAGE (and compute blocks)
-$PAGE->set_url($TC->url->attempt());
+$PAGE->set_url($TC->url->submit());
 $PAGE->set_title($TC->taskchain->name);
 $PAGE->set_heading($TC->course->fullname);
 

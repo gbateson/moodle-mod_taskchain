@@ -318,12 +318,9 @@ class taskchain_available extends taskchain_base {
      * @todo Finish documenting this function
      */
     static public function outputformats_list($sourcetype) {
-        $sm = get_string_manager();
+        $strman = get_string_manager();
 
-        $outputformats = array(
-            '0' => get_string('outputformat_best', 'taskchain')
-        );
-
+        $outputformats = array();
         if ($sourcetype) {
             $classes = mod_taskchain::get_classes('taskchainattempt', 'renderer.php', 'mod_', '_renderer');
             foreach ($classes as $class) {
@@ -333,19 +330,23 @@ class taskchain_available extends taskchain_base {
                     // mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer
                     // strip prefix, "mod_taskchain_attempt_", and suffix, "_renderer"
                     $outputformat = substr($class, 22, -9);
-                    if ($sm->string_exists('outputformat_'.$outputformat, 'taskchain')) {
-                        $outputformats[$outputformat] = $sm->get_string('outputformat_'.$outputformat, 'taskchain');
+                    if ($strman->string_exists('outputformat_'.$outputformat, 'taskchain')) {
+                        $outputformats[$outputformat] = $strman->get_string('outputformat_'.$outputformat, 'taskchain');
                     } else {
-                        $outputformats[$outputformat] = $sm->get_string('outputformat_best', 'taskchain');
+                        $outputformats[$outputformat] = $strman->get_string('outputformat_best', 'taskchain');
                     }
                 }
             }
-            // remove "best" if there is only one compatible output format
-            // if (count($outputformats)==2) {
-            //     unset($outputformats[0]);
-            // }
+            asort($outputformats);
         }
-        return $outputformats;
+
+        $best = array('0' => get_string('outputformat_best', 'taskchain'));
+
+        switch (count($outputformats)) {
+            case 0  : return $best; // shouldn't happen !!
+            case 1  : return $outputformats; // unusual ?!
+            default : return $best + $outputformats;
+        }
     }
 
     /**

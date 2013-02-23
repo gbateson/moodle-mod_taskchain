@@ -495,7 +495,7 @@ class taskchain_source {
             return false;
         }
 
-        while ($file && ($task = $this->is('is_taskfile', $file, $data))) {
+        while ($file && ($task = self::is('is_taskfile', $file, $data))) {
 
             // add this task
             $sources[] = $task;

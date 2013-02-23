@@ -571,7 +571,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         if (array_key_exists($value, $list)) {
             return $list[$value];
         } else {
-            return $list[0]; // Best
+            return array_shift($list); // "Best" output format
         }
     }
 

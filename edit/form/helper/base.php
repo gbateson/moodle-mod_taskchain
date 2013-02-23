@@ -1863,6 +1863,13 @@ abstract class taskchain_form_helper_base {
             case 'task':
                 $params = array('taskid'=>$this->get_fieldvalue('id'), 'cnumber'=>0);
                 $text = $output->commands(array('update', 'delete'), 'edit/task.php', 'taskid', $params, false);
+                //$params = array(
+                //    'chaingradeid' => 0, 'chainattemptid' => -1, 'cnumber' => 0,
+                //    'taskscoreid'  => 0, 'taskattemptid'  => 0,  'tnumber' => 0,
+                //    'taskid'       => $this->get_fieldvalue('id'),
+                //    'conditionid'  => 0, 'conditiontype'  => 0, 'inpopup' => 0
+                //);
+                //$text .= $output->commands(array('preview'), 'attempt.php', '', $params, false);
                 break;
 
             case 'chain':
