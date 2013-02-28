@@ -56,7 +56,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'time'       => array('timeopen', 'timeclose', 'timelimit', 'delay1', 'delay2'),
         'attempts'   => array('attemptlimit', 'allowresume', 'allowfreeaccess'),
         'security'   => array('password', 'subnet'),
-        'assessment' => array('attemptgrademethod', 'grademethod', 'gradeignore', 'gradelimit', 'gradeweighting', 'removegradeitem')
+        'assessment' => array('attemptgrademethod', 'grademethod', 'gradeignore', 'gradelimit', 'gradeweighting', 'gradecategory')
         // Note: "hidden" section will be added by mod_moodleform
     );
 
@@ -118,7 +118,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'gradeignore'        => mod_taskchain::NO,
         'gradelimit'         => 100,
         'gradeweighting'     => 100,
-        'removegradeitem'    => mod_taskchain::NO
+        'gradecategory'      => mod_taskchain::NO
     );
 
     /**
@@ -162,20 +162,27 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /////////////////////////////////////////////////////////
 
     /**
-     * Detects if the current taskchain instance has a grade item in the Moodle gradebook
+     * get grade item, if any, for this activity from the Moodle gradebook
      *
      * Note: could make this general purpose, if we use $this->_cm->modname for 'itemmodule'
      *
      * @uses $DB
-     * @return bool True if the current activity has a grade item, false otherwise
+     * @return int the grade category of this activity (or 0 is there is no grade item)
      */
-    public function has_grade_item() {
+    public function get_grade_category() {
         global $DB;
-        if ($this->is_add()) {
-            return false;
-        } else {
-            return $DB->record_exists('grade_items', array('itemtype'=>'mod', 'itemmodule'=>'taskchain', 'iteminstance'=>$this->record->instance));
+        if ($this->is_update()) {
+            if (isset($this->record->instance)) {
+                $iteminstance = $this->record->instance;
+            } else {
+                $iteminstance = $this->record->id;
+            }
+            $params = array('itemtype'=>'mod', 'itemmodule'=>'taskchain', 'iteminstance'=>$iteminstance);
+            if ($categoryid = $DB->get_field('grade_items', 'categoryid', $params)) {
+                return $categoryid;
+            }
         }
+        return 0; // no grade item exists (yet)
     }
 
     /////////////////////////////////////////////////////////
@@ -229,6 +236,16 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                 }
             }
         }
+    }
+
+    /**
+     * prepare_field_gradecategory
+     *
+     * @param object $data (passed by reference) from form
+     * @todo Finish documenting this function
+     */
+    protected function prepare_field_gradecategory(&$data) {
+        $data['gradecategory'] = $this->get_grade_category();
     }
 
     /////////////////////////////////////////////////////////
@@ -541,25 +558,22 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     }
 
     /**
-     * add_field_removegradeitem
+     * add_field_gradecategory
      *
      * @param string name of $field
      * @todo Finish documenting this function
      */
-    protected function add_field_removegradeitem($field) {
+    protected function add_field_gradecategory($field) {
+        global $PAGE;
         $name = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
-        if ($this->is_add() || ! $this->has_grade_item()) {
-            $this->mform->addElement('hidden', $name, 0);
-            $this->mform->setType($name, PARAM_INT);
-        } else {
-            $this->mform->addElement('selectyesno', $name, $label);
-            $this->mform->addHelpButton($name, $field, 'taskchain');
-            $this->mform->setType($name, PARAM_INT);
-            $this->mform->setAdvanced($name);
-            // this element is only available if gradeweighting==0 or gradelimit==0
-            $this->mform->disabledIf($name, 'gradeweighting', 'selected', 0);
-        }
+        $options = grade_get_categories_menu($PAGE->course->id);
+        $this->mform->addElement('select', $name, $label, $options);
+        $this->mform->addHelpButton($name, 'gradecategoryonmodform', 'grades');
+        $this->mform->setType($name, PARAM_INT);
+        // this element is not available if gradeweighting==0 or gradelimit==0
+        $this->mform->disabledIf($name, 'gradeweighting', 'eq', 0);
+        $this->mform->disabledIf($name, 'gradelimit', 'eq', 0);
     }
 
     /////////////////////////////////////////////////////////
@@ -1023,6 +1037,34 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $data->popupoptions = strtoupper(implode(',', $popupoptions));
     }
 
+    /**
+     * fix_field_gradecategory
+     *
+     * @param object $data (passed by reference) from form
+     * @todo Finish documenting this function
+     */
+    protected function fix_field_gradecategory(&$data, $field) {
+        if (empty($data->gradelimit) || empty($data->gradeweighting) || empty($data->gradecategory)) {
+            unset($data->gradecategory, $data->gradecat);
+        } else {
+            $data->gradecat = $data->gradecategory;
+        }
+    }
+
+    /////////////////////////////////////////////////////////
+    // get fieldlabel ...
+    /////////////////////////////////////////////////////////
+
+    /**
+     * format_fieldlabel_gradecategory
+     *
+     * @param string $field name of field
+     * @todo Finish documenting this function
+     */
+    protected function get_fieldlabel_gradecategory() {
+        return get_string('gradecategoryonmodform', 'grades');
+    }
+
     /////////////////////////////////////////////////////////
     // format fieldvalue ...
     /////////////////////////////////////////////////////////
@@ -1308,16 +1350,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     }
 
     /**
-     * format_fieldlabel_removegradeitem
-     *
-     * @param string $field name of field
-     * @todo Finish documenting this function
-     */
-    protected function format_fieldlabel_removegradeitem() {
-        // do nothing
-    }
-
-    /**
      * format_selectfield_name
      *
      * @param string $field name of field
@@ -1329,32 +1361,27 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     }
 
     /**
-     * format_selectfield_removegradeitem
+     * format_defaultfield_gradecategory
      *
      * @param string $field name of field
      * @todo Finish documenting this function
      */
-    protected function format_selectfield_removegradeitem() {
+    protected function format_defaultfield_gradecategory($field) {
         // do nothing
     }
 
     /**
-     * format_defaultfield_removegradeitem
+     * format_field_gradecategory
      *
      * @param string $field name of field
      * @todo Finish documenting this function
      */
-    protected function format_defaultfield_removegradeitem($field) {
-        // do nothing
-    }
-
-    /**
-     * format_field_removegradeitem
-     *
-     * @param string $field name of field
-     * @todo Finish documenting this function
-     */
-    protected function format_field_removegradeitem($field) {
-        // do nothing
+    protected function format_field_gradecategory($field) {
+        global $DB;
+        if ($categoryid = $this->get_grade_category()) {
+            return $DB->get_field('grade_categories', 'fullname', array('id' => $categoryid));
+        } else {
+            return '';
+        }
     }
 }

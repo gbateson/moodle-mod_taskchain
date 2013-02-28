@@ -102,17 +102,47 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function prepare_template_filearea(&$data, $type) {
+
+        // set parameters for accessing filearea
         if ($this->is_add()) {
             $contextid = null;
         } else {
             $contextid = $this->context->id;
         }
+        $component = 'mod_taskchain';
+        $filearea  = $type.'file';
+        $options   = mod_taskchain::filearea_options();
+        $itemid    = 0;
+
+        // set current source file as the "main file" in this filearea
+        if (isset($data['sourcefile'])) {
+            $sourcefile = $data['sourcefile'];
+
+            $fs = get_file_storage();
+            $area_files = $fs->get_area_files($contextid, $component, $filearea, $itemid);
+
+            foreach ($area_files as $file) {
+                if ($file->is_directory()) {
+                    continue;
+                }
+                if ($sourcefile==$file->get_filepath().$file->get_filename()) {
+                    $sortorder = 1;
+                } else {
+                    $sortorder = 0;
+                }
+                if ($sortorder==$file->get_sortorder()) {
+                    // do nothing
+                } else {
+                    $file->set_sortorder($sortorder);
+                }
+            }
+        }
 
         // Note: if you call "file_prepare_draft_area()" without setting itemid
         // (the first argument), then it will be assigned automatically, and the files
         // for this context will be transferred automatically, which is what we want
-        $data[$type.'itemid'] = 0;
-        file_prepare_draft_area($data[$type.'itemid'], $contextid, 'mod_taskchain', $type.'file', 0, mod_taskchain::filearea_options());
+        $data[$type.'itemid'] = $itemid;
+        file_prepare_draft_area($data[$type.'itemid'], $contextid, $component, $filearea, 0, $options);
     }
 
     /////////////////////////////////////////////////////////
@@ -160,7 +190,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function get_fieldlabel_edit() {
-        return get_string('edit');
+        return get_string('action'); // 'edit'
     }
 
     /**
@@ -812,19 +842,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             // set main file, if necessary
             $mainfile = taskchain_pluginfile_mainfile($this->context, $component, $filearea);
             if ($mainfile) {
-                if (method_exists($mainfile, 'get_sortorder')) {
-                    $sortorder = $mainfile->get_sortorder();
-                } else if (isset($mainfile->sortorder)) {
-                    $sortorder = $mainfile->sortorder;
-                } else {
-                    $sortorder = -1; // shouldn't happen !!
-                }
-                if ($sortorder==0) {
-                    if (method_exists($mainfile, 'set_sortorder')) {
-                        $mainfile->set_sortorder(1);
-                    } else {
-                        $mainfile->sortorder = 1;
-                    }
+                if ($mainfile->get_sortorder()==0) {
+                    $mainfile->set_sortorder(1);
                 }
             }
 
@@ -1488,7 +1507,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             'chaingradeid' => 0, 'chainattemptid' => 0, 'cnumber' => 0,
             'taskscoreid'  => 0, 'taskattemptid'  => 0, 'tnumber' => 0,
             'taskid'       => $condition->taskid,       'inpopup' => 0,
-            'conditionid'  => $condition->id, 'conditiontype'  => $condition->conditiontype
+            'conditionid'  => $condition->id,    'conditiontype'  => $condition->conditiontype
         );
         return $output->commands($types, 'edit/condition.php', 'conditionid', $params, 'taskchainpopup', true);
     }

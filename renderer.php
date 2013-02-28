@@ -419,11 +419,6 @@ class mod_taskchain_renderer extends plugin_renderer_base {
         // show exit links
         $output .= $this->exitlinks();
 
-        // put everything in a centered box
-        if ($output) {
-            $output = $this->box($output, 'generalbox centeredboxtable');
-        }
-
         // if there is no link back to the course page, show a continue button
         if (! $this->TC->chain->exitoptions & mod_taskchain::EXITOPTIONS_COURSE) {
             $output .= $this->continue_button($this->TC->url->course());
@@ -535,21 +530,26 @@ class mod_taskchain_renderer extends plugin_renderer_base {
      * commands
      *
      * @param xxx $types
-     * @param xxx $taskchainscriptname
+     * @param xxx $scripts taskchain script name(s) e.g. attempt.php
      * @param xxx $id
      * @param xxx $params
      * @param xxx $popup (optional, default=false)
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function commands($types, $taskchainscriptname, $id, $params, $popup=false)  {
+    public function commands($types, $scripts, $id, $params, $popup=false)  {
         // $types : array('add', 'update', 'delete', 'deleteall', 'preview')
         // $params : array('name' => 'value') for url query string
         // $popup : true, false or array('name' => 'something', 'width' => 999, 'height' => 999)
 
         $commands = html_writer::start_tag('span', array('class'=>'commands'))."\n";
-        foreach ($types as $type) {
-            $commands .= $this->command($type, $taskchainscriptname, $id, $params, $popup);
+        foreach ($types as $i => $type) {
+            if (is_array($scripts)) {
+                $script = $scripts[$i];
+            } else {
+                $script = $scripts;
+            }
+            $commands .= $this->command($type, $script, $id, $params, $popup);
         }
         $commands .= html_writer::end_tag('span')."\n";
         return $commands;

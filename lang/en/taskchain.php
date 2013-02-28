@@ -111,7 +111,6 @@ $string['allowresume_help'] = 'This setting specifies whether or not students ca
 : If there is a previous attempt that is still in progress, students will be forced to resume that attempt. Otherwise, they can start a new attempt.';
 $string['allowreview'] = 'Allow review';
 $string['allowreview_help'] = 'If enabled, students may review their task attempts after the task is closed.';
-$string['analysisreport'] = 'Item Analysis';
 $string['anyattempts'] = 'Any attempts';
 $string['anygroup'] = 'Any group';
 $string['applydefaults'] = 'Apply selected default values';
@@ -252,7 +251,9 @@ $string['canrestarttask'] = 'Your results so far will be saved and you can redo 
 $string['canresumetask'] = 'Your results so far will be saved and you can resume "{$a}" later.';
 $string['chain'] = 'TaskChain activity';
 $string['chainattemptnotinprogress'] = 'Chain attempt not in progress';
+$string['chainattemptreport'] = 'Chain attempt';
 $string['chainclosed'] = 'Sorry, this activity closed on {$a}';
+$string['chaingradereport'] = 'Chain grade';
 $string['chainname_help'] = 'The name of this TaskChain activity that will be displayed on the course page';
 $string['chainnotavailable'] = 'Sorry this activity is not available to you until {$a}.';
 $string['chainrequirepasswordmessage'] = 'To attempt this activity, you need to know the password.';
@@ -264,7 +265,6 @@ $string['clearedcache'] = 'The TaskChain cache has been cleared';
 $string['cleareddetails'] = 'The TaskChain details have been cleared';
 $string['clickreporting'] = 'Enable click reporting';
 $string['clickreporting_help'] = 'If enabled, a separate record is kept each time a "hint", "clue" or "check" button is clicked. This allows the teacher to see a very detailed report showing the state of the task at each click. Otherwise, only one record per attempt at a task is kept.';
-$string['clicktrailreport'] = 'Click trails';
 $string['clues'] = 'Clues';
 $string['cnumber'] = 'Attempt number';
 $string['columnlistid'] = 'Show columns';
@@ -315,16 +315,16 @@ $string['configlocation_help'] = 'The location of the configuration file.';
 $string['configlockframe'] = 'If this setting is enabled, then the navigation frame, if used, will be locked so that it is not scrollable, not resizeable and has no border';
 $string['configmaxeventlength'] = 'If a TaskChain has both an open and a close time specified, and the difference between the two times is greater than the number of days specified here, then two separate calendar events will be added to the course calendar. For shorter durations, or when just one time is specified, only one calendar event will be added. If neither time is specified, no calendar event will be added.';
 $string['configstoredetails'] = 'If this setting is enabled, then the raw XML details of attempts at TaskChain tasks will be stored in the taskchain_details table. This allows task attempts to be regraded in the future to reflect changes in the TaskChain task scoring system. However, enabling this option on a busy site will cause the taskchain_details table to grow very quickly.';
-$string['confirmdeletechainscolumnlists'] = 'Are you sure you want to delete ALL chain column lists';
-$string['confirmdeletetaskscolumnlists'] = 'Are you sure you want to delete ALL task column lists';
 $string['confirmdeleteallpostconditions'] = 'Are you sure you want to delete ALL post-conditions?';
 $string['confirmdeleteallpreconditions'] = 'Are you sure you want to delete ALL pre-conditions?';
 $string['confirmdeleteattempts'] = 'Are you sure you want to delete the selected attempts?';
 $string['confirmdeletechainscolumnlist'] = 'Are you sure you want to delete this chain column list';
-$string['confirmdeletetaskscolumnlist'] = 'Are you sure you want to delete this task column list';
+$string['confirmdeletechainscolumnlists'] = 'Are you sure you want to delete ALL chain column lists';
 $string['confirmdeletepostcondition'] = 'Are you sure you want to delete this post-condition?';
 $string['confirmdeleteprecondition'] = 'Are you sure you want to delete this pre-condition?';
 $string['confirmdeletetask'] = 'Are you sure you want to delete this task?';
+$string['confirmdeletetaskscolumnlist'] = 'Are you sure you want to delete this task column list';
+$string['confirmdeletetaskscolumnlists'] = 'Are you sure you want to delete ALL task column lists';
 $string['confirmregradeattempts'] = 'Are you sure you want to regrade the selected attempts?';
 $string['confirmstop'] = 'Are you sure you want to navigate away from this page?';
 $string['consecutiveattempts'] = 'Consecutive attempts';
@@ -792,7 +792,6 @@ $string['outputformat_html_ispring'] = 'iSpring HTML file';
 $string['outputformat_html_xerte'] = 'Xerte HTML file';
 $string['outputformat_html_xhtml'] = 'Standard HTML file';
 $string['outputformat_qedoc'] = 'Qedoc file';
-$string['overviewreport'] = 'Overview';
 $string['passworderror'] = 'The password entered was incorrect';
 $string['penalties'] = 'Penalties';
 $string['percent'] = 'Percent';
@@ -811,7 +810,6 @@ $string['questionshort'] = 'Q-{$a}';
 $string['randomtask'] = 'Random task';
 $string['reattempttask'] = 'Re-attempt task';
 $string['recentattempts'] = 'Most recent attempts';
-$string['removegradeitem'] = 'Remove grade item';
 $string['removegradeitem_help'] = 'Should the grade item for this activity be removed?
 
 **No**
@@ -824,7 +822,6 @@ $string['requirepassword'] = 'Require password';
 $string['requirepassword_help'] = 'If a password is specified, a student must enter it in order to attempt the quiz.';
 $string['requiresubnet'] = 'Require network address';
 $string['requiresubnet_help'] = 'Quiz access may be restricted to particular subnets on the LAN or Internet by specifying a comma-separated list of partial or full IP address numbers. This can be useful for an invigilated (proctored) quiz, to ensure that only people in a certain location can access the quiz.';
-$string['responsesreport'] = 'Responses';
 $string['resume'] = 'Resume';
 $string['sametask'] = 'Same task';
 $string['score'] = 'Score';
@@ -856,7 +853,6 @@ The task score will be set to the score of the first attempt at this task.
 
 **Last**
 The task score will be set to the score of the most recent attempt at this task.';
-$string['scoresreport'] = 'Scores';
 $string['scoreweighting'] = 'Score weighting';
 $string['scoreweighting_help'] = 'The score weighting is the contribution of the score for this task toward the chain grade attempt.
 
@@ -932,6 +928,11 @@ $string['studentfeedback_help'] = 'If enabled, a link to a pop-up feedback windo
 $string['studentfeedbackurl'] = 'Student feedback URL';
 $string['submits'] = 'Submissions';
 $string['task'] = 'Task';
+$string['task_analysisreport'] = 'Task item analysis';
+$string['task_clicktrailreport'] = 'Task click trail';
+$string['task_overviewreport'] = 'Task overview';
+$string['task_responsesreport'] = 'Task responses';
+$string['task_scoresreport'] = 'Task scores';
 $string['taskaction_help'] = 'These options specify what action will be taken when the "Go" button is clicked.
 
 **Reorder tasks**
@@ -949,6 +950,7 @@ $string['taskaction_help'] = 'These options specify what action will be taken wh
 **Delete tasks**
 : The selected tasks will be deleted from the TaskChain activity.';
 $string['taskattemptnotinprogress'] = 'Task attempt not in progress';
+$string['taskattemptreport'] = 'Task attempt';
 $string['taskchainname'] = 'TaskChain name';
 $string['taskclosed'] = 'Sorry, this task closed on {$a}';
 $string['taskname'] = 'Task name';
@@ -985,6 +987,7 @@ $string['tasknotavailable'] = 'Sorry this task is not available to you until {$a
 $string['taskposition'] = 'Task position';
 $string['taskrequirepasswordmessage'] = 'To attempt this task, you need to know the password.';
 $string['tasks'] = 'Tasks';
+$string['taskscorereport'] = 'Task score';
 $string['tasktype'] = 'Task type';
 $string['textsourcefile'] = 'Get from source file';
 $string['textsourcefilename'] = 'Use source file name';

@@ -78,6 +78,24 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
             }
         }
 
+        // for form elements that have '[' and ']' in the name
+        // the standard QuickForm behavior does not transfer
+        // incoming form values to the outgoing form,
+        // so we try to fix it manually here, at least for
+        // "checkbox" and "radio" elements
+
+        $type = $element->getType();
+        if ($type=='checkbox' || $type=='radio') {
+            $name = $element->getName();
+            if ($pos = strpos($name, '[')) {
+                $i = substr($name, $pos+1, -1);
+                $name = substr($name, 0, $pos);
+                if (isset($_POST[$name]) && is_array($_POST[$name])) {
+                    $element->setChecked(empty($_POST[$name][$i]) ? false : true);
+                }
+            }
+        }
+
         // proceed as normal
         parent::renderElement($element, $required, $error);
     }

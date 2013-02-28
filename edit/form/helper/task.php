@@ -686,12 +686,10 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function format_fieldtemplate_conditions($field, $type) {
         $elements = array();
-
         $taskid = $this->get_fieldvalue('id');
         $return_intro = ($this->multiple ? false : true);
         $text = $this->format_conditions($taskid, $type, $return_intro);
         $elements[] = $this->mform->createElement('static', '', '', $text);
-
         $name_elements = $this->get_fieldname($field.'_elements');
         $this->mform->addGroup($elements, $name_elements, '', html_writer::empty_tag('br'));
     }

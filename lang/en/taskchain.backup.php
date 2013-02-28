@@ -836,4 +836,3 @@ The square-bracket notation has the following syntax:
 * * name="some value with spaces"';
 $string['entrypagehdr'] = 'Entry page';
 $string['exitpagehdr'] = 'Exit page';
-

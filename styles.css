@@ -238,7 +238,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 
 /** adjust widths of main columns */
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sortorder,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.edit {width: 40px;}
+#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.edit {width: 60px;}
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.defaultrecord,
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.selectrecord {width: 50px;}
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.name {width: 180px;}
@@ -256,7 +256,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sortorder div.felement input {text-align: center; width: 2.0em;}
 
 /** align name field to left (but not top 3 rows) */
-#page-mod-taskchain-edit-tasks fieldset.clearfix          div.fitem.name div.felement {text-align: left;}
+#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.name div.felement {text-align: left;}
 #page-mod-taskchain-edit-tasks fieldset#labels   div.fitem.name div.felement,
 #page-mod-taskchain-edit-tasks fieldset#defaults div.fitem.name div.felement,
 #page-mod-taskchain-edit-tasks fieldset#selects  div.fitem.name div.felement {text-align: center;}

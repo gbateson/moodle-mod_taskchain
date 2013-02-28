@@ -142,8 +142,23 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2011040114;
+    $newversion = 2011040115;
     if ($oldversion < $newversion) {
+        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+
+        // extract all TaskChain records and associated grade information
+        $select = 't.*, tc.id AS chainid, tc.gradelimit, tc.gradeweighting';
+        $from   = '{taskchain} t JOIN {taskchain_chains} tc ON t.id=tc.parentid';
+        $where  = 'tc.parenttype = ? AND tc.gradelimit > ? AND tc.gradeweighting > ?';
+        $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, 0, 0);
+
+        // make sure all TaskChains have grade items
+        if ($taskchains = $DB->get_records_sql("SELECT $select FROM $from WHERE $where", $params)) {
+            foreach ($taskchains as $taskchain) {
+                taskchain_grade_item_update($taskchain);
+            }
+        }
+
         $update_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }

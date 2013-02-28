@@ -1299,9 +1299,26 @@ class mod_taskchain extends taskchain_base {
      * @todo Finish documenting this function
      */
     public function get_report_modes() {
-        $modes = array('overview', 'scores', 'responses', 'analysis');
-        if ($this->get_task() && $this->task->clickreporting) {
-            $modes[] = 'clicktrail';
+        $modes = array();
+        $enablereports = false;
+        if ($enablereports && $this->get_chain()) {
+            $modes[] = 'chaingrade';
+            if ($this->get_chainattempt()) {
+                $modes[] = 'chainattempt';
+                if ($this->get_taskscore()) {
+                    $modes[] = 'taskscore';
+                    if ($this->get_taskattempt()) {
+                        $modes[] = 'taskattempt';
+                        if ($this->task->clickreporting) {
+                            $modes[] = 'clicktrail';
+                        }
+                    }
+                    $modes[] = 'task_overview';
+                    $modes[] = 'task_scores';
+                    $modes[] = 'task_responses';
+                    $modes[] = 'task_analysis';
+                }
+            }
         }
         return $modes;
     }

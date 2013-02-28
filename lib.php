@@ -60,8 +60,8 @@ function taskchain_supports($feature) {
         'FEATURE_COMPLETION_HAS_RULES' => true,
         'FEATURE_COMPLETION_TRACKS_VIEWS' => false,
         'FEATURE_CONTROLS_GRADE_VISIBILITY' => true,
-        'FEATURE_GRADE_OUTCOMES'   => true,
         'FEATURE_GRADE_HAS_GRADE'  => true,  // default=false
+        'FEATURE_GRADE_OUTCOMES'   => true,
         'FEATURE_GROUPS'           => true,
         'FEATURE_GROUPINGS'        => true,  // default=false
         'FEATURE_GROUPMEMBERSONLY' => true,  // default=false
@@ -183,11 +183,6 @@ function taskchain_process_formdata(stdclass &$data, $mform) {
             }
 
             $parent->timemodified = $time;
-            if (empty($data->removegradeitem)) {
-                $parent->removegradeitem = false;
-            } else {
-                $parent->removegradeitem = true;
-            }
             break;
 
         case 'block_taskchain_edit_form':
@@ -324,21 +319,6 @@ function taskchain_process_formdata(stdclass &$data, $mform) {
     } else {
         // updating a TaskChain
         if ($regrade_chaingrades) {
-
-            // create and initialize $TC object
-            global $course, $coursemodule, $taskchain, $chain;
-            require_once($CFG->dirroot.'/mod/taskchain/class.php');
-
-            /**
-             * mod_taskchain_mod
-             *
-             * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
-             * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-             * @since      Moodle 2.0
-             * @package    mod
-             * @subpackage taskchain
-             */
-            class mod_taskchain_mod extends mod_taskchain {}
             $TC = new mod_taskchain();
 
             // regrade chain attempts
@@ -357,7 +337,7 @@ function taskchain_process_formdata(stdclass &$data, $mform) {
                     $TC->regrade_attempts('chain', $chain, 0, $record->userid);
                 }
             }
-            unset($records);
+            unset($TC, $records);
             $update_gradebook = true;
         }
         if ($update_gradebook && $parenttype==mod_taskchain::PARENTTYPE_ACTIVITY) {
@@ -1422,10 +1402,10 @@ function taskchain_grade_item_update($taskchain, $grades=null) {
 
     // set maximum grade for this TaskChain
     taskchain_add_grade_settings($taskchain);
-    if (empty($taskchain->gradelimit) || empty($chain->gradeweighting)) {
+    if (empty($taskchain->gradelimit) || empty($taskchain->gradeweighting)) {
         $grademax = 0;
     } else {
-        $grademax = $chain->gradelimit * ($chain->gradeweighting/100);
+        $grademax = $taskchain->gradelimit * ($taskchain->gradeweighting/100);
     }
 
     // set up params for grade_update()
@@ -1447,10 +1427,8 @@ function taskchain_grade_item_update($taskchain, $grades=null) {
         // A gradeitem will be created later if gradetype changes to GRADE_TYPE_VALUE
         // However, the gradeitem will *not* be deleted if the activity's
         // gradetype changes back from GRADE_TYPE_VALUE to GRADE_TYPE_NONE
-        // Therefore, we give the user the ability to force the removal of empty gradeitems
-        if (! empty($taskchain->removegradeitem)) {
-            $params['deleted'] = true;
-        }
+        // Therefore, we force the removal of empty gradeitems
+        $params['deleted'] = true;
     }
     return grade_update('mod/taskchain', $taskchain->course, 'mod', 'taskchain', $taskchain->id, 0, $grades, $params);
 }
@@ -1849,22 +1827,36 @@ function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $c
     }
 
     if (isset($TC->can)) {
-        if ($TC->can->reviewattempts()) {
-        //    $type = navigation_node::TYPE_SETTING;
-        //    $icon = new pix_icon('i/report', '');
-        //    foreach ($TC->get_report_modes() as $mode) {
-        //        $label = get_string($mode.'report', 'taskchain');
-        //        $url   = $TC->url->report($mode, $cm);
-        //        $taskchainnode->add($label, $url, $type, null, null, $icon);
-        //    }
-        }
-
         if ($TC->can->preview()) {
             $label = get_string('preview', 'taskchain');
             $url   = new moodle_url('/mod/taskchain/attempt.php', $TC->merge_params(array('tab'=>'preview', 'cnumber'=>-1)));
             $type  = navigation_node::TYPE_SETTING;
             $icon  = new pix_icon('t/preview', '');
             $taskchainnode->add($label, $url, $type, null, null, $icon);
+        }
+
+        if ($TC->can->reviewattempts()) {
+            $reportnodes = array();
+            $type = navigation_node::TYPE_SETTING;
+            $icon = new pix_icon('i/report', '');
+            foreach ($TC->get_report_modes() as $mode) {
+                $label = get_string($mode.'report', 'taskchain');
+                $url   = $TC->url->report($mode, $cm);
+                //$taskchainnode->add($label, $url, $type, null, null, $icon);
+                $reportnodes[] = navigation_node::create($label, $url, $type, null, null, $icon);
+            }
+            if ($count = count($reportnodes)) {
+                if ($count==1) {
+                    $node = array_shift($reportnodes);
+                    $node->text = get_string('report');
+                } else {
+                    $node = navigation_node::create(get_string('reports'));
+                    while ($reportnode = array_shift($reportnodes)) {
+                        $node->add_node($reportnode);
+                    }
+                }
+                $taskchainnode->add_node($node);
+            }
         }
     }
 }

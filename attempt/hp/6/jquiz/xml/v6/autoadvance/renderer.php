@@ -263,7 +263,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
             // add functions required for progress bar
             $substr .= "\n"
                 ."function AA_images() {\n"
-                ."	return 'output/hp/6/jquiz/xml/v6/autoadvance/$dots';\n"
+                ."	return 'pix/autoadvance/$dots';\n"
                 ."}\n"
                 ."function AA_ProgressArrow() {\n"
                 ."	var img = document.createElement('img');\n"

@@ -239,7 +239,7 @@ class taskchain_source {
                 return self::get_sources_from_taskfile($data, $context, $component, $filearea);
 
             case mod_taskchain::ADDTYPE_TASKCHAIN:
-                return self::get_sources_from_taskchain($data, $context, $component, $filearea);
+                return self::get_sources_from_taskchain($data, $context, $component, $filearea, true);
 
             case mod_taskchain::ADDTYPE_CHAINFILE:
                 return self::get_sources_from_chainfile($data, $context, $component, $filearea);
@@ -484,11 +484,15 @@ class taskchain_source {
     /**
      * returns an array of taskchain_source objects if $filename is a head of a task chain, or false otherwise
      *
+     * @param xxx $data
+     * @param xxx $context
+     * @param xxx $component
+     * @param xxx $filearea
      * @param xxx $gettaskchain
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function get_sources_from_taskchain(&$data, $context, $component, $filearea)  {
+    static public function get_sources_from_taskchain(&$data, $context, $component, $filearea, $gettaskchain)  {
         $sources = array();
 
         if (! $file = taskchain_pluginfile_mainfile($context, $component, $filearea)) {

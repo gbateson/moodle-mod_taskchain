@@ -432,7 +432,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
      *
      * @param integer $field ("preconditions" or "postconditions")
      * @param integer $type (1=PRE or 2=POST)
-     * @param integer $conditionid
+     * @param integer $targetid id of task with default conditions
      * @param xxx $records  (passed by reference)
      * @param xxx $updated  (passed by reference)
      * @todo Finish documenting this function
@@ -471,7 +471,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
             $conditions = array();
         }
 
-        $formatted_conditions = null;
+        // update/add conditions as necessary
         foreach ($recordids as $recordid) {
             foreach ($conditions as $condition) {
                 $condition->taskid = $recordid;
@@ -486,31 +486,43 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                     }
                 }
             }
+        }
+
+        // remove any superfluous conditions
+        if (count($conditionids)) {
+            $DB->delete_records_list('taskchain_conditions', 'id', $conditionids);
+        }
+
+        // update form fields if necessary
+        foreach ($recordids as $recordid) {
 
             // update form field if this is one the current tasks
             if (array_key_exists($recordid, $this->records)) {
                 $record = &$this->records[$recordid];
 
+                // clear cache for this task's conditions
+                // if we don't do this here, the "format_conditions"
+                // method will use the conditions cached earlier
+                // and will not include the newly copied conditions
+
+                if ($type==mod_taskchain::CONDITIONTYPE_PRE) {
+                    unset($this->TC->cache_preconditions[$recordid]);
+                } else {
+                    unset($this->TC->cache_postconditions[$recordid]);
+                }
+
                 // get form element name and check it exists
                 $name = $record->get_fieldname($field.'_elements');
                 if ($this->mform->elementExists($name)) {
 
-                    // get formatted conditions (first time only)
-                    if ($formatted_conditions===null) {
-                        $formatted_conditions = $record->format_conditions($targetid, $type, false);
-                    }
-
-                    // now update the conditions in the form
+                    // update the formatted conditions for this task
+                    $formatted_conditions = $record->format_conditions($recordid, $type, false);
                     $this->mform->getElement($name)->setValue($formatted_conditions);
                 }
 
                 // release $record reference
                 unset($record);
             }
-        }
-
-        if (count($conditionids)) {
-            $DB->delete_records_list('taskchain_conditions', 'id', $conditionids);
         }
     }
 
