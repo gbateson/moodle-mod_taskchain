@@ -29,42 +29,54 @@
 require_once(dirname(dirname(__DIR__)).'/config.php');
 require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
-$id       = optional_param('id', 0, PARAM_INT); // taskchain_attempts id
-$attempt  = $DB->get_record('taskchain_attempts', array('id' => $id), '*', MUST_EXIST);
-$taskchain   = $DB->get_record('taskchain', array('id' => $attempt->taskchainid), '*', MUST_EXIST);
-$course   = $DB->get_record('course', array('id' => $taskchain->course), '*', MUST_EXIST);
-$cm       = get_coursemodule_from_instance('taskchain', $taskchain->id, $course->id, false, MUST_EXIST);
-
-// Check login
-require_login($course, true, $cm);
-if (! has_capability('mod/taskchain:reviewallattempts', $PAGE->context)) {
-    require_capability('mod/taskchain:reviewmyattempts', $PAGE->context);
-}
-
-// Create an object to represent this attempt at the current TaskChain activity
-$taskchain = mod_taskchain::create($taskchain, $cm, $course, $PAGE->context, $attempt);
+// create object to represent this TaskChain activity
+$TC = new mod_taskchain();
 
 // Log this request
-add_to_log($course->id, 'taskchain', 'review', 'view.php?id='.$cm->id, $taskchain->id, $cm->id);
+add_to_log($TC->course->id, 'taskchain', 'report', 'review.php?id='.$TC->taskattempt->id, $TC->taskchain->id, $TC->coursemodule->id);
 
-// Set editing mode
-if ($PAGE->user_allowed_editing()) {
-    mod_taskchain::set_user_editing();
+$PAGE->set_url($TC->url->review());
+$PAGE->set_title($TC->taskchain->name);
+$PAGE->set_heading($TC->course->shortname);
+$PAGE->navbar->add(get_string('report'));
+
+$text = '';
+if ($TC->get_chaingrade()) {
+
+    $text = get_string('pluginname', 'taskchainreport_chaingrade');
+    if ($TC->get_chainattempt()) {
+
+        $url = $TC->url_report('chaingrade', array('chaingradeid' => $TC->chaingrade->id));
+        $PAGE->navbar->add($text, $url);
+
+        $text = get_string('pluginname', 'taskchainreport_chainattempt');
+        if ($TC->get_taskscore()) {
+
+            $url = $TC->url_report('chainattempt', array('chainattemptid' => $TC->chainattempt->id));
+            $PAGE->navbar->add($text, $url);
+
+            $text = get_string('pluginname', 'taskchainreport_taskscore');
+            if ($TC->get_taskattempt()) {
+
+                $url = $TC->url_report('taskscore', array('taskscoreid' => $TC->taskscore->id));
+                $PAGE->navbar->add($text, $url);
+
+                $text = get_string('pluginname', 'taskchainreport_taskattempt');
+            }
+        }
+    }
+}
+if ($text) {
+    $PAGE->navbar->add($text); // no link on last navbar item
 }
 
-// initialize $PAGE (and compute blocks)
-$PAGE->set_url($taskchain->reurl->view());
-$PAGE->set_title($taskchain->name);
-$PAGE->set_heading($course->fullname);
+// get the taskchain renderer
+$output = $PAGE->get_renderer('mod_taskchain');
 
 // get renderer subtype (e.g. attempt_hp_6_jcloze_xml)
-// and load the appropriate storage class for this attempt
-$subtype = $taskchain->get_attempt_subtype();
-$subdir = str_replace('_', '/', $subtype);
-require_once($CFG->dirroot.'/mod/taskchain/'.$subdir.'/review.php');
-
-// create the renderer for this attempt
-$output = $PAGE->get_renderer('mod_taskchain');
+// and load the appropriate review class for this attempt
+$subtype = $TC->get_attempt_subtype();
+$TC->load_class($subtype, 'review.php');
 
 ////////////////////////////////////////////////////////////////////////////////
 // Output starts here                                                         //
@@ -72,17 +84,17 @@ $output = $PAGE->get_renderer('mod_taskchain');
 
 echo $output->header();
 
-echo $output->heading($taskchain);
+echo $output->heading();
 
 echo $output->box_start('generalbox boxaligncenter boxwidthwide');
 
 // show the attempt review page
 // use call_user_func() to prevent syntax error in PHP 5.2.x
 $class = 'mod_taskchain_'.$subtype.'_review';
-echo call_user_func(array($class, 'review'), $taskchain, $class);
+echo call_user_func(array($class, 'review'), $TC, $class);
 
 echo $output->box_end();
 
-echo $output->continue_button($taskchain->url->report());
+echo $output->continue_button($TC->url->report());
 
 echo $output->footer();

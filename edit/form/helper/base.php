@@ -1091,6 +1091,14 @@ abstract class taskchain_form_helper_base {
         $sections = $this->get_sections();
         foreach ($sections as $section => $fields) {
             $this->add_section($section, $fields);
+            // to make individual sections NOT collapsible, do this:
+            //if (method_exists($this->mform, 'setExpanded')) {
+            //    $this->mform->setExpanded($section.'hdr', true);
+            //}
+        }
+        // make all sections NOT collapsible (Moodle >= 2.5)
+        if (method_exists($this->mform, 'setDisableShortForms')) {
+            $this->mform->setDisableShortForms();
         }
     }
 

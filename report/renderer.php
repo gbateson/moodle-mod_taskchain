@@ -44,9 +44,18 @@ require_once($CFG->dirroot.'/mod/taskchain/report/userfiltering.php');
  */
 class mod_taskchain_report_renderer extends mod_taskchain_renderer {
 
+    /** names of columns in this table */
     protected $tablecolumns = array();
 
+    /** names of columns to be suppressed (i.e. only shown once per user) */
+    protected $suppresscolumns = array();
+
+    /** columns with this prefix will be suppressed (i.e. only shown once per user) */
+    protected $suppressprefix = '';
+
     protected $filterfields = array();
+
+    protected $TC = null;
 
     public $mode = '';
 
@@ -65,15 +74,15 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $taskchain
      * @todo Finish documenting this function
      */
-    public function init($taskchain)   {
+    public function init($TC)   {
         global $DB;
 
         // save a reference to the $taskchain record
-        $this->taskchain = $taskchain;
+        $this->TC = &$TC;
 
         // add question numbers to $tablecolumns
         if ($this->has_questioncolumns) {
-            if ($records = $DB->get_records('taskchain_questions', array('taskchainid' => $this->taskchain->id), '', 'id,name,text')) {
+            if ($records = $DB->get_records('taskchain_questions', array('taskid' => $this->TC->task->id), '', 'id,name,text')) {
                 $this->questions = array_values($records);
             }
         }
@@ -86,8 +95,8 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $taskchain
      * @todo Finish documenting this function
      */
-    public function render_report($taskchain)  {
-        $this->init($taskchain);
+    public function render_report($TC)  {
+        $this->init($TC);
         echo $this->header();
         echo $this->reportcontent();
         echo $this->footer();
@@ -105,30 +114,30 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         global $DB, $USER;
 
         // check capabilities
-        if ($this->taskchain->can_reviewallattempts()) {
+        if ($this->TC->can_reviewallattempts()) {
             $userid = 0; // all users
-        } else if ($this->taskchain->can_reviewmyattempts()) {
+        } else if ($this->TC->can_reviewmyattempts()) {
             // current user can only review their own attempts
             $userid = $USER->id;
         } else {
-            // has_capability('mod/taskchain:review', $this->taskchain->context))
+            // has_capability('mod/taskchain:review', $this->TC->context))
             // should already have been checked in "mod/taskchain/report.php"
             return false;
         }
 
         // set baseurl for this page (used for filters and table)
-        $baseurl = $this->taskchain->url->report($this->mode)->out();
+        $baseurl = $this->TC->url->report($this->mode)->out();
 
         // display user and attempt filters
         $this->display_filters($baseurl);
 
         // create report table
         $uniqueid = $this->page->pagetype.'-'.$this->mode;
-        $table = new taskchain_report_table($uniqueid, $this);
+        $table = new taskchain_report_table($uniqueid, $this, $this->TC);
 
         // set the table columns
         $tablecolumns = $this->tablecolumns;
-        if (! $this->taskchain->can_deleteattempts()) {
+        if (! $this->TC->can_deleteattempts()) {
             // remove the select column from students view
             $i = array_search('selected', $tablecolumns);
             if (is_numeric($i)) {
@@ -146,8 +155,17 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
             array_splice($tablecolumns, $i, 0, $this->get_question_columns());
         }
 
+        if ($this->suppressprefix) {
+            foreach ($tablecolumns as $tablecolumn) {
+                if (strpos($tablecolumn, $this->suppressprefix)===0) {
+                    $this->suppresscolumns[] = $tablecolumn;
+                }
+            }
+            $this->suppresscolumns = array_unique($this->suppresscolumns);
+        }
+
         // setup the report table
-        $table->setup_report_table($tablecolumns, $baseurl);
+        $table->setup_report_table($tablecolumns, $this->suppresscolumns, $baseurl);
 
         // setup sql to COUNT records
         list($select, $from, $where, $params) = $this->count_sql($userid);
@@ -158,12 +176,15 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         $table->set_sql($select, $from, $where, $params);
 
         // extract attempt records
-        $table->query_db($table->get_page_size());
+        // Note: avoid error caused by zero $pagesize
+        $pagesize = $table->get_page_size();
+        $table->query_db($pagesize ? $pagesize : 10);
 
         // extract question responses, if required
         if ($this->has_questioncolumns) {
             $this->add_responses_to_rawdata($table);
         }
+        $this->fix_suppresscolumns_in_rawdata($table);
 
         // display the table
         $table->build_table();
@@ -180,7 +201,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @todo Finish documenting this function
      */
     public function display_filters($baseurl) {
-        if (count($this->filterfields) && $this->taskchain->can_reviewattempts()) {
+        if (count($this->filterfields) && $this->TC->can_reviewattempts()) {
 
             $user_filtering = new taskchain_user_filtering($this->filterfields, $baseurl);
 
@@ -201,23 +222,10 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @todo Finish documenting this function
      */
     public function count_sql($userid=0, $attemptid=0) {
-        $select = 'COUNT(1)';
-        $from   = '{taskchain_attempts}';
-        $where  = 'taskchainid=?';
-        $params = array($this->taskchain->id);
-
-        // restrict to a specific user
-        if ($userid) {
-            $where .= ' AND userid=?';
-            $params[] = $userid;
-        }
-
-        // restrict to a specific attempt
-        if ($attemptid) {
-            $where = ' AND id=?';
-            $params[] = $attemptid;
-        }
-
+        $select  = '';
+        $from    = '';
+        $where   = '';
+        $params  = array();
         return array($select, $from, $where, $params);
     }
 
@@ -230,45 +238,12 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @todo Finish documenting this function
      */
     public function select_sql($userid=0, $attemptid=0) {
-
-        // the standard way to get Moodle grades is thus:
-        // $grades = grade_get_grades($this->taskchain->course->id, 'mod', 'taskchain', $this->taskchain->id, $userid);
-        // $grade = $grades->items[0]->grades[$USER->id]->grade;
-
-        // get question fields, if any
-        $select_questions = '';
-        foreach ($this->get_question_columns() as $column) {
-            $select_questions .= "1 AS $column, ";
-        }
-
-        // sql to select all attempts at this TaskChain (and Moodle grade)
-        $select = 'ha.*, (ha.timemodified - ha.timestart) AS duration, '.$select_questions.
-                  'ROUND(gg.rawgrade, 0) AS grade';
-        $from   = '{taskchain_attempts} ha, {grade_items} gi, {grade_grades} gg';
-        $where  = 'ha.taskchainid=? AND ha.userid=gg.userid AND gg.itemid=gi.id '.
-                  'AND gi.courseid=? AND gi.itemtype=? AND gi.itemmodule=? AND gi.iteminstance=?';
-        $params = array($this->taskchain->id, $this->taskchain->course->id, 'mod', 'taskchain', $this->taskchain->id);
-
-        // add user fields. if required
-        if (in_array('fullname', $this->tablecolumns)) {
-            $select .= ', u.id AS userid, u.firstname, u.lastname, u.picture, u.imagealt, u.email';
-            $from   .= ', {user} u';
-            $where  .= ' AND ha.userid=u.id';
-        }
-
-        // restrict sql to a specific user
-        if ($userid) {
-            $where .= ' AND ha.userid=?';
-            $params[] = $userid;
-        }
-
-        // restrict sql to a specific attempt
-        if ($attemptid) {
-            $where = ' AND ha.id=?';
-            $params[] = $attemptid;
-        }
-
-        return array($select, $from, $where, $params);
+        $select  = '';
+        $from    = '';
+        $where   = '';
+        $orderby = '';
+        $params  = array();
+        return array($select, $from, $where, $orderby, $params);
     }
 
     /**
@@ -358,5 +333,65 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
             $question_columns[$id] = "q_$i";
         }
         return $question_columns;
+    }
+
+    /**
+     * fix_suppresscolumns_in_rawdata
+     *
+     * this function adjusts the grade values
+     *
+     * @param xxx $table (passed by reference)
+     * @return xxx
+     */
+    function fix_suppresscolumns_in_rawdata(&$table)   {
+        if (empty($table->rawdata)) {
+            return false; // no records
+        }
+        if (empty($table->column_suppress)) {
+            return false; // no columns are suppressed
+        }
+
+        $values = array();
+        $prefixes = array();
+
+        foreach ($table->rawdata as $id => $record) {
+            if ($this->show_suppressed_columns($record, $values, $prefixes)) {
+                foreach ($this->suppresscolumns as $column) {
+                    // new values - adjust prefixes so that all columns are displayed
+                    if (empty($prefixes[$column])) {
+                        // add an empty span tag to make this column different from previous row
+                        $prefixes[$column] = html_writer::tag('span', '');
+                    } else {
+                        $prefixes[$column] = '';
+                    }
+                    $values[$column] = $prefixes[$column].$record->$column;
+                }
+            }
+            foreach ($this->suppresscolumns as $column) {
+                if ($prefixes[$column]) {
+                    $table->rawdata[$id]->$column = $prefixes[$column].$table->rawdata[$id]->$column;
+                }
+            }
+        }
+    }
+
+    /**
+     * show_suppressed_columns
+     *
+     * @param xxx $record
+     * @param xxx $values
+     * @param xxx $prefixes
+     * @return xxx
+     */
+     function show_suppressed_columns($record, $values, $prefixes) {
+        if (empty($prefixes) || empty($values)) {
+            return true; // always show first row
+        }
+        foreach ($this->suppresscolumns as $column) {
+             if ($values[$column] != $prefixes[$column].$record->$column) {
+                return true; // at least one column has a new value
+            }
+        }
+        return false; // all columns have same values, so don't show them
     }
 }

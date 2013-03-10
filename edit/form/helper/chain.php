@@ -118,7 +118,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'gradeignore'        => mod_taskchain::NO,
         'gradelimit'         => 100,
         'gradeweighting'     => 100,
-        'gradecategory'      => mod_taskchain::NO
+        'gradecategory'      => 0
     );
 
     /**
@@ -1350,6 +1350,26 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     }
 
     /**
+     * format_fieldvalue_gradecategory
+     *
+     * @param string $field name of field
+     * @param string $value of field
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_gradecategory($field, $value) {
+        if ($value) {
+            if ($category = grade_category::fetch(array('id' => $value))) {
+                if ($category->is_course_category()) {
+                    return get_string('uncategorised', 'grades');
+                } else {
+                    return $category->get_name();
+                }
+            }
+        }
+        return ''; // category is empty (or invalid !)
+    }
+
+    /**
      * format_selectfield_name
      *
      * @param string $field name of field
@@ -1358,30 +1378,5 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     protected function format_selectfield_name($field) {
         $name = $this->get_fieldname($field);
         $this->mform->addElement('static', $name, '', '');
-    }
-
-    /**
-     * format_defaultfield_gradecategory
-     *
-     * @param string $field name of field
-     * @todo Finish documenting this function
-     */
-    protected function format_defaultfield_gradecategory($field) {
-        // do nothing
-    }
-
-    /**
-     * format_field_gradecategory
-     *
-     * @param string $field name of field
-     * @todo Finish documenting this function
-     */
-    protected function format_field_gradecategory($field) {
-        global $DB;
-        if ($categoryid = $this->get_grade_category()) {
-            return $DB->get_field('grade_categories', 'fullname', array('id' => $categoryid));
-        } else {
-            return '';
-        }
     }
 }

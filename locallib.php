@@ -200,6 +200,7 @@ class mod_taskchain extends taskchain_base {
                     $taskid = optional_param('id', $taskid, PARAM_INT);
                     break;
                 case 'mod-taskchain-submit':
+                case 'mod-taskchain-review':
                     $taskattemptid = optional_param('id', $taskattemptid, PARAM_INT);
                     break;
                 case 'mod-taskchain-edit-condition':
@@ -432,10 +433,11 @@ class mod_taskchain extends taskchain_base {
                 default: $this->tab = optional_param('tab', 'info', PARAM_ALPHA);
             }
 
+            $this->mode = optional_param('mode', '', PARAM_ALPHA);
             $this->action = optional_param('action', '', PARAM_ALPHA);
             $this->inpopup = optional_param('inpopup', 0, PARAM_INT);
             $this->confirmed = optional_param('confirmed', 0, PARAM_INT);
-            $this->selected  = taskchain_optional_param_array('selected', 0, PARAM_INT);
+            $this->selected = taskchain_optional_param_array('selected', 0, PARAM_INT);
 
             // set conditiontype
             $type = ($this->condition ? $this->condition->conditiontype : 0);
@@ -1163,7 +1165,7 @@ class mod_taskchain extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_strings($ids)  {
+    static function get_strings($ids)  {
         global $DB;
         if (empty($ids)) {
             return array();
@@ -1190,15 +1192,30 @@ class mod_taskchain extends taskchain_base {
     /**
      * Returns the localized description of the grade method
      *
-     * @param string $type (optional, default='grade') "grade" or "score"
+     * @param string $type (optional, default='grade') "grade", "attemptgrade" or "score"
+     * @param string $option (optional, default=null) value of grademethod to be formatted
      * @return string
      */
-    public function format_grademethod($type='grade') {
-        $options = $this->available_grademethods_list($type);
-        if (array_key_exists($this->chain->grademethod, $options)) {
-            return $options[$this->chain->grademethod];
+    public function format_grademethod($type='grade', $option=null) {
+        $available_list = 'available_'.$type.'methods_list';
+        $options = $this->$available_list($type);
+        if (is_null($option)) {
+            if ($type=='score') {
+                $record = 'task';
+            } else {
+                $record = 'chain';
+            }
+            if (isset($this->$record)) {
+                $method = $type.'method';
+                $option = $this->$record->$method;
+            } else {
+                $option = ''; // shouldn't happen !!
+            }
+        }
+        if (array_key_exists($option, $options)) {
+            return $options[$option];
         } else {
-            return $this->chain->grademethod; // shouldn't happen
+            return $option; // shouldn't happen
         }
     }
 
@@ -1295,31 +1312,43 @@ class mod_taskchain extends taskchain_base {
     /**
      * get_report_modes
      *
-     * @return xxx
+     * @return xxx array($name => $params)
      * @todo Finish documenting this function
      */
     public function get_report_modes() {
         $modes = array();
-        $enablereports = false;
-        if ($enablereports && $this->get_chain()) {
-            $modes[] = 'chaingrade';
-            if ($this->get_chainattempt()) {
-                $modes[] = 'chainattempt';
-                if ($this->get_taskscore()) {
-                    $modes[] = 'taskscore';
-                    if ($this->get_taskattempt()) {
-                        $modes[] = 'taskattempt';
-                        if ($this->task->clickreporting) {
-                            $modes[] = 'clicktrail';
+        if ($this->can->reviewmyattempts()) {
+            $submodes = array();
+            if ($this->get_chaingrade()) {
+                $submodes['chaingrade'] = array('chaingradeid' => $this->chaingrade->id);
+                if ($this->get_chainattempt()) {
+                    $submodes['chainattempt'] = array('chainattemptid' => $this->chainattempt->id);
+                    if ($this->get_taskscore()) {
+                        $submodes['taskscore'] = array('taskscoreid' => $this->taskscore->id);
+                        if ($this->get_taskattempt()) {
+                            $submodes['taskattempt'] = array('taskattemptid' => $this->taskattempt->id);
                         }
                     }
-                    $modes[] = 'task_overview';
-                    $modes[] = 'task_scores';
-                    $modes[] = 'task_responses';
-                    $modes[] = 'task_analysis';
                 }
             }
+            $modes['myattempts'] = $submodes;
         }
+        //if ($this->can->reviewallattempts()) {
+        //    if ($this->get_chain()) {
+        //        $submodes = array();
+        //        $submodes['chaingrades']  = array('chainid' => $this->chain->id);
+        //        if ($this->get_task()) {
+        //            $submodes['taskscores']    = array('taskid' => $this->task->id);
+        //            $submodes['taskquestions'] = array('taskid' => $this->task->id);
+        //            $submodes['taskresponses'] = array('taskid' => $this->task->id);
+        //            $submodes['taskanalysis']  = array('taskid' => $this->task->id);
+        //            if ($this->task->clickreporting) {
+        //                $submodes['taskclicktrail'] = array('taskid' => $this->task->id);
+        //            }
+        //        }
+        //        $modes['classreports'] = $submodes;
+        //    }
+        //}
         return $modes;
     }
 
@@ -2012,14 +2041,6 @@ class mod_taskchain extends taskchain_base {
         if (! $userfilter = $this->get_userfilter('')) {
             return false; // no users selected
         }
-
-        //if (! $selected = optional_param('selected', 0, PARAM_INT)) {
-        //    return false; // no attempts select
-        //}
-
-        //if (! $confirmed = optional_param('confirmed', 0, PARAM_INT)) {
-        //    return false; // delete is not confirmed
-        //}
 
         // we are going to return some totals of how many records were deleted
         $this->deleted = (object)array(

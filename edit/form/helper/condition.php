@@ -273,7 +273,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
         $label = $this->get_fieldlabel($field);
 
         $conditiontype = $this->get_conditiontype();
-        if ($conditiontype==mod_taskchain::CONDITIONTYPE_POST) {
+        if ($conditiontype==mod_taskchain::CONDITIONTYPE_PRE) {
             $options = array();
             for ($i=0; $i<8; $i++) {
                 $options[$i] = $i;
@@ -395,7 +395,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function disabledIf_attemptcount_zero($name) {
-        $this->mform->disabledIf($name, 'attemptcount', 'eq', 0);
+        //$this->mform->disabledIf($name, 'attemptcount', 'eq', 0);
         $this->mform->disabledIf($name, 'attemptcountenable', 'notchecked');
     }
 

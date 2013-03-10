@@ -506,7 +506,7 @@ class taskchain_source {
 
             if ($gettaskchain) {
                 // get next task (if any)
-                if ($file = $task->get_nexttask()) {
+                if ($file = $task->get_nexttask($context, $component, $filearea)) {
                     // to prevent infinite loops on chains, we check that
                     // the next task is not one of the earlier tasks
                     foreach ($sources as $source) {
@@ -693,12 +693,15 @@ class taskchain_source {
     }
 
     /**
-     * returns $filepath of next task if there is one, or false otherwise
+     * returns $file of next task if there is one, or false otherwise
      *
+     * @param xxx $context
+     * @param xxx $component
+     * @param xxx $filearea
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_nexttask() {
+    public function get_nexttask($context, $component, $filearea) {
         return false;
     }
 

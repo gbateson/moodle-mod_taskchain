@@ -1836,26 +1836,32 @@ function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $c
         }
 
         if ($TC->can->reviewattempts()) {
-            $reportnodes = array();
             $type = navigation_node::TYPE_SETTING;
             $icon = new pix_icon('i/report', '');
-            foreach ($TC->get_report_modes() as $mode) {
-                $label = get_string($mode.'report', 'taskchain');
-                $url   = $TC->url->report($mode, $cm);
-                //$taskchainnode->add($label, $url, $type, null, null, $icon);
-                $reportnodes[] = navigation_node::create($label, $url, $type, null, null, $icon);
-            }
-            if ($count = count($reportnodes)) {
-                if ($count==1) {
-                    $node = array_shift($reportnodes);
-                    $node->text = get_string('report');
+            foreach ($TC->get_report_modes() as $name => $submodes) {
+                $text = get_string($name, 'taskchain');
+                if (method_exists('navigation_node', 'create')) {
+                    $node = navigation_node::create($text); // Moodle >= 2.2
                 } else {
-                    $node = navigation_node::create(get_string('reports'));
-                    while ($reportnode = array_shift($reportnodes)) {
-                        $node->add_node($reportnode);
-                    }
+                    $node = new navigation_node(array('text' => $text, 'type' => $type));
                 }
-                $taskchainnode->add_node($node);
+                foreach ($submodes as $mode => $params) {
+                    $label = get_string('pluginname', 'taskchainreport_'.$mode);
+                    if ($mode=='taskattempt') {
+                        $url = $TC->url->review();
+                    } else {
+                        $url = $TC->url->report($mode, $params);
+                    }
+                    $node->add($label, $url, $type, null, null, $icon);
+                }
+                if (method_exists($taskchainnode, 'add_node')) {
+                    $taskchainnode->add_node($node); // Moodle >= 2.2
+                } else {
+                    $node->key = $taskchainnode->children->count();
+                    $taskchainnode->nodetype = navigation_node::NODETYPE_BRANCH;
+                    $taskchainnode->children->add($node);
+                }
+                unset($node);
             }
         }
     }

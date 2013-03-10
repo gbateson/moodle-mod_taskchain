@@ -106,14 +106,17 @@ class taskchain_source_hp extends taskchain_source {
     /**
      * get_nexttask
      *
+     * @param xxx $context
+     * @param xxx $component
+     * @param xxx $filearea
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_nexttask() {
+    public function get_nexttask($context, $component, $filearea) {
         if ($this->is_html()) {
-            return $this->html_get_nexttask();
+            return $this->html_get_nexttask($context, $component, $filearea);
         } else {
-            return $this->xml_get_nexttask();
+            return $this->xml_get_nexttask($context, $component, $filearea);
         }
     }
 
@@ -184,10 +187,13 @@ class taskchain_source_hp extends taskchain_source {
     /**
      * html_get_nexttask
      *
+     * @param xxx $context
+     * @param xxx $component
+     * @param xxx $filearea
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function html_get_nexttask() {
+    public function html_get_nexttask($context, $component, $filearea) {
         if (! isset($this->nexttask)) {
             $this->nexttask = false;
 
@@ -201,7 +207,8 @@ class taskchain_source_hp extends taskchain_source {
                 if (preg_match_all('/<button[^>]*onclick="'."location='([^']*)'".'[^"]*"[^>]*>/is', $navbuttonbar, $matches)) {
 
                     $lastbutton = count($matches[0])-1;
-                    $this->nexttask = $this->xml_locate_file(dirname($this->filepath).'/'.$matches[1][$lastbutton]);
+                    $nexttaskurl = $matches[1][$lastbutton];
+                    $this->nexttask = $this->xml_locate_file($context, $component, $filearea, $nexttaskurl);
                 }
             }
         }
@@ -264,10 +271,13 @@ class taskchain_source_hp extends taskchain_source {
     /**
      * xml_get_nexttask
      *
+     * @param xxx $context
+     * @param xxx $component
+     * @param xxx $filearea
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function xml_get_nexttask() {
+    public function xml_get_nexttask($context, $component, $filearea) {
         if (! isset($this->nexttask)) {
             $this->nexttask = false;
 
@@ -281,13 +291,13 @@ class taskchain_source_hp extends taskchain_source {
                 return false;
             }
 
-            if (! $nexttask = $this->xml_value($this->hbs_software.'-config-file,'.$this->hbs_tasktype.',next-ex-url')) {
+            if (! $nexttaskurl = $this->xml_value($this->hbs_software.'-config-file,'.$this->hbs_tasktype.',next-ex-url')) {
                 // there is no next URL given for the next task
                 return false;
             }
 
             // set the URL of the next task
-            $this->nexttask = $this->xml_locate_file(dirname($this->filepath).'/'.$nexttask);
+            $this->nexttask = $this->xml_locate_file($context, $component, $filearea, $nexttaskurl);
         }
         return $this->nexttask;
     }
@@ -295,29 +305,32 @@ class taskchain_source_hp extends taskchain_source {
     /**
      * xml_locate_file
      *
-     * @param xxx $file
+     * @param xxx $context
+     * @param xxx $component
+     * @param xxx $filearea
+     * @param xxx $url
      * @param xxx $filetypes (optional, default=null)
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function xml_locate_file($file, $filetypes=null) {
-        if (preg_match('/^https?:\/\//', $file)) {
-            return $file;
+    public function xml_locate_file($context, $component, $filearea, $nexttaskurl, $filetypes=null) {
+        if (preg_match('/^https?:\/\//', $nexttaskurl)) {
+            return $nexttaskurl;
         }
 
-        $filepath = $this->basepath.'/'.ltrim($file, '/');
+        $filepath = $this->basepath.'/'.ltrim($nexttaskurl, '/');
         if (file_exists($filepath)) {
-            return $file;
+            return $nexttaskurl;
         }
 
         $filename = basename($filepath);
         if (! $pos = strrpos($filename, '.')) {
-            return $file;
+            return $nexttaskurl;
         }
 
         $filetype = substr($filename, $pos + 1);
         if ($filetype=='htm' || $filetype=='html') {
-            // $file is a local html file that doesn't exist
+            // $nexttaskurl is a local html file that doesn't exist
             // so search for a HP source file with the same name
             $len = strlen($filetype);
             $filepath = substr($filepath, 0, -$len);
@@ -326,12 +339,12 @@ class taskchain_source_hp extends taskchain_source {
             }
             foreach ($filetypes as $filetype) {
                 if (file_exists($filepath.$filetype)) {
-                    return substr($file, 0, -$len).$filetype;
+                    return substr($nexttaskurl, 0, -$len).$filetype;
                 }
             }
         }
 
-        // valid $file could not be found :-(
+        // valid $nexttaskurl could not be found :-(
         return '';
     }
 

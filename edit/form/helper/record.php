@@ -843,7 +843,11 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             $mainfile = taskchain_pluginfile_mainfile($this->context, $component, $filearea);
             if ($mainfile) {
                 if ($mainfile->get_sortorder()==0) {
-                    $mainfile->set_sortorder(1);
+                    if (method_exists($mainfile, 'set_sortorder')) {
+                        $mainfile->set_sortorder(1);
+                    } else {
+                        $mainfile->sortorder = 1;
+                    }
                 }
             }
 

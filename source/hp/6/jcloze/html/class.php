@@ -80,6 +80,6 @@ class taskchain_source_hp_6_jcloze_html extends taskchain_source_hp_6_jcloze {
             return false;
         }
 
-        return true;
+        return $this;
     }
 }

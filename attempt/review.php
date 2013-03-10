@@ -65,7 +65,7 @@ class mod_taskchain_attempt_review {
      * @todo Finish documenting this function
      */
     static function attempt_fields()  {
-        return array('attempt', 'score', 'penalties', 'status', 'duration', 'timemodified');
+        return array('tnumber', 'score', 'penalties', 'status', 'duration', 'timestart');
     }
 
     /**
@@ -105,32 +105,32 @@ class mod_taskchain_attempt_review {
     static function can_reviewattempts()  {
         return self::provide_review();
 
-        // when $taskchain->reviewoptions are implemented,
+        // when $TC->task->reviewoptions are implemented,
         // we can do something like the following ...
 
-        if (self::provide_review() && $taskchain->reviewoptions) {
-            if ($attempt = $taskchain->get_attempt()) {
-                if ($taskchain->reviewoptions & mod_taskchain::REVIEW_DURINGATTEMPT) {
+        if (self::provide_review() && $TC->task->reviewoptions) {
+            if ($attempt = $TC->get_attempt()) {
+                if ($TC->task->reviewoptions & mod_taskchain::REVIEW_DURINGATTEMPT) {
                     // during attempt
-                    if ($taskchain->attempt->status==mod_taskchain::STATUS_INPROGRESS) {
+                    if ($TC->taskattempt->status==mod_taskchain::STATUS_INPROGRESS) {
                         return true;
                     }
                 }
-                if ($taskchain->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT) {
+                if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT) {
                     // after attempt (but before task closes)
-                    if ($taskchain->attempt->status==mod_taskchain::STATUS_COMPLETED) {
+                    if ($TC->taskattempt->status==mod_taskchain::STATUS_COMPLETED) {
                         return true;
                     }
-                    if ($taskchain->attempt->status==mod_taskchain::STATUS_ABANDONED) {
+                    if ($TC->taskattempt->status==mod_taskchain::STATUS_ABANDONED) {
                         return true;
                     }
-                    if ($taskchain->attempt->status==mod_taskchain::STATUS_TIMEDOUT) {
+                    if ($TC->taskattempt->status==mod_taskchain::STATUS_TIMEDOUT) {
                         return true;
                     }
                 }
-                if ($taskchain->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
+                if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
                     // after the task closes
-                    if ($taskchain->timeclose < $taskchain->time) {
+                    if ($TC->timeclose < $TC->time) {
                         return true;
                     }
                 }
@@ -143,39 +143,39 @@ class mod_taskchain_attempt_review {
      * review
      *
      * @uses $DB
-     * @param xxx $taskchain
+     * @param xxx $TC
      * @param xxx $class
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function review($taskchain, $class)  {
+    static function review($TC, $class)  {
         global $DB;
 
         // for the time-being we set this setting manually here
         // but one day it will be settable in "mod/taskchain/mod_form.php"
-        $taskchain->reviewoptions = mod_taskchain::REVIEW_DURINGATTEMPT | mod_taskchain::REVIEW_AFTERATTEMPT | mod_taskchain::REVIEW_AFTERCLOSE;
+        $TC->task->reviewoptions = mod_taskchain::REVIEW_DURINGATTEMPT | mod_taskchain::REVIEW_AFTERATTEMPT | mod_taskchain::REVIEW_AFTERCLOSE;
 
-        // set $reviewoptions to relevant part of $taskchain->reviewoptions
+        // set $reviewoptions to relevant part of $TC->task->reviewoptions
         $reviewoptions = 0;
-        if ($taskchain->can_reviewallattempts()) {
+        if ($TC->can_reviewallattempts()) {
             // teacher can always review (anybody's) task attempts
             $reviewoptions = (mod_taskchain::REVIEW_AFTERATTEMPT | mod_taskchain::REVIEW_AFTERCLOSE);
-        } else if ($taskchain->timeclose && $taskchain->timeclose > $taskchain->time) {
+        } else if ($TC->timeclose && $TC->timeclose > $TC->time) {
             // task is closed
-            if ($taskchain->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
+            if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
                 // user can review task attempt after task closes
-                $reviewoptions = ($taskchain->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE);
-            } else if ($taskchain->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT) {
-                return get_string('noreviewbeforeclose', 'taskchain', userdate($taskchain->timeclose));
+                $reviewoptions = ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE);
+            } else if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT) {
+                return get_string('noreviewbeforeclose', 'taskchain', userdate($TC->timeclose));
             } else {
                 return get_string('noreview', 'taskchain');
             }
         } else {
             // task is still open
-            if ($taskchain->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT) {
+            if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT) {
                 // user can review task attempt while task is open
-                $reviewoptions = ($taskchain->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT);
-            } else if ($taskchain->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
+                $reviewoptions = ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT);
+            } else if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
                 return get_string('noreviewafterclose', 'taskchain');
             } else {
                 return get_string('noreview', 'taskchain');
@@ -217,7 +217,9 @@ class mod_taskchain_attempt_review {
 
         $strtimeformat = get_string('strftimerecentfull');
 
-        $attempt_fields = $class::attempt_fields();
+        $callback = array($class, 'attempt_fields');
+        $attempt_fields = call_user_func($callback);
+
         foreach ($attempt_fields as $field) {
             $row = new html_table_row();
 
@@ -227,7 +229,10 @@ class mod_taskchain_attempt_review {
             $row->cells[] = $cell;
 
             // add data
-            $text = $class::format_attempt_data($taskchain->attempt, $field, $strtimeformat);
+            $callback = array($class, 'format_attempt_data');
+            $params = array($TC->taskattempt, $field, $strtimeformat);
+            $text = call_user_func_array($callback , $params);
+
             $cell = new html_table_cell($text, array('class'=>'attemptvalue'));
             $cell->colspan = $textfield_colspan;
             $row->cells[] = $cell;
@@ -236,8 +241,8 @@ class mod_taskchain_attempt_review {
         }
 
         // get questions and responses relevant to this task attempt
-        $questions = $DB->get_records('taskchain_questions', array('taskchainid' => $taskchain->id));
-        $responses = $DB->get_records('taskchain_responses', array('attemptid' => $taskchain->attempt->id));
+        $questions = $DB->get_records('taskchain_questions', array('taskid' => $TC->task->id));
+        $responses = $DB->get_records('taskchain_responses', array('attemptid' => $TC->taskattempt->id));
 
         if (empty($questions) || empty($responses)) {
             $row = new html_table_row();
@@ -317,12 +322,11 @@ class mod_taskchain_attempt_review {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function format_attempt_heading($field) {
+    static function format_attempt_heading($field) {
         switch ($field) {
-            case 'timemodified': return get_string('time', 'task');
-            case 'attempt'     : return get_string('attemptnumber', 'taskchain');
-            case 'score'       : return get_string('score', 'task');
-            default            : return get_string($field, 'taskchain');
+            case 'score'     : return get_string('score', 'quiz');
+            case 'timestart' : return get_string('time', 'quiz');
+            default          : return get_string($field, 'taskchain');
         }
     }
 
@@ -335,12 +339,12 @@ class mod_taskchain_attempt_review {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function format_attempt_data($attempt, $field, $strtimeformat) {
+    static function format_attempt_data($attempt, $field, $strtimeformat) {
         switch ($field) {
-            case 'status'      : return mod_taskchain::format_status($attempt->$field);
-            case 'duration'    : return format_time($attempt->timemodified - $attempt->timestart);
-            case 'timemodified': return trim(userdate($attempt->$field, $strtimeformat));
-            default            : return $attempt->$field;
+            case 'duration'  : return (($duration = $attempt->$field) ? format_time($duration) : '');
+            case 'status'    : return mod_taskchain::format_status($attempt->$field);
+            case 'timestart' : return trim(userdate($attempt->$field, $strtimeformat));
+            default          : return $attempt->$field;
         }
     }
 

@@ -28,25 +28,26 @@
 /** Prevent direct access to this script */
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+/** Include parent classes (table_sql and flexible_table) */
 require_once($CFG->dirroot.'/lib//tablelib.php');
 
 /**
  * taskchain_report_table
  *
- * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      Moodle 2.0
- * @package    mod
- * @subpackage taskchain
+ * @copyright 2010 Gordon Bateson
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since     Moodle 2.0
  */
 class taskchain_report_table extends table_sql {
 
-    /** @var string field in the attempt records that refers to the user id */
-    public $useridfield = 'userid';
+    /** @var reference to global $TC object */
+    protected $TC = null;
 
     /** @var mod_taskchain_report_renderer for the current page */
     protected $output;
+
+    /** @var string field in the attempt records that refers to the user id */
+    public $useridfield = 'userid';
 
     /** @var string time format used for the "timemodified" column */
     protected $timeformat = 'strftimerecentfull';
@@ -57,28 +58,31 @@ class taskchain_report_table extends table_sql {
     /** @var array list of distinct values stored in response columns */
     protected $legend = array();
 
+    /** @var array names of table columns which are to be suppressed */
+    protected $suppress_columns = array();
+
     /**
      * Constructor
      *
-     * @param xxx $uniqueid
-     * @param xxx $output
-     * @todo Finish documenting this function
+     * @param int $uniqueid
+     * @param xxx $output (passed by reference)
+     * @param xxx $TC (passed by reference)
      */
-    public function __construct($uniqueid, $output) {
+    function __construct($uniqueid, &$output, &$TC) {
         parent::__construct($uniqueid);
-        $this->output = $output;
+        $this->TC = &$TC;
+        $this->output = &$output;
         $this->strtimeformat = get_string($this->timeformat);
     }
 
     /**
-     * setup
+     * setup_report_table
      *
      * @param xxx $tablecolumns
      * @param xxx $baseurl
-     * @param xxx $usercount (optional, default=10)
-     * @todo Finish documenting this function
+     * @param xxx $usercount (optional, default value = 10)
      */
-    public function setup_report_table($tablecolumns, $baseurl, $usercount = 10)  {
+    function setup_report_table($tablecolumns, $suppresscolumns, $baseurl, $usercount=10)  {
 
         // generate headers (using "header_xxx()" methods below)
         $tableheaders = array();
@@ -94,30 +98,26 @@ class taskchain_report_table extends table_sql {
             $this->pageable(true);
             $this->sortable(true);
             $this->initialbars($usercount > 20);
-
-            // this information is only printed once per user
-            $this->column_suppress('fullname');
-            $this->column_suppress('picture');
-            $this->column_suppress('grade');
-
-            // special css class for "picture" column
-            $this->column_class('picture', 'picture');
+            if ($this->has_column('selected')) {
+                $this->no_sorting('selected');
+            }
         } else {
             $this->pageable(false);
             $this->sortable(false);
-            // you can set specific columns to be unsortable:
-            // $this->no_sorting('columnname');
         }
 
-        // basically all columns are centered
-        $this->column_style_all('text-align', 'center');
-
-        // some columns are not centered
-        if ($this->has_column('fullname')) {
-            $this->column_style('fullname', 'text-align', '');
+        // css class for each column is column name without leading
+        // "chaingrade", "chainattempt", "taskscore", or "taskattempt"
+        $search = '/^(?:chain|task)(?:grade|score|attempt)/';
+        foreach ($tablecolumns as $tablecolumn) {
+            $class = preg_replace($search, '', $tablecolumn);
+            $this->column_class($tablecolumn, $class);
         }
-        if ($this->has_column('responsefield')) {
-            $this->column_style('responsefield', 'text-align', 'right');
+
+        // if necessary, suppress columns so that some
+        // information is only printed once per attempt
+        foreach ($suppresscolumns as $suppresscolumn) {
+            $this->column_suppress($suppresscolumn);
         }
 
         // attributes in the table tag
@@ -130,11 +130,8 @@ class taskchain_report_table extends table_sql {
 
     /**
      * wrap_html_start
-     *
-     * @return xxx
-     * @todo Finish documenting this function
      */
-    public function wrap_html_start() {
+    function wrap_html_start() {
 
         // check this table has a "selected" column
         if (! $this->has_column('selected')) {
@@ -142,12 +139,12 @@ class taskchain_report_table extends table_sql {
         }
 
         // check user can delete attempts
-        if (! $this->output->taskchain->can_deleteattempts()) {
+        if (! $this->TC->can_deleteattempts()) {
             return false;
         }
 
         // start form
-        $url = $this->output->taskchain->url->report($this->output->mode);
+        $url = $this->TC->url->report($this->TC->mode);
         $params = array('id'=>'attemptsform', 'method'=>'post', 'action'=>$url->out_omit_querystring());
         echo html_writer::start_tag('form', $params);
 
@@ -163,11 +160,8 @@ class taskchain_report_table extends table_sql {
 
     /**
      * wrap_html_finish
-     *
-     * @return xxx
-     * @todo Finish documenting this function
      */
-    public function wrap_html_finish() {
+    function wrap_html_finish() {
 
         // check this table has a "selected" column
         if (! $this->has_column('selected')) {
@@ -175,7 +169,7 @@ class taskchain_report_table extends table_sql {
         }
 
         // check user can delete attempts
-        if (! $this->output->taskchain->can_deleteattempts()) {
+        if (! $this->TC->can_deleteattempts()) {
             return false;
         }
 
@@ -184,15 +178,15 @@ class taskchain_report_table extends table_sql {
         echo html_writer::start_tag('div', $params);
 
         // add "select all" link
-        $text = get_string('selectall', 'task');
-        $href = "javascript:select_all_in('FORM',null,'attemptsform');";
+        $text = get_string('selectall', 'quiz');
+        $href = "javascript:select_all_in('TABLE',null,'attempts');";
         echo html_writer::tag('a', $text, array('href' => $href));
 
         echo ' / ';
 
         // add "deselect all" link
-        $text = get_string('selectnone', 'task');
-        $href = "javascript:deselect_all_in('FORM',null,'attemptsform');";
+        $text = get_string('selectnone', 'quiz');
+        $href = "javascript:deselect_all_in('TABLE',null,'attempts');";
         echo html_writer::tag('a', $text, array('href' => $href));
 
         echo ' &nbsp; ';
@@ -227,9 +221,8 @@ class taskchain_report_table extends table_sql {
      *
      * @param xxx $tablecolumn
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function format_header($tablecolumn)  {
+    function format_header($tablecolumn)  {
         $method = 'header_'.$tablecolumn;
         if (method_exists($this, $method)) {
             return $this->$method();
@@ -242,9 +235,8 @@ class taskchain_report_table extends table_sql {
      * header_picture
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function header_picture()  {
+    function header_picture()  {
         return '';
     }
 
@@ -252,70 +244,303 @@ class taskchain_report_table extends table_sql {
      * header_fullname
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function header_fullname()  {
+    function header_fullname()  {
         return get_string('name');
-    }
-
-    /**
-     * header_grade
-     *
-     * @return xxx
-     * @todo Finish documenting this function
-     */
-    public function header_grade()  {
-        $grademethod = $this->output->taskchain->format_grademethod();
-
-        $gradeweighting = $this->output->taskchain->gradeweighting;
-        if ($gradeweighting != 100) {
-            $grademethod = $gradeweighting." x $grademethod/100";
-        }
-
-        $params = array('class' => 'grademethod');
-        $grademethod = html_writer::tag('span', $grademethod, $params);
-
-        $br = html_writer::empty_tag('br');
-        return get_string('grade').$br.'('.$grademethod.')';
     }
 
     /**
      * header_selected
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function header_selected()  {
-        return '';
+    function header_selected()  {
+        return get_string('select');
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // functions to format CHAINGRADE header cells                                //
+    ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * header_chaingradegrade
+     *
+     * @return xxx
+     */
+    function header_chaingradegrade()  {
+        return $this->header_grade('grade', 'chain');
     }
 
     /**
-     * header_attempt
+     * header_chaingradestatus
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function header_attempt()  {
-        return get_string('attemptnumber', 'taskchain');
+    function header_chaingradestatus()  {
+        return $this->header_status();
     }
 
     /**
-     * header_timemodified
+     * header_chaingradeduration
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function header_timemodified()  {
-        return get_string('time', 'task');
+    function header_chaingradeduration()  {
+        return $this->header_duration();
+    }
+
+    /**
+     * header_chaingradetimemodified
+     *
+     * @return xxx
+     */
+    function header_chaingradetimemodified()  {
+        return $this->header_timemodified();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // functions to format CHAINATTEMPT header cells                              //
+    ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * header_chainattemptcnumber
+     *
+     * @return xxx
+     */
+    function header_chainattemptcnumber()  {
+        return $this->header_cnumber();
+    }
+
+    /**
+     * header_chainattemptgrade
+     *
+     * @return xxx
+     */
+    function header_chainattemptgrade()  {
+        return $this->header_grade('attemptgrade', 'chain', 'attemptgrademethod', 'gradeweighting');
+    }
+
+    /**
+     * header_chainattemptstatus
+     *
+     * @return xxx
+     */
+    function header_chainattemptstatus()  {
+        return $this->header_status();
+    }
+
+    /**
+     * header_chainattemptduration
+     *
+     * @return xxx
+     */
+    function header_chainattemptduration()  {
+        return $this->header_duration();
+    }
+
+    /**
+     * header_chainattempttimemodified
+     *
+     * @return xxx
+     */
+    function header_chainattempttimemodified()  {
+        return $this->header_timemodified();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // functions to format TASKSCORE header cells                              //
+    ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * header_taskscoretaskname
+     *
+     * @return xxx
+     */
+    function header_taskscoretaskname()  {
+        return get_string('taskname', 'taskchain');
+    }
+
+    /**
+     * header_taskscorecnumber
+     *
+     * @return xxx
+     */
+    function header_taskscorecnumber()  {
+        return $this->header_cnumber();
+    }
+
+    /**
+     * header_taskscorescore
+     *
+     * @return xxx
+     */
+    function header_taskscorescore()  {
+        return $this->header_grade('score', 'task');
+    }
+
+    /**
+     * header_taskscorestatus
+     *
+     * @return xxx
+     */
+    function header_taskscorestatus()  {
+        return $this->header_status();
+    }
+
+    /**
+     * header_taskscoreduration
+     *
+     * @return xxx
+     */
+    function header_taskscoreduration()  {
+        return $this->header_duration();
+    }
+
+    /**
+     * header_taskscoretimemodified
+     *
+     * @return xxx
+     */
+    function header_taskscoretimemodified()  {
+        return $this->header_timemodified();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // functions to format TASKATTEMPT header cells                               //
+    ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * header_taskattempttnumber
+     *
+     * @return xxx
+     */
+    function header_taskattemptcnumber()  {
+        return $this->header_cnumber();
+    }
+
+    /**
+     * header_taskattempttnumber
+     *
+     * @return xxx
+     */
+    function header_taskattempttnumber()  {
+        return $this->header_tnumber();
+    }
+
+    /**
+     * header_taskattemptscore
+     *
+     * @return xxx
+     */
+    function header_taskattemptscore()  {
+        return $this->header_score();
+    }
+
+    /**
+     * header_taskattemptpenalties
+     *
+     * @return xxx
+     */
+    function header_taskattemptpenalties()  {
+        return $this->header_penalties();
+    }
+
+    /**
+     * header_taskattemptstatus
+     *
+     * @return xxx
+     */
+    function header_taskattemptstatus()  {
+        return $this->header_status();
+    }
+
+    /**
+     * header_taskattemptduration
+     *
+     * @return xxx
+     */
+    function header_taskattemptduration()  {
+        return $this->header_duration();
+    }
+
+    /**
+     * header_taskattempttimemodified
+     *
+     * @return xxx
+     */
+    function header_taskattempttimemodified()  {
+        return $this->header_timemodified();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // utility functions to format header cells                                   //
+    ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * header_attemptcnumber
+     *
+     * @return xxx
+     */
+    function header_cnumber()  {
+        return get_string('cnumber', 'taskchain');
+    }
+
+    /**
+     * header_attempttnumber
+     *
+     * @return xxx
+     */
+    function header_tnumber()  {
+        return get_string('tnumber', 'taskchain');
+    }
+
+    /**
+     * header_grade
+     *
+     * @param xxx $type ("score", "grade" or "attemptgrade")
+     * @param xxx $record ("chain" or "task")
+     * @param xxx $grademethod (optional, default="")
+     * @param xxx $gradeweighting (optional, default="")
+     * @return xxx
+     */
+    function header_grade($gradetype, $recordtype, $grademethod='', $gradeweighting='')  {
+        $grade = get_string($gradetype, 'taskchain');
+
+        if (isset($this->TC->$recordtype)) {
+            if ($grademethod=='') {
+                $grademethod = $gradetype.'method';
+            }
+            $grademethod = $this->TC->$recordtype->$grademethod;
+            $grademethod = $this->TC->format_grademethod($gradetype, $grademethod);
+
+            if ($gradeweighting=='') {
+                $gradeweighting = $gradetype.'weighting';
+            }
+            $gradeweighting = $this->TC->$recordtype->$gradeweighting;
+            if ($gradeweighting != 100) {
+                $grademethod = $gradeweighting." x $grademethod/100";
+            }
+            $grade .= html_writer::empty_tag('br').html_writer::tag('span', '('.$grademethod.')', array('class' => 'grademethod'));
+        }
+
+        return $grade;
+    }
+
+    /**
+     * header_penalties
+     *
+     * @return xxx
+     */
+    function header_penalties()  {
+        return get_string('penalties', 'taskchain');
     }
 
     /**
      * header_status
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function header_status()  {
+    function header_status()  {
         return get_string('status', 'taskchain');
     }
 
@@ -323,50 +548,44 @@ class taskchain_report_table extends table_sql {
      * header_duration
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function header_duration()  {
+    function header_duration()  {
         return get_string('duration', 'taskchain');
     }
 
     /**
-     * header_penalties
+     * header_timemodified
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function header_penalties()  {
-        return get_string('penalties', 'taskchain');
+    function header_timemodified()  {
+        return get_string('time', 'quiz');
     }
 
     /**
      * header_score
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function header_score()  {
-        return get_string('score', 'task');
+    function header_score()  {
+        return get_string('score', 'quiz');
     }
 
     /**
      * header_responsefield
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function header_responsefield()  {
+    function header_responsefield()  {
         return '';
     }
 
     /**
      * header_other
      *
-     * @param xxx $column
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function header_other($column)  {
+    function header_other($column)  {
         if (substr($column, 0, 2)=='q_') {
             $a = intval(substr($column, 2)) + 1;
             return get_string('questionshort', 'taskchain', $a);
@@ -384,9 +603,8 @@ class taskchain_report_table extends table_sql {
      *
      * @param xxx $row
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function col_selected($row)  {
+    function col_selected($row)  {
         return html_writer::checkbox('selected['.$row->id.']', 1, false);
     }
 
@@ -395,10 +613,9 @@ class taskchain_report_table extends table_sql {
      *
      * @param xxx $row
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function col_picture($row)  {
-        $courseid = $this->output->taskchain->course->id;
+    function col_picture($row)  {
+        $courseid = $this->TC->course->id;
         $user = (object)array(
             'id'        => $row->userid,
             'firstname' => $row->firstname,
@@ -411,94 +628,151 @@ class taskchain_report_table extends table_sql {
     }
 
     /**
+     * col_cnumber
+     *
+     * @param xxx $row
+     * @param xxx $type (optional, default="")
+     * @return xxx
+     */
+    function col_cnumber($row, $type='')  {
+        return $this->col_attemptnumber($row, $type, 'cnumber');
+    }
+
+    /**
+     * col_cnumber
+     *
+     * @param xxx $row
+     * @param xxx $type (optional, default="")
+     * @return xxx
+     */
+    function col_tnumber($row, $type='')  {
+        return $this->col_attemptnumber($row, $type, 'tnumber');
+    }
+
+    /**
+     * col_attemptnumber
+     *
+     * @param xxx $row
+     * @param xxx $recordtype "chaingrade", "chainattempt", "taskscore" or "taskattempt"
+     * @param xxx $numbertype "cnumber" or "tnumber"
+     * @return xxx
+     */
+    function col_attemptnumber($row, $recordtype, $numbertype)  {
+        $field = $recordtype.$numbertype;
+        $value = $row->$field;
+        list($prefix, $value) = $this->split_prefix($value);
+        $value = $row->$field;
+        $value = $this->format_review_link($recordtype, $row, $value);
+        return $prefix.$value;
+    }
+
+    /**
      * col_grade
      *
      * @param xxx $row
+     * @param xxx $type "chaingrade", "chainattempt", "tastscore", or "taskattempt"
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function col_grade($row)  {
-        if (isset($row->grade)) {
-            return $row->grade.'%';
+    function col_grade($row, $type, $grade='grade')  {
+        $field = $type.$grade;
+        $value = $row->$field;
+        list($prefix, $value) = $this->split_prefix($value);
+        if ($value===null || $value==='') {
+            $value = '&nbsp;';
         } else {
-            return '&nbsp;';
+            $value = $value.'%';
         }
-    }
-
-    /**
-     * col_attempt
-     *
-     * @param xxx $row
-     * @return xxx
-     * @todo Finish documenting this function
-     */
-    public function col_attempt($row)  {
-        $text = "$row->attempt";
-        return $this->format_review_link($text, $row);
-    }
-
-    /**
-     * col_timemodified
-     *
-     * @param xxx $row
-     * @return xxx
-     * @todo Finish documenting this function
-     */
-    public function col_timemodified($row)  {
-        $text = trim(userdate($row->timemodified, $this->strtimeformat));
-        return $this->format_review_link($text, $row);
-    }
-
-    /**
-     * col_status
-     *
-     * @param xxx $row
-     * @return xxx
-     * @todo Finish documenting this function
-     */
-    public function col_status($row)  {
-        $text = mod_taskchain::format_status($row->status);
-        return $this->format_review_link($text, $row);
-    }
-
-    /**
-     * col_duration
-     *
-     * @param xxx $row
-     * @return xxx
-     * @todo Finish documenting this function
-     */
-    public function col_duration($row)  {
-        if ($row->duration) {
-            $text = format_time($row->duration);
-        } else {
-            $text = ''; // format_text(0) returns "now"
-        }
-        return $this->format_review_link($text, $row);
+        $value = $this->format_review_link($type, $row, $value);
+        return $prefix.$value;
     }
 
     /**
      * col_penalties
      *
      * @param xxx $row
+     * @param xxx $type "taskattempt"
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function col_penalties($row)  {
-        $text = "$row->penalties";
-        return $this->format_review_link($text, $row);
+    function col_penalties($row, $type)  {
+        $field = $type.'penalties';
+        $value = $row->$field;
+        list($prefix, $value) = $this->split_prefix($value);
+        $value = $this->format_review_link($type, $row, $value);
+        return $prefix.$value;
     }
 
     /**
-     * col_score
+     * col_status
      *
      * @param xxx $row
+     * @param xxx $type "chaingrade", "chainattempt", "tastscore", or "taskattempt"
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function col_score($row)  {
-        $text = "$row->score";
-        return $this->format_review_link($text, $row);
+    function col_status($row, $type)  {
+        $field = $type.'status';
+        $value = $row->$field;
+        list($prefix, $value) = $this->split_prefix($value);
+        $value = mod_taskchain::format_status($value);
+        $value = $this->format_review_link($type, $row, $value);
+        return $prefix.$value;
+    }
+
+    /**
+     * col_duration
+     *
+     * @param xxx $row
+     * @param xxx $type "chaingrade", "chainattempt", "tastscore", or "taskattempt"
+     * @return xxx
+     */
+    function col_duration($row, $type)  {
+        $field = $type.'duration';
+        $value = $row->$field;
+        list($prefix, $value) = $this->split_prefix($value);
+        if ($value) {
+            $value = format_time($value);
+            $value = $this->format_review_link($type, $row, $value);
+        } else {
+            $value = ''; // format_text(0) returns "now"
+        }
+        return $prefix.$value;
+    }
+
+    /**
+     * col_timemodified
+     *
+     * @param xxx $row
+     * @param xxx $type "chaingrade", "chainattempt", "tastscore", or "taskattempt"
+     * @return xxx
+     */
+    function col_timemodified($row, $type)  {
+        $field = $type.'timemodified';
+        $value = $row->$field;
+        list($prefix, $value) = $this->split_prefix($value);
+        $value = trim(userdate($value, $this->strtimeformat));
+        $value = $this->format_review_link($type, $row, $value);
+        return $prefix.$value;
+    }
+
+    /**
+     * split_prefix
+     *
+     * @param xxx $value
+     * @return xxx
+     */
+    function split_prefix($value) {
+        static $prefix = null;
+        static $prefixlen = 0;
+
+        if ($prefix===null) {
+            $prefix = html_writer::tag('span', '');
+            $prefixlen = strlen($prefix);
+        }
+
+        if (strpos($value, $prefix)===0) {
+            return array($prefix, substr($value, $prefixlen));
+        } else {
+            return array('', $value);
+        }
     }
 
     /**
@@ -507,9 +781,8 @@ class taskchain_report_table extends table_sql {
      * @param xxx $column
      * @param xxx $row
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function other_cols($column, $row) {
+    function other_cols($column, $row) {
 
         if (! property_exists($row, $column)) {
             return $column;
@@ -526,43 +799,287 @@ class taskchain_report_table extends table_sql {
     /**
      * format_review_link
      *
-     * @param xxx $text
+     * @param xxx $type "chaingrade", "chainattempt", "taskscore", or "taskattempt"
      * @param xxx $row
+     * @param xxx $text
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function format_review_link($text, $row)  {
-        if (strlen($text) && $this->output->taskchain->can_reviewattempts()) {
-            $url = $this->output->taskchain->reurl->view($row);
+    function format_review_link($type, $row, $text)  {
+        if (strlen($text) && $this->TC->can_reviewattempts()) {
+            $id = $type.'id';
+            if (empty($row->$id)) {
+                $params = array($id => $row->id);
+            } else {
+                $params = array($id => $row->$id);
+            }
+            if ($type=='taskattempt') {
+                $url = $this->TC->url_review($row);
+            } else {
+                $url = $this->TC->url_report($type, $params);
+            }
             $text = html_writer::link($url, $text);
         }
         return $text;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // functions to format CHAINGRADE data cells                                  //
+    ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * col_chaingradegrade
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_chaingradegrade($row)  {
+        return $this->col_grade($row, 'chaingrade');
+    }
+
+    /**
+     * col_chaingradestatus
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_chaingradestatus($row)  {
+        return $this->col_status($row, 'chaingrade');
+    }
+
+    /**
+     * col_chaingradeduration
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_chaingradeduration($row)  {
+        return $this->col_duration($row, 'chaingrade');
+    }
+
+    /**
+     * col_chaingradetimemodified
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_chaingradetimemodified($row)  {
+        return $this->col_timemodified($row, 'chaingrade');
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // functions to format CHAINATTEMPT data cells                                //
+    ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * col_chainattemptcnumber
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_chainattemptcnumber($row)  {
+        return $this->col_cnumber($row, 'chainattempt');
+    }
+
+    /**
+     * col_chainattemptgrade
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_chainattemptgrade($row)  {
+        return $this->col_grade($row, 'chainattempt');
+    }
+
+    /**
+     * col_chainattemptstatus
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_chainattemptstatus($row)  {
+        return $this->col_status($row, 'chainattempt');
+    }
+
+    /**
+     * col_chainattemptduration
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_chainattemptduration($row)  {
+        return $this->col_duration($row, 'chainattempt');
+    }
+
+    /**
+     * col_chainattempttimemodified
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_chainattempttimemodified($row)  {
+        return $this->col_timemodified($row, 'chainattempt');
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // functions to format TASKSCORE data cells                                   //
+    ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * col_taskscorecnumber
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskscorecnumber($row)  {
+        return $this->col_cnumber($row, 'taskscore');
+    }
+
+    /**
+     * col_taskscorescore
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskscorescore($row)  {
+        return $this->col_grade($row, 'taskscore', 'score');
+    }
+
+    /**
+     * col_taskscorestatus
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskscorestatus($row)  {
+        return $this->col_status($row, 'taskscore');
+    }
+
+    /**
+     * col_taskscoreduration
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskscoreduration($row)  {
+        return $this->col_duration($row, 'taskscore');
+    }
+
+    /**
+     * col_taskscoretimemodified
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskscoretimemodified($row)  {
+        return $this->col_timemodified($row, 'taskscore');
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // functions to format TASKATTEMPT data cells                                   //
+    ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * col_taskattemptcnumber
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskattemptcnumber($row)  {
+        return $this->col_cnumber($row, 'taskattempt');
+    }
+
+    /**
+     * col_taskscorecnumber
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskattempttnumber($row)  {
+        return $this->col_tnumber($row, 'taskattempt');
+    }
+
+    /**
+     * col_taskattemptpenalties
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskattemptpenalties($row)  {
+        return $this->col_penalties($row, 'taskattempt');
+    }
+
+    /**
+     * col_taskattemptscore
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskattemptscore($row)  {
+        return $this->col_grade($row, 'taskattempt', 'score');
+    }
+
+    /**
+     * col_taskattemptstatus
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskattemptstatus($row)  {
+        return $this->col_status($row, 'taskattempt');
+    }
+
+    /**
+     * col_taskattemptduration
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskattemptduration($row)  {
+        return $this->col_duration($row, 'taskattempt');
+    }
+
+    /**
+     * col_taskattempttimemodified
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_taskattempttimemodified($row)  {
+        return $this->col_timemodified($row, 'taskattempt');
     }
 
     /**
      * override parent class method, because we may want to specify a default sort
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function get_sql_sort()  {
+    function get_sql_sort()  {
 
         // if user has specified a sort column, use that
         if ($sort = parent::get_sql_sort()) {
             return $sort;
         }
 
+        $sort = array();
         // if there is a "fullname" column, sort by first/last name
         if ($this->has_column('fullname')) {
-            $sort = 'u.firstname, u.lastname';
-            if ($this->has_column('attempt')) {
-                $sort .= ', ha.attempt ASC';
-            }
-            return $sort;
+            $sort[] = 'u.firstname';
+            $sort[] = 'u.lastname';
         }
-
-        // no sort column, and no "fullname" column
-        return '';
+        // sort by "cunumber" and/or "tnumber" column, if they exist
+        if ($this->has_column('chaingradecnumber')) {
+            $sort[] = 'tc_chn_grd.cnumber ASC';
+        }
+        if ($this->has_column('taskscorecnumber')) {
+            $sort[] = 'tc_tsk_scr.cnumber ASC';
+        }
+        if ($this->has_column('taskattemptcnumber')) {
+            $sort[] = 'tc_tsk_att.cnumber ASC';
+        }
+        if ($this->has_column('taskattempttnumber')) {
+            $sort[] = 'tc_tsk_att.tnumber ASC';
+        }
+        return implode(',', $sort);
     }
 
     /**
@@ -570,7 +1087,6 @@ class taskchain_report_table extends table_sql {
      *
      * @param xxx $column
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function has_column($column)  {
         return array_key_exists($column, $this->columns);
@@ -580,9 +1096,8 @@ class taskchain_report_table extends table_sql {
      * delete_rows
      *
      * @param xxx $delete_rows
-     * @todo Finish documenting this function
      */
-    public function delete_rows($delete_rows)  {
+    function delete_rows($delete_rows)  {
         foreach ($delete_rows as $id => $delete_flag) {
             if ($delete_flag) {
                 unset($this->rawdata[$id]);
@@ -594,9 +1109,8 @@ class taskchain_report_table extends table_sql {
      * delete_columns
      *
      * @param xxx $delete_columns
-     * @todo Finish documenting this function
      */
-    public function delete_columns($delete_columns)  {
+    function delete_columns($delete_columns)  {
         $newcolnum = 0;
         foreach($this->columns as $column => $oldcolnum) {
             if (empty($delete_columns[$column])) {
@@ -619,9 +1133,8 @@ class taskchain_report_table extends table_sql {
      * @param xxx $column
      * @param xxx $value
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function set_legend($column, $value) {
+    function set_legend($column, $value) {
         if (empty($column) || empty($value)) {
             return '';
         }
@@ -644,11 +1157,8 @@ class taskchain_report_table extends table_sql {
 
     /**
      * print_legend
-     *
-     * @return xxx
-     * @todo Finish documenting this function
      */
-    public function print_legend()  {
+    function print_legend()  {
         if (empty($this->legend)) {
             return false;
         }
@@ -659,7 +1169,7 @@ class taskchain_report_table extends table_sql {
                 $stringids[$stringid] = true;
             }
         }
-        $strings = mod_taskchain::get_strings(array_keys($stringids));
+        $strings = taskchain::get_strings(array_keys($stringids));
         unset($stringids, $column, $responses, $i, $stringid);
 
         foreach ($this->legend as $column => $responses) {
@@ -688,9 +1198,8 @@ class taskchain_report_table extends table_sql {
      *
      * @param xxx $i
      * @return xxx
-     * @todo Finish documenting this function
      */
-    public function format_legend_index($i)  {
+    function format_legend_index($i)  {
         // convert numeric index to A, B, ... Z, AA, AB, ...
         if ($i < 26) {
             return chr(ord('A') + $i);

@@ -49,7 +49,7 @@ class mod_taskchain_attempt_hp_6_sequitur_review extends mod_taskchain_attempt_h
      * @todo Finish documenting this function
      */
     static function attempt_fields()   {
-        return array('attempt', 'score', 'status', 'duration', 'timemodified');
+        return array('tnumber', 'score', 'status', 'duration', 'timestart');
     }
 
     /**

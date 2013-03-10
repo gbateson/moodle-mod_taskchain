@@ -1304,7 +1304,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 $text = get_string('exit_noscore', 'taskchain');
                 $feedback[] = html_writer::tag('li', $text);
             }
-        } else if ($this->TC->get_gradeitem() && $this->TC->get_chain_attempt()) {
+        } else if ($this->TC->get_gradeitem() && $this->TC->get_chainattempt()) {
             if ($exitoptions & mod_taskchain::EXITOPTIONS_ENCOURAGEMENT) {
                 switch (true) {
                     case $this->TC->chainattempt->grade >= 90:
@@ -1336,7 +1336,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                             // zero score is best so far
                             $text = get_string('exit_taskchaingrade_highest_zero', 'taskchain', $this->TC->chainattempt->grade.$percentsign);
                             $feedback[] = html_writer::tag('li', $text);
-                        } else if ($this->TC->get_attempts()) {
+                        } else if ($this->TC->get_chainattempts()) {
                             // current attempt is highest so far
                             $maxscore = null;
                             foreach ($this->TC->chainattempts as $attempt) {

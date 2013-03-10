@@ -78,6 +78,15 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-report div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap div#region-main div.region-content,
 #page-mod-taskchain-report div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap div#region-main div.region-content #attemptsform div.no-overflow {overflow:visible;}
 /* ================= */
+#page-mod-taskchain-report table#attempts th{ white-space: normal; }
+#page-mod-taskchain-report table#attempts td{ width: 60px; text-align: center; }
+#page-mod-taskchain-report table#attempts td.fullname,
+#page-mod-taskchain-report table#attempts td.taskname{ width: 120px; text-align: left; }
+#page-mod-taskchain-report table#attempts td.timemodified{ width: 80px; }
+#page-mod-taskchain-report table#attempts td.responsefield{ text-align: right; }
+#page-mod-taskchain-report table#attempts th span.grademethod,
+#page-mod-taskchain-report table#attempts th span.scoremethod{ font-size: 0.8em; font-weight: normal; }
+/* ================= */
 #page-mod-taskchain-report ul.response{text-align: left; padding: 0px; margin-top: 0px; text-indent: -6px;}
 #page-mod-taskchain-report ul.response li {list-style: none; text-align: left;} /* white-space:nowrap; */
 #page-mod-taskchain-report ul.response li.correct {color: green; list-style-image: url([[pix:i/tick_green_small]]);}

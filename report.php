@@ -29,61 +29,60 @@
 require_once(dirname(dirname(__DIR__)).'/config.php');
 require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
-$id    = optional_param('id', 0, PARAM_INT); // course_module ID, or
-$hp    = optional_param('hp', 0, PARAM_INT); // taskchain instance ID
-$mode  = optional_param('mode', 'overview', PARAM_ALPHA); // type of report
+// create object to represent this TaskChain activity
+$TC = new mod_taskchain();
 
-if ($id) {
-    $cm      = get_coursemodule_from_id('taskchain', $id, 0, false, MUST_EXIST);
-    $course  = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $taskchain  = $DB->get_record('taskchain', array('id' => $cm->instance), '*', MUST_EXIST);
-} else {
-    $taskchain  = $DB->get_record('taskchain', array('id' => $hp), '*', MUST_EXIST);
-    $course  = $DB->get_record('course', array('id' => $taskchain->course), '*', MUST_EXIST);
-    $cm      = get_coursemodule_from_instance('taskchain', $taskchain->id, $course->id, false, MUST_EXIST);
-}
-
-// check login
-require_login($course, true, $cm);
-if (! has_capability('mod/taskchain:reviewallattempts', $PAGE->context)) {
-    require_capability('mod/taskchain:reviewmyattempts', $PAGE->context);
-}
-
-add_to_log($course->id, 'taskchain', 'report', 'report.php?id='.$cm->id, $taskchain->id, $cm->id);
-
-// Create an object to represent the current TaskChain activity
-$taskchain = mod_taskchain::create($taskchain, $cm, $course, $PAGE->context);
-
-// delete attempts, if requested
-$action    = optional_param('action', '', PARAM_ALPHA);
-$confirmed = optional_param('confirmed', 0, PARAM_INT);
-if (function_exists('optional_param_array')) {
-    $selected  = optional_param_array('selected', 0, PARAM_INT);
-} else {
-    $selected  = optional_param('selected', 0, PARAM_INT);
-}
-
-if ($action=='deleteselected') {
-    require_sesskey();
-    if ($confirmed) {
-        $taskchain->delete_attempts($selected, false);
+if ($TC->action=='deleteselected') {
+    if ($TC->confirmed) {
+        $TC->delete_selected_attempts($TC->selected, false);
     } else {
         // show a confirm button ?
     }
 }
 
-$PAGE->set_url('/mod/taskchain/report.php', array('id' => $course->id, 'mode' => $mode));
-$PAGE->set_title($taskchain->name);
-$PAGE->set_heading($course->shortname);
-$PAGE->navbar->add(get_string('report', 'task'));
-if ($mode) {
-    $PAGE->navbar->add(get_string($mode.'report', 'taskchain'));
+// Log this request
+add_to_log($TC->course->id, 'taskchain', 'report', 'report.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+
+$PAGE->set_url($TC->url->report($TC->mode));
+$PAGE->set_title($TC->taskchain->name);
+$PAGE->set_heading($TC->course->shortname);
+$PAGE->navbar->add(get_string('report'));
+
+$text = '';
+if ($TC->get_chaingrade()) {
+
+    $text = get_string('pluginname', 'taskchainreport_chaingrade');
+    if ($TC->get_chainattempt()) {
+
+        $url = $TC->url_report('chaingrade', array('chaingradeid' => $TC->chaingrade->id));
+        $PAGE->navbar->add($text, $url);
+
+        $text = get_string('pluginname', 'taskchainreport_chainattempt');
+        if ($TC->get_taskscore()) {
+
+            $url = $TC->url_report('chainattempt', array('chainattemptid' => $TC->chainattempt->id));
+            $PAGE->navbar->add($text, $url);
+
+            $text = get_string('pluginname', 'taskchainreport_taskscore');
+            if ($TC->get_taskattempt()) {
+
+                $url = $TC->url_report('taskscore', array('taskscoreid' => $TC->taskscore->id));
+                $PAGE->navbar->add($text, $url);
+
+                $text = get_string('pluginname', 'taskchainreport_taskattempt');
+            }
+        }
+    }
+}
+if ($text) {
+    $PAGE->navbar->add($text); // no link on last navbar item
 }
 
 // get renderer subtype (e.g. report_overview)
-// and load the appropriate renderer class for this attempt
-$subtype = $taskchain->get_report_renderer_subtype($mode);
+// and load the appropriate renderer class for this report $mode
+$subtype = $TC->get_report_renderer_subtype($TC->mode);
 $subdir = str_replace('_', '/', $subtype);
+
 require_once($CFG->dirroot.'/mod/taskchain/'.$subdir.'/renderer.php');
 
 // create the renderer for this attempt
@@ -93,4 +92,4 @@ $output = $PAGE->get_renderer('mod_taskchain', $subtype);
 // Output starts here                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-echo $output->render_report($taskchain);
+echo $output->render_report($TC);

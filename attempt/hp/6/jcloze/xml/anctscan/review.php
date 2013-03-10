@@ -49,6 +49,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_review extends mod_taskchai
      * @todo Finish documenting this function
      */
     static function attempt_fields()   {
-        return array('attempt', 'score', 'penalties', 'status', 'duration', 'timemodified');
+        return array('tnumber', 'score', 'penalties', 'status', 'duration', 'timestart');
     }
 }

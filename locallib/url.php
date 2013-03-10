@@ -118,15 +118,15 @@ class taskchain_url extends taskchain_base {
      * report
      *
      * @param xxx $mode (optional, default='')
-     * @param xxx $cm (optional, default=null)
+     * @param xxx $params (optional, default=null)
      * @return moodle_url of this taskchain's view page
      * @todo Finish documenting this function
      */
-    public function report($mode='', $cm=null) {
-        if (is_null($cm)) {
-            $cm = $this->TC->coursemodule;
+    public function report($mode='', $params=null) {
+        if (is_null($params)) {
+            $params = array();
+            $params['id'] = $this->TC->coursemodule->id;
         }
-        $params = array('id' => $cm->id);
         if ($mode) {
             $params['mode'] = $mode;
         }
@@ -137,7 +137,7 @@ class taskchain_url extends taskchain_base {
      * review
      *
      * @param xxx $taskattempt (optional, default=null)
-     * @return moodle_url of the review page for an attempt at this taskchain
+     * @return moodle_url of the review page for an attempt at a task
      * @todo Finish documenting this function
      */
     public function review($taskattempt=null) {

@@ -251,14 +251,13 @@ $string['canrestarttask'] = 'Your results so far will be saved and you can redo 
 $string['canresumetask'] = 'Your results so far will be saved and you can resume "{$a}" later.';
 $string['chain'] = 'TaskChain activity';
 $string['chainattemptnotinprogress'] = 'Chain attempt not in progress';
-$string['chainattemptreport'] = 'Chain attempt';
 $string['chainclosed'] = 'Sorry, this activity closed on {$a}';
-$string['chaingradereport'] = 'Chain grade';
 $string['chainname_help'] = 'The name of this TaskChain activity that will be displayed on the course page';
 $string['chainnotavailable'] = 'Sorry this activity is not available to you until {$a}.';
 $string['chainrequirepasswordmessage'] = 'To attempt this activity, you need to know the password.';
 $string['checks'] = 'Checks';
 $string['checksomeboxes'] = 'Please check some boxes';
+$string['classreports'] = 'Class reports';
 $string['clearcache'] = 'Clear TaskChain cache';
 $string['cleardetails'] = 'Clear TaskChain details';
 $string['clearedcache'] = 'The TaskChain cache has been cleared';
@@ -266,7 +265,7 @@ $string['cleareddetails'] = 'The TaskChain details have been cleared';
 $string['clickreporting'] = 'Enable click reporting';
 $string['clickreporting_help'] = 'If enabled, a separate record is kept each time a "hint", "clue" or "check" button is clicked. This allows the teacher to see a very detailed report showing the state of the task at each click. Otherwise, only one record per attempt at a task is kept.';
 $string['clues'] = 'Clues';
-$string['cnumber'] = 'Attempt number';
+$string['cnumber'] = 'Chain attempt';
 $string['columnlistid'] = 'Show columns';
 $string['columnlistid_help'] = 'This menu allows you to select which set of columns are shown on this page';
 $string['columnlistschain'] = 'All chain column lists';
@@ -624,6 +623,7 @@ The materials are created on the teacher\'s computer using authoring software su
 
 After students have attempted the tasks, a number of reports are available which show how individual questions were answered and some statistical trends in the scores.';
 $string['movetasks'] = 'Move selected tasks';
+$string['myattempts'] = 'My attempts';
 $string['name'] = 'Name';
 $string['name_help'] = 'The name can be specfic text entered by the teacher or it can be automatically generated.
 
@@ -928,11 +928,6 @@ $string['studentfeedback_help'] = 'If enabled, a link to a pop-up feedback windo
 $string['studentfeedbackurl'] = 'Student feedback URL';
 $string['submits'] = 'Submissions';
 $string['task'] = 'Task';
-$string['task_analysisreport'] = 'Task item analysis';
-$string['task_clicktrailreport'] = 'Task click trail';
-$string['task_overviewreport'] = 'Task overview';
-$string['task_responsesreport'] = 'Task responses';
-$string['task_scoresreport'] = 'Task scores';
 $string['taskaction_help'] = 'These options specify what action will be taken when the "Go" button is clicked.
 
 **Reorder tasks**
@@ -950,7 +945,6 @@ $string['taskaction_help'] = 'These options specify what action will be taken wh
 **Delete tasks**
 : The selected tasks will be deleted from the TaskChain activity.';
 $string['taskattemptnotinprogress'] = 'Task attempt not in progress';
-$string['taskattemptreport'] = 'Task attempt';
 $string['taskchainname'] = 'TaskChain name';
 $string['taskclosed'] = 'Sorry, this task closed on {$a}';
 $string['taskname'] = 'Task name';
@@ -987,7 +981,6 @@ $string['tasknotavailable'] = 'Sorry this task is not available to you until {$a
 $string['taskposition'] = 'Task position';
 $string['taskrequirepasswordmessage'] = 'To attempt this task, you need to know the password.';
 $string['tasks'] = 'Tasks';
-$string['taskscorereport'] = 'Task score';
 $string['tasktype'] = 'Task type';
 $string['textsourcefile'] = 'Get from source file';
 $string['textsourcefilename'] = 'Use source file name';
@@ -1033,6 +1026,7 @@ $string['title_help'] = 'This setting specifies the title to be displayed on the
 : the source file path, including any folder names, will be used as the web page title.';
 $string['titleappendsortorder'] = 'Append sort order';
 $string['titleprependchainname'] = 'Prepend chain name';
+$string['tnumber'] = 'Task attempt';
 $string['totaltaskscores'] = 'Total of task scores';
 $string['unansweredtask'] = 'Unanswered task';
 $string['unseentask'] = 'Unseen task';
