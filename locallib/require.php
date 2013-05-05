@@ -296,6 +296,10 @@ class taskchain_require extends taskchain_base {
      * @todo Finish documenting this function
      */
     function canstart($type) {
+        if ($this->TC->can->preview()) {
+            // teacher can always start a new attempt
+            return false;
+        }
         if (! $error = $this->delay($type, 'delay1')) {
             if (! $error = $this->delay($type, 'delay2')) {
                 if (! $error = $this->moreattempts($type)) {

@@ -44,7 +44,6 @@ class mod_taskchain_report_taskattempt_renderer extends mod_taskchain_report_ren
     public $mode = 'taskattempt';
 
     public $tablecolumns = array(
-        //'picture', 'fullname',
         'taskscorecnumber',  'taskscoretaskname',
         'taskattempttnumber',  'selected',
         'taskattemptscore',    'taskattemptstatus',
@@ -52,7 +51,6 @@ class mod_taskchain_report_taskattempt_renderer extends mod_taskchain_report_ren
     );
 
     public $filterfields = array(
-        /'realname'=>0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
         'grade'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'score'=>1
     );
 

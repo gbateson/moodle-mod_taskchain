@@ -44,7 +44,6 @@ class mod_taskchain_report_chainattempt_renderer extends mod_taskchain_report_re
     public $mode = 'chainattempt';
 
     public $tablecolumns = array(
-        //'picture', 'fullname',
         'chainattemptcnumber',
         'chainattemptgrade',    'chainattemptstatus',
         'chainattemptduration', 'chainattempttimemodified',
@@ -53,14 +52,10 @@ class mod_taskchain_report_chainattempt_renderer extends mod_taskchain_report_re
         'taskscoreduration',    'taskscoretimemodified'
     );
 
-    /** names of columns to be suppressed (i.e. only shown once per user) */
-    protected $suppresscolumns = array();
-
     /** columns with this prefix will be suppressed (i.e. only shown once per user) */
     protected $suppressprefix = 'chainattempt';
 
     public $filterfields = array(
-        //'realname'=>0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
         'grade'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'score'=>1
     );
 
@@ -128,8 +123,13 @@ class mod_taskchain_report_chainattempt_renderer extends mod_taskchain_report_re
                   ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_tsk.chainid'.
                   ' JOIN {taskchain_chain_attempts} tc_chn_att ON (tc_chn_att.chainid = tc_chn.id '.
                                                               'AND tc_chn_att.cnumber = tc_tsk_scr.cnumber)';
-        $where  = 'tc_chn.parenttype = ? AND tc_chn.parentid = ?';
-        $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $this->TC->taskchain->id);
+        if ($this->TC->get_chainattempt()) {
+            $where  = 'tc_chn_att.id = ?';
+            $params = array($this->TC->chainattempt->id);
+        } else {
+            $where  = 'tc_chn.parenttype = ? AND tc_chn.parentid = ?';
+            $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $this->TC->taskchain->id);
+        }
 
         // add user fields. if required
         if (in_array('fullname', $this->tablecolumns)) {

@@ -54,19 +54,19 @@ if ($TC->get_chaingrade()) {
     $text = get_string('pluginname', 'taskchainreport_chaingrade');
     if ($TC->get_chainattempt()) {
 
-        $url = $TC->url_report('chaingrade', array('chaingradeid' => $TC->chaingrade->id));
+        $url = $TC->url->report('chaingrade', array('chaingradeid' => $TC->chaingrade->id));
         $PAGE->navbar->add($text, $url);
 
         $text = get_string('pluginname', 'taskchainreport_chainattempt');
         if ($TC->get_taskscore()) {
 
-            $url = $TC->url_report('chainattempt', array('chainattemptid' => $TC->chainattempt->id));
+            $url = $TC->url->report('chainattempt', array('chainattemptid' => $TC->chainattempt->id));
             $PAGE->navbar->add($text, $url);
 
             $text = get_string('pluginname', 'taskchainreport_taskscore');
             if ($TC->get_taskattempt()) {
 
-                $url = $TC->url_report('taskscore', array('taskscoreid' => $TC->taskscore->id));
+                $url = $TC->url->report('taskscore', array('taskscoreid' => $TC->taskscore->id));
                 $PAGE->navbar->add($text, $url);
 
                 $text = get_string('pluginname', 'taskchainreport_taskattempt');

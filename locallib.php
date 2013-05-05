@@ -330,15 +330,17 @@ class mod_taskchain extends taskchain_base {
             }
 
             // check we had some sensible input
-            if (empty($select) || empty($tables)) {
-                throw new moodle_exception('error_noinputparameters', 'taskchain');
-            }
-            if (empty($fields)) {
+            if (! $fields = implode(',', $fields)) {
                 throw new moodle_exception('error_nodatabaseinfo', 'taskchain');
             }
-
+            if (! $tables = implode(',', $tables)) {
+                throw new moodle_exception('error_noinputparameters', 'taskchain');
+            }
+            if (! $select = implode(' AND ', $select)) {
+                throw new moodle_exception('error_noinputparameters', 'taskchain');
+            }
             // get the information from the database
-            if (! $record = $DB->get_record_sql('SELECT '.implode(',', $fields).' FROM '.implode(',', $tables).' WHERE '.implode(' AND ', $select))) {
+            if (! $record = $DB->get_record_sql("SELECT $fields FROM $tables WHERE $select")) {
                 throw new moodle_exception('error_norecordsfound', 'taskchain');
             }
 
@@ -1333,22 +1335,22 @@ class mod_taskchain extends taskchain_base {
             }
             $modes['myattempts'] = $submodes;
         }
-        //if ($this->can->reviewallattempts()) {
-        //    if ($this->get_chain()) {
-        //        $submodes = array();
-        //        $submodes['chaingrades']  = array('chainid' => $this->chain->id);
-        //        if ($this->get_task()) {
-        //            $submodes['taskscores']    = array('taskid' => $this->task->id);
-        //            $submodes['taskquestions'] = array('taskid' => $this->task->id);
-        //            $submodes['taskresponses'] = array('taskid' => $this->task->id);
-        //            $submodes['taskanalysis']  = array('taskid' => $this->task->id);
-        //            if ($this->task->clickreporting) {
-        //                $submodes['taskclicktrail'] = array('taskid' => $this->task->id);
-        //            }
-        //        }
-        //        $modes['classreports'] = $submodes;
-        //    }
-        //}
+        if ($this->can->reviewallattempts()) {
+            if ($this->get_chain()) {
+                $submodes = array();
+                $submodes['chaingrades']  = array('chainid' => $this->chain->id);
+                if ($this->get_task()) {
+                    $submodes['taskscores']    = array('taskid' => $this->task->id);
+                    $submodes['taskquestions'] = array('taskid' => $this->task->id);
+                    $submodes['taskresponses'] = array('taskid' => $this->task->id);
+                    $submodes['taskanalysis']  = array('taskid' => $this->task->id);
+                    if ($this->task->clickreporting) {
+                        $submodes['taskclicktrail'] = array('taskid' => $this->task->id);
+                    }
+                }
+                $modes['classreports'] = $submodes;
+            }
+        }
         return $modes;
     }
 

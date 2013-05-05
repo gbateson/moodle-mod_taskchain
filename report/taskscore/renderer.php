@@ -44,7 +44,6 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
     public $mode = 'taskscore';
 
     public $tablecolumns = array(
-        //'picture', 'fullname',
         'taskscorecnumber',     'taskscoretaskname',
         'taskscorescore',       'taskscorestatus',
         'taskscoreduration',    'taskscoretimemodified',
@@ -54,14 +53,10 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
         'taskattemptduration',  'taskattempttimemodified'
     );
 
-    /** names of columns to be suppressed (i.e. only shown once per user) */
-    protected $suppresscolumns = array();
-
     /** columns with this prefix will be suppressed (i.e. only shown once per user) */
     protected $suppressprefix = 'taskscore';
 
     public $filterfields = array(
-        //'realname'=>0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
         'grade'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'score'=>1
     );
 
@@ -133,7 +128,7 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
         // add user fields. if required
         if (in_array('fullname', $this->tablecolumns)) {
             $select .= ', u.id AS userid, u.firstname, u.lastname, u.picture, u.imagealt, u.email';
-            $from   .= ' JOIN {user} u ON tc_chn_att.userid=u.id';
+            $from   .= ' JOIN {user} u ON tc_tsk_scr.userid=u.id';
         }
 
         // restrict sql to a specific user

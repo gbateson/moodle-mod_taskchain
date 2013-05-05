@@ -67,6 +67,9 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
 
     public $has_questioncolumns = false;
 
+    /** does this table have user columns, "picture" and "fullname", or not? */
+    public $has_usercolumns = false;
+
     /**
      * init
      *
@@ -79,6 +82,12 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
 
         // save a reference to the $taskchain record
         $this->TC = &$TC;
+
+        // add user columns, if required
+        if ($this->has_usercolumns || true) {
+            array_unshift($this->tablecolumns, 'picture', 'fullname');
+            //array_unshift($this->filterfields, 'fullname');
+        }
 
         // add question numbers to $tablecolumns
         if ($this->has_questioncolumns) {
@@ -129,7 +138,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         $baseurl = $this->TC->url->report($this->mode)->out();
 
         // display user and attempt filters
-        $this->display_filters($baseurl);
+        //$this->display_filters($baseurl);
 
         // create report table
         $uniqueid = $this->page->pagetype.'-'.$this->mode;

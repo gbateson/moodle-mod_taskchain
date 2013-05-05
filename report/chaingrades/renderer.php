@@ -29,7 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/report/renderer.php');
+require_once($CFG->dirroot.'/mod/taskchain/report/chaingrade/renderer.php');
 
 /**
  * mod_taskchain_report_chaingrades_renderer
@@ -40,16 +40,6 @@ require_once($CFG->dirroot.'/mod/taskchain/report/renderer.php');
  * @package    mod
  * @subpackage taskchain
  */
-class mod_taskchain_report_chaingrades_renderer extends mod_taskchain_report_renderer {
-    public $mode = 'chaingrades';
-
-    public $tablecolumns = array(
-        'picture', 'fullname', 'score', 'selected', 'attempt',
-        'timemodified', 'status', 'duration', 'score'
-    );
-
-    public $filterfields = array(
-        'realname'=>0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
-        'score'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'score'=>1
-    );
+class mod_taskchain_report_chaingrades_renderer extends mod_taskchain_report_chaingrade_renderer {
+    public $has_usercolumns = true;
 }

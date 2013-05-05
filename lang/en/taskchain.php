@@ -395,6 +395,8 @@ or one of the following general purpose settings:
 
 * Previous activity in this course
 * Previous activity in this section
+* Previous graded activity in this course
+* Previous graded activity in this section
 * Previous TaskChain in this course
 * Previous TaskChain in this section';
 $string['entrycmcourse'] = 'Previous activity in this course';
@@ -514,6 +516,8 @@ The teacher can select a specific activity, or a one of the following general pu
 
 * Next activity in this course
 * Next activity in this section
+* Next graded activity in this course
+* Next graded activity in this section
 * Next TaskChain in this course
 * Next TaskChain in this section
 
@@ -1107,3 +1111,9 @@ $string['youneedtoenrol'] = 'You need to enrol in this course before you can att
 $string['zeroduration'] = 'No duration';
 $string['zerograde'] = 'Zero grade';
 $string['zeroscore'] = 'Zero score';
+
+$string['entrygradedcourse'] = 'Previous graded activity in this course';
+$string['entrygradedsection'] = 'Previous graded activity in this course section';
+
+$string['exitgradedcourse'] = 'Next graded activity in this course';
+$string['exitgradedsection'] = 'Next graded activity in this course section';

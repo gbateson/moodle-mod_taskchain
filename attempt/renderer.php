@@ -850,7 +850,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             $title = $this->TC->task->name.': '.$title;
         }
         if ($this->TC->task->title & mod_taskchain::TITLE_SORTORDER) {
-            $title .= ' ('.$this->sortorder.')';
+            $title .= ' ('.$this->TC->task->sortorder.')';
         }
 
         $title = $this->TC->textlib('utf8_to_entities', $title);

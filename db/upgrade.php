@@ -163,6 +163,16 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
+    $newversion = 2011040117;
+    if ($oldversion < $newversion) {
+        $fields = array('entrycm', 'exitcm');
+        foreach ($fields as $field) {
+            $DB->set_field('taskchain_chains', $field, -5, array($field => -3));
+            $DB->set_field('taskchain_chains', $field, -6, array($field => -4));
+        }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
     if ($empty_cache) {
         $DB->delete_records('taskchain_cache');
     }

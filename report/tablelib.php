@@ -813,9 +813,9 @@ class taskchain_report_table extends table_sql {
                 $params = array($id => $row->$id);
             }
             if ($type=='taskattempt') {
-                $url = $this->TC->url_review($row);
+                $url = $this->TC->url->review($row);
             } else {
-                $url = $this->TC->url_report($type, $params);
+                $url = $this->TC->url->report($type, $params);
             }
             $text = html_writer::link($url, $text);
         }

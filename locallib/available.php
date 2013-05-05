@@ -128,6 +128,8 @@ class taskchain_available extends taskchain_base {
         return array(
             self::ACTIVITY_COURSE_ANY  => get_string($type.'cmcourse', 'taskchain'),
             self::ACTIVITY_SECTION_ANY => get_string($type.'cmsection', 'taskchain'),
+            self::ACTIVITY_COURSE_GRADED  => get_string($type.'gradedcourse', 'taskchain'),
+            self::ACTIVITY_SECTION_GRADED => get_string($type.'gradedsection', 'taskchain'),
             self::ACTIVITY_COURSE_TASKCHAIN  => get_string($type.'taskchaincourse', 'taskchain'),
             self::ACTIVITY_SECTION_TASKCHAIN => get_string($type.'taskchainsection', 'taskchain')
         );

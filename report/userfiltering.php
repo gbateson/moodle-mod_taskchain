@@ -157,12 +157,13 @@ class taskchain_user_filtering extends user_filtering {
 class taskchain_filter_group extends user_filter_select {
     /**
      * Constructor
+     * @uses $TC
      * @param string $name the name of the filter instance
      * @param boolean $advanced advanced form element flag
      * @param mixed $default option
      */
     function __construct($filtername, $advanced, $default=null) {
-        global $taskchain;
+        global $TC; // taskchain object
 
         $label = '';
         $options = array();
@@ -170,7 +171,7 @@ class taskchain_filter_group extends user_filter_select {
         $strgroup = get_string('group', 'group');
         $strgrouping = get_string('grouping', 'group');
 
-        if ($groupings = groups_get_all_groupings($taskchain->course->id)) {
+        if ($groupings = groups_get_all_groupings($TC->course->id)) {
             $label = $strgrouping;
             $has_groupings = true;
         } else {
@@ -178,7 +179,7 @@ class taskchain_filter_group extends user_filter_select {
             $groupings = array();
         }
 
-        if ($groups = groups_get_all_groups($taskchain->course->id)) {
+        if ($groups = groups_get_all_groups($TC->course->id)) {
             if ($label) {
                 $label .= ' / ';
             }
@@ -233,7 +234,7 @@ class taskchain_filter_group extends user_filter_select {
      * @return xxx
      */
     function get_sql_filter($data)  {
-        global $DB, $taskchain;
+        global $DB, $TC;
 
         $filter = '';
         $params = array();
@@ -243,13 +244,13 @@ class taskchain_filter_group extends user_filter_select {
             $userids = array();
             if (substr($value, 0, 5)=='group') {
                 if (substr($value, 5, 3)=='ing') {
-                    $gids = groups_get_all_groupings($taskchain->course->id);
+                    $gids = groups_get_all_groupings($TC->course->id);
                     $gid = intval(substr($value, 8));
                     if ($gids && array_key_exists($gid, $gids) && ($members = groups_get_grouping_members($gid))) {
                         $userids = array_keys($members);
                     }
                 } else {
-                    $gids = groups_get_all_groups($taskchain->course->id);
+                    $gids = groups_get_all_groups($TC->course->id);
                     $gid = intval(substr($value, 5));
                     if ($gids && array_key_exists($gid, $gids) && ($members = groups_get_members($gid))) {
                         $userids = array_keys($members);

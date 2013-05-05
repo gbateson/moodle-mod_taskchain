@@ -161,8 +161,10 @@ class taskchain_base {
     const ACTIVITY_NONE               = 0;
     const ACTIVITY_COURSE_ANY         = -1;
     const ACTIVITY_SECTION_ANY        = -2;
-    const ACTIVITY_COURSE_TASKCHAIN   = -3;
-    const ACTIVITY_SECTION_TASKCHAIN  = -4;
+    const ACTIVITY_COURSE_GRADED      = -3;
+    const ACTIVITY_SECTION_GRADED     = -4;
+    const ACTIVITY_COURSE_TASKCHAIN   = -5;
+    const ACTIVITY_SECTION_TASKCHAIN  = -6;
 
     /**
      * possible values for "addtype" field on the main form.

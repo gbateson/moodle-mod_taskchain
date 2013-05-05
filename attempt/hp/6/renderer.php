@@ -1681,20 +1681,25 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @todo Finish documenting this function
      */
     public function get_feedback_teachers()  {
-        $teachers = get_users_by_capability($this->TC->course->context, 'mod/taskchain:grade');
-        if (! $teachers) {
-            return '';
-        }
-        if ($this->TC->task->studentfeedback==mod_taskchain::FEEDBACK_MOODLEMESSAGING) {
-            $detail = 'id';
-        } else {
-            $detail = 'email';
-        }
+        $teachers = get_users_by_capability($this->TC->course->context, 'mod/taskchain:reviewallattempts');
+
         $details = array();
-        foreach ($teachers as $teacher) {
-            $details[] = "new Array('".addslashes_js(fullname($teacher))."', '".addslashes_js($teacher->$detail)."')";
+        if (isset($teachers) && count($teachers)) {
+            if ($this->TC->task->studentfeedback==mod_taskchain::FEEDBACK_MOODLEMESSAGING) {
+                $detail = 'id';
+            } else {
+                $detail = 'email';
+            }
+            foreach ($teachers as $teacher) {
+                $details[] = "new Array('".addslashes_js(fullname($teacher))."', '".addslashes_js($teacher->$detail)."')";
+            }
         }
-        return 'new Array('.implode(', ', $details).')';
+
+        if ($details = implode(', ', $details)) {
+            return 'new Array('.$details.')';
+        } else {
+            return ''; // no teachers
+        }
     }
 
     /**

@@ -44,7 +44,6 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
     public $mode = 'chaingrade';
 
     public $tablecolumns = array(
-        //'picture', 'fullname',
         'chaingradegrade',      'chaingradestatus',
         'chaingradeduration',   'chaingradetimemodified',
         'chainattemptcnumber',   'selected',
@@ -52,14 +51,10 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
         'chainattemptduration', 'chainattempttimemodified'
     );
 
-    /** names of columns to be suppressed (i.e. only shown once per user) */
-    protected $suppresscolumns = array();
-
     /** columns with this prefix will be suppressed (i.e. only shown once per user) */
     protected $suppressprefix = 'chaingrade';
 
     public $filterfields = array(
-        //'realname'=>0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
         'grade'=>1, 'timemodified'=>1, 'status'=>0, 'duration'=>1, // 'score'=>1
     );
 
@@ -124,8 +119,13 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
                   ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_chn_att.chainid'.
                   ' JOIN {taskchain_chain_grades} tc_chn_grd ON (tc_chn.parenttype = tc_chn_grd.parenttype '.
                                                               'AND tc_chn.parentid = tc_chn_grd.parentid)';
-        $where  = 'tc_chn_grd.parenttype = ? AND tc_chn_grd.parentid = ?';
-        $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $this->TC->taskchain->id);
+        if ($this->TC->get_chaingrade()) {
+            $where  = 'tc_chn_grd.id = ?';
+            $params = array($this->TC->chaingrade->id);
+        } else {
+            $where  = 'tc_chn_grd.parenttype = ? AND tc_chn_grd.parentid = ?';
+            $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $this->TC->taskchain->id);
+        }
 
         // add user fields. if required
         if (in_array('fullname', $this->tablecolumns)) {
