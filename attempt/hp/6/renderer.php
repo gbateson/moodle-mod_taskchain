@@ -2882,8 +2882,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @todo Finish documenting this function
      */
     public function taskchain_keypad_chars_sort($a_char, $b_char)  {
-        $a_value = $this->TC_keypad_char_value($a_char);
-        $b_value = $this->TC_keypad_char_value($b_char);
+        $a_value = $this->taskchain_keypad_char_value($a_char);
+        $b_value = $this->taskchain_keypad_char_value($b_char);
         if ($a_value < $b_value) {
             return -1;
         }
