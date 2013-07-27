@@ -622,6 +622,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $name = $this->get_fieldname($type.'location');
         $location = $this->get_original_value($name, 0);
         $this->mform->addElement('hidden', $name, $location);
+        $this->mform->setType($name, PARAM_INT);
     }
 
     /**

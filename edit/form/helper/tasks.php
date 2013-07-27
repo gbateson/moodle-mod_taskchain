@@ -173,8 +173,8 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                 $elements[] = $this->mform->createElement('text',   $name_value,  '', array('size', self::TEXT_FIELD_SIZE));
                 $this->mform->addGroup($elements, $name_elements, $filterlabel, ' ', false);
 
-                $this->mform->setType($name.'type', PARAM_INT);
-                $this->mform->setType($name.'value', PARAM_ALPHAEXT);
+                $this->mform->setType($name_type, PARAM_INT);
+                $this->mform->setType($name_value, PARAM_ALPHAEXT);
 
                 $name_disabled = $name_elements;
             }

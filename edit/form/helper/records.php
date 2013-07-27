@@ -443,7 +443,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '    fieldsets = null;'."\n";
             $js .= '}'."\n";
 
-            $js .= 'set_fitem_heights();'."\n";
+            $js .= 'if (confirm("run set_fitem_heights() ?")) set_fitem_heights();'."\n";
 
             // force bottom borders of final subactions
             $js .= 'function set_bottom_borders() {'."\n";
@@ -481,7 +481,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '    divs = null;'."\n";
             $js .= '    obj = null;'."\n";
             $js .= '}'."\n";
-            $js .= 'set_bottom_borders();'."\n";
+            $js .= 'if (confirm("run set_bottom_borders() ?")) set_bottom_borders();'."\n";
 
             $js .= '//]]>'."\n";
             $js .= '</script>';

@@ -1205,6 +1205,12 @@ abstract class taskchain_form_helper_base {
                     continue; // sesskey will be added by mform
                 }
                 $this->mform->addElement('hidden', $name, $value);
+                if (is_numeric($value)) {
+                    $param_type = PARAM_INT;
+                } else {
+                    $param_type = PARAM_ALPHA;
+                }
+                $this->mform->setType($name, $param_type);
             }
         }
     }
