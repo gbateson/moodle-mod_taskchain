@@ -2589,8 +2589,10 @@ class mod_taskchain extends taskchain_base {
      */
     public function context($contextlevel, $instanceid=0, $strictness=0) {
         if (class_exists('context_helper')) {
-            $classname = context_helper::get_class_for_level($contextlevel);
-            return $classname::instance($instanceid, $strictness);
+            // use call_user_func() to prevent syntax error in PHP 5.2.x
+            // return $class::instance($instanceid, $strictness);
+            $class = context_helper::get_class_for_level($contextlevel);
+            return call_user_func(array($class, 'instance'), $instanceid, $strictness);
         } else {
             return get_context_instance($contextlevel, $instanceid);
         }

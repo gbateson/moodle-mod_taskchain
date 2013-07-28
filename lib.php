@@ -139,7 +139,6 @@ function taskchain_update_instance(stdclass $data, $mform) {
  */
 function taskchain_process_formdata(stdclass &$data, $mform) {
     global $CFG, $DB;
-
     require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
     // set time created/modified

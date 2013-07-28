@@ -52,6 +52,23 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
     }
 
     /**
+     * renderHeader
+     *
+     * @param object $header (passed by reference)
+     */
+    function renderHeader(&$header){
+        if ($name = $header->getName()) {
+            // Moodle 2.5 uses "id_" prefix for header elements
+            // but this wil mess with TaskChain styles
+            // so we force the id to be the same as the name
+            $header->updateAttributes(array('id' => $name));
+        }
+        return parent::renderHeader($header);
+    }
+
+    /**
+     * renderElement
+     *
      * @param object $element
      * @param mixed $required
      * @param mixed $error
