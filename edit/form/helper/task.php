@@ -122,6 +122,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name  = $this->get_fieldname($field);
         $value = mod_taskchain::ADDTYPE_TASKFILE;
         $this->mform->addElement('hidden', $name, $value);
+        $this->mform->setType($name, PARAM_INT);
     }
 
     /**

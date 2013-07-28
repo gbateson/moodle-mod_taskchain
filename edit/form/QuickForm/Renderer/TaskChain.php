@@ -58,10 +58,17 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
      */
     function renderHeader(&$header){
         if ($name = $header->getName()) {
-            // Moodle 2.5 uses "id_" prefix for header elements
-            // but this wil mess with TaskChain styles
-            // so we force the id to be the same as the name
-            $header->updateAttributes(array('id' => $name));
+            $excludeheaders = array('generalhdr',  'entrypagehdr',  'exitpagehdr',
+                                    'displayhdr',  'timehdr',       'attemptshdr',
+                                    'securityhdr', 'assessmenthdr', 'modstandardelshdr');
+            if (in_array($name, $excludeheaders)) {
+                // do nothing
+            } else {
+                // Moodle 2.5 uses "id_" prefix for header elements
+                // but this wil mess with TaskChain styles
+                // so we force the id to be the same as the name
+                $header->updateAttributes(array('id' => $name));
+            }
         }
         return parent::renderHeader($header);
     }

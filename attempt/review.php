@@ -150,7 +150,7 @@ class mod_taskchain_attempt_review {
         if ($TC->can_reviewallattempts()) {
             // teacher can always review (anybody's) task attempts
             $reviewoptions = (mod_taskchain::REVIEW_AFTERATTEMPT | mod_taskchain::REVIEW_AFTERCLOSE);
-        } else if ($TC->timeclose && $TC->timeclose > $TC->time) {
+        } else if ($TC->task->timeclose && $TC->task->timeclose > $TC->time) {
             // task is closed
             if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
                 // user can review task attempt after task closes

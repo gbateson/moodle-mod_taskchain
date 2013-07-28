@@ -237,7 +237,18 @@ class taskchain_create extends taskchain_base {
      */
     function taskattempt() {
         global $DB;
-
+        /*
+        Usually this function is called like this:
+        line 240 of /mod/taskchain/locallib/create.php: moodle_exception thrown
+        line 307 of /mod/taskchain/locallib/create.php: call to taskchain_create->taskattempt()
+        line ? of unknownfile: call to taskchain_create->attempt()
+        line 555 of /mod/taskchain/locallib.php: call to call_user_func_array()
+        line 1722 of /mod/taskchain/attempt/hp/6/renderer.php: call to mod_taskchain->__call()
+        line 1722 of /mod/taskchain/attempt/hp/6/renderer.php: call to mod_taskchain->create_attempt()
+        line 1231 of /mod/taskchain/attempt/hp/6/renderer.php: call to mod_taskchain_attempt_hp_6_renderer->fix_submissionform()
+        line 278 of /mod/taskchain/attempt/renderer.php: call to mod_taskchain_attempt_hp_6_renderer->postprocessing()
+        line 89 of /mod/taskchain/attempt.php: call to mod_taskchain_attempt_renderer->render_attempt()
+        */
         if ($this->TC->get_taskattempt()) {
             return $this->TC->get_taskattemptid();
         }
@@ -246,6 +257,12 @@ class taskchain_create extends taskchain_base {
         $userid = $this->TC->userid;
         $taskid = $this->TC->get_taskid();
         $cnumber = $this->TC->get_cnumber();
+
+        if ($cnumber < 0) {
+            // create chain grade and attempt
+            $this->chainattempt();
+            $cnumber = $this->TC->get_cnumber();
+        }
 
         // get maximum tnumber (task attempt number)
         $select = "taskid=? AND cnumber=? AND userid=?";
