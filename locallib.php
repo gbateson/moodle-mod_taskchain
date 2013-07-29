@@ -1193,7 +1193,7 @@ class mod_taskchain extends taskchain_base {
      * @return string
      */
     public function format_grademethod($type='grade', $option=null) {
-        $available_list = $type.'methods_list';
+        $list = $type.'methods_list';
         $options = $this->available->$list($type);
         if (is_null($option)) {
             if ($type=='score') {
