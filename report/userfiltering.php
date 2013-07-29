@@ -295,7 +295,7 @@ class taskchain_filter_status extends user_filter_select {
      */
     function __construct($name, $advanced, $default=null) {
         $label = get_string($name, 'taskchain');
-        $options = mod_taskchain::available_statuses_list();
+        $options = $this->TC->available_statuses_list();
         parent::__construct($name, $label, $advanced, '', $options, $default);
     }
 
