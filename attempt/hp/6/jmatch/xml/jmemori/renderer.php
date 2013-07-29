@@ -55,7 +55,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
         parent::__construct($page, $target);
 
         // prepend templates for this output format
-        array_unshift($this->templatesfolders, 'mod/taskchain/attempt/hp/6/jmatch/xml/jmemori/templates');
+        array_unshift($this->templatefolders, 'mod/taskchain/attempt/hp/6/jmatch/xml/jmemori/templates');
 
         // replace standard jcloze.js with jmemori.js
         $this->javascripts = preg_grep('/jmatch.js/', $this->javascripts, PREG_GREP_INVERT);

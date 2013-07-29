@@ -49,7 +49,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
     protected $templatestrings = '';
 
     /** templates folders (relative to Moodle dirroot) */
-    protected $templatesfolders = array();
+    protected $templatefolders = array();
 
     /** external javascripts required for this format */
     protected $javascripts = array();
@@ -740,18 +740,18 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         global $CFG;
 
         // check that some template folders have been specified to something sensible
-        if (! isset($this->templatesfolders)) {
-            debugging('templatesfolders is not set', DEBUG_DEVELOPER);
+        if (! isset($this->templatefolders)) {
+            debugging('templatefolders is not set', DEBUG_DEVELOPER);
             return '';
         }
-        if (! is_array($this->templatesfolders)) {
-            debugging('templatesfolders is not an array', DEBUG_DEVELOPER);
+        if (! is_array($this->templatefolders)) {
+            debugging('templatefolders is not an array', DEBUG_DEVELOPER);
             return '';
         }
 
         // set the path to the template file
         $filepath = '';
-        foreach ($this->templatesfolders as $templatesfolder) {
+        foreach ($this->templatefolders as $templatesfolder) {
             if (is_file("$CFG->dirroot/$templatesfolder/$filename")) {
                 $filepath = "$CFG->dirroot/$templatesfolder/$filename";
                 break;

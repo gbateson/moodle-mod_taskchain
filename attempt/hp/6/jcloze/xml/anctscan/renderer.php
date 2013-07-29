@@ -54,7 +54,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
         parent::__construct($page, $target);
 
         // prepend templates for this output format
-        array_unshift($this->templatesfolders, 'mod/taskchain/attempt/hp/6/jcloze/xml/anctscan/templates');
+        array_unshift($this->templatefolders, 'mod/taskchain/attempt/hp/6/jcloze/xml/anctscan/templates');
 
         // replace standard jcloze.js with dropdown.js
         $this->javascripts = preg_grep('/jcloze.js/', $this->javascripts, PREG_GREP_INVERT);

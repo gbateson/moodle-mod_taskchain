@@ -58,7 +58,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_jgloss_renderer extends mod_taskchai
         parent::__construct($page, $target);
 
         // prepend templates for this output format
-        array_unshift($this->templatesfolders, 'mod/taskchain/attempt/hp/6/jcloze/xml/jgloss/templates');
+        array_unshift($this->templatefolders, 'mod/taskchain/attempt/hp/6/jcloze/xml/jgloss/templates');
 
         // replace standard jcloze.js with jgloss.js
         $this->javascripts = preg_grep('/jcloze.js/', $this->javascripts, PREG_GREP_INVERT);
