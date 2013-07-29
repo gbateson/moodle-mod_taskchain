@@ -1942,7 +1942,7 @@ abstract class taskchain_form_helper_base {
         } else {
             $list = 'available_'.$field.'s_list';
         }
-        $callback = array('mod_taskchain', $list);
+        $callback = array($this->TC, $list);
         $list = call_user_func_array($callback, $args);
         if (array_key_exists($value, $list)) {
             return $list[$value];
