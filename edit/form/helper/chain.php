@@ -701,7 +701,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $name = ($type=='entry' ? 'previous' : 'next');
         $optgroups = array(
             get_string('none') => array(mod_taskchain::ACTIVITY_NONE => get_string('none')),
-            get_string($name)  => mod_taskchain::available_cms_list($type)
+            get_string($name)  => $this->TC->available_cms_list($type)
         );
 
         if ($modinfo = get_fast_modinfo($PAGE->course)) {

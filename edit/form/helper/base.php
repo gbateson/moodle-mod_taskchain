@@ -1267,7 +1267,7 @@ abstract class taskchain_form_helper_base {
         $name = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
         $list = 'available_'.$field.'s_list';
-        $this->mform->addElement('select', $name, $label, mod_taskchain::$list());
+        $this->mform->addElement('select', $name, $label, $this->TC->$list());
         $this->mform->setType($name, PARAM_INT);
         $this->mform->setDefault($name, $this->get_defaultvalue($field));
         $this->mform->addHelpButton($name, $field, 'taskchain');
