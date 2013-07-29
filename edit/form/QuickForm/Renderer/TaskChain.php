@@ -59,7 +59,7 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
      */
     function renderHeader(&$header){
         if ($name = $header->getName()) {
-            $header->updateAttributes(array('id' => 'id_'.$name));
+            $header->updateAttributes(array('id' => $name));
         }
         return parent::renderHeader($header);
     }

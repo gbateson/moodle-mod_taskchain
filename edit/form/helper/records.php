@@ -339,7 +339,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
             $js .= '    var divs = null;'."\n";
             $js .= '    if (targetid && showid) {'."\n";
-            $js .= '        var fieldset = document.getElementById("id_actionshdr");'."\n";
+            $js .= '        var fieldset = document.getElementById("actionshdr");'."\n";
             $js .= '        if (fieldset) {'."\n";
             $js .= '            divs = fieldset.getElementsByTagName("DIV");'."\n";
             $js .= '        }'."\n";
@@ -395,7 +395,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '    var fieldsets = document.getElementsByTagName("FIELDSET")'."\n";
             $js .= '    if (fieldsets) {'."\n";
 
-            $js .= '        var hdrFieldsetId = new RegExp("^id_(labels|defaults|selects|(record[0-9]+))$");'."\n";
+            $js .= '        var hdrFieldsetId = new RegExp("^labels|defaults|selects|(record[0-9]+)$");'."\n";
             $js .= '        var fitemDivClass = new RegExp("\\\\b"+"fitem"+"\\\\b");'."\n";
             $js .= '        var felementClass = new RegExp("\\\\b"+"felement"+"\\\\b");'."\n";
 
@@ -457,7 +457,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
             // force bottom borders of final subactions
             $js .= 'function set_bottom_borders() {'."\n";
-            $js .= '    var obj = document.getElementById("id_actionshdr");'."\n";
+            $js .= '    var obj = document.getElementById("actionshdr");'."\n";
             $js .= '    var targetid = new RegExp("^(fitem|fgroup)_id_'.$field.'_('.implode('|', array_keys($actions)).')$");'."\n";
 
             $js .= '    var divs = null;'."\n";
