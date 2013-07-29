@@ -1266,8 +1266,8 @@ abstract class taskchain_form_helper_base {
     protected function add_template_list($field, $advanced=false) {
         $name = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
-        $list = 'available_'.$field.'s_list';
-        $this->mform->addElement('select', $name, $label, mod_taskchain::$list());
+        $list = $field.'s_list';
+        $this->mform->addElement('select', $name, $label, taskchain_available::$list());
         $this->mform->setType($name, PARAM_INT);
         $this->mform->setDefault($name, $this->get_defaultvalue($field));
         $this->mform->addHelpButton($name, $field, 'taskchain');
@@ -1938,11 +1938,11 @@ abstract class taskchain_form_helper_base {
         $value = array_shift($args);
         $type  = array_shift($args);
         if ($type) {
-            $list = 'available_'.$type.'s_list';
+            $list = $type.'s_list';
         } else {
-            $list = 'available_'.$field.'s_list';
+            $list = $field.'s_list';
         }
-        $callback = array('mod_taskchain', $list);
+        $callback = array('taskchain_available', $list);
         $list = call_user_func_array($callback, $args);
         if (array_key_exists($value, $list)) {
             return $list[$value];

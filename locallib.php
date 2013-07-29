@@ -1177,7 +1177,7 @@ class mod_taskchain extends taskchain_base {
      * @return string
      */
     public function format_allowresume() {
-        $options = $this->available_allowresumes_list();
+        $options = $this->available->allowresumes_list();
         if (array_key_exists($this->chain->allowresume, $options)) {
             return $options[$this->chain->allowresume];
         } else {
@@ -1193,8 +1193,8 @@ class mod_taskchain extends taskchain_base {
      * @return string
      */
     public function format_grademethod($type='grade', $option=null) {
-        $available_list = 'available_'.$type.'methods_list';
-        $options = $this->$available_list($type);
+        $available_list = $type.'methods_list';
+        $options = $this->available->$list($type);
         if (is_null($option)) {
             if ($type=='score') {
                 $record = 'task';

@@ -135,7 +135,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name  = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
         $sourcetype = $this->get_original_value('sourcetype', '');
-        $options = mod_taskchain::available_outputformats_list($sourcetype);
+        $options = taskchain_available::outputformats_list($sourcetype);
         $this->mform->addElement('select', $name, $label, $options);
         $this->mform->addHelpButton($name, $field, 'taskchain');
         //$this->mform->setAdvanced($name);
@@ -171,7 +171,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name_elements = $this->get_fieldname($field.'elements');
 
         $elements = array();
-        $elements[] = $this->mform->createElement('select',   $name_source,  '', mod_taskchain::available_titles_list());
+        $elements[] = $this->mform->createElement('select',   $name_source,  '', taskchain_available::titles_list());
         $elements[] = $this->mform->createElement('checkbox', $name_prepend, '', get_string($field_prepend, 'taskchain'));
         $elements[] = $this->mform->createElement('checkbox', $name_append,  '', get_string($field_append,  'taskchain'));
 
@@ -205,7 +205,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         $elements = array();
         $elements[] = $this->mform->createElement('selectyesno', $name_yesno, '');
-        $elements[] = $this->mform->createElement('select', $name_type, '', mod_taskchain::available_stopbuttontypes_list());
+        $elements[] = $this->mform->createElement('select', $name_type, '', taskchain_available::stopbuttontypes_list());
         $elements[] = $this->mform->createElement('text', $name_text, '', array('size' => '20'));
 
         $this->mform->addGroup($elements, $name_elements, $label, ' ', false);
@@ -274,7 +274,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name_elements = $this->get_fieldname($field.'elements');
 
         $elements = array();
-        $elements[] = $this->mform->createElement('select', $name, '', mod_taskchain::available_feedbacks_list());
+        $elements[] = $this->mform->createElement('select', $name, '', taskchain_available::feedbacks_list());
         $elements[] = $this->mform->createElement('text', $name_url, '', array('size'=>self::TEXT_FIELD_SIZE));
         $this->mform->addGroup($elements, $name_elements, $label, array(' '), false);
 
@@ -306,7 +306,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function add_field_delay3($field) {
-        $before = array('options' => mod_taskchain::available_delay3s_list());
+        $before = array('options' => taskchain_available::delay3s_list());
         $this->add_template_timer($field, true, $before);
 
         $name = $this->get_fieldname($field);
@@ -568,7 +568,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function format_fieldvalue_outputformat($field, $value) {
         $type = $this->get_fieldvalue('sourcetype');
-        $list = mod_taskchain::available_outputformats_list($type);
+        $list = taskchain_available::outputformats_list($type);
         if (array_key_exists($value, $list)) {
             return $list[$value];
         } else {

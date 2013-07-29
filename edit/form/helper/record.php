@@ -370,8 +370,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $name  = $this->get_fieldname($field);
         if ($this->is_add()) {
             $label = $this->get_fieldlabel($field);
-            $list  = 'available_'.$field.'s_list';
-            $this->mform->addElement('select', $name, $label, mod_taskchain::$list());
+            $list  = $field.'s_list';
+            $this->mform->addElement('select', $name, $label, taskchain_available::$list());
             $this->mform->setDefault($name, $this->get_defaultvalue($field));
             $this->mform->addHelpButton($name, $field, 'taskchain');
             //$this->mform->setAdvanced($name);
@@ -446,8 +446,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $field = 'attemptlimit';
         $name  = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
-        $list  = 'available_'.$field.'s_list';
-        $this->mform->addElement('select', $name, $label, mod_taskchain::$list());
+        $list  = $field.'s_list';
+        $this->mform->addElement('select', $name, $label, taskchain_available::$list());
         $this->mform->setDefault($name, $this->get_defaultvalue($field));
         $this->mform->setAdvanced($name);
         $this->mform->addHelpButton($name, $field, 'taskchain');
@@ -461,8 +461,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     protected function add_field_allowresume($field) {
         $name  = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
-        $list  = 'available_'.$field.'s_list';
-        $this->mform->addElement('select', $name, $label, mod_taskchain::$list());
+        $list  = $field.'s_list';
+        $this->mform->addElement('select', $name, $label, taskchain_available::$list());
         $this->mform->addHelpButton($name, $field, 'taskchain');
         $this->mform->setAdvanced($name);
     }
@@ -648,7 +648,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         if ($this->is_add()) {
             // create a group of form $elements
             $elements = array(
-                $this->mform->createElement('select', $name_source, '', mod_taskchain::available_namesources_list()),
+                $this->mform->createElement('select', $name_source, '', taskchain_available::namesources_list()),
                 $this->mform->createElement('text', $name, '', $size)
             );
 
