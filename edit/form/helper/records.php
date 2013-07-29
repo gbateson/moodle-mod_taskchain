@@ -29,7 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once(__DIR__.'/base.php');
+require_once(dirname(__FILE__).'/base.php');
 
 /**
  * taskchain_form_helper_records
@@ -104,7 +104,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
             $objectclass   = 'taskchain_'.$this->recordstype;
             $formclass     = 'taskchain_form_helper_'.$this->recordstype;
-            $formclassfile = __DIR__.'/'.$this->recordstype.'.php';
+            $formclassfile = dirname(__FILE__).'/'.$this->recordstype.'.php';
 
             if (! file_exists($formclassfile)) {
                 throw new moodle_exception(get_string('error_formhelperfilenotfound', 'taskchain', $formclassfile));

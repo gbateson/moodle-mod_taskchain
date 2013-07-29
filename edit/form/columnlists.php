@@ -29,7 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once(__DIR__.'/helper/columnlists.php');
+require_once(dirname(__FILE__).'/helper/columnlists.php');
 
 /**
  * mod_taskchain_edit_columnlists_form

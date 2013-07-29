@@ -29,7 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once(__DIR__.'/record.php');
+require_once(dirname(__FILE__).'/record.php');
 
 /**
  * taskchain_form_helper_condition
@@ -101,12 +101,12 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
         switch ($type) {
 
             case 'tasks':
-                require_once(__DIR__.'/task.php');
+                require_once(dirname(__FILE__).'/task.php');
                 $form_helper = new taskchain_form_helper_task($mform, $context, $record);
                 break;
 
             case 'chains':
-                require_once(__DIR__.'/chain.php');
+                require_once(dirname(__FILE__).'/chain.php');
                 $form_helper = new taskchain_form_helper_chain($mform, $context, $record);
                 break;
 

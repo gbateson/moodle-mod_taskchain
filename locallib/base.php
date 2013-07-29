@@ -29,28 +29,28 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once(__DIR__.'/available.php');
-require_once(__DIR__.'/can.php');
-require_once(__DIR__.'/create.php');
-require_once(__DIR__.'/get.php');
-require_once(__DIR__.'/regrade.php');
-require_once(__DIR__.'/require.php');
-require_once(__DIR__.'/url.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/available.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/can.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/create.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/get.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/regrade.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/require.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/url.php');
 
 /** PHP classes to handle TaskChain DB records */
-require_once(__DIR__.'/taskchain.php');
-require_once(__DIR__.'/taskchain_cache.php');
-require_once(__DIR__.'/taskchain_chain_attempt.php');
-require_once(__DIR__.'/taskchain_chain_grade.php');
-require_once(__DIR__.'/taskchain_chain.php');
-require_once(__DIR__.'/taskchain_condition.php');
-require_once(__DIR__.'/taskchain_detail.php');
-require_once(__DIR__.'/taskchain_question.php');
-require_once(__DIR__.'/taskchain_response.php');
-require_once(__DIR__.'/taskchain_string.php');
-require_once(__DIR__.'/taskchain_task_attempt.php');
-require_once(__DIR__.'/taskchain_task_score.php');
-require_once(__DIR__.'/taskchain_task.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_cache.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_chain_attempt.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_chain_grade.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_chain.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_condition.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_detail.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_question.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_response.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_string.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_task_attempt.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_task_score.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_task.php');
 
 /**
  * taskchain_base

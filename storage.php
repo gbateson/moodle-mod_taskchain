@@ -395,10 +395,10 @@ class mod_taskchain_storage {
 
         } // end while
     }
-// does this output format allow task attempts to be reviewed?
 
     /**
      * provide_review
+     * does this output format allow task attempts to be reviewed?
      *
      * @return xxx
      * @todo Finish documenting this function
@@ -406,10 +406,10 @@ class mod_taskchain_storage {
     static public function provide_review() {
         return false;
     }
-// does this output format allow task attempts to be resumed?
 
     /**
      * provide_resume
+     * does this output format allow task attempts to be resumed?
      *
      * @return xxx
      * @todo Finish documenting this function
@@ -417,11 +417,11 @@ class mod_taskchain_storage {
     static public function provide_resume() {
         return false;
     }
-// does this output format allow a clickreport
-    // show a click trail of what students clicked
 
     /**
      * provide_clickreport
+     * does this output format allow a clickreport
+     * show a click trail of what students clicked
      *
      * @return xxx
      * @todo Finish documenting this function
@@ -429,10 +429,10 @@ class mod_taskchain_storage {
     static public function provide_clickreport() {
         return false;
     }
-// can the current task attempt be reviewed now?
 
     /**
      * can_review
+     * can the current task attempt be reviewed now?
      *
      * @param xxx $TC
      * @return xxx
@@ -469,10 +469,10 @@ class mod_taskchain_storage {
         }
         return false;
     }
-// can the current chain/task attempt be paused and resumed later?
 
     /**
      * can_resume
+     * can the current chain/task attempt be paused and resumed later?
      *
      * @param xxx $TC
      * @param xxx $type
@@ -487,10 +487,10 @@ class mod_taskchain_storage {
         }
         return false;
     }
-// can the current chain/task be restarted after the current attempt finishes?
 
     /**
      * can_restart
+     * can the current chain/task be restarted after the current attempt finishes?
      *
      * @param xxx $TC
      * @param xxx $type

@@ -29,7 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once(__DIR__.'/helper/task.php');
+require_once(dirname(__FILE__).'/helper/task.php');
 
 /**
  * mod_taskchain_edit_task_form

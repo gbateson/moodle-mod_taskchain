@@ -29,7 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once(__DIR__.'/record.php');
+require_once(dirname(__FILE__).'/record.php');
 
 /**
  * taskchain_form_helper_chain

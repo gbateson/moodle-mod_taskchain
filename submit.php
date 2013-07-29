@@ -26,7 +26,7 @@
  */
 
 /** Include required files */
-require_once(dirname(dirname(__DIR__)).'/config.php');
+require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
 $TC = new mod_taskchain();

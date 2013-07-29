@@ -498,38 +498,6 @@ class mod_taskchain extends taskchain_base {
      * this allows us to separate the methods into several classes
      * http://stackoverflow.com/questions/356128/can-i-extend-a-class-using-more-than-1-class-in-php
      *
-     * taskchain::available_xxx() will call taskchain_available::xxx()
-     * taskchain::can_xxx()       will call taskchain_can::xxx()
-     * taskchain::create_xxx()    will call taskchain_create::xxx()
-     * taskchain::get_xxx()       will call taskchain_get::xxx()
-     * taskchain::regrade_xxx()   will call taskchain_regrade::xxx()
-     * taskchain::require_xxx()   will call taskchain_require::xxx()
-     *
-     * @param string $name
-     * @param array $params
-     * @todo Finish documenting this function
-     */
-    static public function __callStatic($name, $params) {
-        switch (true) {
-            case substr($name, 0, 10)=='available_' : $callback = array('taskchain_available', substr($name, 10)); break;
-            case substr($name, 0,  4)=='can_'       : $callback = array('taskchain_can',       substr($name,  4)); break;
-            case substr($name, 0,  7)=='create_'    : $callback = array('taskchain_create',    substr($name,  7)); break;
-            case substr($name, 0,  4)=='get_'       : $callback = array('taskchain_get',       substr($name,  4)); break;
-            case substr($name, 0,  8)=='regrade_'   : $callback = array('taskchain_regrade',   substr($name,  8)); break;
-            case substr($name, 0,  8)=='require_'   : $callback = array('taskchain_require',   substr($name,  8)); break;
-            case substr($name, 0,  4)=='url_'       : $callback = array('taskchain_url',       substr($name,  4)); break;
-            default: return false; // shouldn't happen !!
-        }
-        return call_user_func_array($callback, $params);
-    }
-
-    /**
-     * __call
-     *
-     * here is one way to implement inheritance from multiple classes
-     * this allows us to separate the methods into several classes
-     * http://stackoverflow.com/questions/356128/can-i-extend-a-class-using-more-than-1-class-in-php
-     *
      * taskchain->available_xxx() will call taskchain->available->xxx()
      * taskchain->can_xxx()       will call taskchain->can->xxx()
      * taskchain->create_xxx()    will call taskchain->create->xxx()
@@ -683,7 +651,7 @@ class mod_taskchain extends taskchain_base {
      */
     static public function get_sourcetype($sourcefile) {
         // include all the taskchain_source classes
-        $classes = self::get_classes('taskchainsource');
+        $classes = taskchain_get::classes('taskchainsource');
 
         // loop through the classes checking to see if this file is recognized
         // use call_user_func() to prevent syntax error in PHP 5.2.x
@@ -1051,7 +1019,7 @@ class mod_taskchain extends taskchain_base {
      * @todo Finish documenting this function
      */
     static public function format_status($status) {
-        $options = self::available_statuses_list();
+        $options = taskchain_available::statuses_list();
         if (array_key_exists($status, $options)) {
             return $options[$status];
         } else {
@@ -2616,7 +2584,6 @@ class mod_taskchain extends taskchain_base {
     public function context($contextlevel, $instanceid=0, $strictness=0) {
         if (class_exists('context_helper')) {
             // use call_user_func() to prevent syntax error in PHP 5.2.x
-            // return $class::instance($instanceid, $strictness);
             $class = context_helper::get_class_for_level($contextlevel);
             return call_user_func(array($class, 'instance'), $instanceid, $strictness);
         } else {

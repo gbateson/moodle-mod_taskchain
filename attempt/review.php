@@ -132,6 +132,8 @@ class mod_taskchain_attempt_review {
     /**
      * review
      *
+     * we use call_user_func() a lot in this function to prevent syntax error in PHP 5.2.x
+     *
      * @uses $DB
      * @param xxx $TC
      * @param xxx $class
@@ -173,13 +175,15 @@ class mod_taskchain_attempt_review {
         }
 
         // if necessary, remove score and weighting fields
-        $response_num_fields = $class::response_num_fields();
+        $callback = array($class, 'response_num_fields');
+        $response_num_fields = call_user_func($callback);
         if (! ($reviewoptions & mod_taskchain::REVIEW_SCORES)) {
             $response_num_fields = preg_grep('/^score|weighting$/', $response_num_fields, PREG_GREP_INVERT);
         }
 
-        // if necessary, remove reponses fields
-        $response_text_fields = $class::response_text_fields();
+        // if necessary, remove responses fields
+        $callback = array($class, 'response_text_fields');
+        $response_text_fields = call_user_func($callback);
         if (! ($reviewoptions & mod_taskchain::REVIEW_RESPONSES)) {
             $response_text_fields = array();
         }
@@ -214,13 +218,14 @@ class mod_taskchain_attempt_review {
             $row = new html_table_row();
 
             // add heading
-            $text = $class::format_attempt_heading($field);
+            $callback = array($class, 'format_attempt_heading');
+            $text = call_user_func($callback, $field);
             $cell = new html_table_cell($text, array('class'=>'attemptfield'));
             $row->cells[] = $cell;
 
             // add data
-            $callback = array($class, 'format_attempt_data');
             $params = array($TC->taskattempt, $field, $strtimeformat);
+            $callback = array($class, 'format_attempt_data');
             $text = call_user_func_array($callback , $params);
 
             $cell = new html_table_cell($text, array('class'=>'attemptvalue'));
@@ -254,13 +259,15 @@ class mod_taskchain_attempt_review {
 
                 // add separator
                 if (count($table->data)) {
-                    $class::add_separator($table, $question_colspan);
+                    $callback = array($class, 'add_separator'); // PHP 5.2
+                    call_user_func($callback, &$table, $question_colspan);
                 }
 
                 // question text
-                if ($class::show_question_text()) {
+                if (call_user_func(array($class, 'show_question_text'))) {
                     if ($text = mod_taskchain::get_question_text($questions[$response->questionid])) {
-                        $class::add_question_text($table, $text, $question_colspan);
+                        $callback = array($class, 'add_question_text'); // PHP 5.2
+                        call_user_func($callback, &$table, $text, $question_colspan);
                     }
                 }
 
@@ -286,17 +293,20 @@ class mod_taskchain_attempt_review {
                     if ($neutralize_text_fields) {
                         $neutral_text .= ($neutral_text ? ',' : '').$text;
                     } else {
-                        $class::add_text_field($table, $field, $text, $textfield_colspan);
+                        $callback = array($class, 'add_text_field'); // PHP 5.2
+                        call_user_func($callback, &$table, $field, $text, $textfield_colspan);
                     }
                 }
                 if ($neutral_text) {
-                    $class::add_text_field($table, 'responses', $neutral_text, $textfield_colspan);
+                    $callback = array($class, 'add_text_field'); // PHP 5.2
+                    call_user_func($callback, &$table, 'responses', $neutral_text, $textfield_colspan);
                 }
 
                 // numeric fields
                 $row = new html_table_row();
                 foreach ($response_num_fields as $field) {
-                    $class::add_num_field($row, $field, $response->$field);
+                    $callback = array($class, 'add_num_field'); // PHP 5.2
+                    call_user_func($callback, &$row, $field, $response->$field);
                 }
                 $table->data[] = $row;
             }
