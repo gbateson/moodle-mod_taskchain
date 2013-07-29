@@ -1100,29 +1100,111 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function fix_onload($onload, $script_tags=false)  {
-        static $count = 0;
-        $onload_temp  = 'onload_'.sprintf('%02d', (++$count));
-
-        $onload_oneline = preg_replace('/\s+/s', ' ', $onload);
-        $onload_nospace = str_replace(' ', '', $onload_oneline);
+    function fix_onload($onload, $script_tags=false) {
+        static $taskid = 0;
 
         $str = '';
         if ($script_tags) {
             $str .= "\n".'<script type="text/javascript">'."\n"."//<![CDATA[\n";
         }
-        $str .= ''
-            .'if (typeof(window.onload)=="function"){'."\n"
-            .'	var s = onload.toString();'."\n"
-            .'	s = s.replace(new RegExp("\\\\s+", "g"), "");'."\n"
-            .'	if (s.indexOf("'.$onload_nospace.'")<0){'."\n"
-            .'		window.'.$onload_temp.' = onload;'."\n"
-            .'		window.onload = new Function("window.'.$onload_temp.'();"+"'.$onload_oneline.';");'."\n"
-            .'	}'."\n"
-            .'} else {'."\n"
-            .'	window.onload = new Function("'.$onload_oneline.'");'."\n"
-            .'}'."\n"
-        ;
+        if ($taskid && $taskid==$this->TC->task->id) {
+            // do nothing
+        } else {
+            // only do this once per task
+            $taskid = $this->TC->task->id;
+            $str .= ''
+                ."/**\n"
+                ." * Based on http://phrogz.net/JS/AttachEvent_js.txt - thanks!\n"
+                ." * That code is copyright 2003 by Gavin Kistner, !@phrogz.net\n"
+                ." * and is covered under the license viewable at:\n"
+                ." * http://phrogz.net/JS/_ReuseLicense.txt\n"
+                ." */\n"
+
+                ."function taskchainAttachEvent(obj, evt, fnc, useCapture) {\n"
+                ."	// obj : an HTML element\n"
+                ."	// evt : the name of the event (without leading 'on')\n"
+                ."	// fnc : the name of the event handler funtion\n"
+                ."	// useCapture : boolean (default = false)\n"
+
+                ."	if (typeof(fnc)=='string') {\n"
+                ."		fnc = new Function(fnc);\n"
+                ."	}\n"
+
+                ."	// transfer object's old event handler (if any)\n"
+                ."	var onevent = 'on' + evt;\n"
+                ."	if (obj[onevent]) {\n"
+                ."		var old_event_handler = obj[onevent];\n"
+                ."		obj[onevent] = null;\n"
+                ."		taskchainAttachEvent(obj, evt, old_event_handler, useCapture);\n"
+                ."	}\n"
+
+                ."	// create key for this event handler\n"
+                ."	var s = fnc.toString();\n"
+                .'	s = s.replace(new RegExp("[; \\\\t\\\\n\\\\r]+", "g"), "");'."\n"
+                .'	s = s.substring(s.indexOf("{") + 1, s.lastIndexOf("}"));'."\n"
+
+                ."	 // skip event handler, if it is a duplicate\n"
+                ."	if (! obj.evt_keys) {\n"
+                ."		obj.evt_keys = new Array();\n"
+                ."	}\n"
+                ."	if (obj.evt_keys[s]) {\n"
+                ."		return true;\n"
+                ."	}\n"
+                ."	obj.evt_keys[s] = true;\n"
+
+                ."	// standard DOM\n"
+                ."	if (obj.addEventListener) {\n"
+                ."		obj.addEventListener(evt, fnc, (useCapture ? true : false));\n"
+                ."		return true;\n"
+                ."	}\n"
+
+                ."	// IE\n"
+                ."	if (obj.attachEvent) {\n"
+                ."		return obj.attachEvent(onevent, fnc);\n"
+                ."	}\n"
+
+                ."	// old browser (e.g. NS4 or IE5Mac)\n"
+                ."	if (! obj.evts) {\n"
+                ."		obj.evts = new Array();\n"
+                ."	}\n"
+                ."	if (! obj.evts[onevent]) {\n"
+                ."		obj.evts[onevent] = new Array();\n"
+                ."	}\n"
+                ."	var i = obj.evts[onevent].length;\n"
+                ."	obj.evts[onevent][i] = fnc;\n"
+                ."	obj[onevent] = new Function('var onevent=\"'+onevent+'\"; for (var i=0; i<this.evts[onevent].length; i++) this.evts[onevent][i]();');\n"
+                ."}\n"
+
+                ."function disable_paste(obj) {\n"
+                ."	obj.ondrop = new Function('return false');\n"
+                ."	obj.onpaste = new Function('return false');\n"
+                ."}\n"
+
+                ."function disable_paste_input(obj) {\n"
+                ."	var obj = document.getElementsByTagName('input');\n"
+                ."	if (obj) {\n"
+                ."		for (var i=0; i<obj.length; i++) {\n"
+                ."			if (obj[i].type=='text') {\n"
+                ."				disable_paste(obj[i])\n"
+                ."			}\n"
+                ."		}\n"
+                ."	}\n"
+                ."	var obj = document.getElementsByTagName('textarea');\n"
+                ."	if (obj) {\n"
+                ."		var i_max = obj.length;\n"
+                ."		for (var i=0; i<i_max; i++) {\n"
+                ."			disable_paste(obj[i])\n"
+                ."		}\n"
+                ."		obj = null;\n"
+                ."	}\n"
+                ."}\n"
+
+                ."disable_paste_input();\n"
+            ;
+        }
+        $onload_oneline = preg_replace('/\s+/s', ' ', $onload);
+        $onload_oneline = preg_replace("/[\\']/", '\\\\$0', $onload_oneline);
+        $str .= "taskchainAttachEvent(window, 'load', '$onload_oneline');\n";
         if ($script_tags) {
             $str .= "//]]>\n"."</script>\n";
         }
