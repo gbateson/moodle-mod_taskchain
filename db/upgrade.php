@@ -173,6 +173,12 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
+    $newversion = 2011040126;
+    if ($oldversion < $newversion) {
+        $update_cache = true;
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
     if ($empty_cache) {
         $DB->delete_records('taskchain_cache');
     }
