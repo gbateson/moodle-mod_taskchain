@@ -1140,6 +1140,32 @@ class mod_taskchain extends taskchain_base {
     }
 
     /**
+     * show_entrypage
+     *
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    function show_entrypage() {
+        // teacher can always see the entry page
+        if ($this->can_manage()) {
+            return true;
+        }
+
+        if ($this->has_entrypage()) {
+            // special case for student who has an "in progress" chain attempt
+            // when "allowresume" is set to "force"
+            if ($this->chain->allowresume==mod_taskchain::ALLOWRESUME_FORCE) {
+                if (! $this->require->previous_chainattempt()) {
+                    return false; // student must resume previous chain attempt
+                }
+            }
+            return true; // student can see entry page
+        }
+
+        return false; // no entry page for student
+    }
+
+    /**
      * has_entrypage
      *
      * @return xxx

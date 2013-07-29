@@ -167,7 +167,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem {
     padding-top      : 6px;
 }
-#page-mod-taskchain-edit-tasks fieldset#labels div.fitem,
+#page-mod-taskchain-edit-tasks fieldset#id_labels div.fitem,
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem div.felement {
     vertical-align   : bottom;
 }
@@ -194,7 +194,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem fieldset.felement {white-space: normal;}
 
 /** fancy effects for top row (modern browsers only) */
-#page-mod-taskchain-edit-tasks fieldset#labels {
+#page-mod-taskchain-edit-tasks fieldset#id_labels {
     /* cross-browser gradient (Note: Safari and Chrome use Webkit) */
     /* non-css3 */ background: #eeeeee;
     /* css3     */ background: linear-gradient(top,  #ffffff,  #dddddd);
@@ -211,8 +211,8 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
     /* Webkit  */ -webkit-border-top-left-radius: 12px; -webkit-border-top-right-radius: 12px;
 }
 
-#page-mod-taskchain-edit-tasks fieldset#defaults,
-#page-mod-taskchain-edit-tasks fieldset#selects {
+#page-mod-taskchain-edit-tasks fieldset#id_defaults,
+#page-mod-taskchain-edit-tasks fieldset#id_selects {
     background   : #ffffff;
 }
 
@@ -257,8 +257,8 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.postconditions {width: 180px;}
 
 /** align special checkboxes to right (and add margin-right) */
-#page-mod-taskchain-edit-tasks fieldset#selects div.fitem.selectrecord fieldset.fgroup {text-align: right;}
-#page-mod-taskchain-edit-tasks fieldset#selects div.fitem.selectrecord fieldset.fgroup input {margin-left: 3px; margin-right: 2px;}
+#page-mod-taskchain-edit-tasks fieldset#id_selects div.fitem.selectrecord fieldset.fgroup {text-align: right;}
+#page-mod-taskchain-edit-tasks fieldset#id_selects div.fitem.selectrecord fieldset.fgroup input {margin-left: 3px; margin-right: 2px;}
 
 /** align sortorder center (but don't affect actionshdr first radio button) */
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sortorder div.felement {text-align: center;}
@@ -266,12 +266,12 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 
 /** align name field to left (but not top 3 rows) */
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.name div.felement {text-align: left;}
-#page-mod-taskchain-edit-tasks fieldset#labels   div.fitem.name div.felement,
-#page-mod-taskchain-edit-tasks fieldset#defaults div.fitem.name div.felement,
-#page-mod-taskchain-edit-tasks fieldset#selects  div.fitem.name div.felement {text-align: center;}
+#page-mod-taskchain-edit-tasks fieldset#id_labels   div.fitem.name div.felement,
+#page-mod-taskchain-edit-tasks fieldset#id_defaults div.fitem.name div.felement,
+#page-mod-taskchain-edit-tasks fieldset#id_selects  div.fitem.name div.felement {text-align: center;}
 
-#page-mod-taskchain-edit-tasks fieldset#filtershdr,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr {
+#page-mod-taskchain-edit-tasks fieldset#id_filtershdr,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr {
     background    : transparent;
     border        : none;
     margin-top    : 12px;
@@ -279,52 +279,52 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
     text-align    : left;
     padding-left  : 24px;
 }
-#page-mod-taskchain-edit-tasks fieldset#filtershdr legend {
+#page-mod-taskchain-edit-tasks fieldset#id_filtershdr legend {
     display       : none;
 }
-#page-mod-taskchain-edit-tasks fieldset#actionshdr legend {
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr legend {
     margin-bottom : 12px;
 }
-#page-mod-taskchain-edit-tasks fieldset#filtershdr div.fitem,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem {
+#page-mod-taskchain-edit-tasks fieldset#id_filtershdr div.fitem,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem {
     border-right  : none;
     clear         : both;
     display       : block;
     width         : auto;
 }
-#page-mod-taskchain-edit-tasks fieldset#filtershdr div.fitem div.fitemtitle,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem div.fitemtitle {
+#page-mod-taskchain-edit-tasks fieldset#id_filtershdr div.fitem div.fitemtitle,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem div.fitemtitle {
     float        : left;
 }
-#page-mod-taskchain-edit-tasks fieldset#filtershdr div.felement,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.felement,
-#page-mod-taskchain-edit-tasks fieldset#filtershdr div.felement.fgroup,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.felement.fgroup,
-#page-mod-taskchain-edit-tasks fieldset#filtershdr fieldset.felement,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr fieldset.felement,
-#page-mod-taskchain-edit-tasks fieldset#filtershdr fieldset.felement.fgroup,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr fieldset.felement.fgroup {
+#page-mod-taskchain-edit-tasks fieldset#id_filtershdr div.felement,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.felement,
+#page-mod-taskchain-edit-tasks fieldset#id_filtershdr div.felement.fgroup,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.felement.fgroup,
+#page-mod-taskchain-edit-tasks fieldset#id_filtershdr fieldset.felement,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr fieldset.felement,
+#page-mod-taskchain-edit-tasks fieldset#id_filtershdr fieldset.felement.fgroup,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr fieldset.felement.fgroup {
     float        : left;
     text-align   : left;
 }
 
 #page-mod-taskchain-edit-tasks input {margin-right : 8px;}
 
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortfield,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortdirection,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortincrement,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.addtasks,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.addtasksafter,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasks,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasksafter,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetaskschain,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtercoursename,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filteractivityname,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskname,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskposition,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcefile,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcetype {
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.reordertasks_sortfield,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.reordertasks_sortdirection,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.reordertasks_sortincrement,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.addtasks,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.addtasksafter,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.movetasks,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.movetasksafter,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.movetaskschain,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filtercoursename,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filteractivityname,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filtertaskname,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filtertaskposition,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filtersourcefile,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filtersourcetype {
     background-color : #eeeebb;
     border-left      : 1px solid #333333;
     border-right     : 1px solid #333333;
@@ -332,32 +332,32 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
     width            : 480px;
 }
 
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortfield,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortdirection,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortincrement,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.addtasks,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.addtasksafter,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasks,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasksafter,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetaskschain,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults {padding-left: 24px; width: 456px;}
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.reordertasks_sortfield,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.reordertasks_sortdirection,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.reordertasks_sortincrement,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.addtasks,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.addtasksafter,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.movetasks,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.movetasksafter,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.movetaskschain,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults {padding-left: 24px; width: 456px;}
 
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtercoursename,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filteractivityname,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskname,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskposition,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcefile,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcetype {padding-left: 48px; width: 432px;}
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filtercoursename,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filteractivityname,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filtertaskname,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filtertaskposition,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filtersourcefile,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.applydefaults_filtersourcetype {padding-left: 48px; width: 432px;}
 
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_reordertasks_sortfield,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_addtasks_start,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_movetasks_start,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_applydefaults_selectedtasks {border-top: 1px solid #333333; padding-top: 6px;}
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div#fitem_id_reordertasks_sortfield,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div#fitem_id_addtasks_start,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div#fitem_id_movetasks_start,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div#fitem_id_applydefaults_selectedtasks {border-top: 1px solid #333333; padding-top: 6px;}
 
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_reordertasks_sortincrement,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fgroup_id_addtasksafter_elements,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fgroup_id_movetaskschain_elements,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fgroup_id_applydefaults_filtersourcetype_elements {border-bottom: 1px solid #333333; padding-bottom: 6px;}
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div#fitem_id_reordertasks_sortincrement,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div#fgroup_id_addtasksafter_elements,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div#fgroup_id_movetaskschain_elements,
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div#fgroup_id_applydefaults_filtersourcetype_elements {border-bottom: 1px solid #333333; padding-bottom: 6px;}
 
 #page-mod-taskchain-edit-tasks div.fitem#fitem_id_applydefaults_filtercoursename div.fitemtitle,
 #page-mod-taskchain-edit-tasks div.fitem#fgroup_id_applydefaults_filteractivityname_elements div.fitemtitle,
@@ -384,7 +384,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
     width       : auto;
 }
 
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.actionjs {display:none;}
+#page-mod-taskchain-edit-tasks fieldset#id_actionshdr div.fitem.actionjs {display:none;}
 
 #page-mod-taskchain-edit-tasks div.conditions {text-align: left; padding: 0px;}
 #page-mod-taskchain-edit-tasks div.conditions ul {list-style-position: inside; margin: 0px; padding: 0px; white-space: nowrap;}
@@ -451,7 +451,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-chains fieldset.clearfix div.fitem {
     padding-top      : 6px;
 }
-#page-mod-taskchain-edit-chains fieldset#labels div.fitem,
+#page-mod-taskchain-edit-chains fieldset#id_labels div.fitem,
 #page-mod-taskchain-edit-chains fieldset.clearfix div.fitem div.felement {
     vertical-align   : bottom;
 }
@@ -478,7 +478,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-chains fieldset.clearfix div.fitem fieldset.felement {white-space: normal;}
 
 /** fancy effects for top row (modern browsers only) */
-#page-mod-taskchain-edit-chains fieldset#labels {
+#page-mod-taskchain-edit-chains fieldset#id_labels {
     /* cross-browser gradient (Note: Safari and Chrome use Webkit) */
     /* non-css3 */ background: #eeeeee;
     /* css3     */ background: linear-gradient(top,  #ffffff,  #dddddd);
@@ -495,8 +495,8 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
     /* Webkit  */ -webkit-border-top-left-radius: 12px; -webkit-border-top-right-radius: 12px;
 }
 
-#page-mod-taskchain-edit-chains fieldset#defaults,
-#page-mod-taskchain-edit-chains fieldset#selects {
+#page-mod-taskchain-edit-chains fieldset#id_defaults,
+#page-mod-taskchain-edit-chains fieldset#id_selects {
     background   : #ffffff;
 }
 
@@ -541,8 +541,8 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-chains fieldset.clearfix div.fitem.postconditions {width: 180px;}
 
 /** align special checkboxes to right (and add margin-right) */
-#page-mod-taskchain-edit-chains fieldset#selects div.fitem.selectrecord fieldset.fgroup {text-align: right;}
-#page-mod-taskchain-edit-chains fieldset#selects div.fitem.selectrecord fieldset.fgroup input {margin-left: 3px; margin-right: 2px;}
+#page-mod-taskchain-edit-chains fieldset#id_selects div.fitem.selectrecord fieldset.fgroup {text-align: right;}
+#page-mod-taskchain-edit-chains fieldset#id_selects div.fitem.selectrecord fieldset.fgroup input {margin-left: 3px; margin-right: 2px;}
 
 /** align sortorder center (but don't affect actionshdr first radio button) */
 #page-mod-taskchain-edit-chains fieldset.clearfix div.fitem.sortorder div.felement {text-align: center;}
@@ -550,12 +550,12 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 
 /** align name field to left (but not top 3 rows) */
 #page-mod-taskchain-edit-chains fieldset.clearfix          div.fitem.name div.felement {text-align: left;}
-#page-mod-taskchain-edit-chains fieldset#labels   div.fitem.name div.felement,
-#page-mod-taskchain-edit-chains fieldset#defaults div.fitem.name div.felement,
-#page-mod-taskchain-edit-chains fieldset#selects  div.fitem.name div.felement {text-align: center;}
+#page-mod-taskchain-edit-chains fieldset#id_labels   div.fitem.name div.felement,
+#page-mod-taskchain-edit-chains fieldset#id_defaults div.fitem.name div.felement,
+#page-mod-taskchain-edit-chains fieldset#id_selects  div.fitem.name div.felement {text-align: center;}
 
-#page-mod-taskchain-edit-chains fieldset#filtershdr,
-#page-mod-taskchain-edit-chains fieldset#actionshdr {
+#page-mod-taskchain-edit-chains fieldset#id_filtershdr,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr {
     background    : transparent;
     border        : none;
     margin-top    : 12px;
@@ -563,47 +563,47 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
     text-align    : left;
     padding-left  : 24px;
 }
-#page-mod-taskchain-edit-chains fieldset#filtershdr legend {
+#page-mod-taskchain-edit-chains fieldset#id_filtershdr legend {
     display       : none;
 }
-#page-mod-taskchain-edit-chains fieldset#actionshdr legend {
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr legend {
     margin-bottom : 12px;
 }
-#page-mod-taskchain-edit-chains fieldset#filtershdr div.fitem,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem {
+#page-mod-taskchain-edit-chains fieldset#id_filtershdr div.fitem,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem {
     border-right  : none;
     clear         : both;
     display       : block;
     width         : auto;
 }
-#page-mod-taskchain-edit-chains fieldset#filtershdr div.fitem div.fitemtitle,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem div.fitemtitle {
+#page-mod-taskchain-edit-chains fieldset#id_filtershdr div.fitem div.fitemtitle,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem div.fitemtitle {
     float        : left;
 }
-#page-mod-taskchain-edit-chains fieldset#filtershdr div.felement,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.felement,
-#page-mod-taskchain-edit-chains fieldset#filtershdr div.felement.fgroup,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.felement.fgroup,
-#page-mod-taskchain-edit-chains fieldset#filtershdr fieldset.felement,
-#page-mod-taskchain-edit-chains fieldset#actionshdr fieldset.felement,
-#page-mod-taskchain-edit-chains fieldset#filtershdr fieldset.felement.fgroup,
-#page-mod-taskchain-edit-chains fieldset#actionshdr fieldset.felement.fgroup {
+#page-mod-taskchain-edit-chains fieldset#id_filtershdr div.felement,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.felement,
+#page-mod-taskchain-edit-chains fieldset#id_filtershdr div.felement.fgroup,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.felement.fgroup,
+#page-mod-taskchain-edit-chains fieldset#id_filtershdr fieldset.felement,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr fieldset.felement,
+#page-mod-taskchain-edit-chains fieldset#id_filtershdr fieldset.felement.fgroup,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr fieldset.felement.fgroup {
     float        : left;
     text-align   : left;
 }
 
 #page-mod-taskchain-edit-chains input {margin-right : 8px;}
 
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortfield,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortdirection,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortincrement,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.addchains,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.addchainsafter,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.movechains,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.movechainsafter,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults_filtercoursename,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults_filteractivityname {
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.reorderchains_sortfield,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.reorderchains_sortdirection,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.reorderchains_sortincrement,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.addchains,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.addchainsafter,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.movechains,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.movechainsafter,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.applydefaults,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.applydefaults_filtercoursename,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.applydefaults_filteractivityname {
     background-color : #eeeebb;
     border-left      : 1px solid #333333;
     border-right     : 1px solid #333333;
@@ -611,27 +611,27 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
     width            : 480px;
 }
 
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortfield,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortdirection,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortincrement,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.addchains,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.addchainsafter,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.movechains,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.movechainsafter,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults {padding-left: 24px; width: 456px;}
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.reorderchains_sortfield,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.reorderchains_sortdirection,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.reorderchains_sortincrement,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.addchains,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.addchainsafter,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.movechains,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.movechainsafter,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.applydefaults {padding-left: 24px; width: 456px;}
 
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults_filtercoursename,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults_filteractivityname {padding-left: 48px; width: 432px;}
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.applydefaults_filtercoursename,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.applydefaults_filteractivityname {padding-left: 48px; width: 432px;}
 
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fitem_id_reorderchains_sortfield,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fitem_id_addchains_start,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fitem_id_movechains_start,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fitem_id_applydefaults_selectedchains {border-top: 1px solid #333333; padding-top: 6px;}
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div#fitem_id_reorderchains_sortfield,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div#fitem_id_addchains_start,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div#fitem_id_movechains_start,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div#fitem_id_applydefaults_selectedchains {border-top: 1px solid #333333; padding-top: 6px;}
 
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fitem_id_reorderchains_sortincrement,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fgroup_id_addchainsafter_elements,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fgroup_id_movechainsafter_elements,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fgroup_id_applydefaults_filteractivityname_elements {border-bottom: 1px solid #333333; padding-bottom: 6px;}
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div#fitem_id_reorderchains_sortincrement,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div#fgroup_id_addchainsafter_elements,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div#fgroup_id_movechainsafter_elements,
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div#fgroup_id_applydefaults_filteractivityname_elements {border-bottom: 1px solid #333333; padding-bottom: 6px;}
 
 #page-mod-taskchain-edit-chains div.fitem#fitem_id_applydefaults_filtercoursename div.fitemtitle,
 #page-mod-taskchain-edit-chains div.fitem#fgroup_id_applydefaults_filteractivityname_elements div.fitemtitle {
@@ -654,7 +654,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
     width       : auto;
 }
 
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.actionjs {display:none;}
+#page-mod-taskchain-edit-chains fieldset#id_actionshdr div.fitem.actionjs {display:none;}
 
 /** edit-condition and edit-columnlists */
 
@@ -685,9 +685,9 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-columnlists div.fitem div.fitemtitle {width: 160px; margin-right: 12px;}
 #page-mod-taskchain-edit-columnlists fieldset.clearfix:not(#filtershdr) div.fitem div.fitemtitle:after {content: ":";}
 
-#page-mod-taskchain-edit-columnlists fieldset#actionshdr div,
-#page-mod-taskchain-edit-columnlists fieldset#actionshdr div.fitem#fgroup_id_action_buttons_elements,
-#page-mod-taskchain-edit-columnlists fieldset#actionshdr div.fitem#fgroup_id_action_buttons_elements div.felement.fgroup {
+#page-mod-taskchain-edit-columnlists fieldset#id_actionshdr div,
+#page-mod-taskchain-edit-columnlists fieldset#id_actionshdr div.fitem#fgroup_id_action_buttons_elements,
+#page-mod-taskchain-edit-columnlists fieldset#id_actionshdr div.fitem#fgroup_id_action_buttons_elements div.felement.fgroup {
     margin-bottom  : 0px;
     margin-left    : 0px;
     margin-right   : 0px;

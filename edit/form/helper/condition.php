@@ -594,8 +594,8 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             $js .=  '            }'."\n";
 
             // adjust row heights as necessary
-            $js .=  '            if (window.opener.set_fitem_heights) {'."\n";
-            $js .=  '                window.opener.set_fitem_heights();'."\n";
+            $js .=  '            if (window.opener.set_fitem_heights_and_widths) {'."\n";
+            $js .=  '                window.opener.set_fitem_heights_and_widths();'."\n";
             $js .=  '            }'."\n";
 
             // close the javascript

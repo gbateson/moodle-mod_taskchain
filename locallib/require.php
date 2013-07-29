@@ -125,10 +125,10 @@ class taskchain_require extends taskchain_base {
             return false;
         }
     }
-// check availability of the chain / task
 
     /**
      * availability
+     * check availability of the chain / task
      *
      * @param xxx $type
      * @return xxx
@@ -176,6 +176,61 @@ class taskchain_require extends taskchain_base {
     }
 
     /**
+     * previous_chainattempt
+     *
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    function previous_chainattempt() {
+
+        // if possible, find a previous chain attempt that can be resumed
+        if ($this->TC->chain->allowresume && $this->TC->get_chainattempts()) {
+
+            if ($this->TC->chain->allowresume==self::ALLOWRESUME_FORCE) {
+                $force_resume = true;
+            } else if ($error = $this->moreattempts('chain')) {
+                $force_resume = true;
+            } else {
+                $force_resume = false;
+            }
+
+            foreach (array_keys($this->TC->chainattempts) as $id) {
+                $attempt = &$this->TC->chainattempts[$id];
+                if ($error = $this->inprogress('chain', $attempt)) {
+                    continue; // not "in progress"
+                }
+                if ($error = $this->moretime('chain', $attempt)) {
+                    continue; // no more time
+                }
+                // $attempt can be resumed
+                if ($force_resume) {
+                    // set chain attempt details
+                    $this->TC->chainattempt = new taskchain_chain_attempt($attempt, array('TC' => &$this->TC));
+                    $this->TC->force_cnumber(0);
+
+                    // unset task attempt
+                    $this->TC->taskattempt = null;
+                    $this->TC->force_tnumber(0);
+
+                    // unset task details
+                    $this->TC->task = null;
+                } else {
+                    // adjust setting to show entry page with a list of attempts
+                    $this->TC->chain->set_entrypage(self::YES);
+                    $this->TC->chain->set_entryoptions($this->TC->chain->entryoptions | self::ENTRYOPTIONS_ATTEMPTS);
+                }
+                // at least one attempt can be resumed, so we can stop
+                // (if necessary, cnumber has been set to something valid)
+                return false;
+            }
+        }
+
+        // no "in progress" previous chain attempt was found
+        // return "true" signifying, "new chain attempt is required"
+        return true;
+    }
+
+    /**
      * valid_cnumber
      *
      * @return xxx
@@ -206,45 +261,11 @@ class taskchain_require extends taskchain_base {
                 return false;
             }
 
-            // if possible, find a previous chain attempt that can be resumed
-            if ($this->TC->chain->allowresume && $this->TC->get_chainattempts()) {
-
-                if ($this->TC->chain->allowresume==self::ALLOWRESUME_FORCE) {
-                    $force_resume = true;
-                } else if ($error = $this->moreattempts('chain')) {
-                    $force_resume = true;
-                } else {
-                    $force_resume = false;
-                }
-
-                foreach (array_keys($this->TC->chainattempts) as $id) {
-                    $attempt = &$this->TC->chainattempts[$id];
-                    if (! $error = $this->inprogress('chain', $attempt)) {
-                        if (! $error = $this->moretime('chain', $attempt)) {
-                            // $attempt can be resumed
-                            if ($force_resume) {
-                                // set chain attempt details
-                                $this->TC->chainattempt = new taskchain_chain_attempt($attempt, array('TC' => &$this->TC));
-                                $this->TC->force_cnumber(self::FORCE_NEW_ATTEMPT);
-
-                                // unset task details
-                                $this->TC->task = null;
-                            } else {
-                                // adjust setting to show entry page with a list of attempts
-                                $this->TC->chain->set_entrypage(self::YES);
-                                $this->TC->chain->set_entryoptions($this->TC->chain->entryoptions | self::ENTRYOPTIONS_ATTEMPTS);
-                            }
-                            // at least one attempt can be resumed, so we can stop
-                            // (if necessary, cnumber has been set to something valid)
-                            return false;
-                        }
-                    }
-                }
+            // look for a previous chain attempt that is "in progress"
+            if (! $this->previous_chainattempt()) {
+                return false;
             }
-            if ($this->TC->has_entrypage()) {
-                // entry page is viewable
-                // return false;
-            }
+
             // no previous chain attempts could be resumed
             // so force the creation of a new chain attempt
             $this->TC->force_cnumber(self::FORCE_NEW_ATTEMPT);
@@ -286,10 +307,10 @@ class taskchain_require extends taskchain_base {
         }
         return $this->canstart('task');
     }
-// check user can start a new chain/task attempt
 
     /**
      * canstart
+     * check user can start a new chain/task attempt
      *
      * @param xxx $type
      * @return xxx
@@ -414,10 +435,10 @@ class taskchain_require extends taskchain_base {
         // no last attempt
         return get_string("nolast{$type}attempt", 'taskchain');
     }
-// check user can resume this chain/task attempt
 
     /**
      * canresume
+     * check user can resume this chain/task attempt
      *
      * @param xxx $type
      * @return xxx
@@ -434,11 +455,11 @@ class taskchain_require extends taskchain_base {
         }
         return $error;
     }
-// this function may be useful for checking that a "lasttaskattempt" still satisfies preconditions
-    // if attempts at earlier tasks have been deleted, then the user may no longer be allowed to take this task
 
     /**
      * preconditions
+     * this function may be useful for checking that a "lasttaskattempt" still satisfies preconditions
+     * if attempts at earlier tasks have been deleted, then the user may no longer be allowed to take this task
      *
      * @param xxx $attempt (optional, default='')
      * @return xxx
@@ -685,16 +706,16 @@ class taskchain_require extends taskchain_base {
             return false;
         }
     }
-// check availability of chain
 
     /**
      * chain_availability
+     * check availability of chain
      *
      * @return xxx
      * @todo Finish documenting this function
      */
     function chain_availability() {
-        if (($this->TC->tab=='info' || $this->TC->tab=='preview') && $this->TC->can->preview()) {
+        if ($this->TC->tab=='info' && $this->TC->can->preview()) {
             // teacher can always view the entry page
             return false;
         }

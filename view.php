@@ -32,9 +32,9 @@ require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 // create object to represent this TaskChain activity
 $TC = new mod_taskchain();
 
-if (! $TC->has_entrypage()) {
+if (! $TC->show_entrypage()) {
     // go straight to attempt.php
-    //redirect($TC->url->attempt());
+    redirect($TC->url->attempt());
 }
 
 if ($TC->action=='deleteselected') {
@@ -83,6 +83,5 @@ if ($TC->can->attempt() || $TC->can->preview()) {
         echo $output->box($message, 'generalbox', 'notice');
     }
 }
-
 
 echo $output->footer();

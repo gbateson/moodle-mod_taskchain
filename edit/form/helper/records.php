@@ -328,7 +328,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js = '';
             $js .= '<script type="text/javascript">'."\n";
             $js .= '//<![CDATA['."\n";
-            $js .= 'function toggleactions(obj) {'."\n";
+            $js .= 'function toggle_actions(obj) {'."\n";
 
             $js .= '    var targetid = "";'."\n";
             $js .= '    var showid = "";'."\n";
@@ -339,7 +339,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
             $js .= '    var divs = null;'."\n";
             $js .= '    if (targetid && showid) {'."\n";
-            $js .= '        var fieldset = document.getElementById("actionshdr");'."\n";
+            $js .= '        var fieldset = document.getElementById("id_actionshdr");'."\n";
             $js .= '        if (fieldset) {'."\n";
             $js .= '            divs = fieldset.getElementsByTagName("DIV");'."\n";
             $js .= '        }'."\n";
@@ -370,7 +370,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
                 if (empty($require_records) || $count > 0) {
                     $js .= 'var obj = document.getElementById("id_'.$name.'_'.$action.'");'."\n";
                     $js .= 'if (obj) {'."\n";
-                    $js .= '    obj.onclick = function() {toggleactions(this)}'."\n";
+                    $js .= '    obj.onclick = function() {toggle_actions(this)}'."\n";
                     $js .= '}'."\n";
                 }
             }
@@ -382,7 +382,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
                 $js .= '    var i_max = obj.elements["'.$name.'"].length;'."\n";
                 $js .= '    for (i=0; i<i_max; i++) {'."\n";
                 $js .= '        if (obj.elements["'.$name.'"][i].checked) {'."\n";
-                $js .= '            toggleactions(obj.elements["action"][i]);'."\n";
+                $js .= '            toggle_actions(obj.elements["action"][i]);'."\n";
                 $js .= '        }'."\n";
                 $js .= '    }'."\n";
                 $js .= '}'."\n";
@@ -390,11 +390,12 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             }
 
             // set the heights of the "fitem" elements to the full height of their parent nodes
-            $js .= 'function set_fitem_heights() {'."\n";
+            // and set the width of the FIELDSETs so that they enclose all their child fitem DIVs
+            $js .= 'function set_fitem_heights_and_widths() {'."\n";
             $js .= '    var fieldsets = document.getElementsByTagName("FIELDSET")'."\n";
             $js .= '    if (fieldsets) {'."\n";
 
-            $js .= '        var hdrFieldsetId = new RegExp("^labels|defaults|selects|(record[0-9]+)$");'."\n";
+            $js .= '        var hdrFieldsetId = new RegExp("^id_(labels|defaults|selects|(record[0-9]+))$");'."\n";
             $js .= '        var fitemDivClass = new RegExp("\\\\b"+"fitem"+"\\\\b");'."\n";
             $js .= '        var felementClass = new RegExp("\\\\b"+"felement"+"\\\\b");'."\n";
 
@@ -405,11 +406,16 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '                var divs = fieldsets[f].getElementsByTagName("DIV");'."\n";
             $js .= '                if (divs) {'."\n";
 
+            $js .= '                    var maxRight = 0;'."\n";
             $js .= '                    var maxHeight = 0;'."\n";
 
             $js .= '                    var d_max = divs.length;'."\n";
             $js .= '                    for (var d=0; d<d_max; d++) {'."\n";
             $js .= '                        if (divs[d].className && divs[d].className.match(fitemDivClass)) {'."\n";
+
+            $js .= '                            if (divs[d].offsetLeft && divs[d].offsetWidth) {'."\n";
+            $js .= '                                maxRight = Math.max(maxRight, divs[d].offsetLeft + divs[d].offsetWidth);'."\n";
+            $js .= '                            }'."\n";
 
             $js .= '                            var c_max = divs[d].childNodes.length;'."\n";
             $js .= '                            for (var c=0; c<c_max; c++) {'."\n";
@@ -430,6 +436,10 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '                        }'."\n";
             $js .= '                    }'."\n";
 
+            $js .= '                    if (maxRight) {'."\n";
+            $js .= '                        fieldsets[f].style.width = (maxRight - fieldsets[f].offsetLeft) + "px";'."\n";
+            $js .= '                    }'."\n";
+
             $js .= '                 }'."\n";
             $js .= '                 divs = null;'."\n";
             $js .= '            }'."\n";
@@ -443,55 +453,11 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '    fieldsets = null;'."\n";
             $js .= '}'."\n";
 
-            $js .= 'set_fitem_heights();'."\n";
-
-            // set the heights of the "fitem" elements to the full height of their parent nodes
-            $js .= 'function set_fieldset_widths() {'."\n";
-            $js .= '    var fieldsets = document.getElementsByTagName("FIELDSET")'."\n";
-            $js .= '    if (fieldsets) {'."\n";
-
-            $js .= '        var fieldsetClass = new RegExp("\\\\b"+"clearfix"+"\\\\b");'."\n";
-            $js .= '        var fitemDivClass = new RegExp("\\\\b"+"fitem"+"\\\\b");'."\n";
-
-            $js .= '        var f_max = fieldsets.length;'."\n";
-            $js .= '        for (var f=0; f<f_max; f++) {'."\n";
-            $js .= '            if (fieldsets[f].className && fieldsets[f].className.match(fieldsetClass)) {'."\n";
-
-            $js .= '                var divs = fieldsets[f].getElementsByTagName("DIV");'."\n";
-            $js .= '                if (divs) {'."\n";
-
-            $js .= '                    var maxRight = 0;'."\n";
-
-            $js .= '                    var d_max = divs.length;'."\n";
-            $js .= '                    for (var d=0; d<d_max; d++) {'."\n";
-            $js .= '                        if (divs[d].className && divs[d].className.match(fitemDivClass)) {'."\n";
-            $js .= '                            if (divs[d].offsetLeft && divs[d].offsetWidth) {'."\n";
-            $js .= '                                maxRight = Math.max(maxRight, divs[d].offsetLeft + divs[d].offsetWidth);'."\n";
-            $js .= '                            }'."\n";
-            $js .= '                        }'."\n";
-            $js .= '                    }'."\n";
-
-            $js .= '                    if (maxRight) {'."\n";
-            $js .= '                        fieldsets[f].style.width = (maxRight - fieldsets[f].offsetLeft) + "px";'."\n";
-            $js .= '                    }'."\n";
-
-            $js .= '                 }'."\n";
-            $js .= '                 divs = null;'."\n";
-            $js .= '            }'."\n";
-            $js .= '        }'."\n";
-
-            $js .= '        fieldsetClass = null;'."\n";
-            $js .= '        fitemDivClass = null;'."\n";
-
-            $js .= '    }'."\n";
-            $js .= '    fieldsets = null;'."\n";
-            $js .= '}'."\n";
-
-            $js .= 'set_fieldset_widths();'."\n";
+            $js .= 'set_fitem_heights_and_widths();'."\n";
 
             // force bottom borders of final subactions
             $js .= 'function set_bottom_borders() {'."\n";
-            $js .= '    var obj = document.getElementById("actionshdr");'."\n";
+            $js .= '    var obj = document.getElementById("id_actionshdr");'."\n";
             $js .= '    var targetid = new RegExp("^(fitem|fgroup)_id_'.$field.'_('.implode('|', array_keys($actions)).')$");'."\n";
 
             $js .= '    var divs = null;'."\n";

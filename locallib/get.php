@@ -604,7 +604,10 @@ class taskchain_get extends taskchain_base {
         }
         return $mytaskchains;
     }
-// access the TaskChain tables in the database
+
+    ///////////////////////////////////////////////////////
+    // get records from TaskChain tables in the Moodle DB
+    ///////////////////////////////////////////////////////
 
     /**
      * taskchains
