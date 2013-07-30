@@ -1300,7 +1300,7 @@ class mod_taskchain extends taskchain_base {
      */
     public function get_report_renderer_subtype($mode) {
         if ($mode=='') {
-            $mode = 'overview';
+            $mode = 'chaingrade';
         }
         return 'report_'.$mode;
     }

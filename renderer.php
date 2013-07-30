@@ -923,6 +923,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             $number = 'tnumber';
             $grade = 'score';
         }
+        $mode = $type.$grade;
         $gradelimit = $grade.'limit';
         $grademethod = $grade.'method';
         $gradeweighting = $grade.'weighting';
@@ -1013,7 +1014,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 $row->cells[] = $attempt->$number;
                 if ($this->TC->$type->$gradelimit && $this->TC->$type->$gradeweighting) {
                     if ($canreview) {
-                        $params = array('tab'=>'report', $type.'attemptid'=>$attempt->id);
+                        $params = array('tab'=>'report', $type.'attemptid'=>$attempt->id, 'mode' => $mode);
                         $href = $this->format_url('report.php', '', $params);
                         $row->cells[] = '<a href="'.$href.'">'.$attempt->$grade.'%</a>';
                     } else {
