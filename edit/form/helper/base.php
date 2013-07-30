@@ -191,7 +191,6 @@ abstract class taskchain_form_helper_base {
         global $CFG, $TC;
 
         if (empty($TC)) {
-            require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
             $TC = new mod_taskchain();
         }
 

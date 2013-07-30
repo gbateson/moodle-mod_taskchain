@@ -29,7 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once(dirname(__FILE__).'/record.php');
+require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/record.php');
 
 /**
  * taskchain_form_helper_condition
@@ -77,7 +77,6 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
         global $CFG, $TC;
 
         if (empty($TC)) {
-            require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
             $TC = new mod_taskchain();
         }
 
@@ -101,12 +100,12 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
         switch ($type) {
 
             case 'tasks':
-                require_once(dirname(__FILE__).'/task.php');
+                require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/task.php');
                 $form_helper = new taskchain_form_helper_task($mform, $context, $record);
                 break;
 
             case 'chains':
-                require_once(dirname(__FILE__).'/chain.php');
+                require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/chain.php');
                 $form_helper = new taskchain_form_helper_chain($mform, $context, $record);
                 break;
 
@@ -255,6 +254,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
         $this->mform->addGroup($elements, 'columnlists_elements', '', array(' '), false);
         $this->mform->disabledIf('columnlists_elements', 'columnlists', 'ne', 0);
         $this->mform->setDefault('columnlists', get_user_preferences('taskchain_'.$type.'_columnlists', 0));
+        $this->mform->setType('columnlistname', PARAM_TEXT);
     }
 
     /**
