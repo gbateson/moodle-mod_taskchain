@@ -505,6 +505,7 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
             $append = "\n"
                 ."// send results after delay\n"
                 ."	setTimeout('HP.onunload(".mod_taskchain::STATUS_ABANDONED.",$flag)',SubmissionTimeout);\n"
+                ."	return false;\n"
             ;
             $substr = substr_replace($substr, $append, $pos, 0);
         }
