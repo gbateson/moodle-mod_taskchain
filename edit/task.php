@@ -96,7 +96,7 @@ switch ($TC->action) {
 
         // check the user really wants to delete this task
         $text = get_string('confirmdeletetask', 'taskchain');
-        $params = $TC->merge_params(array('id' => $TC->task->id));
+        $params = $TC->merge_params(null, null, 'taskid');
         echo $output->page_delete($text, 'edit/task.php', $params);
         break;
 

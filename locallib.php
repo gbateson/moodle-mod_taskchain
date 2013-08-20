@@ -1386,14 +1386,18 @@ class mod_taskchain extends taskchain_base {
      *
      * @param xxx $params (optional, default=false)
      * @param xxx $more_params (optional, default=false)
+     * @param xxx $id (optional, default='') name of id field
      * @return xxx
      * @todo Finish documenting this function
      */
-    function merge_params($params=false, $more_params=false) {
+    function merge_params($params=false, $more_params=false, $id='') {
+
         $basic_params = array('id'             => 0,
                               'inpopup'        => $this->inpopup,
                               'tab'            => $this->tab,
                               'mode'           => $this->mode,
+                              'coursemoduleid' => $this->get_coursemoduleid(),
+                              'taskchainid'    => $this->get_taskchainid(),
                               'chainid'        => $this->get_chainid(),
                               'cnumber'        => $this->get_cnumber(),
                               'taskid'         => $this->get_taskid(),
@@ -1406,6 +1410,7 @@ class mod_taskchain extends taskchain_base {
                               'taskattemptid'  => $this->get_taskattemptid(),
                               'columnlistid'   => $this->get_columnlistid(),
                               'columnlisttype' => $this->get_columnlisttype());
+
         // remove empty values
         $basic_params = array_filter($basic_params);
 
@@ -1459,6 +1464,12 @@ class mod_taskchain extends taskchain_base {
 
         foreach ($unset as $name) {
             unset($all_params[$name]);
+        }
+
+        // rename the $id parameter, if necessary
+        if ($id && isset($all_params[$id])) {
+            $all_params['id'] = $all_params[$id];
+            unset($all_params[$id]);
         }
 
         return $all_params;

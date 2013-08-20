@@ -1190,13 +1190,9 @@ abstract class taskchain_form_helper_base {
             $value = $this->get_fieldvalue($field);
             $params[$name] = $value;
         }
-        $params = $this->TC->merge_params($params);
 
         $id = $this->recordtype.'id'; // e.g. taskid
-        if (empty($params['id']) && isset($params[$id])) {
-            $params['id'] = $params[$id];
-            unset($params[$id]);
-        }
+        $params = $this->TC->merge_params($params, null, $id);
 
         foreach ($params as $name => $value) {
             if ($value) {

@@ -279,6 +279,26 @@ class taskchain_get extends taskchain_base {
     }
 
     /**
+     * coursemoduleid
+     *
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function coursemoduleid() {
+        return $this->id('coursemodule');
+    }
+
+    /**
+     * taskchainid
+     *
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function taskchainid() {
+        return $this->id('taskchain');
+    }
+
+    /**
      * chainid
      *
      * @return xxx
@@ -360,16 +380,6 @@ class taskchain_get extends taskchain_base {
      */
     public function taskattemptid() {
         return $this->id('taskattempt');
-    }
-
-    /**
-     * taskchainid
-     *
-     * @return xxx
-     * @todo Finish documenting this function
-     */
-    public function taskchainid() {
-        return $this->id('taskchain');
     }
 
     /**

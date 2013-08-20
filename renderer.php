@@ -508,13 +508,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
         }
 
         // merge parameters into a single array (including $TC ids)
-        $all_params = $this->TC->merge_params($params, $more_params);
-
-        // rename the $id parameter, if necessary
-        if ($id && isset($all_params[$id])) {
-            $all_params['id'] = $all_params[$id];
-            unset($all_params[$id]);
-        }
+        $all_params = $this->TC->merge_params($params, $more_params, $id);
 
         $join = '?';
         foreach ($all_params as $name=>$value) {
@@ -705,10 +699,8 @@ class mod_taskchain_renderer extends plugin_renderer_base {
      * @todo Finish documenting this function
      */
     public function taskedit_icon() {
-        $params = $this->TC->merge_params(array('id' => $this->TC->task->id));
-        $url = new moodle_url('/mod/taskchain/edit/task.php', $params);
         $img = html_writer::empty_tag('img', array('src' => $this->pix_url('t/edit')));
-        return ' '.html_writer::link($url, $img);
+        return ' '.html_writer::link($this->TC->url->edit('task'), $img);
     }
 
     /**

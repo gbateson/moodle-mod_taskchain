@@ -190,6 +190,8 @@ class taskchain_require extends taskchain_base {
                 $force_resume = true;
             } else if ($error = $this->moreattempts('chain')) {
                 $force_resume = true;
+            } else if ($this->TC->show_entrypage()==false) {
+                $force_resume = true;
             } else {
                 $force_resume = false;
             }
@@ -687,7 +689,7 @@ class taskchain_require extends taskchain_base {
             if (! $this->TC->inpopup) {
 
                 $target = "taskchain{$this->TC->chain->parentid}";
-                $params = $this->TC->merge_params(array('id'=>$this->TC->coursemodule->id, 'inpopup'=>'true'));
+                $params = $this->TC->merge_params(array('inpopup'=>'true'), null, 'coursemoduleid');
                 $popupurl = new moodle_url('/mod/taskchain/view.php', $params);
                 $openpopupurl = substr($popupurl->out(true), strlen($CFG->wwwroot));
 

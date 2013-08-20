@@ -1828,7 +1828,9 @@ function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $c
     if (isset($TC->can)) {
         if ($TC->can->preview()) {
             $label = get_string('preview', 'taskchain');
-            $url   = new moodle_url('/mod/taskchain/attempt.php', $TC->merge_params(array('tab'=>'preview', 'cnumber'=>-1)));
+            $params = array('tab'=>'preview', 'cnumber'=>-1);
+            $params = $TC->merge_params($params, null, 'coursemoduleid');
+            $url   = new moodle_url('/mod/taskchain/attempt.php', $params);
             $type  = navigation_node::TYPE_SETTING;
             $icon  = new pix_icon('t/preview', '');
             $taskchainnode->add($label, $url, $type, null, null, $icon);
@@ -1890,12 +1892,12 @@ function taskchain_extend_settings_navigation(settings_navigation $settingsnav, 
         $type = navigation_node::TYPE_SETTING;
         $icon = new pix_icon('t/edit', '');
 
-        $params = $TC->merge_params(array('columnlisttype' => 'chains'));
+        $params = $TC->merge_params(array('columnlisttype' => 'chains'), null, 'coursemoduleid');
         $action = new moodle_url('/mod/taskchain/edit/chains.php', $params);
         $text   = get_string('editchains', 'taskchain');
         $nodes[] = new navigation_node(array('text'=>$text, 'action'=>$action, 'key'=>'editchains', 'type'=>$type, 'icon'=>$icon));
 
-        $params = $TC->merge_params(array('columnlisttype' => 'tasks'));
+        $params = $TC->merge_params(array('columnlisttype' => 'tasks'), null, 'coursemoduleid');
         $action = new moodle_url('/mod/taskchain/edit/tasks.php', $params);
         $text   = get_string('edittasks', 'taskchain');
         $nodes[] = new navigation_node(array('text'=>$text, 'action'=>$action, 'key'=>'edittasks', 'type'=>$type, 'icon'=>$icon));

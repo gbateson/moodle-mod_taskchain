@@ -51,11 +51,11 @@ class taskchain_url extends taskchain_base {
         if (is_null($cm)) {
             $cm = $this->TC->coursemodule;
         }
-        $params = array('id' => $cm->id);
+        $params = array();
         if ($framename) {
             $params['framename'] = $framename;
         }
-        $params = $this->TC->merge_params($params);
+        $params = $this->TC->merge_params($params, null, 'coursemoduleid');
         return new moodle_url('/mod/taskchain/attempt.php', $params);
     }
 
@@ -82,7 +82,16 @@ class taskchain_url extends taskchain_base {
      * @todo Finish documenting this function
      */
     public function edit($type, $params=array()) {
-        $params = $this->TC->merge_params($params);
+        switch ($type) {
+            case 'columnlists': $id = 'courseid';    break;
+            case 'chains'     : $id = 'courseid';    break;
+            case 'chain'      : $id = 'chainid';     break;
+            case 'tasks'      : $id = 'chainid';     break;
+            case 'task'       : $id = 'taskid';      break;
+            case 'condition'  : $id = 'conditionid'; break;
+            default           : $id = ''; // shouldn't happen !!
+        }
+        $params = $this->TC->merge_params($params, null, $id);
         return new moodle_url('/mod/taskchain/edit/'.$type.'.php', $params);
     }
 
