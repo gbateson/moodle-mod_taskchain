@@ -64,6 +64,8 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-index .region-content table {margin-left: auto; margin-right: auto;}
 
 /** mod taskchain report **/
+#page-mod-taskchain-report table.flexible tr.emptyrow { display: none; }
+/* ================= */
 #page-mod-taskchain-report div#commands  {text-align: center;}
 #page-mod-taskchain-report table#attempts {clear: both; margin-left: auto; margin-right: auto;}
 #page-mod-taskchain-report table#attempts.analysis td.c0 {font-weight: bold;}
