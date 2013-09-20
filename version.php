@@ -28,6 +28,6 @@
 $module->cron      = 0; // 60
 $module->component = 'mod_taskchain';
 $module->maturity  = MATURITY_BETA; // ALPHA=50, BETA=100, RC=150, STABLE=200
-$module->release   = 'v0.9.29';
+$module->release   = 'v0.9.30';
 $module->requires  = 2010112400; // Moodle 2.0
-$module->version   = 2011040129;
+$module->version   = 2011040130;

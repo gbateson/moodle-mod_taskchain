@@ -350,6 +350,9 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
             $search = "/(\s*)window.onunload = new Function[^\r\n]*;/s";
             $replace = '$0$1'
                 ."window.taskchainbeforeunload = function(){".'$1'
+                ."	if (window.HP) {".'$1'
+                ."		HP.onunload()".'$1'
+                ."	}".'$1'
                 ."	return '".$this->TC->task->source->js_value_safe($onbeforeunload, true)."';".'$1'
                 ."}".'$1'
                 ."if (window.opera) {".'$1'
