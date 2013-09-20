@@ -346,8 +346,6 @@ function hpTaskAttempt() {
                 HP_xmlHttp.onreadystatechange = HP_onreadystatechange;
                 HP_xmlHttp.open(this.form.method, this.form.action, (this.forceajax ? false : true)); // false=SYNNCHRONOUS, true=ASYNCHRONOUS
                 HP_xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                HP_xmlHttp.setRequestHeader("Content-length", parameters.length);
-                HP_xmlHttp.setRequestHeader("Connection", "close");
                 HP_xmlHttp.send(parameters);
             } else {
                 this.form.submit();
