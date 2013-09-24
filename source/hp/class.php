@@ -150,8 +150,8 @@ class taskchain_source_hp extends taskchain_source {
                     }
                 }
             }
-            $this->name = $this->TC->textlib('entities_to_utf8', $this->name, true);
-            $this->title = $this->TC->textlib('entities_to_utf8', $this->title, true);
+            $this->name = mod_taskchain::textlib('entities_to_utf8', $this->name, true);
+            $this->title = mod_taskchain::textlib('entities_to_utf8', $this->title, true);
         }
         if ($textonly) {
             return $this->name;
@@ -234,7 +234,7 @@ class taskchain_source_hp extends taskchain_source {
                 return false;
             }
             $this->title = $this->xml_value('data,title');
-            $this->title = $this->TC->textlib('entities_to_utf8', $this->title, true);
+            $this->title = mod_taskchain::textlib('entities_to_utf8', $this->title, true);
             $this->name = trim(strip_tags($this->title)); // sanitize
         }
         if ($textonly) {
@@ -498,7 +498,7 @@ class taskchain_source_hp extends taskchain_source {
 
             // encode unicode characters as HTML entities
             // (in particular, accented charaters that have not been encoded by HP)
-            $value = $this->TC->textlib('utf8_to_entities', $value);
+            $value = mod_taskchain::textlib('utf8_to_entities', $value);
         }
         return $value;
     }
@@ -611,7 +611,7 @@ class taskchain_source_hp extends taskchain_source {
 
         // convert (hex and decimal) html entities to javascript unicode, if required
         if ($convert_to_unicode) {
-            $str = $this->TC->textlib('utf8_to_entities', $str, false, true);
+            $str = mod_taskchain::textlib('utf8_to_entities', $str, false, true);
 
             $search = '/&#x([0-9A-F]+);/i';
             $callback = array($this, 'js_unicode_char');

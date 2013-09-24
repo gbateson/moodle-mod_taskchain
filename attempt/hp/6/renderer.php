@@ -1354,7 +1354,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     .'onfocus="FuncBtnOver(this)" onblur="FuncBtnOut(this)" '
                     .'onmouseover="FuncBtnOver(this)" onmouseout="FuncBtnOut(this)" '
                     .'onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)">'
-                    .$this->TC->textlib('utf8_to_entities', $stoptext)
+                    .mod_taskchain::textlib('utf8_to_entities', $stoptext)
                 .'</button>'
                 .'</div>'
             ;
@@ -1534,7 +1534,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             for ($i=$i_max; $i>=0; $i--) {
                 list($match, $start) = $matches[0][$i];
                 $char = $matches[1][$i][0];
-                $char = $this->TC->textlib('code2utf8', hexdec($char));
+                $char = mod_taskchain::textlib('code2utf8', hexdec($char));
                 $str = substr_replace($str, $char, $start, strlen($match));
             }
         }
@@ -1548,9 +1548,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      */
     public function filter_text_bodycontent()  {
         // convert entities to utf8, filter text and convert back
-        //$this->bodycontent = $this->TC->textlib('entities_to_utf8', $this->bodycontent);
+        //$this->bodycontent = mod_taskchain::textlib('entities_to_utf8', $this->bodycontent);
         //$this->bodycontent = filter_text($this->bodycontent);
-        //$this->bodycontent = $this->TC->textlib('utf8_to_entities', $this->bodycontent);
+        //$this->bodycontent = mod_taskchain::textlib('utf8_to_entities', $this->bodycontent);
     }
 
     /**
@@ -2904,7 +2904,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     public function taskchain_keypad_char_value($char)  {
 
         // ordinal value of char
-        $ord = ord($this->TC->textlib('entities_to_utf8', $char));
+        $ord = ord(mod_taskchain::textlib('entities_to_utf8', $char));
 
         // lowercase letters (plain or accented)
         if (($ord>=97 && $ord<=122) || ($ord>=224 && $ord<=255)) {
@@ -3238,7 +3238,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     // get the definition for this word
                     $def = '';
                     $word = ($direction=='A') ? $aword : $dword;
-                    $word = $this->TC->textlib('utf8_to_entities', $word);
+                    $word = mod_taskchain::textlib('utf8_to_entities', $word);
 
                     $i = 0;
                     $clues = 'data,crossword,clues,item';

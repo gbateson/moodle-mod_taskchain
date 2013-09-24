@@ -359,7 +359,7 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     public function set_context($contextlevel, $instanceid=0) {
-        $this->context = $this->TC->context($contextlevel, $instanceid);
+        $this->context = mod_taskchain::context($contextlevel, $instanceid);
     }
 
     /**

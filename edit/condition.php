@@ -86,7 +86,7 @@ switch ($TC->action) {
             if ($DB->delete_records_select('taskchain_conditions', $select)) {
                 // success
                 $text = get_string($type, 'taskchain');
-                $text = $TC->textlib('strtolower', $text);
+                $text = mod_taskchain::textlib('strtolower', $text);
                 $text = get_string('deletedactivity', '', $text);
                 echo $output->page_quick($text, 'close');
             } else {

@@ -212,8 +212,8 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             default: return ''; // shouldn't happen !!
         }
         switch ($this->TC->action) {
-            case 'add': return get_string('addinganew', 'moodle', $this->TC->textlib('strtolower', get_string($type, 'taskchain')));
-            case 'edit': return get_string('updatinga', 'moodle', $this->TC->textlib('strtolower', get_string($type, 'taskchain')));
+            case 'add': return get_string('addinganew', 'moodle', mod_taskchain::textlib('strtolower', get_string($type, 'taskchain')));
+            case 'edit': return get_string('updatinga', 'moodle', mod_taskchain::textlib('strtolower', get_string($type, 'taskchain')));
             case 'delete': return get_string('delete'.$type, 'taskchain');
             case 'deleteall': return get_string('deleteall'.$type.'s', 'taskchain');
             return ''; // shouldn't happen !!

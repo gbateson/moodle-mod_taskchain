@@ -686,7 +686,7 @@ function taskchain_get_coursemodule_info($cm) {
 
     if (isset($cm->showdescription) && $cm->showdescription) {
         // $context = context_module::instance($cm->id);
-        $context = get_context_instance(CONTEXT_MODULE, $cm->id); // Moodle 2.0 - 2.1
+        $context = mod_taskchain::context(CONTEXT_MODULE, $cm->id); // Moodle 2.0 - 2.1
         $options = array('noclean'=>true, 'para'=>false, 'filter'=>true, 'context'=>$context, 'overflowdiv'=>true);
         $entrytext = file_rewrite_pluginfile_urls($chain->entrytext, 'pluginfile.php', $context->id, 'mod_taskchain', 'entry', null);
         $info->content = trim(format_text($entrytext, $chain->entryformat, $options, null));
@@ -814,7 +814,7 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
     if ($logs = $DB->get_records_select('log', $select, $params, 'time ASC')) {
 
         //$coursecontext = context_course::instance($course->id);
-        $coursecontext = get_context_instance(CONTEXT_COURSE, $course->id); // Moodle 2.0 - 2.1
+        $coursecontext = mod_taskchain::context(CONTEXT_COURSE, $course->id); // Moodle 2.0 - 2.1
         $viewhiddensections = has_capability('moodle/course:viewhiddensections', $coursecontext);
 
         if ($modinfo = unserialize($course->modinfo)) {
@@ -835,7 +835,7 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
             $sortorder = array_search($cmid, $coursemoduleids);
             if (! array_key_exists($sortorder, $stats)) {
                 // $modulecontext = context_module::instance($cmid);
-                $modulecontext = get_context_instance(CONTEXT_MODULE, $cmid); // Moodle 2.0 - 2.1
+                $modulecontext = mod_taskchain::context(CONTEXT_MODULE, $cmid); // Moodle 2.0 - 2.1
                 if (has_capability('mod/taskchain:reviewmyattempts', $modulecontext) || has_capability('mod/taskchain:reviewallattempts', $modulecontext)) {
                     $viewreport = true;
                 } else {
@@ -1527,7 +1527,7 @@ function mod_taskchain_pluginfile($course, $cm, $context, $filearea, $args, $for
 
     // search course legacy files
     // $coursecontext = context_course::instance($course->id);
-    $coursecontext = get_context_instance(CONTEXT_COURSE, $course->id); // Moodle 2.0 - 2.1
+    $coursecontext = mod_taskchain::context(CONTEXT_COURSE, $course->id); // Moodle 2.0 - 2.1
     if ($file = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $filepath, $filename)) {
         if ($file = $fs->create_file_from_storedfile($file_record, $file)) {
             send_stored_file($file, $lifetime, 0);
@@ -2128,9 +2128,9 @@ function taskchain_update_events(&$taskchain, &$chain, &$eventids, $delete) {
     // $coursecontext = context_course::instance($taskchain->course);
 
     $capability = 'moodle/calendar:manageentries';
-    if (has_capability($capability, get_context_instance(CONTEXT_SYSTEM))) {
+    if (has_capability($capability, mod_taskchain::context(CONTEXT_SYSTEM))) {
         $can_manage_events = true; // site admin
-    } else if (has_capability($capability, get_context_instance(CONTEXT_COURSE, $taskchain->course))) {
+    } else if (has_capability($capability, mod_taskchain::context(CONTEXT_COURSE, $taskchain->course))) {
         $can_manage_events = true; // course admin/teacher
     } else {
         $can_manage_events = false; // not allowed to add/edit calendar events !!

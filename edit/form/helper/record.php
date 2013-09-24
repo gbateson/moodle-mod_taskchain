@@ -774,7 +774,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         }
 
         $fs = get_file_storage();
-        $usercontext = $this->TC->context(CONTEXT_USER, $USER->id);
+        $usercontext = mod_taskchain::context(CONTEXT_USER, $USER->id);
 
         // check some files have been uploaded
         if ($fs->is_area_empty($usercontext->id, 'user', 'draft', $data['sourceitemid'])) {
@@ -877,7 +877,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     protected function delete_user_draft_files($itemid) {
         global $USER;
         $fs = get_file_storage();
-        $usercontext = $this->TC->context(CONTEXT_USER, $USER->id);
+        $usercontext = mod_taskchain::context(CONTEXT_USER, $USER->id);
         $fs->delete_area_files($usercontext->id, 'user', 'draft', $itemid);
     }
 
@@ -1457,9 +1457,9 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
 
         foreach ($details as $name=>$detail) {
             if ($name=='conditionscore' || $name=='attemptcount') {
-                $details[$name] = $this->TC->textlib('strtolower', $detail);
+                $details[$name] = mod_taskchain::textlib('strtolower', $detail);
             } else {
-                $details[$name] = $this->TC->textlib('strtolower', $str->$name.$detail);
+                $details[$name] = mod_taskchain::textlib('strtolower', $str->$name.$detail);
             }
         }
 

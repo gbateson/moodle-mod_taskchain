@@ -853,7 +853,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             $title .= ' ('.$this->TC->task->sortorder.')';
         }
 
-        $title = $this->TC->textlib('utf8_to_entities', $title);
+        $title = mod_taskchain::textlib('utf8_to_entities', $title);
 
         return $title;
     }

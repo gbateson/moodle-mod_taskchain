@@ -85,7 +85,7 @@ switch ($TC->action) {
                 }
             }
         }
-        $text = get_string('deletedactivity', '', $TC->textlib('strtolower', $text));
+        $text = get_string('deletedactivity', '', mod_taskchain::textlib('strtolower', $text));
         echo $output->page_quick($text, 'close');
         break;
 

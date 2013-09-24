@@ -53,20 +53,13 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
 
     /**
      * renderHeader
-     * force header fieldset id to be the default id used in Moodle >= 2.5
+     * force header fieldset id to be the default id used in Moodle <= 2.4
      *
      * @param object $header (passed by reference)
      */
     function renderHeader(&$header){
         if ($name = $header->getName()) {
-            $exclude_header_names = array(
-                'generalhdr', 'entrypagehdr', 'exitpagehdr', 'displayhdr', 'timehdr',
-                'attemptshdr', 'securityhdr', 'assessmenthdr', 'modstandardelshdr',
-                'taskshdr','reviewoptionshdr','conditionshdr' // Task-only headers
-            );
-            if (! in_array($name, $exclude_header_names)) {
-                $header->updateAttributes(array('id' => $name));
-            }
+            $header->updateAttributes(array('id' => $name));
         }
         return parent::renderHeader($header);
     }

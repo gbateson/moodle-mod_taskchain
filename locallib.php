@@ -366,13 +366,13 @@ class mod_taskchain extends taskchain_base {
             }
 
             // get course context
-            $this->course->context = $this->context(CONTEXT_COURSE, $this->course->id);
+            $this->course->context = mod_taskchain::context(CONTEXT_COURSE, $this->course->id);
 
             // mimic get_coursemodule_from_id() and get_coursemodule_from_instance()
             if ($this->coursemodule) {
                 $this->coursemodule->name = $this->taskchain->name;
                 $this->coursemodule->modname = $this->module->name;
-                $this->coursemodule->context = $this->context(CONTEXT_MODULE, $this->coursemodule->id);
+                $this->coursemodule->context = mod_taskchain::context(CONTEXT_MODULE, $this->coursemodule->id);
             }
 
             // the main objects have now been set up - yay !
@@ -439,7 +439,7 @@ class mod_taskchain extends taskchain_base {
             $this->action = optional_param('action', '', PARAM_ALPHA);
             $this->inpopup = optional_param('inpopup', 0, PARAM_INT);
             $this->confirmed = optional_param('confirmed', 0, PARAM_INT);
-            $this->selected = taskchain_optional_param_array('selected', 0, PARAM_INT);
+            $this->selected = self::optional_param_array('selected', 0, PARAM_INT);
 
             // set conditiontype
             $type = ($this->condition ? $this->condition->conditiontype : 0);
@@ -2418,7 +2418,7 @@ class mod_taskchain extends taskchain_base {
                     // Note: $mod->id is the taskchain id, $mod->cm is the course_modules id
                     if ($mod->mod=='taskchain') {
                         $taskchainid = $mod->id;
-                        if (in_array($taskchainid, $taskchainids) && $this->can->$capability(false, $this->context(CONTEXT_MODULE, $cmid))) {
+                        if (in_array($taskchainid, $taskchainids) && $this->can->$capability(false, mod_taskchain::context(CONTEXT_MODULE, $cmid))) {
                             // user can delete attempts, so save the taskchain id
                             // we don't need to get the full taskchain/coursemodule record
                             $coursemodules[$cmid] = true;
@@ -2583,7 +2583,7 @@ class mod_taskchain extends taskchain_base {
      * context
      *
      * a wrapper method to offer consistent API to get contexts
-     * in Moodle 2.0 and 2.1, we use get_context_instance() function
+     * in Moodle 2.0 and 2.1, we use mod_taskchain::context() function
      * in Moodle >= 2.2, we use static context_xxx::instance() method
      *
      * @param integer $contextlevel
@@ -2592,13 +2592,13 @@ class mod_taskchain extends taskchain_base {
      * @return required context
      * @todo Finish documenting this function
      */
-    public function context($contextlevel, $instanceid=0, $strictness=0) {
+    static public function context($contextlevel, $instanceid=0, $strictness=0) {
         if (class_exists('context_helper')) {
             // use call_user_func() to prevent syntax error in PHP 5.2.x
             $class = context_helper::get_class_for_level($contextlevel);
             return call_user_func(array($class, 'instance'), $instanceid, $strictness);
         } else {
-            return get_context_instance($contextlevel, $instanceid);
+            return mod_taskchain::context($contextlevel, $instanceid);
         }
     }
 
@@ -2614,7 +2614,7 @@ class mod_taskchain extends taskchain_base {
      * @return result from the textlib $method
      * @todo Finish documenting this function
      */
-    public function textlib() {
+    static public function textlib() {
         if (method_exists('textlib', 'textlib')) {
             $textlib = textlib_get_instance();
         } else {
@@ -2625,46 +2625,28 @@ class mod_taskchain extends taskchain_base {
         $callback = array($textlib, $method);
         return call_user_func_array($callback, $args);
     }
-}
 
-/**
- * taskchain_optional_param_array
- *
- * @param xxx $parname
- * @param xxx $default
- * @param xxx $type
- * @return xxx
- * @todo Finish documenting this function
- */
-function taskchain_optional_param_array($parname, $default, $type) {
-    if (func_num_args() != 3 or empty($parname) or empty($type)) {
-        throw new coding_exception('optional_param_array() requires $parname, $default and $type to be specified (parameter: '.$parname.')');
-    }
-
-    if (isset($_POST[$parname])) {       // POST has precedence
-        $param = $_POST[$parname];
-    } else if (isset($_GET[$parname])) {
-        $param = $_GET[$parname];
-    } else {
-        return $default;
-    }
-    if (!is_array($param)) {
-        debugging('optional_param_array() expects array parameters only: '.$parname);
-        return $default;
-    }
-
-    $result = array();
-    foreach($param as $key=>$value) {
-        if (!preg_match('/^[a-z0-9_-]+$/i', $key)) {
-            debugging('Invalid key name in optional_param_array() detected: '.$key.', parameter: '.$parname);
-            continue;
+    /**
+     * optional_param_array
+     *
+     * a wrapper method to offer consistent API for getting array parameters
+     *
+     * @param string $name the name of the parameter
+     * @param mixed $default
+     * @param mixed $type one of the PARAM_xxx constants
+     * @param mixed $recursive (optional, default = true)
+     * @return either an array of form values or the $default value
+     */
+    static public function optional_param_array($name, $default, $type, $recursive=true) {
+        switch (true) {
+            case isset($_POST[$name]): $param = $_POST[$name]; break;
+            case isset($_GET[$name]) : $param = $_GET[$name]; break;
+            default: return $default; // param not found
         }
-        if (is_array($value) && function_exists('clean_param_array')) {
-            $result[$key] = clean_param_array($value, $type, true);
-        } else {
-            $result[$key] = clean_param($value, $type);
+        if (is_array($param) && function_exists('clean_param_array')) {
+            return clean_param_array($param, $type, $recursive);
         }
+        // not an array (or Moodle <= 2.1)
+        return clean_param($param, $type);
     }
-
-    return $result;
 }

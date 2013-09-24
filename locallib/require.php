@@ -397,7 +397,7 @@ class taskchain_require extends taskchain_base {
                 if ($shorterror) {
                     $error = get_string('nomore'.$type.'attempts', 'taskchain');
                 } else {
-                    $attemptlimitstr = $this->TC->textlib('strtolower', get_string('attemptlimit', 'taskchain'));
+                    $attemptlimitstr = mod_taskchain::textlib('strtolower', get_string('attemptlimit', 'taskchain'));
                     $msg = html_writer::tag('b', format_string($this->name))." ($attemptlimitstr = $this->attemptlimit)";
                     $error = html_writer::tag('p', get_string('nomoreattempts', 'taskchain')).html_writer::tag('p', $msg);
                 }

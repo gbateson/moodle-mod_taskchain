@@ -1108,12 +1108,12 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      */
      protected function format_longtext($text, $textlength=40, $headlength=16, $taillength=16) {
         $text = format_string($text);
-        $strlen = $this->TC->textlib('strlen', $text);
+        $strlen = mod_taskchain::textlib('strlen', $text);
         if ($strlen > $textlength) {
             $headlength = min($headlength, $strlen);
             $taillength = min($taillength, $strlen - $headlength - 3);
-            $head = $this->TC->textlib('substr', $text, 0, $headlength);
-            $tail = $this->TC->textlib('substr', $text, $strlen - $taillength, $taillength);
+            $head = mod_taskchain::textlib('substr', $text, 0, $headlength);
+            $tail = mod_taskchain::textlib('substr', $text, $strlen - $taillength, $taillength);
             $text = $head.' ... '.$tail;
         }
         return $text;

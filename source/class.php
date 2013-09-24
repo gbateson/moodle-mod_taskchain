@@ -355,7 +355,7 @@ class taskchain_source {
         if ($context->contextlevel==CONTEXT_MODULE) {
             if ($cm = $DB->get_record('course_modules', array('id'=>$context->instanceid))) {
                 if ($cm->instance==0) {
-                    $context = get_context_instance(CONTEXT_COURSE, $data->course);
+                    $context = mod_taskchain::context(CONTEXT_COURSE, $data->course);
                 }
             }
         }
@@ -917,7 +917,7 @@ class taskchain_source {
         if ($encoding=='' || $encoding=='UTF-8') {
             // do nothing
         } else {
-            $this->filecontents = $this->TC->textlib('convert', $this->filecontents, $encoding);
+            $this->filecontents = mod_taskchain::textlib('convert', $this->filecontents, $encoding);
         }
 
         return true;

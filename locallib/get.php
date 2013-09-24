@@ -572,7 +572,7 @@ class taskchain_get extends taskchain_base {
             $mycourses = &$this->TC->mycourses;
         }
         if (is_null($mycourses)) {
-            if ($this->TC->can->manageactivities(false, $this->TC->context(CONTEXT_SYSTEM))) {
+            if ($this->TC->can->manageactivities(false, mod_taskchain::context(CONTEXT_SYSTEM))) {
                 $mycourses = get_courses(); // system admin
             } else {
                 $mycourses = enrol_get_users_courses($userid);
