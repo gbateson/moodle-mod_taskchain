@@ -258,18 +258,6 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
     }
 
     /**
-     * add_section_reviewoptions
-     *
-     * @param string $section name of section
-     * @param array $fields in this section
-     * @return xxx
-     * @todo Finish documenting this function
-     */
-    protected function add_section_reviewoptions($section, $fields) {
-        // do nothing
-    }
-
-    /**
      * get_sectionlabel
      *
      * @param string $section name of section

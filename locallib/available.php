@@ -364,6 +364,32 @@ class taskchain_available extends taskchain_base {
     }
 
     /**
+     * Returns the localized list of reviewoptions_type settings for a TaskChain task
+     *
+     * @param string $type either "times" or "items"
+     * @return array
+     */
+    static public function reviewoptions_list($type='') {
+        if ($type=='times') {
+            return array(
+                'duringattempt' => self::REVIEW_DURINGATTEMPT,
+                'afterattempt'  => self::REVIEW_AFTERATTEMPT,
+                'afterclose'    => self::REVIEW_AFTERCLOSE
+            );
+        }
+        if ($type=='items') {
+            return array(
+                'responses' => self::REVIEW_RESPONSES,
+                'answers'   => self::REVIEW_ANSWERS,
+                'scores'    => self::REVIEW_SCORES,
+                'feedback'  => self::REVIEW_FEEDBACK
+            );
+        }
+        return array(); // shoudn't happen
+    }
+
+
+    /**
      * Returns the localized list of status settings for a TaskChain attempt
      *
      * @return array

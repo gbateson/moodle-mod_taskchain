@@ -113,6 +113,18 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-review table#responses td.c6:after {content: ":";}
 #page-mod-taskchain-review table#responses td.lastcol:after {content: "";}
 
+/** mod hotpot mod **/
+#page-mod-taskchain-edit-task #reviewoptionshdr .fitem {clear: none; float: left; margin-left: 48px; width: 20%;}
+#page-mod-taskchain-edit-task #reviewoptionshdr .fitemtitle {font-weight: bold; margin-left: 0; text-align: left; width: 100%;}
+#page-mod-taskchain-edit-task #reviewoptionshdr fieldset.fgroup {margin-left: 0; text-align: left; width: 100%;}
+#page-mod-taskchain-edit-task #reviewoptionshdr fieldset.fgroup {clear: left; margin: 0 0 1em;}
+#page-mod-taskchain-edit-task #reviewoptionshdr fieldset.fgroup > span {clear: left; float: left; line-height: 1.7;}
+#page-mod-taskchain-edit-task #reviewoptionshdr fieldset.fgroup span label {margin-left: 0.4em;}
+
+#page-mod-taskchain-edit-task.dir-rtl #reviewoptionshdr .fitem {float: right;}
+#page-mod-taskchain-edit-task.dir-rtl #reviewoptionshdr .fitemtitle {text-align: right;}
+#page-mod-taskchain-edit-task.dir-rtl #reviewoptionshdr fieldset.fgroup span {float: right; clear: right;}
+
 /** page-mod-taskchain-edit-tasks **/
 
 /** make overflow visible (because this is a w-i-d-e page) */
@@ -271,6 +283,8 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-tasks fieldset#labels   div.fitem.name div.felement,
 #page-mod-taskchain-edit-tasks fieldset#defaults div.fitem.name div.felement,
 #page-mod-taskchain-edit-tasks fieldset#selects  div.fitem.name div.felement {text-align: center;}
+
+#page-mod-taskchain-edit-tasks span.reviewoptionsitems {white-space: nowrap;}
 
 #page-mod-taskchain-edit-tasks fieldset#filtershdr,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr {

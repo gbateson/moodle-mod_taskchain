@@ -54,7 +54,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'attempts'   => array('attemptlimit', 'allowresume'),
         'security'   => array('password', 'subnet'),
         'assessment' => array('scoremethod', 'scoreignore', 'scorelimit', 'scoreweighting', 'clickreporting', 'discarddetails'),
-        'reviewoptions'  => array(),
+        'reviewoptions'  => array('reviewoptions'),
         'conditions'  => array('preconditions', 'postconditions'),
         'hidden'     => array('id', 'aftertaskid')
     );
@@ -111,6 +111,30 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'preconditions'   => '',
         'postconditions'  => ''
     );
+
+    /**
+     * prepare_field_reviewoptions
+     *
+     * @param array $data (passed by reference)
+     * @todo Finish documenting this function
+     */
+    protected function prepare_field_reviewoptions(&$data) {
+        $name = $this->get_fieldname('reviewoptions');
+
+        $times = taskchain_available::reviewoptions_list('times');
+        $items = taskchain_available::reviewoptions_list('items');
+
+        if (empty($data['reviewoptions'])) {
+            $value = 0;
+        } else {
+            $value = $data['reviewoptions'];
+        }
+        foreach ($times as $timename => $timevalue) {
+            foreach ($items as $itemname => $itemvalue) {
+                $data[$name.$timename.$itemname] = min(1, $value & $timevalue & $itemvalue);
+            }
+        }
+    }
 
     /**
      * add_field_addtype
@@ -375,13 +399,43 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     }
 
     /**
-     * get_sectionlabel_reviewoptions
+     * add_field_reviewoptions
      *
-     * @return xxx
+     * @param string name of $field
      * @todo Finish documenting this function
      */
-    protected function get_sectionlabel_reviewoptions() {
-        return get_string('reviewoptionsheading', 'quiz');
+    protected function add_field_reviewoptions($field) {
+        $name = $this->get_fieldname($field);
+        $label = $this->get_fieldlabel($field);
+
+        $times = taskchain_available::reviewoptions_list('times');
+        $items = taskchain_available::reviewoptions_list('items');
+
+        foreach ($times as $timename => $timevalue) {
+
+            // set groupname and id
+            $groupname = $name.$timename.'_elements';
+            $groupid = 'fgroup_id_'.$groupname;
+
+            // set All/None links
+            $allnone = '';
+            $allnone .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in("DIV", "fitem", "'.$groupid.'")'));
+            $allnone .= ' / ';
+            $allnone .= html_writer::tag('a', get_string('none'), array('onclick' => 'deselect_all_in("DIV", "fitem", "'.$groupid.'")'));
+
+            $elements = array();
+            foreach ($items as $itemname => $itemvalue) {
+                $fieldname = $name.$timename.$itemname; // e.g. duringattemptresponses
+                $elements[] = &$this->mform->createElement('checkbox', $fieldname, '', get_string($itemname, 'quiz'));
+                $this->mform->setType($fieldname, PARAM_INT);
+            }
+            $elements[] = &$this->mform->createElement('static', '', '', html_writer::tag('span', $allnone));
+
+            $this->mform->addGroup($elements, $groupname, get_string('review'.$timename, 'taskchain'), null, false);
+            if ($timename=='afterclose') {
+                $this->mform->disabledIf('afterclose_elements', 'timeclose[off]', 'checked');
+            }
+        }
     }
 
     /**
@@ -540,6 +594,34 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     }
 
     /**
+     * fix_field_reviewoptions
+     *
+     * @param array $data (passed by reference)
+     * @param string name of $field
+     * @return void may modify $data
+     * @todo Finish documenting this function
+     */
+    protected function fix_field_reviewoptions(&$data, $field) {
+        $name = $this->get_fieldname($field);
+        $data->$name = 0;
+
+        $times = taskchain_available::reviewoptions_list('times');
+        $items = taskchain_available::reviewoptions_list('items');
+
+        foreach ($times as $timename => $timevalue) {
+            foreach ($items as $itemname => $itemvalue) {
+                $fieldname = $name.$timename.$itemname; // e.g. duringattemptresponses
+                if (isset($data->$fieldname)) {
+                    if ($data->$fieldname) {
+                        $data->$name += ($timevalue & $itemvalue);
+                    }
+                    unset($data->$fieldname);
+                }
+            }
+        }
+    }
+
+    /**
      * format_field_addtype
      *
      * @param string name of $field
@@ -655,6 +737,33 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function format_fieldvalue_discarddetails($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
+    }
+
+    /**
+     * format_field_reviewoptions
+     *
+     * @param string name of $field
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_reviewoptions($field, $value) {
+
+        $times = taskchain_available::reviewoptions_list('times');
+        $items = taskchain_available::reviewoptions_list('items');
+
+        $strtimes = array();
+        foreach ($times as $timename => $timevalue) {
+            $stritems = array();
+            foreach ($items as $itemname => $itemvalue) {
+                if ($value & $timevalue & $itemvalue) {
+                    $stritems[] = get_string($itemname.'short', 'taskchain');
+                }
+            }
+            if ($stritems = implode(', ', $stritems)) {
+                $stritems = get_string($timename, 'taskchain').': '.$stritems;
+                $strtimes[] = html_writer::tag('span', $stritems, array('class' => 'reviewoptionsitems'));
+            }
+        }
+        return implode(' ', $strtimes);
     }
 
     /**

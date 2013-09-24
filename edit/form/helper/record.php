@@ -179,6 +179,16 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         return get_string('display', 'form');
     }
 
+    /**
+     * get_sectionlabel_reviewoptions
+     *
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    protected function get_sectionlabel_reviewoptions() {
+        return get_string('reviewoptions', 'taskchain');
+    }
+
     /////////////////////////////////////////////////////////
     // get_field_label ...
     /////////////////////////////////////////////////////////

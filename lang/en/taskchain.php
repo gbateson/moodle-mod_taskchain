@@ -83,6 +83,8 @@ $string['addtypechainfolder'] = 'Add all files in selected folder';
 $string['addtypechainfolders'] = 'Add all files in all folders';
 $string['addtypetaskchain'] = 'Add chain starting at selected file';
 $string['addtypetaskfile'] = 'Add selected file only';
+$string['afterattempt'] = 'After attempt';
+$string['afterclose'] = 'After close';
 $string['aftertaskid'] = 'After task';
 $string['aftertaskid_help'] = 'After task';
 $string['allowfreeaccess'] = 'Allow free access';
@@ -111,6 +113,8 @@ $string['allowresume_help'] = 'This setting specifies whether or not students ca
 : If there is a previous attempt that is still in progress, students will be forced to resume that attempt. Otherwise, they can start a new attempt.';
 $string['allowreview'] = 'Allow review';
 $string['allowreview_help'] = 'If enabled, students may review their task attempts after the task is closed.';
+$string['answers'] = 'Answers';
+$string['answersshort'] = 'A';
 $string['anyattempts'] = 'Any attempts';
 $string['anygroup'] = 'Any group';
 $string['applydefaults'] = 'Apply selected default values';
@@ -373,6 +377,7 @@ $string['detailsrecords'] = 'TaskChain details records';
 $string['discarddetails'] = 'Discard details';
 $string['discarddetails_help'] = 'If this setting is set to "Yes", the XML details of each attempt at this task will be discarded, otherwise the XML details will be stored in the database for possible future reference';
 $string['duration'] = 'Duration';
+$string['duringattempt'] = 'During attempt';
 $string['editchains'] = 'Edit chains';
 $string['editcolumnlistschain'] = 'Edit columns for TaskChain Chains';
 $string['editcolumnliststask'] = 'Edit columns for TaskChain Tasks';
@@ -403,6 +408,8 @@ $string['entrycmcourse'] = 'Previous activity in this course';
 $string['entrycmsection'] = 'Previous activity in this course section';
 $string['entrycompletionwarning'] = 'Before you start this activity, you must look at {$a}.';
 $string['entrygrade'] = 'Previous activity grade';
+$string['entrygradedcourse'] = 'Previous graded activity in this course';
+$string['entrygradedsection'] = 'Previous graded activity in this course section';
 $string['entrygradewarning'] = 'You cannot start this activity until you score {$a->entrygrade}% on {$a->entryactivity}. Currently, your grade for that activity is {$a->usergrade}%';
 $string['entryoptions'] = 'Entry page options';
 $string['entryoptions_help'] = 'These check boxes enable and disable the display of items on the TaskChain\'s entry page.
@@ -525,6 +532,8 @@ If other exit page options are disabled and the student has achieved the require
 $string['exitcmcourse'] = 'Next activity in this course';
 $string['exitcmsection'] = 'Next activity in this course section';
 $string['exitgrade'] = 'Next activity grade';
+$string['exitgradedcourse'] = 'Next graded activity in this course';
+$string['exitgradedsection'] = 'Next graded activity in this course section';
 $string['exitoptions'] = 'Exit options';
 $string['exitpage'] = 'Show exit page';
 $string['exitpage_help'] = 'Should a exit page displayed after the TaskChain task has been completed?
@@ -538,12 +547,14 @@ $string['exitpagehdr'] = 'Exit page';
 $string['exittaskchaincourse'] = 'Next TaskChain in this course';
 $string['exittaskchainsection'] = 'Next TaskChain in this course section';
 $string['exittext'] = 'Exit page text';
+$string['feedback'] = 'Feedback';
 $string['feedbackdiscuss'] = 'Discuss this task in a forum';
 $string['feedbackformmail'] = 'Feedback form';
 $string['feedbackmoodleforum'] = 'Moodle forum';
 $string['feedbackmoodlemessaging'] = 'Moodle messaging';
 $string['feedbacknone'] = 'None';
 $string['feedbacksendmessage'] = 'Send a message to your instructor';
+$string['feedbackshort'] = 'F';
 $string['feedbackwebpage'] = 'Web page';
 $string['filename'] = 'File name';
 $string['filetype'] = 'File type';
@@ -826,7 +837,13 @@ $string['requirepassword'] = 'Require password';
 $string['requirepassword_help'] = 'If a password is specified, a student must enter it in order to attempt the quiz.';
 $string['requiresubnet'] = 'Require network address';
 $string['requiresubnet_help'] = 'Quiz access may be restricted to particular subnets on the LAN or Internet by specifying a comma-separated list of partial or full IP address numbers. This can be useful for an invigilated (proctored) quiz, to ensure that only people in a certain location can access the quiz.';
+$string['responses'] = 'Responses';
+$string['responsesshort'] = 'R';
 $string['resume'] = 'Resume';
+$string['reviewafterattempt'] = 'Allow review after attempt';
+$string['reviewafterclose'] = 'Allow review after HotPot closes';
+$string['reviewduringattempt'] = 'Allow review during attempt';
+$string['reviewoptions'] = 'Review options';
 $string['sametask'] = 'Same task';
 $string['score'] = 'Score';
 $string['scoreignore'] = 'Ignore voids';
@@ -857,6 +874,8 @@ The task score will be set to the score of the first attempt at this task.
 
 **Last**
 The task score will be set to the score of the most recent attempt at this task.';
+$string['scores'] = 'Scores';
+$string['scoresshort'] = 'S';
 $string['scoreweighting'] = 'Score weighting';
 $string['scoreweighting_help'] = 'The score weighting is the contribution of the score for this task toward the chain grade attempt.
 
@@ -1111,9 +1130,3 @@ $string['youneedtoenrol'] = 'You need to enrol in this course before you can att
 $string['zeroduration'] = 'No duration';
 $string['zerograde'] = 'Zero grade';
 $string['zeroscore'] = 'Zero score';
-
-$string['entrygradedcourse'] = 'Previous graded activity in this course';
-$string['entrygradedsection'] = 'Previous graded activity in this course section';
-
-$string['exitgradedcourse'] = 'Next graded activity in this course';
-$string['exitgradedsection'] = 'Next graded activity in this course section';
