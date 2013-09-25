@@ -44,7 +44,7 @@
 
 /** Prevent direct access to this script */
 defined('MOODLE_INTERNAL') || die();
-
+require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 /**
  * taskchain_supports
  *
