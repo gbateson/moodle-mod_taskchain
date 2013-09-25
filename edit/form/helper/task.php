@@ -543,9 +543,9 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function fix_field_stopbutton(&$data, $field) {
         $name  = $this->get_fieldname($field);
-        $name_yesno = $this->get_fieldname($field,'yesno');
-        $name_type  = $this->get_fieldname($field,'type');
-        $name_text  = $this->get_fieldname($field,'text');
+        $name_yesno = $this->get_fieldname($field.'_yesno');
+        $name_type  = $this->get_fieldname($field.'_type');
+        $name_text  = $this->get_fieldname($field.'_text');
 
         if (empty($data->$name_yesno)) {
             $data->stopbutton = mod_taskchain::STOPBUTTON_NONE;
@@ -556,9 +556,9 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
             if (empty($data->$name_text)) {
                 $data->$name_text = '';
             }
-            if ($data->stopbuttontype=='specific') {
+            if ($data->$name_type=='specific') {
                 $data->$name = mod_taskchain::STOPBUTTON_SPECIFIC;
-                $data->$name_text = $data->stopbuttontext;
+                $data->$name_text = $data->$name_text;
             } else {
                 $data->$name = mod_taskchain::STOPBUTTON_LANGPACK;
                 $data->$name_text = $data->$name_type; // e.g. taskchain_giveup
