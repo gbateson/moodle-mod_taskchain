@@ -558,10 +558,10 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
             }
             if ($data->$name_type=='specific') {
                 $data->$name = mod_taskchain::STOPBUTTON_SPECIFIC;
-                $data->$name_text = $data->$name_text;
+                $data->stoptext = $data->$name_text;
             } else {
                 $data->$name = mod_taskchain::STOPBUTTON_LANGPACK;
-                $data->$name_text = $data->$name_type; // e.g. taskchain_giveup
+                $data->stoptext = '';
             }
         }
         unset($data->$name_yesno,
