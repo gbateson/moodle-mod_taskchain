@@ -789,6 +789,8 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
     global $CFG, $DB, $OUTPUT;
     $result = false;
 
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+
     // the Moodle "logs" table contains the following fields:
     //     time, userid, course, ip, module, cmid, action, url, info
 

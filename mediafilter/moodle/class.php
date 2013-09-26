@@ -47,9 +47,9 @@ class taskchain_mediafilter_moodle extends taskchain_mediafilter {
      *
      * @param xxx $taskchain
      * @param xxx $text
-     * @param xxx $options
+     * @param xxx $options (optional, ddefault=array())
      */
-    public function mediaplugin_filter($taskchain, $text, $options) {
+    public function mediaplugin_filter($taskchain, $text, $options=array()) {
         global $CFG, $PAGE;
         static $eolas_fix_applied = 0;
 
