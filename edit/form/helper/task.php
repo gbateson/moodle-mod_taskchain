@@ -239,7 +239,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $this->mform->setType($name_yesno, PARAM_INT);
         $this->mform->setType($name_type,  PARAM_ALPHAEXT);
         $this->mform->setType($name_text,  PARAM_TEXT);
-
+        
+        $name_value = $this->get_defaultvalue($field); // can be 0, 1, 2
+        $this->mform->setDefault($name_yesno, $name_value > 0 ? 1 : 0);
+        $this->mform->setDefault($name_type, $name_value > 1 ? 'specific' : 'taskchain_giveup');
+        $this->mform->setDefault($name_text, $this->get_defaultvalue('stoptext'));
+        
         $this->mform->disabledIf($name_elements, $name_yesno, 'ne', '1');
         $this->mform->disabledIf($name_text,     $name_type,  'ne', 'specific');
     }
