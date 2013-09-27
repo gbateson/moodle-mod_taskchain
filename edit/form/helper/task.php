@@ -113,6 +113,34 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     );
 
     /**
+     * prepare_field_title
+     *
+     * @param array $data (passed by reference)
+     * @todo Finish documenting this function
+     */
+    protected function prepare_field_title(&$data) {
+        $field = 'title';
+        $value = $this->get_fieldvalue($field);
+
+        $name = $this->get_fieldname($field.'source');
+        $data[$name] = ($value & mod_taskchain::TITLE_SOURCE);
+
+        $name = $this->get_fieldname($field.'prependchainname');
+        if ($value & mod_taskchain::TITLE_CHAINNAME) {
+            $data[$name] = 1;
+        } else {
+            $data[$name] = 0;
+        }
+
+        $name = $this->get_fieldname($field.'appendsortorder');
+        if ($value & mod_taskchain::TITLE_SORTORDER) {
+            $data[$name] = 1;
+        } else {
+            $data[$name] = 0;
+        }
+    }
+
+    /**
      * prepare_field_reviewoptions
      *
      * @param array $data (passed by reference)
@@ -120,15 +148,11 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function prepare_field_reviewoptions(&$data) {
         $name = $this->get_fieldname('reviewoptions');
+        $value = $this->get_fieldvalue('reviewoptions');
 
         $times = taskchain_available::reviewoptions_list('times');
         $items = taskchain_available::reviewoptions_list('items');
 
-        if (empty($data['reviewoptions'])) {
-            $value = 0;
-        } else {
-            $value = $data['reviewoptions'];
-        }
         foreach ($times as $timename => $timevalue) {
             foreach ($items as $itemname => $itemvalue) {
                 $data[$name.$timename.$itemname] = min(1, $value & $timevalue & $itemvalue);
@@ -513,24 +537,32 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function fix_field_title(&$data, $field) {
-        $name = $this->get_fieldname($field);
-        $name_source  = $this->get_fieldname($field.'source');
-        $name_prepend = $this->get_fieldname($field.'prependchainname');
-        $name_append  = $this->get_fieldname($field.'appendsortorder');
+        $value = 0;
 
-        $data->title = 0;
-        if (! empty($data->$name_source)) {
-            $data->title = ($data->$name | ($data->$name_source & mod_taskchain::TITLE_SOURCE)); // 1st/2nd bits
+        $name = $this->get_fieldname($field.'source');
+        if (isset($data->$name)) {
+            $value |= ($data->$name & mod_taskchain::TITLE_SOURCE); // 1st/2nd bits
+            unset($data->$name);
         }
-        if (! empty($data->$name_prepend)) {
-            $data->title = ($data->$name | mod_taskchain::TITLE_CHAINNAME); // 3rd bit
+
+        $name = $this->get_fieldname($field.'prependchainname');
+        if (isset($data->$name)) {
+            if ($data->$name) {
+                $value |= mod_taskchain::TITLE_CHAINNAME; // 3rd bit
+            }
+            unset($data->$name);
         }
-        if (! empty($data->$name_append)) {
-            $data->title = ($data->$name | mod_taskchain::TITLE_SORTORDER); // 4rd bit
+
+        $name = $this->get_fieldname($field.'appendsortorder');
+        if (isset($data->$name)) {
+            if ($data->$name) {
+                $value |= mod_taskchain::TITLE_SORTORDER; // 4th bit
+            }
+            unset($data->$name);
         }
-        unset($data->$name_source,
-              $data->$name_prepend,
-              $data->$name_append);
+
+        $name = $this->get_fieldname($field);
+        $data->$name = $value;
     }
 
     /**
@@ -656,6 +688,24 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         } else {
             return array_shift($list); // "Best" output format
         }
+    }
+
+    /**
+     * format_fieldvalue_title
+     *
+     * @param string $field name of field
+     * @param mixed the $value to be formatted
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_title($field, $value) {
+        $title = $this->format_templatevalue_list($field, ($value & mod_taskchain::TITLE_SOURCE));
+        if ($value & mod_taskchain::TITLE_CHAINNAME) {
+            $title = get_string('taskchainname', 'taskchain').': '.$title;
+        }
+        if ($value & mod_taskchain::TITLE_SORTORDER) {
+            $title = $title.' ('.get_string('sortorder', 'taskchain').')';
+        }
+        return $title;
     }
 
     /**
