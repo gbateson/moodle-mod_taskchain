@@ -433,7 +433,7 @@ class taskchain_mediafilter {
      * @return xxx
      */
     public function fix_link($output, $options, $match)  {
-        global $CFG, $PAGE;
+        global $CFG, $PAGE, $TC;
         static $load_flowplayer = 0;
         static $eolas_fix_applied = 0;
 
@@ -476,13 +476,13 @@ class taskchain_mediafilter {
         // call filter to add media player
         if (empty($options['movie']) && $options['player']=='moodle') {
 
-            $filter = new filter_mediaplugin($output->taskchain->context, array());
+            $filter = new filter_mediaplugin($TC->coursemodule->context, array());
             $object = $filter->filter($link);
 
             if ($object==$link) {
                 // do nothing
-            } else if ($eolas_fix_applied==$output->taskchain->id) {
-                // eolas_fix.js and ufo.js have already been added for this quiz
+            } else if ($eolas_fix_applied==$TC->task->id) {
+                // eolas_fix.js and ufo.js have already been added for this task
             } else {
                 if ($eolas_fix_applied==0) {
                     // 1st quiz - eolas_fix.js was added by filter/mediaplugin/filter.php
@@ -493,7 +493,7 @@ class taskchain_mediafilter {
                 }
                 $PAGE->requires->js('/mod/taskchain/mediafilter/ufo.js', true);
                 //$object .= '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/taskchain/mediafilter/ufo.js"></script>';
-                $eolas_fix_applied = $output->taskchain->id;
+                $eolas_fix_applied = $TC->taskchain->id;
             }
 
             $search = '/(flashvars:")([^"]*)(")/';
@@ -509,7 +509,7 @@ class taskchain_mediafilter {
                 }
             }
         } else {
-            $object = $this->mediaplugin_filter($output->taskchain, $link, $options);
+            $object = $this->mediaplugin_filter($TC->taskchain, $link, $options);
         }
 
         // center content if required
