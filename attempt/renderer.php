@@ -1175,17 +1175,17 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 ."	obj[onevent] = new Function('var onevent=\"'+onevent+'\"; for (var i=0; i<this.evts[onevent].length; i++) this.evts[onevent][i]();');\n"
                 ."}\n"
 
-                ."function disable_paste(obj) {\n"
-                ."	obj.ondrop = new Function('return false');\n"
-                ."	obj.onpaste = new Function('return false');\n"
+                ."function set_onpaste(obj, truefalse) {\n"
+                ."	obj.ondrop = new Function('return ' + truefalse);\n"
+                ."	obj.onpaste = new Function('return ' + truefalse);\n"
                 ."}\n"
 
-                ."function disable_paste_input(obj) {\n"
+                ."function set_onpaste_input(obj, truefalse) {\n"
                 ."	var obj = document.getElementsByTagName('input');\n"
                 ."	if (obj) {\n"
                 ."		for (var i=0; i<obj.length; i++) {\n"
                 ."			if (obj[i].type=='text') {\n"
-                ."				disable_paste(obj[i])\n"
+                ."				set_onpaste(obj[i], truefalse)\n"
                 ."			}\n"
                 ."		}\n"
                 ."	}\n"
@@ -1193,13 +1193,15 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 ."	if (obj) {\n"
                 ."		var i_max = obj.length;\n"
                 ."		for (var i=0; i<i_max; i++) {\n"
-                ."			disable_paste(obj[i])\n"
+                ."			set_onpaste(obj[i], truefalse)\n"
                 ."		}\n"
-                ."		obj = null;\n"
                 ."	}\n"
+                ."	obj = null;\n"
                 ."}\n"
 
-                ."disable_paste_input();\n"
+                // By default, pasting of answers is NOT allowed.
+                // To allow it: window.allow_paste_input = true;
+                ."set_onpaste_input(window.allow_paste_input ? 'true' : 'false');\n"
             ;
         }
         $onload_oneline = preg_replace('/\s+/s', ' ', $onload);
