@@ -35,10 +35,10 @@
  * JMatch
  *
  * @param xxx sendallclicks
- * @param xxx forceajax
+ * @param xxx ajax
  * @return xxx
  */
-function JMatch(sendallclicks, forceajax) {
+function JMatch(sendallclicks, ajax) {
     this.tasktype = 'JMatch';
 
     /**
@@ -159,9 +159,9 @@ function JMatch(sendallclicks, forceajax) {
     }
 
     if (window.F) {
-        this.init(F.length, sendallclicks, forceajax);
+        this.init(F.length, sendallclicks, ajax);
     } else if (window.Status) {
-        this.init(Status.length, sendallclicks, forceajax);
+        this.init(Status.length, sendallclicks, ajax);
     }
 }
 JMatch.prototype = new hpTaskAttempt();

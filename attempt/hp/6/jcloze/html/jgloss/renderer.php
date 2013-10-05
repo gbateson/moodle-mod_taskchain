@@ -100,7 +100,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
      * @todo Finish documenting this function
      */
     public function get_stop_function_name()  {
-        return 'HP.onunload';
+        return 'HP_send_results';
     }
 
     /**
@@ -110,6 +110,6 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
      * @todo Finish documenting this function
      */
     public function get_stop_function_args()  {
-        return mod_taskchain::STATUS_COMPLETED;
+        return 'HP.EVENT_COMPLETED';
     }
 }

@@ -35,9 +35,9 @@
  * JClozeJGloss
  *
  * @param xxx sendallclicks
- * @param xxx forceajax
+ * @param xxx ajax
  */
-function JClozeJGloss(sendallclicks, forceajax) {
+function JClozeJGloss(sendallclicks, ajax) {
     this.tasktype = 'JCloze';
 
     /**
@@ -81,6 +81,6 @@ function JClozeJGloss(sendallclicks, forceajax) {
         }
     }
 
-    this.init(I.length, sendallclicks, forceajax);
+    this.init(I.length, sendallclicks, ajax);
 }
 JClozeJGloss.prototype = new hpTaskAttempt();

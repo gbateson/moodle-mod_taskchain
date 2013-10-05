@@ -791,9 +791,14 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
         if ($pos = strrpos($substr, '}')) {
             if ($this->TC->task->delay3==mod_taskchain::TIME_DISABLE) {
-                $forceajax = 1;
+                $ajax = 1;
             } else {
-                $forceajax = 0;
+                $ajax = 0;
+            }
+            if ($this->can_clickreport()) {
+                $sendallclicks = 1;
+            } else {
+                $sendallclicks = 0;
             }
             if ($this->can_continue()==mod_taskchain::CONTINUE_RESUMETASK) {
                 $onunload_status = mod_taskchain::STATUS_INPROGRESS;
@@ -825,16 +830,13 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 ."		FDiv.style.display = 'none';\n"
                 ."	}\n"
                 ."\n"
-                ."// create HP object (to collect and send responses)\n"
-                ."	window.HP = new ".$this->js_object_type."('".$this->can_clickreport()."','".$forceajax."');\n"
+                ."	// create HP object (to collect and send responses)\n"
+                ."	window.HP = new ".$this->js_object_type."($sendallclicks,$ajax);\n"
                 ."\n"
-                ."// call HP.onunload to send results when this page unloads\n"
-                ."	var s = '';\n"
-                ."	if (typeof(window.onunload)=='function'){\n"
-                ."		window.onunload_StartUp = onunload;\n"
-                ."		s += 'window.onunload_StartUp();'\n"
-                ."	}\n"
-                ."	window.onunload = new Function(s + 'if(window.HP){HP.status=$onunload_status;HP.onunload();object_destroy(HP);}return true;');\n"
+                ."	// define event handlers to try to send results if quiz finishes unexpectedly\n"
+                ."	window.onbeforeunload = HP_send_results;\n" // modern browsers
+                ."	window.onpagehide = HP_send_results;\n"     // modern browsers that don't allow actions in "onbeforeunload"
+                ."	window.onunload = HP_send_results;\n"       // old browsers that don't have "onbeforeunload" or "pagehide"
                 ."\n"
             ;
             $substr = substr_replace($substr, $append, $pos, 0);
@@ -942,8 +944,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
         $search = '/('.'\s*if \(Finished == true\){\s*)(?:.*?)(\s*})/s';
         if ($this->TC->task->delay3==mod_taskchain::TIME_AFTEROK) {
-            // -1 : send form only (do not set form values, as that has already been done)
-            $replace = '$1'.'HP.onunload(HP.status,-1);'.'$2';
+            $replace = '$1'.'HP_send_results(HP.EVENT_SENDVALUES);'.'$2';
         } else {
             $replace = ''; // i.e. remove this if-block
         }
@@ -1071,7 +1072,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         $callback = array($this, 'fix_js_CheckAnswers_arguments');
         $substr = preg_replace_callback($search, $callback, $substr, 1);
 
-        // add call to Finish function (including TaskStatus)
+        // add call to Finish function (including TaskEvent)
         $search = $this->get_stop_function_search();
         $replace = $this->get_stop_function_replace();
         $substr = preg_replace($search, $replace, $substr, 1);
@@ -1088,9 +1089,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      */
     public function fix_js_CheckAnswers_arguments($match)  {
         if (empty($match[2])) {
-            return $match[1].'ForceTaskStatus'.$match[3];
+            return $match[1].'ForceTaskEvent'.$match[3];
         } else {
-            return $match[1].$match[2].',ForceTaskStatus'.$match[3];
+            return $match[1].$match[2].',ForceTaskEvent'.$match[3];
         }
     }
 
@@ -1104,7 +1105,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         if ($name = $this->get_stop_function_name()) {
             return 'if('.$this->get_stop_function_confirm().')'.$name.'('.$this->get_stop_function_args().')';
         } else {
-            return 'if(window.HP)HP.onunload('.mod_taskchain::STATUS_ABANDONED.')';
+            return 'HP_send_results(HP.EVENT_ABANDONED)';
         }
     }
 
@@ -1144,7 +1145,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      */
     public function get_stop_function_args()  {
         // the arguments required by the javascript function which the stop_function() code calls
-        return mod_taskchain::STATUS_ABANDONED;
+        return 'HP.EVENT_ABANDONED';
     }
 
     /**
@@ -1186,22 +1187,18 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         // $1 : name of the "all correct/done" variable
         // $2 : opening curly brace of if-block plus any following text to be kept
 
-        if ($this->TC->task->delay3==mod_taskchain::TIME_AFTEROK) {
-            $flag = 1; // set form values only
-        } else {
-            $flag = 0; // set form values and send form
-        }
+        $event = $this->get_send_results_event();
         return "\n"
             ."	if ($1){\n"
-            ."		var TaskStatus = 4; // completed\n"
-            ."	} else if (ForceTaskStatus){\n"
-            ."		var TaskStatus = ForceTaskStatus; // 3=abandoned\n"
+            ."		var TaskEvent = $event;\n" // COMPLETED or SETVALUES
+            ."	} else if (ForceTaskEvent){\n"
+            ."		var TaskEvent = ForceTaskEvent;\n" // TIMEDOUT or ABANDONED
             ."	} else if (TimeOver){\n"
-            ."		var TaskStatus = 2; // timed out\n"
+            ."		var TaskEvent = HP.EVENT_TIMEDOUT;\n"
             ."	} else {\n"
-            ."		var TaskStatus = 1; // in progress\n"
+            ."		var TaskEvent = HP.EVENT_CHECK;\n"
             ."	}\n"
-            ."	if (TaskStatus > 1) $2\n"
+            ."	if (HP.end_of_task(TaskEvent)) $2\n"
             ."		if (window.Interval) {\n"
             ."			clearInterval(window.Interval);\n"
             ."		}\n"
@@ -1210,12 +1207,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             ."		Finished = true;\n"
             ."	}\n"
             ."	if (Finished || HP.sendallclicks){\n"
-            ."		if (ForceTaskStatus || TaskStatus==1){\n"
-            ."			// send results immediately\n"
-            ."			HP.onunload(TaskStatus);\n"
+            ."		if (TaskEvent==HP.EVENT_COMPLETED){\n"
+            ."			// send results after delay (quiz completed as expected)\n"
+            ."			setTimeout('HP_send_results('+TaskEvent+')', SubmissionTimeout);\n"
             ."		} else {\n"
-            ."			// send results after delay\n"
-            ."			setTimeout('HP.onunload('+TaskStatus+',$flag)', SubmissionTimeout);\n"
+            ."			// send results immediately (quiz finished unexpectedly)\n"
+            ."			HP_send_results(TaskEvent);\n"
             ."		}\n"
             ."	}\n"
         ;
@@ -1224,7 +1221,10 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     /**
      * postprocessing
      *
-     * @todo Finish documenting this function
+     * after headcontent and bodycontent have been setup and
+     * before content is sent to browser, we add title edit icon,
+     * insert submission form, adjust navigation butons (if any)
+     * and add external javascripts (to the top of the page)
      */
     public function postprocessing()  {
         $this->fix_title_icons();

@@ -35,9 +35,9 @@
  * JCloze
  *
  * @param xxx sendallclicks
- * @param xxx forceajax
+ * @param xxx ajax
  */
-function JCloze(sendallclicks, forceajax) {
+function JCloze(sendallclicks, ajax) {
     this.tasktype = 'JCloze';
 
     /**
@@ -190,6 +190,6 @@ function JCloze(sendallclicks, forceajax) {
         }
     }
 
-    this.init(I.length, sendallclicks, forceajax);
+    this.init(I.length, sendallclicks, ajax);
 }
 JCloze.prototype = new hpTaskAttempt();

@@ -347,21 +347,16 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                 $onbeforeunload = ''; // shouldn't happen !!
         }
         if ($onbeforeunload) {
-            $search = "/(\s*)window.onunload = new Function[^\r\n]*;/s";
-            $replace = '$0$1'
-                ."window.taskchainbeforeunload = function(){".'$1'
-                ."	if (window.HP) {".'$1'
-                ."		HP.onunload()".'$1'
-                ."	}".'$1'
-                ."	return '".$this->TC->task->source->js_value_safe($onbeforeunload, true)."';".'$1'
-                ."}".'$1'
-                ."if (window.opera) {".'$1'
-                // user scripts (this is here for reference only)
-                // ."	opera.setOverrideHistoryNavigationMode('compatible');".'$1'
-                // web page scripts
-                ."	history.navigationMode = 'compatible';".'$1'
-                ."}".'$1'
-                ."window.onbeforeunload = window.taskchainbeforeunload;"
+            $search = "/(\s*)window\.(?:hotpot|on)unload = /s";
+            $replace = ''
+                .'$1'."window.hotpotbeforeunload = function() {"
+                .'$1'."	return '".$this->TC->task->source->js_value_safe($onbeforeunload, true)."';"
+                .'$1'."}"
+                .'$1'."if (window.opera) {"
+                .'$1'."	opera.setOverrideHistoryNavigationMode('compatible');"
+                .'$1'."	history.navigationMode = 'compatible';"
+                .'$1'."}"
+                .'$0'
             ;
             $this->headcontent = preg_replace($search, $replace, $this->headcontent, 1);
         }
@@ -975,7 +970,18 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         //       $url = new moodle_url('/mod/taskchain/view.php', array('id' => $record->id));
         //    }
         //}
+    }
 
-        return $url;
+    /**
+     * get_send_results_flag
+     *
+     * @return string
+     */
+    function get_send_results_event() {
+        if ($this->TC->task->delay3==mod_taskchain::TIME_AFTEROK) {
+            return 'HP.EVENT_SETVALUES';
+        } else {
+            return 'HP.EVENT_COMPLETED';
+        }
     }
 }

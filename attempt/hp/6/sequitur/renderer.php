@@ -161,7 +161,7 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
 
         // add extra argument to this function, so it can be called from stop button
         if ($pos = strpos($substr, ')')) {
-            $substr = substr_replace($substr, ', ForceTaskStatus', $pos, 0);
+            $substr = substr_replace($substr, ', ForceTaskEvent', $pos, 0);
         }
 
         // allow for Btn being null (as it is when called from stop button)
@@ -185,15 +185,16 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
 
         // set task status
         if ($pos = strpos($substr, 'if (CurrentCorrect == Chosen)')) {
+            $event = $this->get_send_results_event();
             $insert = ''
                 ."if (CurrentCorrect==Chosen && CurrentNumber>=(TotalSegments-2)){\n"
-                ."		var TaskStatus = 4; // completed\n"
-                ."	} else if (ForceTaskStatus){\n"
-                ."		var TaskStatus = ForceTaskStatus; // 3=abandoned\n"
+                ."		var TaskEvent = $event;\n" // COMPLETED or SETVALUES
+                ."	} else if (ForceTaskEvent){\n"
+                ."		var TaskEvent = ForceTaskEvent;\n"
                 ."	} else if (TimeOver){\n"
-                ."		var TaskStatus = 2; // timed out\n"
+                ."		var TaskEvent = HP.EVENT_TIMEDOUT;\n"
                 ."	} else {\n"
-                ."		var TaskStatus = 1; // in progress\n"
+                ."		var TaskEvent = HP.EVENT_CHECK;\n"
                 ."	}\n"
                 ."	"
             ;
@@ -202,24 +203,19 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
 
         // send results to Moodle, if necessary
         if ($pos = strrpos($substr, '}')) {
-            if ($this->TC->task->delay3==mod_taskchain::TIME_AFTEROK) {
-                $flag = 1; // set form values only
-            } else {
-                $flag = 0; // set form values and send form
-            }
             $insert = "\n"
-                ."	if (TaskStatus > 1) {\n"
+                ."	if (HP.end_of_task(TaskEvent)) {\n"
                 ."		TimeOver = true;\n"
                 ."		Locked = true;\n"
                 ."		Finished = true;\n"
                 ."	}\n"
                 ."	if (Finished || HP.sendallclicks){\n"
-                ."		if (ForceTaskStatus || TaskStatus==1){\n"
-                ."			// send results immediately\n"
-                ."			HP.onunload(TaskStatus);\n"
+                ."		if (TaskEvent==HP.EVENT_COMPLETED){\n"
+                ."			// send results after delay (quiz completed as expected)\n"
+                ."			setTimeout('HP_send_results('+TaskEvent+')', SubmissionTimeout);\n"
                 ."		} else {\n"
-                ."			// send results after delay\n"
-                ."			setTimeout('HP.onunload('+TaskStatus+',$flag)', SubmissionTimeout);\n"
+                ."			// send results immediately (quiz finished unexpectedly)\n"
+                ."			HP_send_results(TaskEvent);\n"
                 ."		}\n"
                 ."	}\n"
             ;
@@ -246,6 +242,6 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * @todo Finish documenting this function
      */
     public function get_stop_function_args()  {
-        return '0,null,'.mod_taskchain::STATUS_ABANDONED;
+        return '0,null,HP.EVENT_ABANDONED';
     }
 }

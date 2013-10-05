@@ -35,9 +35,9 @@
  * JMix
  *
  * @param xxx sendallclicks
- * @param xxx forceajax
+ * @param xxx ajax
  */
-function JMix(sendallclicks, forceajax) {
+function JMix(sendallclicks, ajax) {
     this.tasktype = 'JMix';
 
     /**
@@ -151,6 +151,6 @@ function JMix(sendallclicks, forceajax) {
 
     } // end function : onclickCheck
 
-    this.init(1, sendallclicks, forceajax);
+    this.init(1, sendallclicks, ajax);
 }
 JMix.prototype = new hpTaskAttempt();

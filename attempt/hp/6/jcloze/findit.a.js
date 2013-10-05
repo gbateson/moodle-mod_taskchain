@@ -35,9 +35,9 @@
  * JClozeFindItA
  *
  * @param xxx sendallclicks
- * @param xxx forceajax
+ * @param xxx ajax
  */
-function JClozeFindItA(sendallclicks, forceajax) {
+function JClozeFindItA(sendallclicks, ajax) {
     this.tasktype = 'JCloze';
 
     /**
@@ -148,6 +148,6 @@ function JClozeFindItA(sendallclicks, forceajax) {
         this.penalties = window.Penalties || 0;
     }
 
-    this.init(I.length, sendallclicks, forceajax);
+    this.init(I.length, sendallclicks, ajax);
 }
 JClozeFindItA.prototype = new hpTaskAttempt();

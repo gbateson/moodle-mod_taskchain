@@ -132,7 +132,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_taskc
      * @todo Finish documenting this function
      */
     public function get_stop_function_name()  {
-        return 'HP.onunload';
+        return 'HP_send_results';
     }
 
     /**
@@ -142,6 +142,6 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_flashcard_renderer extends mod_taskc
      * @todo Finish documenting this function
      */
     public function get_stop_function_args()  {
-        return mod_taskchain::STATUS_COMPLETED;
+        return $this->get_send_results_event();
     }
 }

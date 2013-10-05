@@ -955,9 +955,9 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
         $search = '	if (AllDone == true){';
         if ($pos = strpos($substr, $search)) {
             $insert = ''
-                ."	if (typeof(ForceTaskStatus)=='undefined') {\n"
+                ."	if (typeof(ForceTaskEvent)=='undefined') {\n"
                 ."		if (maximumWrong && CountWrong > maximumWrong) {\n"
-                ."			ForceTaskStatus = ".mod_taskchain::STATUS_COMPLETED.";\n"
+                ."			ForceTaskEvent = ".mod_taskchain::STATUS_COMPLETED.";\n"
                 ."		}\n"
                 ."		if (TotalWeighting > 0) {\n"
                 ."			BestPossibleScore = Math.floor((BestPossibleScore/TotalWeighting)*100);\n"
@@ -965,7 +965,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
                 ."			BestPossibleScore = 100;\n"
                 ."		}\n"
                 ."		if (minimumScore && BestPossibleScore < minimumScore) {\n"
-                ."			ForceTaskStatus = ".mod_taskchain::STATUS_COMPLETED.";\n"
+                ."			ForceTaskEvent = ".mod_taskchain::STATUS_COMPLETED.";\n"
                 ."		}\n"
                 ."	}\n"
             ;

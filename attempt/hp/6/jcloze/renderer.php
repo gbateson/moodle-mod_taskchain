@@ -202,7 +202,7 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
         } else {
             $flag = 0; // set form values and send form
         }
-        $substr = str_replace('Finish()', "HP.onunload(".mod_taskchain::STATUS_ABANDONED.",$flag)", $substr);
+        $substr = str_replace('Finish()', "HP_send_results(HP.EVENT_ABANDONED)", $substr);
 
         $str = substr_replace($str, $substr, $start, $length);
     }
@@ -497,14 +497,9 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
         $substr = substr($str, $start, $length);
 
         if ($pos = strrpos($substr, '}')) {
-            if ($this->TC->task->delay3==mod_taskchain::TIME_AFTEROK) {
-                $flag = 1; // set form values only
-            } else {
-                $flag = 0; // set form values and send form
-            }
             $append = "\n"
                 ."// send results after delay\n"
-                ."	setTimeout('HP.onunload(".mod_taskchain::STATUS_ABANDONED.",$flag)',SubmissionTimeout);\n"
+                ."	setTimeout('HP_send_results('+HP.EVENT_ABANDONED+')',SubmissionTimeout);\n"
                 ."	return false;\n"
             ;
             $substr = substr_replace($substr, $append, $pos, 0);
@@ -553,13 +548,8 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
         }
 
         if ($pos = strrpos($substr, '}')) {
-            if ($this->TC->task->delay3==mod_taskchain::TIME_AFTEROK) {
-                $flag = 1; // set form values only
-            } else {
-                $flag = 0; // set form values and send form
-            }
             $insert = ''
-                ."	HP.onunload(".mod_taskchain::STATUS_TIMEDOUT.",$flag);\n"
+                ."	HP_send_results(HP.EVENT_TIMEDOUT);\n"
                 ."	ShowMessage('$msg');\n"
             ;
             $substr = substr_replace($substr, $insert, $pos, 0);

@@ -320,6 +320,7 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * @todo Finish documenting this function
      */
     public function fix_js_DeleteItem_Flashcard(&$str, $start, $length)  {
+        $event = $this->get_send_results_event();
         $substr = ''
             ."function DeleteItem(){\n"
             ."	var Qs = document.getElementById('Questions');\n"
@@ -336,7 +337,7 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
             ."		var count = 0;\n"
             ."	}\n"
             ."	if (count==0){\n"
-            ."		HP.onunload(4,0);\n"
+            ."		HP_send_results($event);\n"
             ."	}\n"
             ."}\n"
         ;
@@ -355,7 +356,10 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
 
         $substr = substr($str, $start, $length);
 
-        $substr = preg_replace('/(\s*)return;/', '$1'.'HP.onunload(4,0);$0', $substr);
+        $event = $this->get_send_results_event();
+        $search = '/(\s*)return;/';
+        $replace = '$1'.'HP_send_results($event);$0';
+        $substr = preg_replace($search, $replace, $substr);
 
         if ($pos = strrpos($substr, '}')) {
             $append = "\n"
@@ -501,12 +505,8 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
     public function fix_js_ShowSolution_JMemori(&$str, $start, $length)  {
         $substr = substr($str, $start, $length);
 
-        if ($this->TC->task->delay3==mod_taskchain::TIME_AFTEROK) {
-            $flag = 1; // set form values only
-        } else {
-            $flag = 0; // set form values and send form
-        }
-        $substr = str_replace('Finish()', "HP.onunload(4,$flag)", $substr);
+        $event = $this->get_send_results_event();
+        $substr = str_replace('Finish()', "HP_send_results($event)", $substr);
 
         $str = substr_replace($str, $substr, $start, $length);
     }

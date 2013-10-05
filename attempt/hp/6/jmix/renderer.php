@@ -231,14 +231,9 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
         }
 
         if ($pos = strrpos($substr, '}')) {
-            if ($this->TC->task->delay3==mod_taskchain::TIME_AFTEROK) {
-                $flag = 1; // set form values only
-            } else {
-                $flag = 0; // set form values and send form
-            }
             $insert = ''
                 ."	Finished = true;\n"
-                ."	HP.onunload(".mod_taskchain::STATUS_TIMEDOUT.",$flag);\n"
+                ."	HP_send_results(HP.EVENT_TIMEDOUT);\n"
                 ."	ShowMessage('$msg');\n"
             ;
             $substr = substr_replace($substr, $insert, $pos, 0);
@@ -294,7 +289,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
         // this must come after call to $this->fix_js_CheckAnswers()
         $search = 'TimeOver == true';
         if ($pos = strpos($substr, $search)) {
-            $replace = $search.' || ForceTaskStatus';
+            $replace = $search.' || ForceTaskEvent';
             $substr = substr_replace($substr, $replace, $pos, strlen($search));
         }
 
@@ -433,7 +428,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @todo Finish documenting this function
      */
     public function get_stop_function_args()  {
-        return '0,'.mod_taskchain::STATUS_ABANDONED;
+        return 'HP.EVENT_ABANDONED';
     }
 
     /**
