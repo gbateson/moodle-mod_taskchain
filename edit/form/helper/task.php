@@ -263,7 +263,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $this->mform->setType($name_yesno, PARAM_INT);
         $this->mform->setType($name_type,  PARAM_ALPHAEXT);
         $this->mform->setType($name_text,  PARAM_TEXT);
-
+        
+        $name_value = $this->get_defaultvalue($field); // can be 0, 1, 2
+        $this->mform->setDefault($name_yesno, $name_value > 0 ? 1 : 0);
+        $this->mform->setDefault($name_type, $name_value > 1 ? 'specific' : 'taskchain_giveup');
+        $this->mform->setDefault($name_text, $this->get_defaultvalue('stoptext'));
+        
         $this->mform->disabledIf($name_elements, $name_yesno, 'ne', '1');
         $this->mform->disabledIf($name_text,     $name_type,  'ne', 'specific');
     }
@@ -575,9 +580,9 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function fix_field_stopbutton(&$data, $field) {
         $name  = $this->get_fieldname($field);
-        $name_yesno = $this->get_fieldname($field,'yesno');
-        $name_type  = $this->get_fieldname($field,'type');
-        $name_text  = $this->get_fieldname($field,'text');
+        $name_yesno = $this->get_fieldname($field.'_yesno');
+        $name_type  = $this->get_fieldname($field.'_type');
+        $name_text  = $this->get_fieldname($field.'_text');
 
         if (empty($data->$name_yesno)) {
             $data->stopbutton = mod_taskchain::STOPBUTTON_NONE;
@@ -588,12 +593,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
             if (empty($data->$name_text)) {
                 $data->$name_text = '';
             }
-            if ($data->stopbuttontype=='specific') {
+            if ($data->$name_type=='specific') {
                 $data->$name = mod_taskchain::STOPBUTTON_SPECIFIC;
-                $data->$name_text = $data->stopbuttontext;
+                $data->stoptext = $data->$name_text;
             } else {
                 $data->$name = mod_taskchain::STOPBUTTON_LANGPACK;
-                $data->$name_text = $data->$name_type; // e.g. taskchain_giveup
+                $data->stoptext = '';
             }
         }
         unset($data->$name_yesno,
