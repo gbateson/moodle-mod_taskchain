@@ -133,6 +133,8 @@ class mod_taskchain_attempt_review {
      * review
      *
      * we use call_user_func() a lot in this function to prevent syntax error in PHP 5.2.x
+     * note that PHP 5.4 does not allow pass-by-reference in call_user_func()
+     * in such a case we must use call_user_func_array($callback, array(&$pass_by_reference))
      *
      * @uses $DB
      * @param xxx $TC
@@ -260,14 +262,14 @@ class mod_taskchain_attempt_review {
                 // add separator
                 if (count($table->data)) {
                     $callback = array($class, 'add_separator'); // PHP 5.2
-                    call_user_func($callback, &$table, $question_colspan);
+                    call_user_func_array($callback, array(&$table, $question_colspan));
                 }
 
                 // question text
                 if (call_user_func(array($class, 'show_question_text'))) {
                     if ($text = mod_taskchain::get_question_text($questions[$response->questionid])) {
                         $callback = array($class, 'add_question_text'); // PHP 5.2
-                        call_user_func($callback, &$table, $text, $question_colspan);
+                        call_user_func_array($callback, array(&$table, $text, $question_colspan));
                     }
                 }
 
@@ -294,19 +296,19 @@ class mod_taskchain_attempt_review {
                         $neutral_text .= ($neutral_text ? ',' : '').$text;
                     } else {
                         $callback = array($class, 'add_text_field'); // PHP 5.2
-                        call_user_func($callback, &$table, $field, $text, $textfield_colspan);
+                        call_user_func_array($callback, array(&$table, $field, $text, $textfield_colspan));
                     }
                 }
                 if ($neutral_text) {
                     $callback = array($class, 'add_text_field'); // PHP 5.2
-                    call_user_func($callback, &$table, 'responses', $neutral_text, $textfield_colspan);
+                    call_user_func_array($callback, array(&$table, 'responses', $neutral_text, $textfield_colspan));
                 }
 
                 // numeric fields
                 $row = new html_table_row();
                 foreach ($response_num_fields as $field) {
                     $callback = array($class, 'add_num_field'); // PHP 5.2
-                    call_user_func($callback, &$row, $field, $response->$field);
+                    call_user_func_array($callback, array(&$row, $field, $response->$field));
                 }
                 $table->data[] = $row;
             }
