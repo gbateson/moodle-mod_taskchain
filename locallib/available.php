@@ -359,7 +359,8 @@ class taskchain_available extends taskchain_base {
     static public function stopbuttontypes_list() {
         return array(
             'taskchain_giveup' => get_string('giveup',             'taskchain'),
-            'specific'         => get_string('stopbuttonspecific', 'taskchain')
+            'specific'         => get_string('stopbuttonspecific', 'taskchain'),
+            'langpack'         => get_string('stopbuttonlangpack', 'taskchain')
         );
     }
 

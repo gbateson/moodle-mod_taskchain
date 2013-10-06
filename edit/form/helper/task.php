@@ -113,7 +113,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     );
 
     /**
-     * prepare_field_title
+     * prepare title's "source", "prependchainname" and "appendsortorder" values
      *
      * @param array $data (passed by reference)
      * @todo Finish documenting this function
@@ -156,6 +156,37 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         foreach ($times as $timename => $timevalue) {
             foreach ($items as $itemname => $itemvalue) {
                 $data[$name.$timename.$itemname] = min(1, $value & $timevalue & $itemvalue);
+            }
+        }
+    }
+
+    /**
+     * prepare_field_stopbutton
+     * set stopbutton's "yesno" and "type" values
+     *
+     * @param array $data (passed by reference)
+     * @todo Finish documenting this function
+     */
+    protected function prepare_field_stopbutton(&$data) {
+        $field = 'stopbutton';
+        $name = $this->get_fieldname($field);
+        $name_yesno = $this->get_fieldname($field.'yesno');
+        $name_type  = $this->get_fieldname($field.'type');
+        $name_text  = $this->get_fieldname('stoptext');
+
+        if (empty($data[$name])) {
+            $data[$name_yesno] = 0; // NO
+            $data[$name_type] = 'taskchain_giveup';
+            $data[$name_text] = '';
+        } else {
+            $data[$name_yesno] = 1; // YES
+            if ($data[$name]==mod_taskchain::STOPBUTTON_SPECIFIC) {
+                $data[$name_type] = 'specific';
+            } else if ($data[$name_text]=='taskchain_giveup') {
+                $data[$name_type] = 'taskchain_giveup';
+                $data[$name_text] = '';
+            } else {
+                $data[$name_type] = 'langpack';
             }
         }
     }
@@ -216,7 +247,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name_source   = $this->get_fieldname($field_source);
         $name_prepend  = $this->get_fieldname($field_prepend);
         $name_append   = $this->get_fieldname($field_append);
-        $name_elements = $this->get_fieldname($field.'elements');
+        $name_elements = $this->get_fieldname($field.'_elements');
 
         $elements = array();
         $elements[] = $this->mform->createElement('select',   $name_source,  '', taskchain_available::titles_list());
@@ -246,10 +277,10 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
 
-        $name_yesno = $this->get_fieldname($field.'_yesno');
-        $name_type  = $this->get_fieldname($field.'_type');
-        $name_text  = $this->get_fieldname($field.'_text');
-        $name_elements = $this->get_fieldname($field.'elements');
+        $name_yesno = $this->get_fieldname($field.'yesno');
+        $name_type  = $this->get_fieldname($field.'type');
+        $name_text  = $this->get_fieldname('stoptext');
+        $name_elements = $this->get_fieldname($field.'_elements');
 
         $elements = array();
         $elements[] = $this->mform->createElement('selectyesno', $name_yesno, '');
@@ -265,7 +296,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $this->mform->setType($name_text,  PARAM_TEXT);
 
         $this->mform->disabledIf($name_elements, $name_yesno, 'ne', '1');
-        $this->mform->disabledIf($name_text,     $name_type,  'ne', 'specific');
+        $this->mform->disabledIf($name_text,     $name_type,  'eq', 'taskchain_giveup');
     }
 
     /**
@@ -319,7 +350,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $label = $this->get_fieldlabel($field);
 
         $name_url = $this->get_fieldname($field.'url');
-        $name_elements = $this->get_fieldname($field.'elements');
+        $name_elements = $this->get_fieldname($field.'_elements');
 
         $elements = array();
         $elements[] = $this->mform->createElement('select', $name, '', taskchain_available::feedbacks_list());
@@ -516,7 +547,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $field = 'studentfeedback';
         $name  = $this->get_fieldname($field);
         $name_url = $this->get_fieldname($field.'url');
-        $name_elements = $this->get_fieldname($field.'elements');
+        $name_elements = $this->get_fieldname($field.'_elements');
 
         if (empty($data[$name])) {
             // do nothing
@@ -575,30 +606,31 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function fix_field_stopbutton(&$data, $field) {
         $name  = $this->get_fieldname($field);
-        $name_yesno = $this->get_fieldname($field,'yesno');
-        $name_type  = $this->get_fieldname($field,'type');
-        $name_text  = $this->get_fieldname($field,'text');
+        $name_yesno = $this->get_fieldname($field.'yesno');
+        $name_type  = $this->get_fieldname($field.'type');
+        $name_text  = $this->get_fieldname('stoptext');
 
-        if (empty($data->$name_yesno)) {
-            $data->stopbutton = mod_taskchain::STOPBUTTON_NONE;
-        } else {
-            if (empty($data->$name_type)) {
-                $data->$name_type = '';
-            }
-            if (empty($data->$name_text)) {
+        switch (true) {
+            case empty($data->$name_yesno) || empty($data->$name_type):
+                $data->$name = mod_taskchain::STOPBUTTON_NONE;
                 $data->$name_text = '';
-            }
-            if ($data->stopbuttontype=='specific') {
+                break;
+
+            case $data->$name_type=='specific' && $data->$name_text:
                 $data->$name = mod_taskchain::STOPBUTTON_SPECIFIC;
-                $data->$name_text = $data->stopbuttontext;
-            } else {
+                break;
+
+            case $data->$name_type=='langpack' && $data->$name_text:
                 $data->$name = mod_taskchain::STOPBUTTON_LANGPACK;
-                $data->$name_text = $data->$name_type; // e.g. taskchain_giveup
-            }
+                break;
+
+            default: // button required, but no text/string specified
+                $data->$name = mod_taskchain::STOPBUTTON_LANGPACK;
+                $data->$name_text = 'taskchain_giveup';
         }
+
         unset($data->$name_yesno,
-              $data->$name_type,
-              $data->$name_text);
+              $data->$name_type);
     }
 
     /**

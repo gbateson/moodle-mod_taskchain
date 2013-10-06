@@ -653,7 +653,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $size = array('size' => self::TEXT_FIELD_SIZE);
 
         $name_source = $this->get_fieldname($field.'source');
-        $name_elements = $this->get_fieldname($field.'elements');
+        $name_elements = $this->get_fieldname($field.'_elements');
 
         if ($this->is_add()) {
             // create a group of form $elements

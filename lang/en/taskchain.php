@@ -929,7 +929,7 @@ $string['stopbutton_help'] = 'If this setting is enabled, a stop button will be 
 
 If a student clicks the stop button, the results so far will be returned to Moodle and the status of the task attempt will be set to abandoned.
 
-The text that is displayed on the stop button can be one of the preset phrases from Moodle\'s language packs, or the teacher can specify their own text for the button.';
+The text that is displayed on the stop button can be one of the preset phrases from Moodle\'s language packs, formatted as component_stringname (e.g. portfolio_returntowhereyouwere), or the teacher can specify their own, specific text for the button.';
 $string['stopbuttonlangpack'] = 'From language pack';
 $string['stopbuttonspecific'] = 'Use specific text';
 $string['stoptext'] = 'Stop button text';
