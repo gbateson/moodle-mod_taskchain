@@ -27,7 +27,7 @@
 
 /** Include required files */
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/lib.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
 $id = required_param('id', PARAM_INT);   // course
 
@@ -76,16 +76,19 @@ if (has_capability('mod/taskchain:reviewallattempts', $PAGE->context)) {
 }
 
 if ($show_aggregates) {
-    $params = array();
-    $tables = '{taskchain_attempts} ha';
-    $fields = 'ha.taskchainid AS taskchainid, COUNT(DISTINCT ha.clickreportid) AS attemptcount, COUNT(DISTINCT ha.userid) AS usercount, ROUND(SUM(ha.score) / COUNT(ha.score), 0) AS averagescore, MAX(ha.score) AS maxscore';
-    $select = 'ha.taskchainid IN ('.implode(',', $taskchainids).')';
+    $tables = '{taskchain_chain_grades} tcg';
+    $fields = 'tcg.parentid AS taskchainid, COUNT(*) AS attemptcount, COUNT(DISTINCT tcg.userid) AS usercount, ROUND(SUM(tcg.grade) / COUNT(tcg.grade), 0) AS averagescore, MAX(tcg.grade) AS maxgrade';
+
+    list($select, $params) = $DB->get_in_or_equal($taskchainids, SQL_PARAMS_NAMED, 'parentid');
+    $select = "tcg.parenttype = :parenttype AND tcg.parentid $select";
+    $params['parenttype'] = mod_taskchain::PARENTTYPE_ACTIVITY;
+
     if ($single_user) {
         // restrict results to this user only
-        $select .= ' AND ha.userid=:userid';
+        $select .= ' AND tcg.userid=:userid';
         $params['userid'] = $USER->id;
     }
-    $aggregates = $DB->get_records_sql("SELECT $fields FROM $tables WHERE $select GROUP BY ha.taskchainid", $params);
+    $aggregates = $DB->get_records_sql("SELECT $fields FROM $tables WHERE $select GROUP BY tcg.parentid", $params);
 } else {
     $aggregates = array();
 }
@@ -106,9 +109,9 @@ if ($usesections) {
 
 $strsectionname = get_string('sectionname', 'format_'.$course->format);
 $strname        = get_string('name');
-$strhighest     = get_string('gradehighest', 'task');
-$straverage     = get_string('gradeaverage', 'task');
-$strattempts    = get_string('attempts', 'task');
+$strhighest     = get_string('highestgrade', 'taskchain');
+$straverage     = get_string('averagegrade', 'taskchain');
+$strattempts    = get_string('attempts', 'taskchain');
 
 $table = new html_table();
 
@@ -148,7 +151,7 @@ foreach ($taskchains as $taskchain) {
         $href = new moodle_url('/mod/taskchain/report.php', array('id' => $taskchain->coursemodule));
         $params = array('href' => $href, 'class' => $class);
 
-        $text = html_writer::tag('a', $aggregates[$taskchain->id]->maxscore, $params);
+        $text = html_writer::tag('a', $aggregates[$taskchain->id]->maxgrade, $params);
         $row->cells[] = new html_table_cell($text);
 
         $text = html_writer::tag('a', $aggregates[$taskchain->id]->averagescore, $params);
