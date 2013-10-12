@@ -58,8 +58,14 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
      * @param object $header (passed by reference)
      */
     function renderHeader(&$header){
+        global $SCRIPT;
         if ($name = $header->getName()) {
-            $header->updateAttributes(array('id' => $name));
+            if ($SCRIPT=='/course/modedit.php') { // $PAGE->url
+                // Moodle >= 2.5 requires "id_" prefix in mod_form.php
+            } else {
+                // however, we don't want "id_" prefix on TC edit pages
+                $header->updateAttributes(array('id' => $name));
+            }
         }
         return parent::renderHeader($header);
     }
