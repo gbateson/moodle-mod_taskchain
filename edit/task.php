@@ -128,6 +128,7 @@ switch ($TC->action) {
         $newdata->sourcetype     = $source->get_type();
         unset($source);
 
+        $newdata->id = $TC->get_taskid();
         if (empty($newdata->id)) {
             // add new TaskChain task(s)
             $aftertaskid = optional_param('aftertaskid', 0, PARAM_INT);

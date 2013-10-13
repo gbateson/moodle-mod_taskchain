@@ -124,16 +124,16 @@ switch ($TC->action) {
     case 'datasubmitted':
         // $newdata object holds the submitted data
 
-        if (empty($newdata->id)) {
-            // adding a new TaskChain task condition
-            if (! $newdata->id = $DB->insert_record('taskchain_conditions', $newdata)) {
-                print_error('error_insertrecord', 'taskchain', '', 'taskchain_conditions');
-             }
-        } else {
+        if ($newdata->id = $TC->get_conditionid()) {
             // updating a TaskChain task condition
             if (! $DB->update_record('taskchain_conditions', $newdata)) {
                 print_error('error_updaterecord', 'taskchain', '', 'taskchain_conditions');
             }
+        } else {
+            // adding a new TaskChain task condition
+            if (! $newdata->id = $DB->insert_record('taskchain_conditions', $newdata)) {
+                print_error('error_insertrecord', 'taskchain', '', 'taskchain_conditions');
+             }
         }
 
         if ($TC->inpopup) {

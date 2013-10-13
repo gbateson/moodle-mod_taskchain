@@ -25,9 +25,12 @@
  * @since      Moodle 2.0
  */
 
+// prevent direct access to this script
+defined('MOODLE_INTERNAL') || die();
+
 $module->cron      = 0; // 60
 $module->component = 'mod_taskchain';
 $module->maturity  = MATURITY_BETA; // ALPHA=50, BETA=100, RC=150, STABLE=200
-$module->release   = 'v0.9.37';
-$module->version   = 2011040137;
+$module->release   = 'v0.9.38';
+$module->version   = 2011040138;
 $module->requires  = 2010112400; // Moodle 2.0

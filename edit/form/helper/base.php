@@ -1185,15 +1185,20 @@ abstract class taskchain_form_helper_base {
     protected function add_section_hidden($section, $fields) {
         $params = array();
 
+        // set "id" field name: chainid OR taskid
+        $id = $this->recordtype.'id';
+
         foreach ($fields as $field) {
-            $name = $this->get_fieldname($field);
+            if ($field=='id') {
+                $name = $this->get_fieldname($id);
+            } else {
+                $name = $this->get_fieldname($field);
+            }
             $value = $this->get_fieldvalue($field);
             $params[$name] = $value;
         }
 
-        $id = $this->recordtype.'id'; // e.g. taskid
-        $params = $this->TC->merge_params($params, null, $id);
-
+        $params = $this->TC->merge_params($params);
         foreach ($params as $name => $value) {
             if ($value) {
                 if ($name=='sesskey') {

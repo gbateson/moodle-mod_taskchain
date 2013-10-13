@@ -530,7 +530,7 @@ class taskchain_require extends taskchain_base {
             $attempt = &$this->TC->$attempt;
         }
         if ($attempt->status > self::STATUS_INPROGRESS) { // allow status==0
-            return get_string($type.'attemptnotinprogress', 'taskchain');
+            return get_string($type.'attemptnotinprogress', 'taskchain')." ($attempt->status)";
         }
         return false;
     }

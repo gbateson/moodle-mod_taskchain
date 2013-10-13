@@ -1788,7 +1788,7 @@ class taskchain_get extends taskchain_base {
         $userids = implode(',', array_unique($userids));
 
         if ($userids=='') {
-            return ''; // no users
+            return 'userid>0'; // no users
         } else if (strpos($userids, ',')===false) {
             return $AND."$field=$userids"; // one user
         } else {
