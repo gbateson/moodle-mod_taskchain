@@ -159,7 +159,7 @@ function xmldb_taskchain_upgrade($oldversion) {
             }
         }
 
-        $update_cache = true;
+        $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
@@ -173,9 +173,24 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2011040138;
+    $newversion = 2011040139;
     if ($oldversion < $newversion) {
-        $update_cache = true;
+
+        $table = new xmldb_table('taskchain_cache');
+        $fields = array(
+            new xmldb_field('sourcerepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'sourcelocation'),
+            new xmldb_field('configrepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'configlocation'),
+        );
+        foreach ($fields as $field) {
+            xmldb_taskchain_fix_previous_field($dbman, $table, $field);
+            if ($dbman->field_exists($table, $field)) {
+                $dbman->change_field_type($table, $field);
+            } else {
+                $dbman->add_field($table, $field);
+            }
+        }
+
+        $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 

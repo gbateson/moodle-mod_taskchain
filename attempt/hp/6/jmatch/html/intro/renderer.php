@@ -128,7 +128,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_intro_renderer extends mod_taskchai
         // send results to Moodle, if necessary
         if ($pos = strrpos($substr, '}')) {
             $insert = "\n"
-                ."	if (HP.end_of_task(TaskEvent)) {\n"
+                ."	if (HP.end_of_quiz(TaskEvent)) {\n"
                 ."		TimeOver = true;\n"
                 ."		Locked = true;\n"
                 ."		Finished = true;\n"

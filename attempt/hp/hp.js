@@ -16,11 +16,9 @@
 /**
  * mod/taskchain/attempt/hp/hp.js
  *
- * @package    mod
- * @subpackage taskchain
- * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      Moodle 2.0
+ * @package   mod-taskchain
+ * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
@@ -62,11 +60,11 @@ function hpTaskAttempt() {
     */
     this.questions = new Array();
 
-    this.tasktype  = '';    // JCloze JCross JMatch JMix JTask
+    this.quiztype  = '';    // JCloze JCross JMatch JMix JQuiz
     this.form      = null;  // reference to document.forms['store']
     this.starttime = null;  // Date object for start time as recorded by client
     this.endtime   = null;  // Date object for end time as recorded by client
-    this.evt       = 0;     // most recent task event (see EVENT_xxx constants below)
+    this.evt       = 0;     // most recent quiz event (see EVENT_xxx constants below)
 
     /**#@+
     * constants for STATUS values
@@ -91,7 +89,7 @@ function hpTaskAttempt() {
     /**#@-*/
 
     /**#@+
-    * constants for end-of-task EVENT values
+    * constants for end-of-quiz EVENT values
     *
     * @var integer
     */
@@ -136,7 +134,7 @@ function hpTaskAttempt() {
     /**
      * init
      *
-     * @param integer questionCount number of questions in this HP task
+     * @param integer questionCount number of questions in this HP quiz
      * @param boolean sendallclicks if clickreport is enabled then TRUE; otherwise FALSE
      * @param boolean ajax       if delay3 is disabled then TRUE; otherwise FALSE
      */
@@ -219,11 +217,11 @@ function hpTaskAttempt() {
         // looop through fields in this attempt
         for (var fieldname in this) {
             switch (fieldname) {
-                // case 'tasktype':
+                // case 'quiztype':
                 case 'status':
                 case 'penalties':
                 case 'score':
-                    xml.addField(this.tasktype+'_'+fieldname, this[fieldname]);
+                    xml.addField(this.quiztype+'_'+fieldname, this[fieldname]);
                     break;
 
                 case 'questions':
@@ -244,7 +242,7 @@ function hpTaskAttempt() {
      * @return xxx
      */
     this.getQuestionPrefix = function (i) {
-        return this.tasktype + '_q' + (parseInt(i)<9 ? '0' : '') + (parseInt(i)+1) + '_';
+        return this.quiztype + '_q' + (parseInt(i)<9 ? '0' : '') + (parseInt(i)+1) + '_';
     };
 
     /**
@@ -323,7 +321,7 @@ function hpTaskAttempt() {
         if (flag==this.FLAG_SENDVALUES || flag==this.FLAG_SETANDSEND) {
 
             // cancel the check for navigating away from this page
-            window.onbeforeunload = null;
+            HP_remove_listener(window, 'beforeunload', HP_send_results);
 
             if (ajax) {
                 var use_asynchronous = (evt==this.EVENT_BEFOREUNLOAD ? false : true);
@@ -336,7 +334,7 @@ function hpTaskAttempt() {
             if (evt==this.EVENT_COMPLETED || evt==this.EVENT_SENDVALUES) {
                 this.form = null; // we don't need this any more
             } else if (ajax) {
-                window.onbeforeunload = window.HP_send_results;
+                HP_add_listener('window', 'beforeunload', HP_send_results);
             }
         }
     };
@@ -502,12 +500,12 @@ function hpTaskAttempt() {
     };
 
     /**
-     * end_of_task
+     * end_of_quiz
      *
      * @param integer evt (optional, default=null)
-     * @return boolean TRUE if (current) evt is end-of-task event; otherwise FALSE
+     * @return boolean TRUE if (current) evt is end-of-quiz event; otherwise FALSE
      */
-    this.end_of_task = function (evt) {
+    this.end_of_quiz = function (evt) {
         if (evt==null) {
             return (this.form==null || evt==this.EVENT_COMPLETED || evt==this.EVENT_SENDVALUES);
         }
@@ -528,12 +526,12 @@ function hpTaskAttempt() {
     };
 
     /**
-     * task_button_event
+     * quiz_button_event
      *
      * @param integer evt (optional, default=null)
-     * @return boolean TRUE if (current) evt is task-button event; otherwise FALSE
+     * @return boolean TRUE if (current) evt is quiz-button event; otherwise FALSE
      */
-    this.task_button_event = function (evt) {
+    this.quiz_button_event = function (evt) {
         if (evt==null) {
             evt = this.evt;
         }
@@ -541,12 +539,12 @@ function hpTaskAttempt() {
     };
 
     /**
-     * task_input_event
+     * quiz_input_event
      *
      * @param integer evt (optional, default=null)
-     * @return boolean TRUE if (current) evt is task-input event; otherwise FALSE
+     * @return boolean TRUE if (current) evt is quiz-input event; otherwise FALSE
      */
-    this.task_input_event = function (evt) {
+    this.quiz_input_event = function (evt) {
         if (evt==null) {
             evt = this.evt;
         }
@@ -742,7 +740,7 @@ function hpField(name, value) {
 };
 
 ///////////////////////////////////////////
-// handle task events and send results
+// handle quiz events and send results
 ///////////////////////////////////////////
 
 /**
@@ -770,12 +768,12 @@ function HP_send_results(evt) {
 
     switch (true) {
 
-        case HP.end_of_task():
-            // task is already finished
+        case HP.end_of_quiz():
+            // quiz is already finished
             break;
 
-        case HP.end_of_task(evt):
-            // task has just finished
+        case HP.end_of_quiz(evt):
+            // quiz has just finished
             send_results = true;
             switch (evt) {
                 case HP.EVENT_TIMEDOUT:   status = HP.STATUS_TIMEDOUT;  break;
@@ -786,21 +784,21 @@ function HP_send_results(evt) {
             }
             break;
 
-        case HP.navigation_event(evt) && (HP.task_input_event() || HP.task_button_event()):
+        case HP.navigation_event(evt) && (HP.quiz_input_event() || HP.quiz_button_event()):
             // navigation event, following a button or input event
             // we need to set status to ABANDONED, because this may be our last chance
             send_results = true;
             status = HP.STATUS_ABANDONED;
             break;
 
-        case (HP.task_input_event(evt) || HP.task_button_event(evt)) && HP.navigation_event():
+        case (HP.quiz_input_event(evt) || HP.quiz_button_event(evt)) && HP.navigation_event():
             // button or input event, following a navigation event
             // we need to set status to INPROGRESS, in case it was set to ABANDONED above
             send_results = true;
             status = HP.STATUS_INPROGRESS;
             break;
 
-        case HP.sendallclicks && HP.task_button_event(evt):
+        case HP.sendallclicks && HP.quiz_button_event(evt):
             // send all button events for the "click report"
             send_results = true;
             status = HP.STATUS_INPROGRESS;
@@ -811,8 +809,8 @@ function HP_send_results(evt) {
         HP.send_results(evt, status);
     }
 
-    if (evt==HP.EVENT_BEFOREUNLOAD && window.hotpotbeforeunload) {
-        return hotpotbeforeunload();
+    if (evt==HP.EVENT_BEFOREUNLOAD && window.HP_beforeunload) {
+        return HP_beforeunload();
     } else {
         return evt;
     }

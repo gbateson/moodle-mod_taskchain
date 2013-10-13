@@ -139,7 +139,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
         // the JCross template file, jcross6.js_, contains an duplicate version
         // of the Finish() function, so for completeness we remove that as well
 
-        list($start, $finish) = $this->locate_js_function($name, $str);
+        list($start, $finish) = $this->locate_js_block('function', $name, $str);
         if ($finish) {
             // remove the second occurrence of this function
             $this->remove_js_function($str, $start, ($finish - $start), $name);

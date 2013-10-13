@@ -774,7 +774,15 @@ class taskchain_source {
      */
     public function filemtime($lastmodified, $etag)  {
         if (is_object($this->file)) {
-            return $this->file->get_timemodified();
+            if (method_exists($this->file, 'referencelastsync')) {
+                $time = $this->file->referencelastsync(); // Moodle >= 2.3
+            } else {
+                $time = $this->file->get_timemodified(); // Moodle <= 2.2
+            }
+            if ($path = self::get_real_path()) {
+                $time = max($time, filemtime($path));
+            }
+            return $time;
         }
         if ($this->url) {
             $headers = array(
@@ -848,30 +856,11 @@ class taskchain_source {
             }
 
             if (! $this->filecontents = $this->file->get_content()) {
-                $path = '';
-                if (method_exists($this->file, 'get_repository_id')) {
-                    if ($repositoryid = $this->file->get_repository_id()) {
-                        if (isset($this->TC->coursemodule->context)) {
-                            $context = $this->TC->coursemodule->context;
-                        } else if (isset($this->TC->course->context)) {
-                            $context = $this->TC->course->context;
-                        } else {
-                            $context = null; // shouldn't happen !!
-                        }
-                        if ($repository = repository::get_repository_by_id($repositoryid, $context)) {
-                            if (isset($repository->root_path)) {
-                                $path = $repository->root_path;
-                            }
-                        }
-                    }
-                }
-                if ($path) {
-                    $path .= '/'.$this->file->get_reference();
-                    $this->filecontents = file_get_contents($path);
-                } else {
+                if (! $path = $this->get_real_path()) {
                     throw new moodle_exception('could not fetch file contents: class='.get_class($this->file).', file='.$this->file->get_filepath().$this->file->get_filename());
                     return false;
                 }
+                $this->filecontents = file_get_contents($path);
             }
 
             if ($id && $lifetime) {
@@ -921,6 +910,61 @@ class taskchain_source {
         }
 
         return true;
+    }
+
+    /**
+     * get_real_path
+     *
+     * @return string
+     */
+    public function get_real_path() {
+        global $CFG, $PAGE;
+
+        // sanity check
+        if (empty($this->file)) {
+            return '';
+        }
+
+        // set default path (= cached file in filedir)
+        $hash = $this->file->get_contenthash();
+        $path = $CFG->dataroot.'/filedir/'.$hash[0].$hash[1].'/'.$hash[2].$hash[3].'/'.$hash;
+
+        if (! method_exists($this->file, 'get_repository_id')) {
+            return $path; // Moodle <= 2.2
+        }
+        if (! $repositoryid = $this->file->get_repository_id()) {
+            return $path; // shoudn't happen !!
+        }
+
+        if (! $repository = repository::get_repository_by_id($repositoryid, $PAGE->context)) {
+            return $path; // shouldn't happen
+        }
+
+        // get repository $type
+        switch (true) {
+            case isset($repository->options['type']):
+                $type = $repository->options['type'];
+                break;
+            case isset($repository->instance->typeid):
+                $type = repository::get_type_by_id($repository->instance->typeid);
+                $type = $type->get_typename();
+                break;
+            default:
+                $type = ''; // shouldn't happen !!
+        }
+
+        // get path according to repository $type
+        switch ($type) {
+            case 'filesystem':
+                $path = $repository->root_path.'/'.$this->file->get_reference();
+                break;
+            case 'user':
+            case 'coursefiles':
+                // use the the default $path
+                break;
+        }
+
+        return $path;
     }
 
     /**

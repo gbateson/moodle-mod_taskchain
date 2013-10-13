@@ -709,11 +709,22 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         }
 
         // custom fields
-        if (isset($this->TC->task->source) && $this->cache->timemodified < $this->TC->task->source->filemtime($this->cache->sourcelastmodified, $this->cache->sourceetag)) {
-            return false; // sourcefile file has been modified
-        }
-        if (isset($this->TC->task->source->config) && $this->cache->timemodified < $this->TC->task->source->config->filemtime($this->cache->configlastmodified, $this->cache->configetag)) {
-            return false; // config file has been modified
+        $fileareas = array('source', 'config');
+        foreach ($fileareas as $filearea) {
+            if (isset($this->TC->task->$filearea) && $this->TC->task->$filearea) {
+                $timemodified = $this->cache->timemodified;
+                $repositoryid = $this->cache->{$filearea.'repositoryid'};
+                $lastmodified = $this->cache->{$filearea.'lastmodified'};
+                $etag         = $this->cache->{$filearea.'etag'};
+                if ($timemodified < $this->TC->task->$filearea->filemtime($lastmodified, $etag)) {
+                    return false; // file has been modified
+                }
+                if (method_exists($this->TC->task->$filearea->file, 'get_repository_id')) {
+                    if ($repositoryid != $this->TC->task->$filearea->file->get_repository_id()) {
+                        return false; // file repository has been changed
+                    }
+                }
+            }
         }
 
         if ($this->TC->task->useglossary) {
@@ -783,6 +794,17 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             $configfield = 'config'.$field;
             $this->cache->$sourcefield = ''; // $this->TC->task->source->$field;
             $this->cache->$configfield = ''; // $this->TC->task->source->config->$field;
+        }
+
+        $fileareas = array('source', 'config');
+        foreach ($fileareas as $filearea) {
+            if (empty($this->TC->task->$filearea)) {
+                continue;
+            }
+            if (method_exists($this->TC->task->$filearea->file, 'get_repository_id')) {
+                $repositoryid = $this->TC->task->$filearea->file->get_repository_id();
+                $this->cache->{$filearea.'repositoryid'} = $repositoryid;
+            }
         }
 
         // create content object
@@ -1113,14 +1135,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             // only do this once per task
             $taskid = $this->TC->task->id;
             $str .= ''
-                ."/**\n"
-                ." * Based on http://phrogz.net/JS/AttachEvent_js.txt - thanks!\n"
-                ." * That code is copyright 2003 by Gavin Kistner, !@phrogz.net\n"
-                ." * and is covered under the license viewable at:\n"
-                ." * http://phrogz.net/JS/_ReuseLicense.txt\n"
-                ." */\n"
-
-                ."function taskchainAttachEvent(obj, evt, fnc, useCapture) {\n"
+                ."function HP_add_listener(obj, evt, fnc, useCapture) {\n"
                 ."	// obj : an HTML element\n"
                 ."	// evt : the name of the event (without leading 'on')\n"
                 ."	// fnc : the name of the event handler funtion\n"
@@ -1133,59 +1148,89 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 ."	// transfer object's old event handler (if any)\n"
                 ."	var onevent = 'on' + evt;\n"
                 ."	if (obj[onevent]) {\n"
-                ."		var old_event_handler = obj[onevent];\n"
+                ."		var old_fnc = obj[onevent];\n"
                 ."		obj[onevent] = null;\n"
-                ."		taskchainAttachEvent(obj, evt, old_event_handler, useCapture);\n"
+                ."		HP_add_listener(obj, evt, old_fnc, useCapture);\n"
                 ."	}\n"
 
-                ."	// create key for this event handler\n"
-                ."	var s = fnc.toString();\n"
-                .'	s = s.replace(new RegExp("[; \\\\t\\\\n\\\\r]+", "g"), "");'."\n"
-                .'	s = s.substring(s.indexOf("{") + 1, s.lastIndexOf("}"));'."\n"
-
-                ."	 // skip event handler, if it is a duplicate\n"
-                ."	if (! obj.evt_keys) {\n"
-                ."		obj.evt_keys = new Array();\n"
-                ."	}\n"
-                ."	if (obj.evt_keys[s]) {\n"
-                ."		return true;\n"
-                ."	}\n"
-                ."	obj.evt_keys[s] = true;\n"
-
-                ."	// standard DOM\n"
                 ."	if (obj.addEventListener) {\n"
                 ."		obj.addEventListener(evt, fnc, (useCapture ? true : false));\n"
-                ."		return true;\n"
+                ."	} else if (obj.attachEvent) {\n"
+                ."		obj.attachEvent(onevent, fnc);\n"
+                ."	} else {\n" // old browser NS4, IE5 ...
+                ."		if (! obj.evts) {\n"
+                ."			obj.evts = new Array();\n"
+                ."		}\n"
+                ."		if (obj.evts && ! obj.evts[onevent]) {\n"
+                ."			obj.evts[onevent] = new Array();\n"
+                ."		}\n"
+                ."		if (obj.evts && obj.evts[onevent] && ! obj.evts[onevent]) {\n"
+                ."			obj.evts[onevent][obj.evts[onevent].length] = fnc;\n"
+                ."			obj[onevent] = new Function('HP_handle_event(this, \"'+onevent+'\")');\n"
+                ."		}\n"
                 ."	}\n"
-
-                ."	// IE\n"
-                ."	if (obj.attachEvent) {\n"
-                ."		return obj.attachEvent(onevent, fnc);\n"
-                ."	}\n"
-
-                ."	// old browser (e.g. NS4 or IE5Mac)\n"
-                ."	if (! obj.evts) {\n"
-                ."		obj.evts = new Array();\n"
-                ."	}\n"
-                ."	if (! obj.evts[onevent]) {\n"
-                ."		obj.evts[onevent] = new Array();\n"
-                ."	}\n"
-                ."	var i = obj.evts[onevent].length;\n"
-                ."	obj.evts[onevent][i] = fnc;\n"
-                ."	obj[onevent] = new Function('var onevent=\"'+onevent+'\"; for (var i=0; i<this.evts[onevent].length; i++) this.evts[onevent][i]();');\n"
                 ."}\n"
 
-                ."function set_onpaste(obj, truefalse) {\n"
-                ."	obj.ondrop = new Function('return ' + truefalse);\n"
-                ."	obj.onpaste = new Function('return ' + truefalse);\n"
+                ."function HP_remove_listener(obj, evt, fnc, useCapture) {\n"
+                ."	// obj : an HTML element\n"
+                ."	// evt : the name of the event (without leading 'on')\n"
+                ."	// fnc : the name of the event handler funtion\n"
+                ."	// useCapture : boolean (default = false)\n"
+
+                ."	var onevent = 'on' + evt;\n"
+                ."	if (obj.removeEventListener) {\n"
+                ."		obj.removeEventListener(evt, fnc, (useCapture ? true : false));\n"
+                ."	} else if (obj.attachEvent) {\n"
+                ."		obj.detachEvent(onevent, fnc);\n"
+                ."	} else if (obj.evts && obj.evts[onevent]) {\n"
+                ."		var i_max = obj.evts[onevent].length;\n"
+                ."		for (var i=(i_max - 1); i>=0; i--) {\n"
+                ."			if (obj.evts[onevent][i]==fnc) {\n"
+                ."				obj.evts[onevent].splice(i, 1);\n"
+                ."			}\n"
+                ."		}\n"
+                ."	}\n"
                 ."}\n"
 
-                ."function set_onpaste_input(obj, truefalse) {\n"
+                ."function HP_handle_event(obj, onevent) {\n"
+                ."	if (obj.evts[onevent]) {\n"
+                ."		var i_max = obj.evts[onevent].length\n"
+                ."		for (var i=0; i<i_max; i++) {\n"
+                ."			obj.evts[onevent][i]();\n"
+                ."		}\n"
+                ."	}\n"
+                ."}\n"
+
+                ."function HP_disable_event(evt) {\n"
+                ."	if (evt==null) {\n"
+                ."		evt = window.event;\n"
+                ."	}\n"
+                ."	if (evt.preventDefault) {\n"
+                ."		evt.preventDefault();\n"
+                ."	} else {\n" // IE <= 8
+                ."		evt.returnValue = false;\n"
+                ."	}\n"
+                ."	return false;\n"
+                ."}\n"
+
+                // By default, pasting of answers is NOT allowed.
+                // To allow it: window.allow_paste_input = true;
+                ."function HP_setup_input_and_textarea() {\n"
+                ."	if (window.allow_paste_input || window.enable_paste_input) {\n"
+                ."		var disablepaste = false;\n"
+                ."	} else {\n"
+                ."		var disablepaste = true;\n"
+                ."	}\n"
                 ."	var obj = document.getElementsByTagName('input');\n"
                 ."	if (obj) {\n"
-                ."		for (var i=0; i<obj.length; i++) {\n"
+                ."		var i_max = obj.length;\n"
+                ."		for (var i=0; i<i_max; i++) {\n"
                 ."			if (obj[i].type=='text') {\n"
-                ."				set_onpaste(obj[i], truefalse)\n"
+                ."				if (disablepaste) {\n"
+                ."					HP_add_listener(obj[i], 'drop', HP_disable_event);\n"
+                ."					HP_add_listener(obj[i], 'paste', HP_disable_event);\n"
+                ."				}\n"
+                ."				HP_add_listener(obj[i], 'focus', HP_send_results);\n" // keydown, mousedown ?
                 ."			}\n"
                 ."		}\n"
                 ."	}\n"
@@ -1193,20 +1238,28 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 ."	if (obj) {\n"
                 ."		var i_max = obj.length;\n"
                 ."		for (var i=0; i<i_max; i++) {\n"
-                ."			set_onpaste(obj[i], truefalse)\n"
+                ."			if (disablepaste) {\n"
+                ."				HP_add_listener(obj[i], 'drop', HP_disable_event);\n"
+                ."				HP_add_listener(obj[i], 'paste', HP_disable_event);\n"
+                ."			}\n"
+                ."			HP_add_listener(obj[i], 'focus', HP_send_results);\n"
                 ."		}\n"
                 ."	}\n"
                 ."	obj = null;\n"
                 ."}\n"
 
-                // By default, pasting of answers is NOT allowed.
-                // To allow it: window.allow_paste_input = true;
-                ."set_onpaste_input(window.allow_paste_input ? 'true' : 'false');\n"
+                ."HP_add_listener(window, 'load', HP_setup_input_and_textarea);\n"
+
+                // ensure keydown (not keypress) event handler is assigned
+                // to prevent leaving page when user hits delete key
+                ."if (window.SuppressBackspace) {\n"
+                ."	HP_add_listener(window, 'keydown', SuppressBackspace);\n"
+                ."}\n"
             ;
         }
         $onload_oneline = preg_replace('/\s+/s', ' ', $onload);
         $onload_oneline = preg_replace("/[\\']/", '\\\\$0', $onload_oneline);
-        $str .= "taskchainAttachEvent(window, 'load', '$onload_oneline');\n";
+        $str .= "HP_add_listener(window, 'load', '$onload_oneline');\n";
         if ($script_tags) {
             $str .= "//]]>\n"."</script>\n";
         }
@@ -1294,7 +1347,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             $functions = '';
             if (preg_match_all('/(?<=function )\w+/', $mediafilter->js_inline, $names)) {
                 foreach ($names[0] as $name) {
-                    list($start, $finish) = $this->locate_js_function($name, $mediafilter->js_inline, true);
+                    list($start, $finish) = $this->locate_js_block('function', $name, $mediafilter->js_inline, true);
                     if ($finish) {
                         $functions .= trim(substr($mediafilter->js_inline, $start, ($finish - $start)))."\n";
                         $mediafilter->js_inline = substr_replace($mediafilter->js_inline, '', $start, ($finish - $start));
