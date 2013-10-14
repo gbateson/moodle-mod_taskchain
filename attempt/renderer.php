@@ -798,12 +798,13 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
         $fileareas = array('source', 'config');
         foreach ($fileareas as $filearea) {
-            if (empty($this->TC->task->$filearea)) {
-                continue;
-            }
-            if (method_exists($this->TC->task->$filearea->file, 'get_repository_id')) {
-                $repositoryid = $this->TC->task->$filearea->file->get_repository_id();
-                $this->cache->{$filearea.'repositoryid'} = $repositoryid;
+            $this->cache->{$filearea.'repositoryid'} = 0; // default
+            if (isset($this->TC->task->$filearea->file)) {
+                if (method_exists($this->TC->task->$filearea->file, 'get_repository_id')) {
+                    if ($repositoryid = $this->TC->task->$filearea->file->get_repository_id()) {
+                        $this->cache->{$filearea.'repositoryid'} = $repositoryid;
+                    }
+                }
             }
         }
 

@@ -175,7 +175,6 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $newversion = 2011040139;
     if ($oldversion < $newversion) {
-
         $table = new xmldb_table('taskchain_cache');
         $fields = array(
             new xmldb_field('sourcerepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'sourcelocation'),
@@ -189,7 +188,11 @@ function xmldb_taskchain_upgrade($oldversion) {
                 $dbman->add_field($table, $field);
             }
         }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
 
+    $newversion = 2011040140;
+    if ($oldversion < $newversion) {
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }

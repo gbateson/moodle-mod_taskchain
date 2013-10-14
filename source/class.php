@@ -563,7 +563,7 @@ class taskchain_source {
      * this function will get task type classes from the plugins directory (and subdirectories),
      * and search the classes for a method which returns a non-empty result
      *
-     * @param string $methodname : name of a method to be used in the classes in the plugins directory
+     * @param string $methodname "is_taskfile" or "is_chainfile"
      * @param stored_file $file
      * @return string : $class name if $file is the required type; otherwise ""
      */
@@ -779,7 +779,7 @@ class taskchain_source {
             } else {
                 $time = $this->file->get_timemodified(); // Moodle <= 2.2
             }
-            if ($path = self::get_real_path()) {
+            if ($path = $this->get_real_path()) {
                 $time = max($time, filemtime($path));
             }
             return $time;
@@ -986,8 +986,8 @@ class taskchain_source {
                 $value = trim(substr($header, $pos+1));
                 switch ($name) {
                     case 'Last-Modified': $this->lastmodified = trim($value); break;
-                    case 'ETag': $this->etag = trim($value); break;
-                    case 'Date': $this->date = trim($value); break;
+                    case 'ETag'         : $this->etag         = trim($value); break;
+                    case 'Date'         : $this->date         = trim($value); break;
                 }
             }
         }
