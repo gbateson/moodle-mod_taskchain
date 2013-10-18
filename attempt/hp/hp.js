@@ -217,7 +217,6 @@ function hpTaskAttempt() {
         // looop through fields in this attempt
         for (var fieldname in this) {
             switch (fieldname) {
-                // case 'quiztype':
                 case 'status':
                 case 'penalties':
                 case 'score':

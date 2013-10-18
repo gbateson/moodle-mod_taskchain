@@ -38,7 +38,7 @@
  * @param xxx ajax
  */
 function JMix(sendallclicks, ajax) {
-    this.tasktype = 'JMix';
+    this.quiztype = 'JMix';
 
     /**
      * initQuestion

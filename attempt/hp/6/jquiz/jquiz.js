@@ -38,7 +38,7 @@
  * @param xxx ajax
  */
 function JQuiz(sendallclicks, ajax) {
-    this.tasktype = 'JQuiz';
+    this.quiztype = 'JQuiz';
 
     /**
      * initQuestion

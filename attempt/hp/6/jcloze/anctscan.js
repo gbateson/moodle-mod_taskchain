@@ -38,7 +38,7 @@
  * @param xxx ajax
  */
 function JCloze_ANCT_Scan(sendallclicks, ajax) {
-    this.tasktype = 'JCloze';
+    this.quiztype = 'JCloze';
 
     /**
      * initQuestion

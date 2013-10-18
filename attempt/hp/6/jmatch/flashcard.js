@@ -38,7 +38,7 @@
  * @param xxx ajax
  */
 function JMatchFlashcard(sendallclicks, ajax) {
-    this.tasktype = 'JMatch';
+    this.quiztype = 'JMatch';
 
     /**
      * initQuestion

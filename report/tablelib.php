@@ -615,16 +615,16 @@ class taskchain_report_table extends table_sql {
      * @return xxx
      */
     function col_picture($row)  {
-        $courseid = $this->TC->course->id;
-        $user = (object)array(
-            'id'        => $row->userid,
-            'firstname' => $row->firstname,
-            'lastname'  => $row->lastname,
-            'picture'   => $row->picture,
-            'imagealt'  => $row->imagealt,
-            'email'     => $row->email
-        );
-        return $this->output->user_picture($user, array('courseid'=>$courseid));
+        $user = new stdClass();
+        $fields = explode(',', $this->output->get_userfields());
+        foreach ($fields as $field) {
+            if ($field=='id') {
+                $user->$field = $row->userid;
+            } else {
+                $user->$field = $row->$field;
+            }
+        }
+        return $this->output->user_picture($user, array('courseid'=>$this->TC->course->id));
     }
 
     /**

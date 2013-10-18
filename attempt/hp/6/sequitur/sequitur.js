@@ -38,7 +38,7 @@
  * @param xxx ajax
  */
 function Sequitur(sendallclicks, ajax) {
-    this.tasktype = 'Sequitur';
+    this.quiztype = 'Sequitur';
 
     /**
      * initQuestion

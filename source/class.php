@@ -842,29 +842,12 @@ class taskchain_source {
                 return false;
             }
 
-            // we want the latest version of the file content
-            // so we force the lifetime to be zero, if it isn't already
-
-            $id = 0;
-            $lifetime = 0;
-            if (method_exists($this->file, 'get_referencefileid')) {
-                if ($id = $this->file->get_referencefileid()) {
-                    if ($lifetime = $this->file->get_referencelifetime()) {
-                        $DB->set_field('files_reference', 'lifetime', 0, array('id' => $id));
-                    }
-                }
-            }
-
             if (! $this->filecontents = $this->file->get_content()) {
                 if (! $path = $this->get_real_path()) {
                     throw new moodle_exception('could not fetch file contents: class='.get_class($this->file).', file='.$this->file->get_filepath().$this->file->get_filename());
                     return false;
                 }
                 $this->filecontents = file_get_contents($path);
-            }
-
-            if ($id && $lifetime) {
-                $DB->set_field('files_reference', 'lifetime', $lifetime, array('id' => $id));
             }
         }
 

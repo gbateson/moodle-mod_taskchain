@@ -1817,9 +1817,9 @@ function taskchain_get_file_info($browser, $areas, $course, $cm, $context, $file
  * @param navigation_node $navigation_node An object representing the navigation tree node of the taskchain module instance
  * @param stdclass $course
  * @param stdclass $module
- * @param stdclass $cm
+ * @param cm_info  $cm
  */
-function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $course, stdclass $module, stdclass $cm) {
+function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $course, stdclass $module, cm_info $cm) {
     global $CFG, $TC;
 
     if (empty($TC)) {

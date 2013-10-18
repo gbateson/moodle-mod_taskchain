@@ -38,7 +38,7 @@
  * @param xxx ajax
  */
 function Rhubarb(sendallclicks, ajax) {
-    this.tasktype = 'Rhubarb';
+    this.quiztype = 'Rhubarb';
 
     /**
      * initQuestion

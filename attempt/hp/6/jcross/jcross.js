@@ -39,7 +39,7 @@
  * @return xxx
  */
 function JCross(sendallclicks, ajax) {
-    this.tasktype = 'JCross';
+    this.quiztype = 'JCross';
 
     this.direction = new Array();
     this.direction['A'] = 'across';
@@ -88,7 +88,7 @@ function JCross(sendallclicks, ajax) {
      */
     this.getQuestionPrefix = function (x) {
         // x  is the question key e.g. 1_across, 2_down
-        return this.tasktype + '_q' + (parseInt(x)<9 ? '0' : '') + x + '_';
+        return this.quiztype + '_q' + (parseInt(x)<9 ? '0' : '') + x + '_';
     }
 
     /**

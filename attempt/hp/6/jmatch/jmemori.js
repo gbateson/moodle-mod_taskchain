@@ -38,7 +38,7 @@
  * @param xxx ajax
  */
 function JMemori(sendallclicks, ajax) {
-    this.tasktype = 'JMatch';
+    this.quiztype = 'JMatch';
 
     /**
      * initQuestion

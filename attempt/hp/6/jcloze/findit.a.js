@@ -38,7 +38,7 @@
  * @param xxx ajax
  */
 function JClozeFindItA(sendallclicks, ajax) {
-    this.tasktype = 'JCloze';
+    this.quiztype = 'JCloze';
 
     /**
      * initQuestion

@@ -39,7 +39,7 @@
  * @return xxx
  */
 function JMatch(sendallclicks, ajax) {
-    this.tasktype = 'JMatch';
+    this.quiztype = 'JMatch';
 
     /**
      * initQuestion

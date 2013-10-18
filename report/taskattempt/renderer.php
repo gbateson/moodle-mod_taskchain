@@ -115,7 +115,7 @@ class mod_taskchain_report_taskattempt_renderer extends mod_taskchain_report_ren
 
         // add user fields. if required
         if (in_array('fullname', $this->tablecolumns)) {
-            $select .= ', u.id AS userid, u.firstname, u.lastname, u.picture, u.imagealt, u.email';
+            $select .= ', '.$this->get_userfields('u', null, 'userid');
             $from   .= ' JOIN {user} u ON tc_tsk_att.userid=u.id';
         }
 
