@@ -60,10 +60,10 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
     function renderHeader(&$header){
         global $SCRIPT;
         if ($name = $header->getName()) {
-            if ($SCRIPT=='/course/modedit.php') { // $PAGE->url
-                // Moodle >= 2.5 requires "id_" prefix in mod_form.php
-            } else {
-                // however, we don't want "id_" prefix on TC edit pages
+            if ($SCRIPT=='/mod/taskchain/edit/tasks.php' || $SCRIPT=='/mod/taskchain/edit/chains.php') {
+                // Moodle >= 2.5 adds a "id_" prefix to the header ids
+                // but this messages with the TaskChain CSS styles
+                // so we use the old "id" that had no prefix
                 $header->updateAttributes(array('id' => $name));
             }
         }

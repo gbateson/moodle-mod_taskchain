@@ -373,6 +373,9 @@ class mod_taskchain extends taskchain_base {
                 $this->coursemodule->name = $this->taskchain->name;
                 $this->coursemodule->modname = $this->module->name;
                 $this->coursemodule->context = mod_taskchain::context(CONTEXT_MODULE, $this->coursemodule->id);
+                $PAGE->set_context($this->coursemodule->context);
+            } else {
+                $PAGE->set_context($this->course->context);
             }
 
             // the main objects have now been set up - yay !

@@ -113,7 +113,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-review table#responses td.c6:after {content: ":";}
 #page-mod-taskchain-review table#responses td.lastcol:after {content: "";}
 
-/** mod hotpot mod **/
+/** mod taskchain edit task **/
 #page-mod-taskchain-edit-task #reviewoptionshdr .fitem {clear: none; float: left; margin-left: 48px; width: 20%;}
 #page-mod-taskchain-edit-task #reviewoptionshdr .fitemtitle {font-weight: bold; margin-left: 0; text-align: left; width: 100%;}
 #page-mod-taskchain-edit-task #reviewoptionshdr fieldset.fgroup {margin-left: 0; text-align: left; width: 100%;}
@@ -125,7 +125,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-task.dir-rtl #reviewoptionshdr .fitemtitle {text-align: right;}
 #page-mod-taskchain-edit-task.dir-rtl #reviewoptionshdr fieldset.fgroup span {float: right; clear: right;}
 
-/** page-mod-taskchain-edit-tasks **/
+/** mod taskchain edit tasks **/
 
 /** make overflow visible (because this is a w-i-d-e page) */
 #page-mod-taskchain-edit-tasks div#page,
@@ -162,7 +162,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-tasks fieldset.felement,
 #page-mod-taskchain-edit-tasks fieldset.felement.fgroup {
     clear            : none;
-    float            : none;
+    /*float            : none; */
     overflow         : visible;
     margin           : 0px;
     margin-bottom    : 0px;
@@ -448,7 +448,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-chains fieldset.felement,
 #page-mod-taskchain-edit-chains fieldset.felement.fgroup {
     clear            : none;
-    float            : none;
+    /*float            : none; */
     overflow         : visible;
     margin           : 0px;
     margin-bottom    : 0px;
