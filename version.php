@@ -31,6 +31,6 @@ defined('MOODLE_INTERNAL') || die();
 $module->cron      = 0; // 60
 $module->component = 'mod_taskchain';
 $module->maturity  = MATURITY_BETA; // ALPHA=50, BETA=100, RC=150, STABLE=200
-$module->release   = 'v0.9.42';
-$module->version   = 2011040142;
+$module->release   = 'v0.9.43';
+$module->version   = 2011040143;
 $module->requires  = 2010112400; // Moodle 2.0

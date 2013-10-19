@@ -2585,7 +2585,7 @@ class mod_taskchain extends taskchain_base {
      * context
      *
      * a wrapper method to offer consistent API to get contexts
-     * in Moodle 2.0 and 2.1, we use mod_taskchain::context() function
+     * in Moodle 2.0 and 2.1, we use get_context_instance() function
      * in Moodle >= 2.2, we use static context_xxx::instance() method
      *
      * @param integer $contextlevel
@@ -2600,7 +2600,7 @@ class mod_taskchain extends taskchain_base {
             $class = context_helper::get_class_for_level($contextlevel);
             return call_user_func(array($class, 'instance'), $instanceid, $strictness);
         } else {
-            return mod_taskchain::context($contextlevel, $instanceid);
+            return get_context_instance($contextlevel, $instanceid);
         }
     }
 
