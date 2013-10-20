@@ -1052,20 +1052,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     }
 
     /////////////////////////////////////////////////////////
-    // get fieldlabel ...
-    /////////////////////////////////////////////////////////
-
-    /**
-     * format_fieldlabel_gradecategory
-     *
-     * @param string $field name of field
-     * @todo Finish documenting this function
-     */
-    protected function get_fieldlabel_gradecategory() {
-        return get_string('gradecategoryonmodform', 'grades');
-    }
-
-    /////////////////////////////////////////////////////////
     // format fieldvalue ...
     /////////////////////////////////////////////////////////
 
