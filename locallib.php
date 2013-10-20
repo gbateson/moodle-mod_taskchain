@@ -1438,30 +1438,30 @@ class mod_taskchain extends taskchain_base {
         $unsettask = false;
         $unsetchain = false;
         switch (true) {
-            case ! empty($all_params['taskattemptid']):
+            case isset($all_params['taskattemptid']) && $all_params['taskattemptid'] > 0:
                 $unset[] = 'taskscoreid';
                 $unset[] = 'tnumber';
-            case ! empty($all_params['taskscoreid']):
+            case isset($all_params['taskscoreid']) && $all_params['taskscoreid']>0:
                 $unset[] = 'chainattemptid';
                 $unsettask = true;
-            case ! empty($all_params['chainattemptid']):
+            case isset($all_params['chainattemptid']) && $all_params['chainattemptid']>0:
                 $unset[] = 'chaingradeid';
                 $unset[] = 'cnumber';
-            case ! empty($all_params['chaingradeid']):
+            case isset($all_params['chaingradeid']) && $all_params['chaingradeid']>0:
                 $unsetchain = true;
         }
         switch (true) {
-            case ! empty($all_params['conditionid']):
+            case isset($all_params['conditionid']) && $all_params['conditionid']>0:
             case $unsettask:
                 $unset[] = 'taskid';
-            case ! empty($all_params['taskid']):
+            case isset($all_params['taskid']) && $all_params['taskid']>0:
             case $unsetchain:
                 $unset[] = 'chainid';
-            case ! empty($all_params['chainid']):
+            case isset($all_params['chainid']) && $all_params['chainid']>0:
                 $unset[] = 'taskchainid';
-            case ! empty($all_params['taskchainid']):
+            case isset($all_params['taskchainid']) && $all_params['taskchainid']>0:
                 $unset[] = 'coursemoduleid';
-            case ! empty($all_params['coursemoduleid']):
+            case isset($all_params['coursemoduleid']) && $all_params['coursemoduleid']>0:
                 $unset[] = 'courseid';
         }
 
