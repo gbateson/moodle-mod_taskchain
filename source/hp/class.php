@@ -607,12 +607,18 @@ class taskchain_source_hp extends taskchain_source {
             // other (closing tag is for XHTML compliance)
             "\0"=>'\\0', '</'=>'<\\/'
         );
+
+        // convert unicode chars to html entities, if required
+        // Note that this will also decode named entities such as &apos; and &quot;
+        // so we have to put "strtr()" AFTER this call to textlib::utf8_to_entities()
+        if ($convert_to_unicode) {
+            $str = mod_taskchain::textlib('utf8_to_entities', $str, false, true);
+        }
+
         $str = strtr($str, $replace_pairs);
 
         // convert (hex and decimal) html entities to javascript unicode, if required
         if ($convert_to_unicode) {
-            $str = mod_taskchain::textlib('utf8_to_entities', $str, false, true);
-
             $search = '/&#x([0-9A-F]+);/i';
             $callback = array($this, 'js_unicode_char');
             $str = preg_replace_callback($search, $callback, $str);

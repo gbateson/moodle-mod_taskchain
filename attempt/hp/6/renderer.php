@@ -97,6 +97,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
         switch ($type) {
 
+            case 'dropdown':
+                // adding missing brackets to call to Is_ExerciseFinished() in CheckAnswers()
+                $search = '/(Finished\s*=\s*Is_ExerciseFinished)(;)/';
+                $this->headcontent = preg_replace($search, '$1()$2', $this->headcontent);
+                break;
+
             case 'findit':
                 // get position of last </style> tag and
                 // insert CSS to make <b> and <em> tags bold
@@ -1986,14 +1992,20 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         if ($str = $this->TC->task->source->xml_value('', "['rdf:RDF'][0]['@']['xmlns:dc']")) {
             $dc .= '<link rel="schema.DC" href="'.str_replace('"', '&quot;', $str).'" />'."\n";
         }
-        if (is_string($this->TC->task->source->xml_value('rdf:RDF,rdf:Description'))) {
-            // do nothing (there is no more dc info)
-        } else {
-            if ($str = $this->TC->task->source->xml_value('rdf:RDF,rdf:Description,dc:creator')) {
-                $dc .= '<meta name="DC:Creator" content="'.str_replace('"', '&quot;', $str).'" />'."\n";
-            }
-            if ($str = strip_tags($this->TC->task->source->xml_value('rdf:RDF,rdf:Description,dc:title'))) {
-                $dc .= '<meta name="DC:Title" content="'.str_replace('"', '&quot;', $str).'" />'."\n";
+        if (is_array($this->TC->task->source->xml_value('rdf:RDF,rdf:Description'))) {
+            $names = array('DC:Creator'=>'dc:creator', 'DC:Title'=>'dc:title');
+            foreach ($names as $name => $tag) {
+                $i = 0;
+                $values = array();
+                while($value = $this->TC->task->source->xml_value("rdf:RDF,rdf:Description,$tag", "[$i]['#']")) {
+                    if ($value = trim(strip_tags($value))) {
+                        $values[strtoupper($value)] = htmlspecialchars($value);
+                    }
+                    $i++;
+                }
+                if ($value = implode(', ', $values)) {
+                    $dc .= '<meta name="'.$name.'" content="'.$value.'" />'."\n";
+                }
             }
         }
         return $dc;
@@ -2011,6 +2023,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
     /**
      * expand_EscapedExerciseTitle
+     * this string only used in resultsp6sendresults.js_ which is not required in Moodle
      *
      * @return xxx
      * @todo Finish documenting this function
@@ -2994,7 +3007,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             case 0x2088: return 55.9; // sub 8
             case 0x2089: return 56.9; // sub 9
 
-            case 0x208A: return 42.9; // sub
+            case 0x208A: return 42.9; // sub +
             case 0x208B: return 44.9; // sub -
             case 0x208C: return 60.9; // sub =
             case 0x208D: return 39.9; // sub (

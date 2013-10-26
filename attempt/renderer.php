@@ -1402,7 +1402,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @todo Finish documenting this function
      */
     public function fix_relativeurls($str=null)  {
-        // elements of the regular expression which will search for the URLs in html tag attritbutes
+        // elements of the regular expression which will search for the URLs
 
         // tags may be present in a number of formats:
         //  * plain ascii text     : < ... >
@@ -1425,41 +1425,34 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         //                         : &apos; ... &apos;
         //  * html entities in xml : &amp;quot; ... &amp;quot;
         //                         : &amp;apos; ... &amp;apos;
-        $quoteopen = '("|\\\\"|&quot;|&amp;quot;'."|'|\\\\'|&apos;|&amp;apos;".')'; // open quote
-        $quoteclose = '\\6'; //  close quote (to match open quote)
+        $quoteopen  = '("|\\\\"|&quot;|&amp;quot;'."|'|\\\\'|&apos;|&amp;apos;".')'; // open quote
+        $quoteclose = '\\6'; // close quote (to match open quote)
+        $url        = '.*?'; // chars between quotes (non-greedy)
 
         // define which attributes of which HTML tags to search for URLs
         $tags = array(
             // tag  =>  attribute containing url
-            'script' => 'src',
-            'source' => 'src', // for HTML5
-            'link'   => 'href',
             'a'      => 'href',
             'area'   => 'href', // <area href="sun.htm" ... shape="..." coords="..." />
-            'img'    => 'src',
-            'param'  => 'value',
-            'object' => 'data',
             'embed'  => 'src',
+            'iframe' => 'src',
+            'img'    => 'src',
             'input'  => 'src', // <input type="image" src="..." >
-            '[a-z]+' => 'style',
-            '(?:table|th|td)' => 'background'
+            'link'   => 'href',
+            'object' => 'data',
+            'param'  => 'value',
+            'script' => 'src',
+            'source' => 'src', // HTML5
+            '(?:table|th|td)' => 'background',
+            '[a-z]+' => 'style'
         );
 
-        // replace relative URLs in attributes of certain HTML tags
         foreach ($tags as $tag=>$attribute) {
-            if ($tag=='param') {
-                // to be absolutely sure of what a param attribute contains
-                // we should check the "name" of the param and allow only
-                // certain names for known <object> or <embed> players
-                // for now though, we look for likely filename strings,
-                // i.e. those that have a file extension and no spaces
-                $url = '[^ =]+?\.[^ ]+?';
-            } else {
-                $url = '.*?';
-            }
             $search = "/($tagopen$tag$space$anychar$attribute$equals$quoteopen)($url)($quoteclose$anychar$tagclose)/is";
             if ($attribute=='style') {
                 $callback = array($this, 'convert_urls_css');
+            } else if ($tag=='param') {
+                $callback = array($this, 'convert_url_param');
             } else {
                 $callback = array($this, 'convert_url_relative');
             }
@@ -1502,6 +1495,23 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         $search = '/(url\(['."'".'"]?)(.+?)(['."'".'"]?\))/is';
         $callback = array($this, 'convert_url');
         return $before.preg_replace_callback($search, $callback, $css).$after;
+    }
+
+    /**
+     * convert_url_param
+     *
+     * @param xxx $match
+     * @return xxx
+     */
+    public function convert_url_param($match)  {
+        // make sure the param "name" attribute is one we know about
+        $quote = $match[6];
+        $search = "/name\s*=\s*$quote(?:data|movie|src|FlashVars)$quote/i";
+        if (preg_match($search, $match[0])) {
+            return $this->convert_url_relative($match);
+        } else {
+            return $match[0];
+        }
     }
 
     /**
