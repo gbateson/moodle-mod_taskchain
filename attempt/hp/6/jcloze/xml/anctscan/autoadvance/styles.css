@@ -1,0 +1,52 @@
+/*
+    override div.ClozeBody font-size:10pt / 100%
+*/
+#middle-column div.ClozeBody li {
+    font-size: 1.4em;
+}
+
+/*
+    override div.ClozeBody line-height:2
+*/
+div.ClozeBody div.indent1,
+div.ClozeBody div.indent2,
+div.ClozeBody div.indent3,
+div.ClozeBody div.indent4,
+div.ClozeBody div.indent5,
+div.ClozeBody div.indent6,
+div.ClozeBody div.indent7,
+div.ClozeBody div.indent8,
+div.ClozeBody div.indent9,
+div.ClozeBody div.indent10 {
+    line-height: 1.4;
+}
+div.ClozeBody div.indent1 {
+    margin-left: 30px;
+}
+div.ClozeBody div.indent2 {
+    margin-left: 60px;
+}
+div.ClozeBody div.indent3 {
+    margin-left: 90px;
+}
+div.ClozeBody div.indent4 {
+    margin-left: 120px;
+}
+div.ClozeBody div.indent5 {
+    margin-left: 150px;
+}
+div.ClozeBody div.indent6 {
+    margin-left: 180px;
+}
+div.ClozeBody div.indent7 {
+    margin-left: 210px;
+}
+div.ClozeBody div.indent8 {
+    margin-left: 240px;
+}
+div.ClozeBody div.indent9 {
+    margin-left: 270px;
+}
+div.ClozeBody div.indent10 {
+    margin-left: 300px;
+}
