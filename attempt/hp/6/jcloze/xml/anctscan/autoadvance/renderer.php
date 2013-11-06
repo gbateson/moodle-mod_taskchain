@@ -176,8 +176,8 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_autoadvance_renderer extend
     public function fix_headcontent() {
         global $CFG;
         if ($pos = strpos($this->headcontent, '<style')) {
-            $path = str_replace('_', '/', get_class($this)); // 'taskchain/output/hp/6/jcloze/xml/anctscan/autoadvance'
-            $insert = '<link rel="stylesheet" type="text/css" href="'.$CFG->wwwroot.'/mod/'.$path.'/styles.css" />'."\n";
+            $path = str_replace('/renderer', '', str_replace('_', '/', get_class($this)));
+            $insert = '<link rel="stylesheet" type="text/css" href="'.$CFG->wwwroot.'/'.$path.'/styles.css" />'."\n";
             $this->headcontent = substr_replace($this->headcontent, $insert, $pos, 0);
         }
         parent::fix_headcontent();

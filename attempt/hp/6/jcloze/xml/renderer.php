@@ -231,7 +231,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_renderer extends mod_taskchain_attem
                     ."	}\n"
                     ."}\n"
                     ."function AA_images() {\n"
-                    ."	return 'output/hp/6/jquiz/xml/v6/autoadvance/$dots';\n"
+                    ."	return 'pix/autoadvance/$dots';\n"
                     ."}\n"
                     ."function AA_ProgressArrow() {\n"
                     ."	var img = document.createElement('img');\n"

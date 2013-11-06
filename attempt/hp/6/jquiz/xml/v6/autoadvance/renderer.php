@@ -168,7 +168,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
 
         $dots = 'squares'; // default
         if ($param = clean_param($this->expand_UserDefined1(), PARAM_ALPHANUM)) {
-            if (is_dir($CFG->dirroot."/mod/taskchain/output/hp/6/jquiz/xml/v6/autoadvance/$param")) {
+            if (is_dir($CFG->dirroot."/mod/taskchain/pix/autoadvance/$param")) {
                 $dots = $param;
             }
         }
