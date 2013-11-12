@@ -1439,7 +1439,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             $textfilters = '';
         }
         if ($this->TC->task->usefilters) {
-            $filters = filter_get_active_in_context($this->TC->context);
+            $filters = filter_get_active_in_context($this->TC->coursemodule->context);
             $filters = array_keys($filters);
         } else {
             $filters = array();
