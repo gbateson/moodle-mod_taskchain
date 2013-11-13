@@ -1076,24 +1076,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                         $selectors[] = "$selector";
                         break;
                     case preg_match('/^body\b/i', $selector):
-                        // the following actions (a), (b) or (c) are possible
-                        // but since these styles affect the Moodle theme,
-                        // they are probably not required, so we do nothing
-                        // which has the effect of disabling these styles
-
-                        // (a) replace "body" with the container element
-                        // $selectors[] = "$container";
-
-                        // (b) remove font, margin, backgroud and color from the css definition
-                        //$search = "/\b(font-[a-z]+|margin-[a-z]+|background-color|color)\b[^;]*;/";
-                        //$css_definition = preg_replace($search, '/* $0 */', $css_definition);
-
-                        // (c) disable entire css definition
-                        //$css_definition = "\n"
-                        //    ."\t/".str_repeat('*', 20)."\n"."\t".'Hot Potatoes page styles are disabled'."\n"
-                        //    ."\t".str_repeat('*', 21)."\n".$css_definition."\t".str_repeat('*', 20)."/\n"
-                        //;
-
                         // by default, we do nothing here, so that
                         // HP styles do not affect the Moodle theme
 
