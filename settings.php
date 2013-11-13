@@ -81,9 +81,9 @@ $options = array(
     mod_taskchain::BODYSTYLES_FONT       => get_string('bodystylesfont',       'taskchain'),
     mod_taskchain::BODYSTYLES_MARGIN     => get_string('bodystylesmargin',     'taskchain')
 );
-$settings->add(
-    new admin_setting_configmultiselect('taskchain_bodystyles', get_string('bodystyles', 'taskchain'), get_string('configbodystyles', 'taskchain'), array(), $options)
-);
+$setting = new admin_setting_configmultiselect('taskchain_bodystyles', get_string('bodystyles', 'taskchain'), get_string('configbodystyles', 'taskchain'), array(), $options);
+$setting->set_updatedcallback('taskchain_implode_bodystyles');
+$settings->add($setting);
 
 // taskchain navigation frame height (default=85)
 $settings->add(
@@ -109,4 +109,5 @@ $setting->set_updatedcallback('taskchain_refresh_events');
 $settings->add($setting);
 
 // dispose of temporary variables used above
-unset($str, $url, $link, $timezone, $options);
+unset($str, $url, $link, $timezone, $options, $i);
+

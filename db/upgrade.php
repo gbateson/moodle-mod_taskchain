@@ -191,10 +191,10 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2013111351;
+    $newversion = 2013111352;
     if ($oldversion < $newversion) {
         $table = new xmldb_table('taskchain_cache');
-        $field = new xmldb_field('taskchain_bodystyles', XMLDB_TYPE_CHAR, '1', null, XMLDB_NOTNULL, null, null, 'slasharguments');
+        $field = new xmldb_field('taskchain_bodystyles', XMLDB_TYPE_CHAR, '8', null, XMLDB_NOTNULL, null, null, 'slasharguments');
         xmldb_taskchain_fix_previous_field($dbman, $table, $field);
         if ($dbman->field_exists($table, $field)) {
             $dbman->change_field_type($table, $field);

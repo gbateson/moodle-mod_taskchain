@@ -780,7 +780,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
         // transfer $CFG fields to cache record
         foreach ($this->cache_CFG_fields as $field) {
-            $this->cache->$field = $CFG->$field;
+            $this->cache->$field = trim($CFG->$field);
         }
 
         // transfer task fields to cache record
