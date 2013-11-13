@@ -270,6 +270,12 @@ class taskchain_base {
     /** unumber/tnumber value to force creation of new attempt */
     const FORCE_NEW_ATTEMPT           = -1;
 
+    /** values for $CFG->taskchain_bodystyles */
+    const BODYSTYLES_BACKGROUND       = 0x01;
+    const BODYSTYLES_COLOR            = 0x02;
+    const BODYSTYLES_FONT             = 0x04;
+    const BODYSTYLES_MARGIN           = 0x08;
+
     /** reference back to global $TC object */
     public $TC = null;
 

@@ -29,7 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/lib.php');
+require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
 // admin_setting_xxx classes are defined in "lib/adminlib.php"
 // new admin_setting_configcheckbox($name, $visiblename, $description, $defaultsetting);
@@ -50,8 +50,6 @@ $settings->add(
 /** Prevent direct access to this script */
 defined('MOODLE_INTERNAL') || die();
 
-unset($str, $url, $link);
-
 // restrict cron job to certain hours of the day (default=never)
 $timezone = get_user_timezone_offset();
 if (abs($timezone) > 13) {
@@ -66,7 +64,6 @@ for ($i=0; $i<=23; $i++) {
 $settings->add(
     new admin_setting_configmultiselect('taskchain_enablecron', get_string('enablecron', 'taskchain'), get_string('configenablecron', 'taskchain'), array(), $options)
 );
-unset($timezone, $options);
 
 // enable embedding of swf media objects intaskchain tasks (default=1)
 $settings->add(
@@ -76,6 +73,16 @@ $settings->add(
 // enable obfuscation of javascript in html files (default=1)
 $settings->add(
     new admin_setting_configcheckbox('taskchain_enableobfuscate', get_string('enableobfuscate', 'taskchain'), get_string('configenableobfuscate', 'taskchain'), 1)
+);
+
+$options = array(
+    mod_taskchain::BODYSTYLES_BACKGROUND => get_string('bodystylesbackground', 'taskchain'),
+    mod_taskchain::BODYSTYLES_COLOR      => get_string('bodystylescolor',      'taskchain'),
+    mod_taskchain::BODYSTYLES_FONT       => get_string('bodystylesfont',       'taskchain'),
+    mod_taskchain::BODYSTYLES_MARGIN     => get_string('bodystylesmargin',     'taskchain')
+);
+$settings->add(
+    new admin_setting_configmultiselect('taskchain_bodystyles', get_string('bodystyles', 'taskchain'), get_string('configbodystyles', 'taskchain'), array(), $options)
 );
 
 // taskchain navigation frame height (default=85)
@@ -100,3 +107,6 @@ $settings->add(
 $setting = new admin_setting_configtext('taskchain_maxeventlength', get_string('maxeventlength', 'taskchain'), get_string('configmaxeventlength', 'taskchain'), 5, PARAM_INT, 4);
 $setting->set_updatedcallback('taskchain_refresh_events');
 $settings->add($setting);
+
+// dispose of temporary variables used above
+unset($str, $url, $link, $timezone, $options);

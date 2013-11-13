@@ -95,7 +95,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * "wwwroot" is not stored explicitly because it is included in the md5key
      */
     protected $cache_CFG_fields = array(
-        'slasharguments','taskchain_enableobfuscate','taskchain_enableswf'
+        'slasharguments','taskchain_bodystyles','taskchain_enableobfuscate','taskchain_enableswf'
     );
 
     /**
@@ -1058,6 +1058,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @todo Finish documenting this function
      */
     public function fix_css_definitions($match)  {
+        global $CFG;
 
         $container = '#'.$this->themecontainer;
         $css_selector = $match[1];
@@ -1081,7 +1082,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                         // which has the effect of disabling these styles
 
                         // (a) replace "body" with the container element
-                        //$selectors[] = "$container";
+                        // $selectors[] = "$container";
 
                         // (b) remove font, margin, backgroud and color from the css definition
                         //$search = "/\b(font-[a-z]+|margin-[a-z]+|background-color|color)\b[^;]*;/";
@@ -1092,6 +1093,46 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                         //    ."\t/".str_repeat('*', 20)."\n"."\t".'Hot Potatoes page styles are disabled'."\n"
                         //    ."\t".str_repeat('*', 21)."\n".$css_definition."\t".str_repeat('*', 20)."/\n"
                         //;
+
+                        // by default, we do nothing here, so that
+                        // HP styles do not affect the Moodle theme
+
+                        // if this site is set to enable HP body styles
+                        // we replace "body" with the container element
+
+                        if (empty($CFG->taskchain_bodystyles)) {
+                            $bodystyles = 0;
+                        } else {
+                        	$callback = create_function('$x,$y', 'return ($x | $y);');
+                            $bodystyles = explode(',', $CFG->taskchain_bodystyles);
+                            $bodystyles = array_reduce($bodystyles, $callback, 0);
+                        }
+
+                        // remove font, margin, backgroud and color from the css definition
+                        $search = array();
+                        if (! ($bodystyles & mod_taskchain::BODYSTYLES_BACKGROUND)) {
+                            // background-color, background-image
+                            $search[] = '(?:background[a-z-]*)';
+                        }
+                        if (! ($bodystyles & mod_taskchain::BODYSTYLES_COLOR)) {
+                            // color (the text color)
+                            $search[] = '(?:color[a-z-]*)';
+                        }
+                        if (! ($bodystyles & mod_taskchain::BODYSTYLES_FONT)) {
+                            // font-size, font-family
+                            $search[] = '(?:font[a-z-]*)';
+                        }
+                        if (! ($bodystyles & mod_taskchain::BODYSTYLES_MARGIN)) {
+                            // margin-left, margin-right
+                            $search[] = '(?:margin[a-z-]*)';
+                        }
+                        if ($search = implode('|', $search)) {
+                            $search = "/[ \t]+($search)[^;]*;[ \t]*[\n\r]*/";
+                            $css_definition = preg_replace($search, '', $css_definition);
+                        }
+                        if (trim($css_definition)) {
+                            $selectors[] = "$container";
+                        }
                         break;
                     default:
                         // we need to do some special processing of CSS for list items
@@ -1102,7 +1143,16 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                             if (preg_match($search, $css_definition, $matches)) {
                                 $listitem_css .= "\n$container $selector li {\n".$matches[0].";\n}";
                             }
+                        } else {
+                            // we need to override the Moodle theme's background-image of buttons
+                            // because these have hitherto played an important role in HP styles
+                            $count = 0;
+                            $selector = preg_replace('/\.FuncButton/', 'button$0', $selector, -1, $count);
+                            if ($count && strpos($css_definition, 'background-image')===false) {
+                                $css_definition .= "\n\tbackground-image: none;\n";
+                            }
                         }
+
                         // restrict other CSS selectors to affect only the content of the container element
                         $selectors[] = "$container $selector";
                 }

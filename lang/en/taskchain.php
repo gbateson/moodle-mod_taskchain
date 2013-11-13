@@ -248,6 +248,11 @@ Any block of consecutive attempts will be considered.';
 $string['average'] = 'Average';
 $string['averagegrade'] = 'Average grade';
 $string['averagescore'] = 'Average score';
+$string['bodystyles'] = 'Body styles';
+$string['bodystylesbackground'] = 'Background color and image';
+$string['bodystylescolor'] = 'Text color';
+$string['bodystylesfont'] = 'Font size and family';
+$string['bodystylesmargin'] = 'Left and right margin';
 $string['cacherecords'] = 'TaskChain cache records';
 $string['cannotread'] = 'Cannot read file (or file is empty!): {$a}';
 $string['canrestartchain'] = 'Your results so far will be saved but if you want to redo this activity again later, you will have to start from the beginning.';
@@ -298,6 +303,7 @@ according to sort order.
 The teacher may also select a specific task to which this pre-condition refers.
 To avoid confusion caused by tasks with identical names,
 the task sort numbers are appended to the task names.';
+$string['configbodystyles'] = 'By default, Moodle theme styles will override TaskChain activity styles. However, for any styles selected here, the TaskChain activity styles, including any styles defined in task source files such as Hot Potatoes files, will be given priority over the Moodle theme styles.';
 $string['configenablecache'] = 'Maintaining a cache of TaskChain tasks can dramatically speed up the delivery of tasks to the students.';
 $string['configenablecron'] = 'Specify the hours in your time zone at which the TaskChain cron script may run';
 $string['configenablemymoodle'] = 'This settings controls whether TaskChains are listed on the MyMoodle page or not';

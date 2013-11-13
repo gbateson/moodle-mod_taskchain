@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/taskchain/db" VERSION="20131013" COMMENT="XMLDB file for Moodle mod/taskchain"
+<XMLDB PATH="mod/taskchain/db" VERSION="20131113" COMMENT="XMLDB file for Moodle mod/taskchain"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -198,8 +198,9 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="taskid"/>
         <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the &quot;id&quot; of the &quot;taskchain_tasks&quot; record to which this cached content is associated" PREVIOUS="id" NEXT="slasharguments"/>
-        <FIELD NAME="slasharguments" TYPE="char" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Moodle's $CFG-&amp;gt;slasharguments setting at the time the cached content was created" PREVIOUS="taskid" NEXT="taskchain_enableobfuscate"/>
-        <FIELD NAME="taskchain_enableobfuscate" TYPE="char" LENGTH="1" NOTNULL="true" SEQUENCE="false" PREVIOUS="slasharguments" NEXT="taskchain_enableswf"/>
+        <FIELD NAME="slasharguments" TYPE="char" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Moodle's $CFG-&amp;gt;slasharguments setting at the time the cached content was created" PREVIOUS="taskid" NEXT="taskchain_bodystyles"/>
+        <FIELD NAME="taskchain_bodystyles" TYPE="char" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Moodle's $CFG-&amp;gt;taskchain_bodystyles setting at the time the cached content was created" PREVIOUS="slasharguments" NEXT="taskchain_enableobfuscate"/>
+        <FIELD NAME="taskchain_enableobfuscate" TYPE="char" LENGTH="1" NOTNULL="true" SEQUENCE="false" PREVIOUS="taskchain_bodystyles" NEXT="taskchain_enableswf"/>
         <FIELD NAME="taskchain_enableswf" TYPE="char" LENGTH="1" NOTNULL="true" SEQUENCE="false" PREVIOUS="taskchain_enableobfuscate" NEXT="name"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="task name at the time the cache was created" PREVIOUS="taskchain_enableswf" NEXT="sourcefile"/>
         <FIELD NAME="sourcefile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the task's &quot;reference&quot; setting at the time the cached content was created" PREVIOUS="name" NEXT="sourcetype"/>
