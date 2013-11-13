@@ -1095,8 +1095,9 @@ The square-bracket notation has the following syntax:
 
 **options** (optional)
 : a comma-separated list options to be passed to the player. Each option can be a simple on/off switch, or a name value pair.
-: **name=value
-: **name="some value with spaces"';
+: *name*
+: *name=value*
+: *name="some value with spaces"*';
 $string['utilitiesindex'] = 'TaskChain Utilities index';
 $string['viewreports'] = 'View reports for {$a} user(s)';
 $string['views'] = 'Views';
