@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
 // admin_setting_xxx classes are defined in "lib/adminlib.php"
-// new admin_setting_configcheckbox($name, $visiblename, $description, $defaultsetting);
+// new admin_setting_xxx($name, $visiblename, $description, $defaultsetting);
 
 // show TaskChains on MyMoodle page (default=1)
 $settings->add(
@@ -75,15 +75,16 @@ $settings->add(
     new admin_setting_configcheckbox('taskchain_enableobfuscate', get_string('enableobfuscate', 'taskchain'), get_string('configenableobfuscate', 'taskchain'), 1)
 );
 
+// bodystyles
 $options = array(
     mod_taskchain::BODYSTYLES_BACKGROUND => get_string('bodystylesbackground', 'taskchain'),
     mod_taskchain::BODYSTYLES_COLOR      => get_string('bodystylescolor',      'taskchain'),
     mod_taskchain::BODYSTYLES_FONT       => get_string('bodystylesfont',       'taskchain'),
     mod_taskchain::BODYSTYLES_MARGIN     => get_string('bodystylesmargin',     'taskchain')
 );
-$setting = new admin_setting_configmultiselect('taskchain_bodystyles', get_string('bodystyles', 'taskchain'), get_string('configbodystyles', 'taskchain'), array(), $options);
-$setting->set_updatedcallback('taskchain_implode_bodystyles');
-$settings->add($setting);
+$settings->add(
+    new admin_setting_configmultiselect('taskchain_bodystyles', get_string('bodystyles', 'taskchain'), get_string('configbodystyles', 'taskchain'), array(), $options)
+);
 
 // taskchain navigation frame height (default=85)
 $settings->add(
