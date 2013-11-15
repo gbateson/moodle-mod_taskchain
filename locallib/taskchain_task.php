@@ -78,6 +78,9 @@ class taskchain_task extends taskchain_base {
     /** db field: stoptext (string (255), default='') */
     private $stoptext            = '';
 
+    /** db field: allowpaste (integer, default=0) */
+    private $allowpaste          = 0;
+
     /** db field: usefilters (integer, default=0) */
     private $usefilters          = 0;
 
@@ -393,6 +396,24 @@ class taskchain_task extends taskchain_base {
      */
     public function set_stoptext($value) {
         $this->stoptext = $value;
+    }
+
+    /**
+     * get the "allowpaste" property
+     *
+     * @return integer the current allowpaste $value
+     */
+    public function get_allowpaste() {
+        return $this->allowpaste;
+    }
+
+    /**
+     * set the "allowpaste" property
+     *
+     * @param integer the new allowpaste $value
+     */
+    public function set_allowpaste($value) {
+        $this->allowpaste = $value;
     }
 
     /**

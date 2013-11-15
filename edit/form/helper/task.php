@@ -49,7 +49,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     protected $sections = array(
         'general'    => array('sortorder', 'edit', 'defaultrecord', 'selectrecord', 'name'),
         'tasks'      => array('sourcefile', 'sourcetype', 'sourcelocation', 'configfile', 'configlocation', 'addtype', 'tasknames'),
-        'display'    => array('outputformat', 'navigation', 'title', 'stopbutton', 'stoptext', 'usefilters', 'useglossary', 'usemediafilter', 'studentfeedback', 'studentfeedbackurl'),
+        'display'    => array('outputformat', 'navigation', 'title', 'stopbutton', 'stoptext', 'allowpaste', 'usefilters', 'useglossary', 'usemediafilter', 'studentfeedback', 'studentfeedbackurl'),
         'time'       => array('timeopen', 'timeclose', 'timelimit', 'delay1', 'delay2', 'delay3'),
         'attempts'   => array('attemptlimit', 'allowresume'),
         'security'   => array('password', 'subnet'),
@@ -85,6 +85,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'title'           => mod_taskchain::TEXTSOURCE_FILE,
         'stopbutton'      => mod_taskchain::NO,
         'stoptext'        => '',
+        'allowpaste'      => mod_taskchain::NO,
         'usefilters'      => mod_taskchain::NO,
         'useglossary'     => mod_taskchain::NO,
         'usemediafilter'  => mod_taskchain::NO,
@@ -307,6 +308,16 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function add_field_stoptext($field) {
         // do nothing - this field was added by add_field_stopbutton($field)
+    }
+
+    /**
+     * add_field_allowpaste
+     *
+     * @param string name of $field
+     * @todo Finish documenting this function
+     */
+    protected function add_field_allowpaste($field) {
+        $this->add_template_yesno($field);
     }
 
     /**

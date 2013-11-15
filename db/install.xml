@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/taskchain/db" VERSION="20131113" COMMENT="XMLDB file for Moodle mod/taskchain"
+<XMLDB PATH="mod/taskchain/db" VERSION="20131115" COMMENT="XMLDB file for Moodle mod/taskchain"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -111,8 +111,9 @@
         <FIELD NAME="navigation" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the navigation used for tasks in this TaskChain chain 1 : bar : Moodle navigation bar 2 : frame : Moodle navigation frame 3 : iframe : embedded IFRAME 4 : original : task’s original navigation 5 : giveup : a single “Give Up” button 6 : none" PREVIOUS="outputformat" NEXT="title"/>
         <FIELD NAME="title" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="3" SEQUENCE="false" PREVIOUS="navigation" NEXT="stopbutton"/>
         <FIELD NAME="stopbutton" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="title" NEXT="stoptext"/>
-        <FIELD NAME="stoptext" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="stopbutton" NEXT="usefilters"/>
-        <FIELD NAME="usefilters" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="stoptext" NEXT="useglossary"/>
+        <FIELD NAME="stoptext" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="stopbutton" NEXT="allowpaste"/>
+        <FIELD NAME="allowpaste" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="stoptext" NEXT="usefilters"/>
+        <FIELD NAME="usefilters" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="allowpaste" NEXT="useglossary"/>
         <FIELD NAME="useglossary" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="usefilters" NEXT="usemediafilter"/>
         <FIELD NAME="usemediafilter" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="useglossary" NEXT="studentfeedback"/>
         <FIELD NAME="studentfeedback" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="usemediafilter" NEXT="studentfeedbackurl"/>
@@ -217,8 +218,9 @@
         <FIELD NAME="navigation" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the task's &quot;navigation&quot; setting when the cached content was created" PREVIOUS="configetag" NEXT="title"/>
         <FIELD NAME="title" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="navigation" NEXT="stopbutton"/>
         <FIELD NAME="stopbutton" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="title" NEXT="stoptext"/>
-        <FIELD NAME="stoptext" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="stopbutton" NEXT="usefilters"/>
-        <FIELD NAME="usefilters" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the task's &quot;usefilters&quot; setting when the cached content was created" PREVIOUS="stoptext" NEXT="useglossary"/>
+        <FIELD NAME="stoptext" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="stopbutton" NEXT="allowpaste"/>
+        <FIELD NAME="allowpaste" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="stoptext" NEXT="usefilters"/>
+        <FIELD NAME="usefilters" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the task's &quot;usefilters&quot; setting when the cached content was created" PREVIOUS="allowpaste" NEXT="useglossary"/>
         <FIELD NAME="useglossary" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the task's &quot;useglossary&quot; setting when the cached content was created" PREVIOUS="usefilters" NEXT="usemediafilter"/>
         <FIELD NAME="usemediafilter" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the task's &quot;usemediafilter&quot; setting when the cached content was created" PREVIOUS="useglossary" NEXT="studentfeedback"/>
         <FIELD NAME="studentfeedback" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the task's &quot;studentfeedback&quot; setting when the cached content was created" PREVIOUS="usemediafilter" NEXT="studentfeedbackurl"/>

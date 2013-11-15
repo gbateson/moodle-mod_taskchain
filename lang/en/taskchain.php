@@ -100,6 +100,8 @@ Once students have free access, they can access any task in the TaskChain, regar
 
 **Yes: Attempts**
 : The students will be given free access to the tasks in the TaskChain, once they have completed the required number of attempts.';
+$string['allowpaste'] = 'Allow paste';
+$string['allowpaste_help'] = 'If this setting is enabled, students will be allowed to copy, paste and drag text into text input boxes.';
 $string['allowresume'] = 'Allow resume';
 $string['allowresume_help'] = 'This setting specifies whether or not students can resume an attempt.
 

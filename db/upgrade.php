@@ -173,33 +173,29 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2011040139;
+    $newversion = 2013111555;
     if ($oldversion < $newversion) {
-        $table = new xmldb_table('taskchain_cache');
-        $fields = array(
-            new xmldb_field('sourcerepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'sourcelocation'),
-            new xmldb_field('configrepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'configlocation'),
+        $tables = array(
+            'taskchain_tasks' => array(
+                new xmldb_field('allowpaste', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'stoptext')
+            ),
+            'taskchain_cache' => array(
+                new xmldb_field('taskchain_bodystyles', XMLDB_TYPE_CHAR,    '8',  null, XMLDB_NOTNULL, null, null, 'slasharguments'),
+                new xmldb_field('sourcerepositoryid',   XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0',  'sourcelocation'),
+                new xmldb_field('configrepositoryid',   XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0',  'configlocation'),
+                new xmldb_field('allowpaste',           XMLDB_TYPE_INTEGER, '2',  null, XMLDB_NOTNULL, null, '0',  'stoptext')
+            )
         );
-        foreach ($fields as $field) {
-            xmldb_taskchain_fix_previous_field($dbman, $table, $field);
-            if ($dbman->field_exists($table, $field)) {
-                $dbman->change_field_type($table, $field);
-            } else {
-                $dbman->add_field($table, $field);
+        foreach ($tables as $table => $fields) {
+            $table = new xmldb_table($table);
+            foreach ($fields as $field) {
+                xmldb_taskchain_fix_previous_field($dbman, $table, $field);
+                if ($dbman->field_exists($table, $field)) {
+                    $dbman->change_field_type($table, $field);
+                } else {
+                    $dbman->add_field($table, $field);
+                }
             }
-        }
-        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
-    }
-
-    $newversion = 2013111352;
-    if ($oldversion < $newversion) {
-        $table = new xmldb_table('taskchain_cache');
-        $field = new xmldb_field('taskchain_bodystyles', XMLDB_TYPE_CHAR, '8', null, XMLDB_NOTNULL, null, null, 'slasharguments');
-        xmldb_taskchain_fix_previous_field($dbman, $table, $field);
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->change_field_type($table, $field);
-        } else {
-            $dbman->add_field($table, $field);
         }
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
         $empty_cache = true;
