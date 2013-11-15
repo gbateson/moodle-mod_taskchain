@@ -1072,6 +1072,17 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     }
 
     /**
+     * format_fieldvalue_allowpaste
+     *
+     * @param string $value of field from the record
+     * @return string formatted version of the value
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_allowpaste($field, $value) {
+        return $this->format_templatevalue_yesno($field, $value);
+    }
+
+    /**
      * format_fieldvalue_usefilters
      *
      * @param string $value of field from the record
