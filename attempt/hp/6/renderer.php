@@ -52,7 +52,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         parent::__construct($page, $target);
 
         // prepend templates for this output format
-        array_unshift($this->templatefolders, 'mod/taskchain/attempt/hp/6/templates');
+        array_unshift($this->templatesfolders, 'mod/taskchain/attempt/hp/6/templates');
     }
 
     /**

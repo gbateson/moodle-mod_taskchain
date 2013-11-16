@@ -52,7 +52,7 @@ class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_ta
         parent::__construct($page, $target);
 
         // prepend templates for this output format
-        array_unshift($this->templatefolders, 'mod/taskchain/attempt/hp/6/jmix/xml/v6/plus/deluxe/templates');
+        array_unshift($this->templatesfolders, 'mod/taskchain/attempt/hp/6/jmix/xml/v6/plus/deluxe/templates');
     }
 
     /**

@@ -998,8 +998,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      */
     public function remove_blank_lines($str)  {
         // standardize line endings and remove trailing white space and blank lines
-        $str = preg_replace('/\s+[\r\n]/s', "\n", $str);
-        return $str;
+        return preg_replace('/\s+[\r\n]/s', "\n", $str);
     }
 
     /**
@@ -1064,6 +1063,9 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         $css_selector = $match[1];
         $css_definition = $match[2];
 
+        // standardize indent to a single tab
+        $css_definition = preg_replace('/^[\t ]*(?=[^\n\r\t ])/m', "\t", $css_definition);
+
         // additional CSS for list items
         $listitem_css = '';
 
@@ -1071,11 +1073,14 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         foreach (explode(',', $css_selector) as $selector) {
             if ($selector = trim($selector)) {
                 switch (true) {
+
                     case preg_match('/^html\b/i', $selector):
                         // leave "html" as it is
                         $selectors[] = "$selector";
                         break;
+
                     case preg_match('/^body\b/i', $selector):
+
                         // by default, we do nothing here, so that
                         // HP styles do not affect the Moodle theme
 
@@ -1116,6 +1121,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                             $selectors[] = "$container";
                         }
                         break;
+
                     default:
                         // we need to do some special processing of CSS for list items
                         // override standard Moodle 2.0 setting of li {list-style-type }
@@ -1690,7 +1696,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             } else {
                 $baseurl .= '/'.trim($dir, '/');
             }
-
             // prefix $url with $baseurl
             $url = "$baseurl/$url";
         }

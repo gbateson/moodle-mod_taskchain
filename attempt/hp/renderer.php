@@ -49,7 +49,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
     protected $templatestrings = '';
 
     /** templates folders (relative to Moodle dirroot) */
-    protected $templatefolders = array();
+    protected $templatesfolders = array();
 
     /** external javascripts required for this format */
     protected $javascripts = array();
@@ -261,6 +261,9 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                 // the following is not necessary for standard HP styles, but may required to handle some custom styles
                 $this->styles = str_replace('TheBody', $this->themecontainer, $this->styles);
             }
+
+            // remove comments /* ... */
+            $this->styles = preg_replace('/[\n\r]*[\t ]*\/\*.*?\*\//s', '', $this->styles);
 
             $this->styles = $this->remove_blank_lines($this->styles);
         }
@@ -624,7 +627,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                 $search = $type.'\s*(?=\{)';
                 break;
 
-            // functions - this is the original intention of this locate_js_block()
+            // functions
             case 'function':
                 $search = 'function\s+'.$name.'\s*\(.*?\)';
                 break;
@@ -785,18 +788,18 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         global $CFG;
 
         // check that some template folders have been specified to something sensible
-        if (! isset($this->templatefolders)) {
-            debugging('templatefolders is not set', DEBUG_DEVELOPER);
+        if (! isset($this->templatesfolders)) {
+            debugging('templatesfolders is not set', DEBUG_DEVELOPER);
             return '';
         }
-        if (! is_array($this->templatefolders)) {
-            debugging('templatefolders is not an array', DEBUG_DEVELOPER);
+        if (! is_array($this->templatesfolders)) {
+            debugging('templatesfolders is not an array', DEBUG_DEVELOPER);
             return '';
         }
 
         // set the path to the template file
         $filepath = '';
-        foreach ($this->templatefolders as $templatesfolder) {
+        foreach ($this->templatesfolders as $templatesfolder) {
             if (is_file("$CFG->dirroot/$templatesfolder/$filename")) {
                 $filepath = "$CFG->dirroot/$templatesfolder/$filename";
                 break;
