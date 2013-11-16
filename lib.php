@@ -1767,10 +1767,21 @@ function taskchain_pluginfile_mainfile($context, $component, $filearea, $itemid=
     // (file with lowest sortorder in $filearea)
     $mainfile = false;
 
+    // these file types can't be the mainfile
+    $media_filetypes = array('fla', 'flv', 'gif', 'jpeg', 'jpg', 'mp3', 'png', 'swf', 'wav');
+
     $area_files = $fs->get_area_files($context->id, $component, $filearea, $itemid); // , 'sortorder, filename', 0
     foreach ($area_files as $file) {
         if ($file->is_directory()) {
             continue;
+        }
+        $filename = $file->get_filename();
+        if (substr($filename, 0, 1)=='.') {
+            continue; // hidden file
+        }
+        $filetype = strtolower(substr($filename, -3));
+        if (in_array($filetype, $media_filetypes)) {
+            continue; // media file
         }
         if (empty($mainfile)) { // || $mainfile->get_content()==''
             $mainfile = $file;
