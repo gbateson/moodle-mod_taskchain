@@ -867,6 +867,7 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
             $stats[$sortorder]->users[$log->userid] = true;
         }
 
+        $dateformat   = get_string('strftimerecent', 'langconfig'); // strftimerecentfull
         $strusers     = get_string('users');
         $stradded     = get_string('added',    'taskchain');
         $strupdated   = get_string('updated',  'taskchain');
@@ -879,10 +880,10 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
         foreach ($stats as $stat) {
             $li = array();
             if ($stat->add) {
-                $li[] = $stradded.': '.userdate($stat->add);
+                $li[] = $stradded.': '.userdate($stat->add, $dateformat);
             }
             if ($stat->update) {
-                $li[] = $strupdated.': '.userdate($stat->update);
+                $li[] = $strupdated.': '.userdate($stat->update, $dateformat);
             }
             if ($stat->viewreport) {
                 // link to a detailed report of recent activity for this taskchain
@@ -1152,8 +1153,8 @@ function taskchain_print_recent_mod_activity($activity, $courseid, $detail, $mod
         $link = html_writer::link($href, userdate($attempt->timemodified, $dateformat));
 
         $table->data[] = new html_table_row(array(
-            new html_table_cell($attempt->attempt),
-            new html_table_cell($attempt->score.'%'),
+            new html_table_cell($attempt->cnumber),
+            new html_table_cell($attempt->grade.'%'),
             new html_table_cell(mod_taskchain::format_status($attempt->status, true)),
             new html_table_cell($link),
             new html_table_cell($duration)

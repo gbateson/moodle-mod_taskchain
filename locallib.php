@@ -2038,11 +2038,63 @@ class mod_taskchain extends taskchain_base {
     }
 
     /**
+     * delete_cached_records
+     *
+     * @param string $types "taskchains", "chains", "tasks", "conditions", "chaingrades", "chainattempts", "quizscores", "quizattempts"
+     * @param string $types "taskchain", "chain", "task", "condition", "chaingrade", "chainattempt", "quizscore", "quizattempt"
+     * @param array  $ids
+     * @todo Finish documenting this function
+     */
+     function delete_cached_records($types, $type, $ids) {
+        $typeid = $type.'id';
+        foreach ($ids as $id) {
+            if (isset($this->{$typeid}) && $this->{$typeid}==$id) {
+                $this->{$typeid} = 0;
+            }
+            if (isset($this->{$type}) && $this->{$type}->get_id()==$id) {
+                $this->{$type} = null;
+            }
+            if (isset($this->{$types}) && array_key_exists($id, $this->{$types})) {
+                unset($this->{$types}[$id]);
+            }
+        }
+     }
+
+    /**
+     * delete_records
+     *
+     * @param string $tablename
+     * @param string $types
+     * @param string $type
+     * @param array  $records
+     * @todo Finish documenting this function
+     */
+    function delete_records($tablename, $types, $type, $records) {
+        global $DB;
+        $ids = array_keys($records);
+
+        // delete DB records
+        list($select, $params) = $DB->get_in_or_equal($ids);
+        if (! $DB->delete_records_select($tablename, "id $select", $params)) {
+            print_error('error_deleterecords', 'taskchain', $tablename);
+        }
+
+        // delete cached records
+        $this->delete_cached_records($types, $type, $ids);
+
+        // update deleted totals
+        $this->deleted->{$types} = count($ids);
+        $this->deleted->total += $this->deleted->{$types};
+    }
+
+    /**
      * delete_selected_attempts
      *
      * @uses $DB
-     * @param xxx $status (optional, default=0)
-     * @return xxx
+     * @param array $selected (passed by referece)
+     *              $selected[chainid][cnumber][taskid][tnumber][taskattemptid]
+     * @param integer $status (optional, default=0)
+     * @return array $deleted[taskattempts, taskscores, chainattempts, chaingrades, total]
      * @todo Finish documenting this function
      */
     public function delete_selected_attempts(&$selected, $status=0) {
@@ -2075,22 +2127,15 @@ class mod_taskchain extends taskchain_base {
             $taskfilter = 'taskid IN (SELECT id FROM {taskchain_tasks} WHERE '.$chainfilter.')';
         }
 
+        // remove all task_attempts by users in $userfilter
         $select = $this->get_selected_sql($selected, $chains, $tasks, $taskattempts);
-
         if ($select) {
             $select = $userfilter.' AND '. $select;
             if ($status) {
                 $select .= " AND status=$status";
             }
-           // remove all task_attempts by users in $userfilter
             if ($records = $DB->get_records_select('taskchain_task_attempts', $select, null, 'id', 'id')) {
-                $select = 'id IN ('.implode(',', array_keys($records)).')';
-                if (! $DB->delete_records_select('taskchain_task_attempts', $select)) {
-                    print_error('error_deleterecords', 'taskchain', 'taskchain_task_attempts');
-                }
-                // update totals
-                $this->deleted->taskattempts = count($records);
-                $this->deleted->total += $this->deleted->taskattempts;
+                $this->delete_records('taskchain_task_attempts', 'taskattempts', 'taskattempt', $records);
             }
         }
 
@@ -2103,15 +2148,8 @@ class mod_taskchain extends taskchain_base {
             ) qa ON qs.taskid=qa.taskid AND qs.cnumber=qa.cnumber AND qs.userid=qa.userid
             WHERE qs.$userfilter AND qs.$taskfilter AND qa.score IS NULL
         )";
-
         if ($records = $DB->get_records_select('taskchain_task_scores', $select, null, 'id', 'id')) {
-            $select = 'id IN ('.implode(',', array_keys($records)).')';
-            if (! $DB->delete_records_select('taskchain_task_scores', $select)) {
-                print_error('error_deleterecords', 'taskchain', 'taskchain_task_scores');
-            }
-            // update totals
-            $this->deleted->taskscores = count($records);
-            $this->deleted->total += $this->deleted->taskscores;
+            $this->delete_records('taskchain_task_scores', 'taskscores', 'taskscore', $records);
         }
 
         // remove all chain_attempts which have no task scores by users in $userfilter
@@ -2126,14 +2164,8 @@ class mod_taskchain extends taskchain_base {
             ) qs ON ua.chainid=qs.chainid AND ua.cnumber=qs.cnumber AND ua.userid=qs.userid
             WHERE ua.$userfilter AND ua.$chainfilter AND qs.score IS NULL
         )";
-
         if ($records = $DB->get_records_select('taskchain_chain_attempts', $select, null, 'id', 'id')) {
-            $select = 'id IN ('.implode(',', array_keys($records)).')';
-            if (! $DB->delete_records_select('taskchain_chain_attempts', $select)) {
-                print_error('error_deleterecords', 'taskchain', 'taskchain_chain_attempts');
-            }
-            $this->deleted->chainattempts = count($records);
-            $this->deleted->total += $this->deleted->chainattempts;
+            $this->delete_records('taskchain_chain_attempts', 'chainattempts', 'chainattempt', $records);
         }
 
         // remove all chain_grades which have no chain_attempts by users in $userfilter
@@ -2149,14 +2181,8 @@ class mod_taskchain extends taskchain_base {
             ) ua ON ug.parenttype=ua.parenttype AND ug.parentid=ua.parentid AND ug.userid=ua.userid
             WHERE ug.$userfilter AND ug.parenttype=0 AND ug.$parentfilter AND ua.grade IS NULL
         )";
-
         if ($records = $DB->get_records_select('taskchain_chain_grades', $select, null, 'id', 'id')) {
-            $select = 'id IN ('.implode(',', array_keys($records)).')';
-            if (! $DB->delete_records_select('taskchain_chain_grades', $select)) {
-                print_error('error_deleterecords', 'taskchain', 'taskchain_chain_grades');
-            }
-            $this->deleted->chaingrades = count($records);
-            $this->deleted->total += $this->deleted->chaingrades;
+            $this->delete_records('taskchain_chain_grades', 'chaingrades', 'chaingrade', $records);
         }
 
         // regrade tasks, chains and taskchains

@@ -443,20 +443,14 @@ abstract class taskchain_form_helper_base {
         $types = $this->recordtype.'s';
         $id = $this->get_fieldvalue('id');
 
-        // delete main $TC record if necessary
-        if (isset($this->TC->$type) && $this->TC->$type->get_id()==$id) {
-            unset($this->TC->$type);
-        }
-
-        // delete record in $TC record array, if necessary
-        if (isset($this->TC->$types) && array_key_exists($id, $this->TC->$types)) {
-            unset($this->TC->{$types}[$id]);
-        }
+        // delete any cached records of this $type(s)
+        $this->TC->delete_cached_records($types, $type, array($id));
 
         // delete form fields for this record
         $this->delete_form_elements($id);
 
         // and finally, delete the record info from the DB
+        // specifically this is for "taskchain_delete_tasks"
         $deletefunction = 'taskchain_delete_'.$types;
         if (function_exists($deletefunction)) {
             $deletefunction($id);
