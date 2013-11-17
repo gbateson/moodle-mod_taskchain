@@ -960,119 +960,107 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
  *         $activity->user->picture : $record->picture;
  *     $activity->timestamp : the time that the content was recorded in the database
  */
-function taskchain_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $coursemoduleid=0, $userid=0, $groupid=0) {
-    global $CFG, $DB;
-
+function taskchain_get_recent_mod_activity(&$activities, &$index, $date, $courseid, $coursemoduleid=0, $userid=0, $groupid=0) {
+    global $CFG, $DB, $OUTPUT;
     if (! $course = $DB->get_record('course', array('id'=>$courseid))) {
-        return; // invalid course id - shouldn't happen !!
+        // invalid course id !!
+        return;
     }
-
     if (! $modinfo = unserialize($course->modinfo)) {
-        return; // no activity mods
+        // no activity mods !!
+        return;
     }
-
-    $taskchains = array(); // taskchainid => cmid
-
+    $taskchains = array();
     foreach (array_keys($modinfo) as $cmid) {
         if ($modinfo[$cmid]->mod=='taskchain' && ($coursemoduleid==0 || $coursemoduleid==$cmid)) {
             // save mapping from taskchainid => coursemoduleid
-            $taskchains[$modinfo[$cmid]->id] = $cmid;
-            // initialize array of users who have recently attempted this TaskChain
+            $taskchainid = $modinfo[$cmid]->id;
+            $taskchains[$taskchainid] = $cmid;
+            // initialize array of users who have recently attempted this QuizPort
             $modinfo[$cmid]->users = array();
         } else {
             // we are not interested in this mod
             unset($modinfo[$cmid]);
         }
     }
-
-    if (empty($taskchains)) {
-        return; // no taskchains
+    if (count($modinfo)==0) {
+        return false; // no taskchains
     }
 
-    list($filter, $params) = $DB->get_in_or_equal(array_keys($taskchains));
-    $duration = '(ha.timemodified - ha.timestart) AS duration';
-    $select = 'ha.*, '.$duration.', u.firstname, u.lastname, u.picture, u.imagealt, u.email';
-    $from   = "{taskchain_attempts} ha, {user} u";
-    $where  = "ha.taskchainid $filter AND ha.userid=u.id";
-    $orderby = 'ha.userid, ha.attempt';
-
+    $userfields = taskchain_get_userfields('u', null, 'theuserid');
+    list($where, $params) = $DB->get_in_or_equal(array_keys($taskchains));
+    $select = 'tca.*, tc.parentid AS taskchainid, '.$userfields;
+    $from   = "{taskchain_chains} tc, {taskchain_chain_attempts} tca, {user} u";
+    $where  = 'tc.parenttype = '.mod_taskchain::PARENTTYPE_ACTIVITY.
+              " AND tc.parentid $where".
+              ' AND tca.chainid = tc.id'.
+              ' AND tca.userid = u.id';
     if ($groupid) {
         // restrict search to a users from a particular group
-        $from   .= ', {groups_members} gm';
-        $where  .= ' AND ha.userid=gm.userid AND gm.id=?';
+        $from .= ', {groups_members} gm';
+        $where .= ' AND tca.userid = gm.userid AND gm.id = ?';
         $params[] = $groupid;
     }
     if ($userid) {
         // restrict search to a single user
-        $where .= ' AND ha.userid=?';
+        $where = ' AND tca.userid = ?';
         $params[] = $userid;
     }
-    $where .= ' AND ha.timemodified>?';
-    $params[] = $timestart;
+    $where .= ' AND tca.timemodified > ?';
+    $params[] = $date;
+    $orderby = 'tca.userid, tca.cnumber';
 
     if (! $attempts = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $orderby", $params)) {
-        return; // no recent attempts at these taskchains
+        // no recent attempts at these taskchains
+        return;
     }
 
     foreach (array_keys($attempts) as $attemptid) {
         $attempt = &$attempts[$attemptid];
 
-        if (! array_key_exists($attempt->taskchainid, $taskchains)) {
-            continue; // invalid taskchainid - shouldn't happen !!
-        }
         $cmid = $taskchains[$attempt->taskchainid];
-
-        if (! array_key_exists($cmid, $modinfo)) {
-            continue; // invalid cmid - shouldn't happen !!
-        }
         $mod = &$modinfo[$cmid];
 
         $userid = $attempt->userid;
-        if (! array_key_exists($userid, $mod->users)) {
+        if (! isset($mod->users)) {
+            $mod->users = array();
+        }
+        if (! isset($mod->users[$userid])) {
             $mod->users[$userid] = (object)array(
-                'id' => $userid,
-                'userid' => $userid,
-                'firstname' => $attempt->firstname,
-                'lastname' => $attempt->lastname,
+                'userid'   => $userid,
                 'fullname' => fullname($attempt),
-                'picture' => $attempt->picture,
-                'imagealt' => $attempt->imagealt,
-                'email' => $attempt->email,
-                'attempts' => array()
+                'picture'  => $OUTPUT->user_picture($attempt, array('courseid'=>$courseid)),
+                'attempts' => array(),
             );
         }
         // add this attempt by this user at this course module
-        $mod->users[$userid]->attempts[$attempt->attempt] = &$attempt;
+        $mod->users[$userid]->attempts[$attempt->cnumber] = &$attempt;
+        unset($mod);
     }
 
     foreach (array_keys($modinfo) as $cmid) {
-        $mod = &$modinfo[$cmid];
+        $mod = $modinfo[$cmid];
         if (empty($mod->users)) {
             continue;
         }
         // add an activity object for each user's attempts at this taskchain
         foreach (array_keys($mod->users) as $userid) {
-            $user = &$mod->users[$userid];
+            $user = $mod->users[$userid];
 
             // get index of last (=most recent) attempt
-            $max_cnumber = max(array_keys($user->attempts));
+            $max_unumber = max(array_keys($user->attempts));
 
             $activities[$index++] = (object)array(
                 'type' => 'taskchain',
                 'cmid' => $cmid,
                 'name' => format_string(urldecode($mod->name)),
                 'user' => (object)array(
-                    'id' => $user->id,
-                    'userid' => $user->userid,
-                    'firstname' => $user->firstname,
-                    'lastname' => $user->lastname,
+                    'userid'   => $user->userid,
                     'fullname' => $user->fullname,
-                    'picture' => $user->picture,
-                    'imagealt' => $user->imagealt,
-                    'email' => $user->email
+                    'picture'  => $user->picture
                 ),
-                'attempts' => $user->attempts,
-                'timestamp' => $user->attempts[$max_cnumber]->timemodified
+                'attempts'  => $user->attempts,
+                'timestamp' => $user->attempts[$max_unumber]->timemodified
             );
         }
     }
@@ -1142,8 +1130,7 @@ function taskchain_print_recent_mod_activity($activity, $courseid, $detail, $mod
     $cell->rowspan = $rowspan;
     $row->cells[] = $cell;
 
-    $picture = $OUTPUT->user_picture($activity->user, array('courseid'=>$courseid));
-    $cell = new html_table_cell($picture, array('width'=>35, 'valign'=>'top', 'class'=>'forumpostpicture'));
+    $cell = new html_table_cell($activity->user->picture, array('width'=>35, 'valign'=>'top', 'class'=>'forumpostpicture'));
     $cell->rowspan = $rowspan;
     $row->cells[] = $cell;
 
@@ -2325,4 +2312,40 @@ function taskchain_set_missing_fields($table, &$record, &$formdata, $fieldnames)
             $record->$name = $default;
         }
     }
+}
+
+/**
+ * taskchain_get_userfields
+ *
+ * @param string $tableprefix name of database table prefix in query
+ * @param array  $extrafields extra fields to be included in result (do not include TEXT columns because it would break SELECT DISTINCT in MSSQL and ORACLE)
+ * @param string $idalias     alias of id field
+ * @param string $fieldprefix prefix to add to all columns in their aliases, does not apply to 'id'
+ * @return string
+ */
+ function taskchain_get_userfields($tableprefix = '', array $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
+    if (class_exists('user_picture')) { // Moodle >= 2.6
+        return user_picture::fields($tableprefix, $extrafields, $idalias, $fieldprefix);
+    }
+    // Moodle <= 2.5
+    $fields = array('id', 'firstname', 'lastname', 'picture', 'imagealt', 'email');
+    if ($tableprefix || $extrafields || $idalias) {
+        if ($tableprefix) {
+            $tableprefix .= '.';
+        }
+        if ($extrafields) {
+            $fields = array_unique(array_merge($fields, $extrafields));
+        }
+        if ($idalias) {
+            $idalias = " AS $idalias";
+        }
+        if ($fieldprefix) {
+            $fieldprefix = " AS $fieldprefix";
+        }
+        foreach ($fields as $i => $field) {
+            $fields[$i] = "$tableprefix$field".($field=='id' ? $idalias : ($fieldprefix=='' ? '' : "$fieldprefix$field"));
+        }
+    }
+    return implode(',', $fields);
+    //return 'u.id AS userid, u.username, u.firstname, u.lastname, u.picture, u.imagealt, u.email';
 }
