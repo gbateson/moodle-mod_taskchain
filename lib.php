@@ -1149,7 +1149,7 @@ function taskchain_print_recent_mod_activity($activity, $courseid, $detail, $mod
             $duration = '&nbsp;';
         }
 
-        $href = new moodle_url('/mod/taskchain/review.php', array('id'=>$attempt->id));
+        $href = new moodle_url('/mod/taskchain/report.php', array('chainattemptid'=>$attempt->id));
         $link = html_writer::link($href, userdate($attempt->timemodified, $dateformat));
 
         $table->data[] = new html_table_row(array(
