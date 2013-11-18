@@ -646,6 +646,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $id = $record->get_fieldvalue('id');
             if (in_array($id, $ids)) {
                 $record->delete_record();
+                unset($this->records[$id]);
             }
         }
     }

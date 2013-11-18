@@ -654,8 +654,39 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
      */
     protected function fix_action_deletetasks(&$data) {
         $ids = $this->get_selected_records($data, false);
+
         if (count($ids)) {
             $this->delete_records($ids);
+
+            $actions = array('addtasks', 'movetasks');
+            foreach ($actions as $action) {
+                $name = $action.'after_elements';
+
+                if ($this->mform->elementExists($name)) {
+                    $is_empty = false;
+                    $elements = $this->mform->getElement($name)->getElements();
+                    foreach ($elements as $e => $element) {
+                        if ($element->getType()=='select' && $element->getName()==$action.'_taskid') {
+                            foreach ($element->_options as $o => $option) {
+                                if (in_array($option['attr']['value'], $ids)) {
+                                    unset($element->_options[$o]);
+                                }
+                            }
+                            if (count($element->_options) <= 1) {
+                                $is_empty = true;
+                            } else {
+                                $element->_options = array_values($element->_options);
+                                $elements[$e] = $element;
+                            }
+                        }
+                    }
+                    if ($is_empty) {
+                        $this->delete_form_element($name, true);
+                    } else {
+                        $this->mform->getElement($name)->setElements($elements);
+                    }
+                }
+            }
         }
     }
 }

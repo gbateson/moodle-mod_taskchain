@@ -703,10 +703,11 @@ abstract class taskchain_form_helper_base {
     /**
      * delete_form_element
      *
-     * @param string $elementid the id of the element to be removed from $this->mform
+     * @param string $id_or_name the id or name of the element to be removed from $this->mform
+     * @param boolean $removeRules TRUE to remove rules, otherwise false
      * @todo Finish documenting this function
      */
-    protected function delete_form_element($elementid, $removeRules=true) {
+    protected function delete_form_element($id_or_name, $removeRules=true) {
         // we would like to use $this->mform->removeElement($name, $removeRules)
         // but in the case of radio elements, and others with duplicate names,
         // removeElement() assumes we want to remove the first element in the set
@@ -715,8 +716,18 @@ abstract class taskchain_form_helper_base {
         // get a reference to $this->mform's element index
         $index = &$this->mform->_elementIndex;
 
+        if (is_numeric($id_or_name)) {
+            $elementid = $id_or_name;
+        } else {
+            foreach ($this->mform->_elements as $elementid => $element) {
+                if ($element->getName()==$id_or_name) {
+                    break;
+                }
+            }
+        }
+
         // make copy of element, and remove it from elements array
-        $element = &$this->mform->_elements[$elementid];
+        $element = $this->mform->_elements[$elementid];
         unset($this->mform->_elements[$elementid]);
 
         // remove/adjust references to element in main index and duplicate-name index
