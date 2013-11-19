@@ -58,6 +58,37 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
 
     /**
      *
+     * add_action_movetasks
+     *
+     * @todo Finish documenting this function
+     */
+    protected function add_action_movetasks($action, $name) {
+        $records = $this->get_live_records();
+        if (count($records) > 1) {
+            $showfield = true;
+        } else {
+            $showfield = false;
+            if ($mycourses = $this->TC->get_mycourses()) {
+                if ($mytaskchains = $this->TC->get_mytaskchains()) {
+                    $courseid = 0;
+                    $coursename = '';
+                    foreach ($mytaskchains as $mytaskchain) {
+                        if ($mytaskchain->id==$this->TC->taskchain->id) {
+                            continue; // skip current taskchain
+                        }
+                        $showfield = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if ($showfield) {
+            $this->mform->addElement('radio', $name, '', get_string($action, 'taskchain'), $action);
+        }
+    }
+
+    /**
+     *
      * add_action_reordertasks_details
      *
      * @todo Finish documenting this function
@@ -86,7 +117,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
      * @todo Finish documenting this function
      */
     protected function add_action_movetasks_details() {
-        $this->add_actiontemplate_tasks('move', true);
+        $this->add_actiontemplate_tasks('move', 2, 1);
     }
 
     /**
@@ -215,7 +246,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
     protected function add_template_aftertaskid($field) {
         $list = array();
 
-        $records = $this->get_records();
+        $records = $this->get_live_records();
         foreach ($records as $record) {
             $id = $record->get_fieldvalue('id');
             $name = $record->get_fieldvalue('name');
@@ -234,70 +265,66 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
      *
      * add_actiontemplate_tasks
      *
+     * @param string  $type
+     * @param integer $min_record_count (optional, default=0)
+     * @param integer $min_taskchain_count (optional, default=0)
      * @todo Finish documenting this function
      */
-    protected function add_actiontemplate_tasks($type, $show_mytaskchains=false) {
+    protected function add_actiontemplate_tasks($type, $min_record_count=0, $min_taskchain_count=0) {
         $field = $type.'tasks';
         $name = $this->get_fieldname($field);
 
-        // "startofchain" if always required
-        $text = get_string('startofchain', 'taskchain');
-        $this->mform->addElement('radio', $name, '', $text, 'start');
-
-        // get ids of any records that are due to be deleted
-        $action = optional_param('action', '', PARAM_ALPHA);
-        if ($action=='delete'.$this->recordstype.'s') {
-            $deleteids = mod_taskchain::optional_param_array('selectrecord', array(), PARAM_INT);
-        } else {
-            $deleteids = false;
-        }
+        // by default we do not add any fields here
+        // if any fields are added, set this to TRUE
+        $added = false;
 
         // get list of tasks (if any)
         $list = array();
-        $records = $this->get_records();
-        foreach ($records as $record) {
-            $recordid = $record->get_fieldvalue('id');
-            if ($deleteids && array_key_exists($recordid, $deleteids)) {
-                // skip this record - it is going to be deleted
-            } else {
-                $recordname = $record->get_fieldvalue('name');
-                $list[$recordid] = format_string($recordname);
-            }
+        foreach ($this->get_live_records() as $recordid => $record) {
+            $recordname = $record->get_fieldvalue('name');
+            $list[$recordid] = format_string($recordname);
         }
         $count = count($list);
 
-        if ($count==0) {
-            $defaultvalue = 'start';
-        } else {
-            $defaultvalue = 'end';
+        if ($count >= $min_record_count) {
+            $added = true;
+            if ($count==0) {
+                $defaultvalue = 'start';
+            } else {
+                $defaultvalue = 'end';
+            }
+
+            // "startofchain" if always required
+            $text = get_string('startofchain', 'taskchain');
+            $this->mform->addElement('radio', $name, '', $text, 'start');
+
+            // add "endofchain", if required
+            if ($count > 0) {
+                $text = get_string('endofchain', 'taskchain');
+                $this->mform->addElement('radio', $name, '', $text, 'end');
+            }
+
+            // add "aftertaskid" (as a group) if required
+            if ($count > 1) {
+                $elements = array();
+
+                $text = get_string('aftertaskid',  'taskchain');
+                $elements[] = $this->mform->createElement('radio', $name, '', $text, 'after');
+
+                $name_taskid = $this->get_fieldname($field.'_taskid');
+                $elements[] = $this->mform->createElement('select', $name_taskid, '', $list);
+
+                $name_elements = $this->get_fieldname($field.'after_elements');
+                $this->mform->addGroup($elements, $name_elements, '', ' ', false);
+
+                $this->mform->setType($name_taskid, PARAM_INT);
+                $this->mform->disabledIf($name_taskid, 'action', 'ne', $field);
+            }
         }
 
-        // add "endofchain", if required
-        if ($count > 0) {
-            $text = get_string('endofchain', 'taskchain');
-            $this->mform->addElement('radio', $name, '', $text, 'end');
-        }
-
-        // add "aftertaskid" (as a group) if required
-        if ($count > 1) {
-            $elements = array();
-
-            $text = get_string('aftertaskid',  'taskchain');
-            $elements[] = $this->mform->createElement('radio', $name, '', $text, 'after');
-
-            $name_taskid = $this->get_fieldname($field.'_taskid');
-            $elements[] = $this->mform->createElement('select', $name_taskid, '', $list);
-
-            $name_elements = $this->get_fieldname($field.'after_elements');
-            $this->mform->addGroup($elements, $name_elements, '', ' ', false);
-
-            $this->mform->setType($name_taskid, PARAM_INT);
-            $this->mform->disabledIf($name_taskid, 'action', 'ne', $field);
-        }
-
-        // add "mytaskchains" if required (movetasks only)
-        if ($show_mytaskchains) {
-            $list = array();
+        // get list of taskchains, if required ("mavetasks" only)
+        $list = array();
+        if ($min_taskchain_count) {
             if ($mycourses = $this->TC->get_mycourses()) {
                 if ($mytaskchains = $this->TC->get_mytaskchains()) {
                     $courseid = 0;
@@ -317,25 +344,31 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                     }
                 }
             }
-            if (count($list)) { // there should be at least one course (the current course)
-                $elements = array();
-
-                $text = get_string('chain', 'taskchain');
-                $elements[] = $this->mform->createElement('radio', $name, '', $text, 'mytaskchain');
-
-                $name_taskchainid = $this->get_fieldname($field.'_taskchainid');
-                $elements[] = $this->mform->createElement('selectgroups', $name_taskchainid, '', $list);
-
-                $name_elements = $this->get_fieldname($field.'chain_elements');
-                $this->mform->addGroup($elements, $name_elements, '', ' ', false);
-
-                $this->mform->setType($name_taskchainid, PARAM_INT);
-            }
         }
 
-        $this->mform->disabledIf($name, 'action', 'ne', $field);
-        $this->mform->setType($name, PARAM_ALPHA);
-        $this->mform->setDefault($name, $defaultvalue);
+        // display list of taskchains, if required
+        $count = count($list);
+        if ($count && $count >= $min_taskchain_count) {
+            $added = true;
+            $elements = array();
+
+            $text = get_string('chain', 'taskchain');
+            $elements[] = $this->mform->createElement('radio', $name, '', $text, 'mytaskchain');
+
+            $name_taskchainid = $this->get_fieldname($field.'_taskchainid');
+            $elements[] = $this->mform->createElement('selectgroups', $name_taskchainid, '', $list);
+
+            $name_elements = $this->get_fieldname($field.'chain_elements');
+            $this->mform->addGroup($elements, $name_elements, '', ' ', false);
+
+            $this->mform->setType($name_taskchainid, PARAM_INT);
+        }
+
+        if ($added) {
+            $this->mform->setType($name, PARAM_ALPHA);
+            $this->mform->setDefault($name, $defaultvalue);
+            $this->mform->disabledIf($name, 'action', 'ne', $field);
+        }
     }
 
     /**
@@ -360,7 +393,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         } else {
             $field = $data->$name;
             $sortorder = array();
-            $records = $this->get_records();
+            $records = $this->get_live_records();
             foreach ($records as $record) {
                 $id = $record->get_fieldvalue('id');
                 $value = $record->get_fieldvalue($field);

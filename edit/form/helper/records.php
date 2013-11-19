@@ -120,11 +120,11 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
                 throw new moodle_exception(get_string('error_formhelperclassnotfound', 'taskchain', $formclass));
             }
 
-            foreach (array_keys($records) as $i) {
-                $r = $records[$i]; // a single record
+            foreach (array_keys($records) as $id) {
+                $r = $records[$id]; // a single record
                 $r = new $objectclass($r, array('TC' => &$this->TC)); // taskchain_chain
                 $r = new $formclass($mform, $context, $r, true);      // taskchain_form_helper_chain
-                $this->records[$i] = $r;
+                $this->records[$id] = $r;
             }
         }
     }
@@ -159,7 +159,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
         $list = array();
 
         // add standard section names
-        if ($record = reset($this->records)) {
+        if ($record = $this->get_live_records(true)) {
             foreach ($record->get_sections(true) as $section => $fields) {
                 // "general" section is added to every other section
                 // so we do not display it separately
@@ -240,7 +240,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @todo Finish documenting this function
      */
     public function add_section_labels($section, $fields) {
-        if ($record = reset($this->records)) {
+        if ($record = $this->get_live_records(1)) {
             $record->format_section_labels();
         }
     }
@@ -251,7 +251,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @todo Finish documenting this function
      */
     public function add_section_defaults($section, $fields) {
-        if ($record = reset($this->records)) {
+        if ($record = $this->get_live_records(1)) {
             $record->format_section_defaults();
         }
     }
@@ -262,7 +262,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @todo Finish documenting this function
      */
     public function add_section_selects($section, $fields) {
-        if ($record = reset($this->records)) {
+        if ($record = $this->get_live_records(1)) {
             $record->format_section_selects();
         }
     }
@@ -273,7 +273,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @todo Finish documenting this function
      */
     public function add_section_records($section, $fields) {
-        $records = $this->get_records();
+        $records = $this->get_live_records();
         foreach ($records as $record) {
             $record->format_sections();
         }
@@ -289,7 +289,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
         $name = $this->get_fieldname($field);
         $label = ''; // $this->get_fieldlabel($field)
 
-        $count = count($this->records);
+        $count = count($this->get_live_records());
         $added = false;
 
         if ($count > 0) {
@@ -458,7 +458,11 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             // force bottom borders of final subactions
             $js .= 'function set_bottom_borders() {'."\n";
             $js .= '    var obj = document.getElementById("actionshdr");'."\n";
-            $js .= '    var targetid = new RegExp("^(fitem|fgroup)_id_'.$field.'_('.implode('|', array_keys($actions)).')$");'."\n";
+            if ($count==0) {
+                $js .= '    var targetid = new RegExp("^(fitem|fgroup)_id_'.$field.'js$");'."\n";
+            } else {
+                $js .= '    var targetid = new RegExp("^(fitem|fgroup)_id_'.$field.'_('.implode('|', array_keys($actions)).')$");'."\n";
+            }
 
             $js .= '    var divs = null;'."\n";
             $js .= '    if (obj) {'."\n";
@@ -568,12 +572,42 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     }
 
     /**
+     * get_live_records
+     *
+     * @param integer $limit (optional, default=0)
+     * @todo Finish documenting this function
+     */
+    public function get_live_records($limit=0) {
+        $action = optional_param('action', '', PARAM_ALPHA);
+        if ($action=='delete'.$this->recordstype.'s') {
+            $deleteids = mod_taskchain::optional_param_array('selectrecord', false, PARAM_INT);
+        } else {
+            $deleteids = false;
+        }
+        $records = $this->get_records();
+        if ($deleteids) {
+            foreach ($records as $id => $record) {
+                if (array_key_exists($id, $deleteids)) {
+                    unset($records[$id]);
+                }
+            }
+        }
+        if ($limit==1) {
+            return reset($records);
+        }
+        if ($limit > 0) {
+            return array_slice($records, 0, $limit);
+        }
+        return $records; // i.e. return all records
+    }
+
+    /**
      * prepare_records
      *
      * @todo Finish documenting this function
      */
     public function prepare_records() {
-        $records = $this->get_records();
+        $records = $this->get_live_records();
         foreach ($records as $record) {
             $record->prepare_sections();
         }
@@ -585,7 +619,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @todo Finish documenting this function
      */
     public function add_records() {
-        $records = $this->get_records();
+        $records = $this->get_live_records();
         foreach ($records as $record) {
             $record->add_sections();
         }
@@ -597,9 +631,23 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @todo Finish documenting this function
      */
     public function validate_records(&$errors, &$data, &$files) {
-        $records = $this->get_records();
+        $records = $this->get_live_records();
         foreach ($records as $record) {
             $record->validate_sections($errors, $data, $files);
+        }
+    }
+
+    /**
+     * fix_data
+     *
+     * @todo Finish documenting this function
+     */
+    public function fix_data(&$data) {
+        if (! isset($data->action)) {
+            $data->action = optional_param('action', '', PARAM_ALPHA);
+        }
+        if (! isset($data->selectrecord)) {
+            $data->selectrecord = mod_taskchain::optional_param_array('selectrecord', array(), PARAM_INT);
         }
     }
 
@@ -609,7 +657,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @todo Finish documenting this function
      */
     public function fix_records(&$data) {
-        $records = $this->get_records();
+        $records = $this->get_live_records();
         foreach ($records as $record) {
             $record->fix_sections($data);
         }
@@ -623,7 +671,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @todo Finish documenting this function
      */
     protected function update_records($ids) {
-        $records = $this->get_records();
+        $records = $this->get_live_records();
         foreach ($records as $record) {
             $id = $record->get_fieldvalue('id');
             if (in_array($id, $ids)) {
@@ -950,7 +998,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
         } else {
             $defaultid = 0;
-            $record = reset($this->records);
+            $record = $this->get_live_records(true);
         }
 
         // get selected fields

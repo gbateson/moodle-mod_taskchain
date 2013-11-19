@@ -97,6 +97,7 @@ class mod_taskchain_edit_tasks_form extends moodleform {
      */
     public function get_data() {
         if ($data = parent::get_data()) {
+            $this->form_helper->fix_data($data);
             $this->form_helper->fix_sections($data);
             $this->form_helper->fix_records($data);
             $this->form_helper->set_preferences($data);

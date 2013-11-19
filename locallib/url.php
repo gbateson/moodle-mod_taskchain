@@ -83,12 +83,12 @@ class taskchain_url extends taskchain_base {
      */
     public function edit($type, $params=array()) {
         switch ($type) {
-            case 'columnlists': $id = 'courseid';    break;
-            case 'chains'     : $id = 'courseid';    break;
-            case 'chain'      : $id = 'chainid';     break;
-            case 'tasks'      : $id = 'chainid';     break;
-            case 'task'       : $id = 'taskid';      break;
-            case 'condition'  : $id = 'conditionid'; break;
+            case 'columnlists': $id = 'courseid';       break;
+            case 'chains'     : $id = 'courseid';       break;
+            case 'chain'      : $id = 'coursemoduleid'; break;
+            case 'tasks'      : $id = 'coursemoduleid'; break;
+            case 'task'       : $id = 'taskid';         break;
+            case 'condition'  : $id = 'conditionid';    break;
             default           : $id = ''; // shouldn't happen !!
         }
         $params = $this->TC->merge_params($params, null, $id);
