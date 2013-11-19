@@ -1609,23 +1609,37 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function format_fieldvalue($field, $value) {
+        global $CFG, $PAGE;
+
+        static $helper_js = null;
+        if ($helper_js===null) {
+            $helper_js = '/mod/taskchain/edit/form/helper.js.php';
+            if (file_exists($CFG->dirroot.$helper_js)) {
+                $PAGE->requires->js($helper_js);
+            } else {
+                $helper_js = false;
+            }
+        }
+
         $method = 'format_fieldvalue_'.$field;
         if (method_exists($this, $method)) {
             $value = $this->$method($field, $value);
         }
 
-        $name  = $this->get_fieldname($field);
-        $label = $this->get_fieldlabel($field);
-        $types = $this->recordtype.'s';
+        if ($helper_js) {
+            $name  = $this->get_fieldname($field);
+            $label = $this->get_fieldlabel($field);
+            $types = $this->recordtype.'s';
 
-        $idfield = $this->recordtype.'id'; // e.g. "chainid" or "taskid"
-        $idvalue = $this->get_fieldvalue('id');
-        $params  = array($idfield => $idvalue, 'field' => $field);
-        $href    = $this->TC->url->edit($types, $params);
+            $idfield = $this->recordtype.'id'; // e.g. "chainid" or "taskid"
+            $idvalue = $this->get_fieldvalue('id');
+            $params  = array($idfield => $idvalue, 'field' => $field);
+            $href    = $this->TC->url->edit($types, $params);
 
-        $onclick = 'alert("edit field: '.$name.'"); return false;';
-        $params  = array('id' => $name, 'title' => $label, 'onclick' => $onclick);
-        $value   = html_writer::link($href, $value, $params);
+            $onclick = 'alert("edit field: '.$name.'"); return false;';
+            $params  = array('id' => $name, 'title' => $label, 'onclick' => $onclick);
+            $value   = html_writer::link($href, $value, $params);
+        }
 
         return $value;
     }

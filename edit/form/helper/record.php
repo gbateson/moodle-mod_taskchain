@@ -398,6 +398,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         } else {
             $this->mform->addElement('hidden', $name, 0);
         }
+        $this->mform->setType($name, PARAM_INT);
     }
 
     /**
