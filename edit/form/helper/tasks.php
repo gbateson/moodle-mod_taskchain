@@ -244,13 +244,25 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         $text = get_string('startofchain', 'taskchain');
         $this->mform->addElement('radio', $name, '', $text, 'start');
 
+        // get ids of any records that are due to be deleted
+        $action = optional_param('action', '', PARAM_ALPHA);
+        if ($action=='delete'.$this->recordstype.'s') {
+            $deleteids = mod_taskchain::optional_param_array('selectrecord', array(), PARAM_INT);
+        } else {
+            $deleteids = false;
+        }
+
         // get list of tasks (if any)
         $list = array();
         $records = $this->get_records();
         foreach ($records as $record) {
             $recordid = $record->get_fieldvalue('id');
-            $recordname = $record->get_fieldvalue('name');
-            $list[$recordid] = format_string($recordname);
+            if ($deleteids && array_key_exists($recordid, $deleteids)) {
+                // skip this record - it is going to be deleted
+            } else {
+                $recordname = $record->get_fieldvalue('name');
+                $list[$recordid] = format_string($recordname);
+            }
         }
         $count = count($list);
 
@@ -654,39 +666,8 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
      */
     protected function fix_action_deletetasks(&$data) {
         $ids = $this->get_selected_records($data, false);
-
         if (count($ids)) {
             $this->delete_records($ids);
-
-            $actions = array('addtasks', 'movetasks');
-            foreach ($actions as $action) {
-                $name = $action.'after_elements';
-
-                if ($this->mform->elementExists($name)) {
-                    $is_empty = false;
-                    $elements = $this->mform->getElement($name)->getElements();
-                    foreach ($elements as $e => $element) {
-                        if ($element->getType()=='select' && $element->getName()==$action.'_taskid') {
-                            foreach ($element->_options as $o => $option) {
-                                if (in_array($option['attr']['value'], $ids)) {
-                                    unset($element->_options[$o]);
-                                }
-                            }
-                            if (count($element->_options) <= 1) {
-                                $is_empty = true;
-                            } else {
-                                $element->_options = array_values($element->_options);
-                                $elements[$e] = $element;
-                            }
-                        }
-                    }
-                    if ($is_empty) {
-                        $this->delete_form_element($name, true);
-                    } else {
-                        $this->mform->getElement($name)->setElements($elements);
-                    }
-                }
-            }
         }
     }
 }

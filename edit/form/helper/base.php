@@ -708,42 +708,51 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function delete_form_element($id_or_name, $removeRules=true) {
-        // we would like to use $this->mform->removeElement($name, $removeRules)
+        // we would like to use $this->mform->removeElement($elementname, $removeRules)
         // but in the case of radio elements, and others with duplicate names,
         // removeElement() assumes we want to remove the first element in the set
         // which is not always want we want, so we proceed "manually", thus ...
 
-        // get a reference to $this->mform's element index
-        $index = &$this->mform->_elementIndex;
-
+        $elementid = null;
         if (is_numeric($id_or_name)) {
-            $elementid = $id_or_name;
+            if (array_key_exists($id_or_name, $this->mform->_elements)) {
+                $element = $this->mform->_elements[$id_or_name];
+                $elementname = $element->getName();
+                $elementid = $id_or_name;
+            }
         } else {
-            foreach ($this->mform->_elements as $elementid => $element) {
-                if ($element->getName()==$id_or_name) {
+            foreach ($this->mform->_elements as $id => $element) {
+                $elementname = $element->getName();
+                if ($elementname==$id_or_name) {
+                    $elementid = $id;
                     break;
                 }
             }
         }
+        if ($elementid===null) {
+            return; // shoudn't happen !!
+        }
 
-        // make copy of element, and remove it from elements array
-        $element = $this->mform->_elements[$elementid];
+        // remove element from elements array
         unset($this->mform->_elements[$elementid]);
+
+        // get a reference to $this->mform's element index
+        $index = &$this->mform->_elementIndex;
 
         // remove/adjust references to element in main index and duplicate-name index
         // (used for radio elements and other elements which have the duplicate names)
-        $name = $element->getName();
-        if (empty($this->mform->_duplicateIndex[$name])) {
+        $elementname = $element->getName();
+        if (empty($this->mform->_duplicateIndex[$elementname])) {
             // element has unique name (the usual case for non-radio elements)
-            unset($index[$name]);
-        } else if ($index[$name]==$elementid) {
+            unset($index[$elementname]);
+        } else if ($index[$elementname]==$elementid) {
             // radio set with this element referenced in main index
             // this is the case that mform->removeElement() expects
-            $index[$name] = array_shift($this->mform->_duplicateIndex[$name]);
+            $index[$elementname] = array_shift($this->mform->_duplicateIndex[$elementname]);
         } else {
             // radio set with this element NOT referenced in main index
             // this is the case that mform->removeElement() does not handle
-            $array = &$this->mform->_duplicateIndex[$name];
+            $array = &$this->mform->_duplicateIndex[$elementname];
             unset($array[array_search($elementid, $array)]);
             unset($array);
         }
@@ -751,9 +760,9 @@ abstract class taskchain_form_helper_base {
         // release the $index reference
         unset($index);
 
-        // remove rules, if requested (but only if no remaining elements with this $name)
-        if ($removeRules && empty($this->mform->_duplicateIndex[$name])) {
-            unset($this->mform->_rules[$name], $this->mform->_errors[$name]);
+        // remove rules, if requested (but only if no remaining elements with this $elementname)
+        if ($removeRules && empty($this->mform->_duplicateIndex[$elementname])) {
+            unset($this->mform->_rules[$elementname], $this->mform->_errors[$elementname]);
         }
 
         return $element;
