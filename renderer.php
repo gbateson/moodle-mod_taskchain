@@ -536,14 +536,22 @@ class mod_taskchain_renderer extends plugin_renderer_base {
         // $params : array('name' => 'value') for url query string
         // $popup : true, false or array('name' => 'something', 'width' => 999, 'height' => 999)
 
+        $is_array_scripts = is_array($scripts);
+        $is_array_params = (is_array($params) && isset($params[0]) && is_array($params[0]));
+
         $commands = html_writer::start_tag('span', array('class'=>'commands'))."\n";
         foreach ($types as $i => $type) {
-            if (is_array($scripts)) {
-                $script = $scripts[$i];
+            if ($is_array_scripts) {
+                $s = $scripts[$i];
             } else {
-                $script = $scripts;
+                $s = $scripts;
             }
-            $commands .= $this->command($type, $script, $id, $params, $popup);
+            if ($is_array_params) {
+                $p = $params[$i];
+            } else {
+                $p = $params;
+            }
+            $commands .= $this->command($type, $s, $id, $p, $popup);
         }
         $commands .= html_writer::end_tag('span')."\n";
         return $commands;

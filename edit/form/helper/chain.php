@@ -185,6 +185,28 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         return 0; // no grade item exists (yet)
     }
 
+    /**
+     * get_fieldvalue_name
+     *
+     * @param string $field name of field
+     * @param mixed $value of field
+     * @todo Finish documenting this function
+     */
+    protected function get_fieldvalue_name() {
+        return $this->TC->taskchain->get_name();
+    }
+
+    /**
+     * get_fieldvalue_showdescription
+     *
+     * @param string $field name of field
+     * @param mixed $value of field
+     * @todo Finish documenting this function
+     */
+    protected function get_fieldvalue_showdescription() {
+        return $this->TC->coursemodule->showdescription;
+    }
+
     /////////////////////////////////////////////////////////
     // prepare_field ...
     /////////////////////////////////////////////////////////
@@ -1136,6 +1158,17 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      */
     protected function format_fieldvalue_name($field, $value) {
         return format_string($value);
+    }
+
+    /**
+     * format_fieldvalue_showdescription
+     *
+     * @param string $field name of field
+     * @param mixed $value of field
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_showdescription($field, $value) {
+        return $this->format_templatevalue_yesno($field, $value);
     }
 
     /**

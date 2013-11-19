@@ -1895,7 +1895,7 @@ abstract class taskchain_form_helper_base {
                     'cnumber'      => mod_taskchain::FORCE_NEW_ATTEMPT,
                     'taskscoreid'  => 0,    'taskattemptid'  => 0, 'tnumber' => 0,
                     'taskid'       => $this->get_fieldvalue('id'),
-                    'conditionid'  => 0,    'conditiontype'  => 0,  'inpopup' => 0
+                    'conditionid'  => 0,    'conditiontype'  => 0, 'inpopup' => 0
                 );
                 $text = $output->commands($commands, $scripts, 'taskid', $params, false);
                 //$params = array('taskid'=>$this->get_fieldvalue('id'), 'cnumber'=>0);
@@ -1903,8 +1903,32 @@ abstract class taskchain_form_helper_base {
                 break;
 
             case 'chain':
-                $params = array('update'=>$this->TC->coursemodule->id, 'columnlistid'=>'', 'columnlisttype'=>'', 'return'=>1);
-                $text = $output->commands(array('update'), $CFG->wwwroot.'/course/modedit.php', '', $params, false);
+                $commands = array();
+                $scripts = array();
+                $params = array();
+
+                $base_params = array(
+                    'courseid'     => 0, 'coursemoduleid' => 0,
+                    'taskchainid'  => 0, 'chainid'        => 0, 'taskid'   => 0,
+                    'chaingradeid' => 0, 'chainattemptid' => 0, 'cnumber'  => 0,
+                    'taskscoreid'  => 0, 'taskattemptid'  => 0, 'tnumber'  => 0,
+                    'conditionid'  => 0, 'conditiontype'  => 0, 'inpopup'  => 0,
+                    'columnlistid' =>'', 'columnlisttype' =>'', 'tab'      => ''
+                );
+
+                $commands[] = 'update';
+                $scripts[] = $CFG->wwwroot.'/course/modedit.php';
+                $params[] = array_merge($base_params, array('update' => $this->TC->coursemodule->id, 'return' => 1));
+
+                $commands[] = 'delete';
+                $scripts[] = $CFG->wwwroot.'/course/mod.php';
+                $params[] = array_merge($base_params, array('delete' => $this->TC->coursemodule->id));
+
+                $commands[] = 'preview';
+                $scripts[] = 'view.php';
+                $params[] = array_merge($base_params, array('cnumber' => mod_taskchain::FORCE_NEW_ATTEMPT, 'chainid' => $this->get_fieldvalue('id')));
+
+                $text = $output->commands($commands, $scripts, '', $params, false);
                 break;
 
             default:

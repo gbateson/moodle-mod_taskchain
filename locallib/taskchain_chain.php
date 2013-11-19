@@ -136,7 +136,7 @@ class taskchain_chain extends taskchain_base {
     private $gradeweighting      = 100;
 
     /** name of associated taskchain record */
-    private $name                = null;
+    //private $name                = null;
 
     /**
      * get the "id" property
@@ -712,24 +712,6 @@ class taskchain_chain extends taskchain_base {
      */
     public function set_gradeweighting($value) {
         $this->gradeweighting = $value;
-    }
-
-    /**
-     * get the "name" property of the activity associated with this chain record
-     *
-     * @return string
-     */
-    public function get_name() {
-        return $this->name;
-    }
-
-    /**
-     * get the "name" property for this chain record
-     *
-     * @param string the new name
-     */
-    public function set_name($value) {
-        $this->name = $value;
     }
 }
 
