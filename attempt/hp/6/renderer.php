@@ -1243,7 +1243,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         // JMatch : AllDone || TimeOver
         // JMix : AllDone || TimeOver (in the CheckAnswer function)
         // JQuiz : AllDone (in the CheckFinished function)
-        return '/\s*if \(\((\w+) == true\)\|\|\(\w+ == true\)\)({).*?}\s*/s';
+        return '/\s*if *\(\((\w+) *== *true\) *\|\| *\(\w+ *== *true\)\) *({).*?}\s*/s';
     }
 
     /**
