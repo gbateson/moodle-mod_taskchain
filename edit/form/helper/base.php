@@ -172,6 +172,9 @@ abstract class taskchain_form_helper_base {
     /** boolean switch denoting whether or not this $record is one of multiple child $records */
     protected $multiple = null;
 
+    /** boolean switch denoting whether or not this form is for a single field */
+    protected $singlefield = false;
+
     /** the current database $record */
     protected $record = null;
 
@@ -199,6 +202,23 @@ abstract class taskchain_form_helper_base {
         $this->context  = $context;
         $this->record   = $record;
         $this->multiple = $multiple;
+
+        // if this form is for a single field, adjust the $sections array
+        if ($field = optional_param('field', '' , PARAM_ALPHANUM)) {
+            foreach ($this->sections as $section => $fields) {
+                if ($section=='hidden') {
+                    continue; // e.g. "id" field
+                }
+                if (in_array($field, $fields)) {
+                    $this->singlefield = true;
+                    break;
+                }
+            }
+            if ($this->singlefield) {
+                $this->sections = array('singlefield' => array($field));
+            }
+        }
+
     }
 
     /////////////////////////////////////////////////////////
@@ -262,7 +282,7 @@ abstract class taskchain_form_helper_base {
     /////////////////////////////////////////////////////////
 
     /**
-     * Detects if we are adding a new TaskChain activity
+     * Detects if we are adding a new record
      * as opposed to updating an existing one
      *
      * Note: we could use any of the following to detect add:
@@ -276,7 +296,7 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
-     * Detects if we are updating a new TaskChain activity
+     * Detects if we are updating a record
      * as opposed to adding an new one
      *
      * @return bool True if we are adding an new activity instance, false otherwise
@@ -1151,6 +1171,16 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
+     * add_section_label
+     *
+     * @param string $section name of section
+     * @todo Finish documenting this function
+     */
+    protected function add_sectionlabel_singlefield($section) {
+        return '';
+    }
+
+    /**
      * add_section_headings
      *
      * @param string $section name of section
@@ -1611,13 +1641,15 @@ abstract class taskchain_form_helper_base {
     protected function format_fieldvalue($field, $value) {
         global $CFG, $PAGE;
 
-        static $helper_js = null;
-        if ($helper_js===null) {
-            $helper_js = '/mod/taskchain/edit/form/helper.js.php';
-            if (file_exists($CFG->dirroot.$helper_js)) {
-                $PAGE->requires->js($helper_js);
+        static $ajax = null;
+        if ($ajax===null) {
+            if (defined('AJAX_SCRIPT') && AJAX_SCRIPT) {
+                $ajax = false;
             } else {
-                $helper_js = false;
+                $filepath = '/mod/taskchain/edit/form/helper.js';
+                if ($ajax = file_exists($CFG->dirroot.$filepath)) {
+                    $PAGE->requires->js($filepath);
+                }
             }
         }
 
@@ -1626,7 +1658,7 @@ abstract class taskchain_form_helper_base {
             $value = $this->$method($field, $value);
         }
 
-        if ($helper_js) {
+        if ($ajax) {
             $name  = $this->get_fieldname($field);
             $label = $this->get_fieldlabel($field);
             $types = $this->recordtype.'s';
@@ -1636,7 +1668,13 @@ abstract class taskchain_form_helper_base {
             $params  = array($idfield => $idvalue, 'field' => $field);
             $href    = $this->TC->url->edit($types, $params);
 
-            $onclick = 'alert("edit field: '.$name.'"); return false;';
+            $params = array('id'      => $this->get_fieldvalue('id'),
+                            'type'    => $this->recordtype,
+                            'field'   => $field,
+                            'sesskey' => sesskey());
+            $helper = new moodle_url('/mod/taskchain/edit/form/helper.js.php', $params);
+
+            $onclick = 'TC_request("'.$helper.'", "'.$name.'"); return false;';
             $params  = array('id' => $name, 'title' => $label, 'onclick' => $onclick);
             $value   = html_writer::link($href, $value, $params);
         }
@@ -2062,5 +2100,16 @@ abstract class taskchain_form_helper_base {
      */
     public function get_js() {
         return '';
+    }
+
+
+    /**
+     * return form for a single field
+     *
+     * @return string
+     */
+    public function field_form($field) {
+        print_object($this->mform);
+        die;
     }
 }

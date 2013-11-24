@@ -172,7 +172,7 @@ class taskchain_regrade extends taskchain_base {
      * attempts
      *
      * @uses $DB
-     * @param xxx $type
+     * @param xxx $type "task" or "chain"
      * @param xxx $record (optional, default=null)
      * @param xxx $cnumber (optional, default=null)
      * @param xxx $userid (optional, default=null)

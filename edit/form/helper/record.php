@@ -132,8 +132,14 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                 }
                 if ($sortorder==$file->get_sortorder()) {
                     // do nothing
-                } else {
+                } else if (method_exists($file, 'set_sortorder')) {
+                    // Moodle >= 2.3
                     $file->set_sortorder($sortorder);
+                } else if (function_exists('file_set_sortorder')) {
+                    // Moodle <= 2.2
+                    $filepath = $file->get_filepath();
+                    $filename = $file->get_filename();
+                    file_set_sortorder($contextid, $component, $filearea, $itemid, $filepath, $filename, $sortorder);
                 }
             }
         }

@@ -160,7 +160,7 @@ class mod_taskchain extends taskchain_base {
         // do TaskChain initialization if this is a TaskChain page
         // i.e. don't initalize for backup, restore or upgrade
 
-        if ($pageclass=='mod-taskchain' || $pageclass=='mod-taskchain-edit' || $pageclass=='course') {
+        if ($pageclass=='mod-taskchain' || $pageclass=='mod-taskchain-edit' || $pageclass=='mod-taskchain-edit-form' || $pageclass=='course') {
 
             // get input params passed to this page
             $course         = optional_param('course',         0, PARAM_INT);
@@ -169,7 +169,8 @@ class mod_taskchain extends taskchain_base {
             $taskchainid    = optional_param('tc',             0, PARAM_INT);
             $chainid        = optional_param('chainid',        0, PARAM_INT);
             $taskid         = optional_param('taskid',         0, PARAM_INT);
-            $conditionid    = optional_param('conditionid',    0, PARAM_INT);
+            $conditionid    = optional_param('
+            ',    0, PARAM_INT);
             $chaingradeid   = optional_param('chaingradeid',   0, PARAM_INT);
             $chainattemptid = optional_param('chainattemptid', 0, PARAM_INT);
             $taskscoreid    = optional_param('taskscoreid',    0, PARAM_INT);
@@ -208,6 +209,21 @@ class mod_taskchain extends taskchain_base {
                     break;
                 case 'mod-taskchain-mod':
                     $coursemoduleid = optional_param('coursemodule', $coursemoduleid, PARAM_INT);
+                    break;
+                case 'mod-taskchain-edit-form-helper':
+                    switch (optional_param('type', '', PARAM_ALPHA)) {
+                        case 'chain'        : $chainid        = optional_param('id', 0, PARAM_INT); break;
+                        case 'chainattempt' : $chainattemptid = optional_param('id', 0, PARAM_INT); break;
+                        case 'chaingrade'   : $chaingradeid   = optional_param('id', 0, PARAM_INT); break;
+                        case 'cm'           : $coursemoduleid = optional_param('id', 0, PARAM_INT); break;
+                        case 'condition'    : $conditionid    = optional_param('id', 0, PARAM_INT); break;
+                        case 'coursemodule' : $coursemoduleid = optional_param('id', 0, PARAM_INT); break;
+                        case 'task'         : $taskid         = optional_param('id', 0, PARAM_INT); break;
+                        case 'taskattempt'  : $taskattemptid  = optional_param('id', 0, PARAM_INT); break;
+                        case 'taskchain'    : $taskchainid    = optional_param('id', 0, PARAM_INT); break;
+                        case 'taskscore'    : $taskscoreid    = optional_param('id', 0, PARAM_INT); break;
+                        //${$type.'id'} = optional_param('id', 0, PARAM_INT);
+                    }
                     break;
                 default:
                     throw new moodle_exception('error_unrecognizedpageid', 'taskchain', '', $pageid);
@@ -339,6 +355,7 @@ class mod_taskchain extends taskchain_base {
             if (! $select = implode(' AND ', $select)) {
                 throw new moodle_exception('error_noinputparameters', 'taskchain');
             }
+
             // get the information from the database
             if (! $record = $DB->get_record_sql("SELECT $fields FROM $tables WHERE $select")) {
                 throw new moodle_exception('error_norecordsfound', 'taskchain');
@@ -425,6 +442,7 @@ class mod_taskchain extends taskchain_base {
                     $this->can->view(true);
                     break;
                 case 'mod-taskchain-edit-columnlists':
+                case 'mod-taskchain-edit-form-helper':
                     $this->can->manage() || $this->can->manageactivities(true);
                     break;
             }
@@ -432,9 +450,9 @@ class mod_taskchain extends taskchain_base {
             // set tab and other page settings
             switch ($pageid) {
                 case 'mod-taskchain-edit-tasks' : $this->tab = 'edit'  ;  break;
-                case 'mod-taskchain-report'    : $this->tab = 'report';  break;
-                case 'mod-taskchain-attempt'   : $this->tab = 'attempt'; break;
-                case 'mod-taskchain-submit'    : $this->tab = 'submit';  break;
+                case 'mod-taskchain-report'     : $this->tab = 'report';  break;
+                case 'mod-taskchain-attempt'    : $this->tab = 'attempt'; break;
+                case 'mod-taskchain-submit'     : $this->tab = 'submit';  break;
                 default: $this->tab = optional_param('tab', 'info', PARAM_ALPHA);
             }
 
@@ -1099,7 +1117,10 @@ class mod_taskchain extends taskchain_base {
             //   $pageid    : mod-taskchain-view
             //   $pageclass : mod-taskchain
 
-            $str = substr($SCRIPT, 1, -4);
+            $strpos = strrpos($SCRIPT, '/');
+            $strpos = strpos($SCRIPT, '.', $strpos);
+            $str = substr($SCRIPT, 1, $strpos -1 );
+            //$str = substr($SCRIPT, 1, -4);
             $str = str_replace('/', '-', $str);
             $pos = strrpos($str, '-');
 

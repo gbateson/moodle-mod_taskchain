@@ -121,4 +121,13 @@ class mod_taskchain_edit_task_form extends moodleform {
         }
         return $data;
     }
+
+    /**
+     * return form for a single field
+     *
+     * @return string
+     */
+    public function field_form($field) {
+        return $this->form_helper->field_form($field);
+    }
 }
