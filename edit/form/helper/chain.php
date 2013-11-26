@@ -141,6 +141,12 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             unset($this->sections['tasks']);
         }
 
+        if (! defined('FEATURE_SHOW_DESCRIPTION')) {
+            // do nothing (Moodle <= 2.1)
+            $i = array_search('showdescription', $this->sections['general']);
+            unset($this->sections['general'][$i]);
+        }
+
         if (isset($record->instance)) {
             // get chain fields for a taskchain record
             if (empty($record->instance)) {
@@ -204,7 +210,11 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function get_fieldvalue_showdescription() {
-        return $this->TC->coursemodule->showdescription;
+        if (isset($this->TC->coursemodule->showdescription)) {
+            return $this->TC->coursemodule->showdescription;
+        } else {
+            return 0; // Moodle <= 2.1
+        }
     }
 
     /////////////////////////////////////////////////////////
