@@ -64,7 +64,7 @@ class mod_taskchain_edit_columnlists_form extends moodleform {
         $this->form_helper->add_sections();
 
         // add action buttons
-        $this->add_action_buttons();
+        $this->form_helper->add_action_buttons();
     }
 
     /**

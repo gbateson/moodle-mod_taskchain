@@ -223,7 +223,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
             $this->mform->setType($name, PARAM_ALPHANUM);
             $this->mform->setDefault($name, $default);
-            $this->mform->addHelpButton($name_elements, $field, 'taskchain');
+            $this->add_helpbutton($name_elements, $field, 'taskchain');
 
             // make mform CSS class specific to this form
             // helps isolate HTML elements when in CSS3 styles
@@ -396,8 +396,11 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '    if (fieldsets) {'."\n";
 
             $js .= '        var hdrFieldsetId = new RegExp("^labels|defaults|selects|(record[0-9]+)$");'."\n";
-            $js .= '        var fitemDivClass = new RegExp("\\\\b"+"fitem"+"\\\\b");'."\n";
+            $js .= '        var fcontainerClass = new RegExp("\\\\b"+"fcontainer"+"\\\\b");'."\n";
             $js .= '        var felementClass = new RegExp("\\\\b"+"felement"+"\\\\b");'."\n";
+            $js .= '        var fitemClass = new RegExp("\\\\b"+"fitem"+"\\\\b");'."\n";
+            $js .= '        var fitemId = new RegExp("^(?:fgroup|fitem)_id_(?:(?:defaultfield|selectfield)_)?([a-z]+).*$");'."\n";
+            $js .= '        var maxWidths = new Array();'."\n";
 
             $js .= '        var f_max = fieldsets.length;'."\n";
             $js .= '        for (var f=0; f<f_max; f++) {'."\n";
@@ -411,18 +414,33 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
             $js .= '                    var d_max = divs.length;'."\n";
             $js .= '                    for (var d=0; d<d_max; d++) {'."\n";
-            $js .= '                        if (divs[d].className && divs[d].className.match(fitemDivClass)) {'."\n";
+            $js .= '                        if (divs[d].className && divs[d].className.match(fitemClass)) {'."\n";
 
             $js .= '                            if (divs[d].offsetLeft && divs[d].offsetWidth) {'."\n";
             $js .= '                                maxRight = Math.max(maxRight, divs[d].offsetLeft + divs[d].offsetWidth);'."\n";
             $js .= '                            }'."\n";
 
+            $js .= '                            if (divs[d].parentNode && divs[d].parentNode.className && divs[d].parentNode.className.match(fcontainerClass)) {'."\n";
+            $js .= '                                if (divs[d].style.width) {'."\n";
+            $js .= '                                    divs[d].style.width = null;'."\n";
+            $js .= '                                }'."\n";
+            $js .= '                            }'."\n";
+            $js .= '                            var col = divs[d].id.replace(fitemId, "$1");'."\n";
+
             $js .= '                            var c_max = divs[d].childNodes.length;'."\n";
             $js .= '                            for (var c=0; c<c_max; c++) {'."\n";
 
             $js .= '                                var child = divs[d].childNodes[c];'."\n";
-            $js .= '                                if (child.className && child.className.match(felementClass) && child.offsetHeight) {'."\n";
-            $js .= '                                    maxHeight = Math.max(maxHeight, child.offsetHeight);'."\n";
+            $js .= '                                if (child.className && child.className.match(felementClass)) {'."\n";
+            $js .= '                                    if (child.offsetHeight) {'."\n";
+            $js .= '                                        maxHeight = Math.max(maxHeight, child.offsetHeight);'."\n";
+            $js .= '                                    }'."\n";
+            $js .= '                                    if (child.offsetWidth) {'."\n";
+            $js .= '                                        if (maxWidths[col]==null) {'."\n";
+            $js .= '                                            maxWidths[col] = 0;'."\n";
+            $js .= '                                        }'."\n";
+            $js .= '                                        maxWidths[col] = Math.max(maxWidths[col], child.offsetWidth);'."\n";
+            $js .= '                                    }'."\n";
             $js .= '                                }'."\n";
             $js .= '                                var child = null;'."\n";
 
@@ -431,8 +449,10 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '                    }'."\n";
 
             $js .= '                    for (var d=0; d<d_max; d++) {'."\n";
-            $js .= '                        if (divs[d].className && divs[d].className.match(fitemDivClass)) {'."\n";
-            $js .= '                            divs[d].style.height = maxHeight + "px";'."\n";
+            $js .= '                        if (divs[d].parentNode && divs[d].parentNode.className && divs[d].parentNode.className.match(fcontainerClass)) {'."\n";
+            $js .= '                            if (divs[d].className && divs[d].className.match(fitemClass)) {'."\n";
+            $js .= '                                divs[d].style.height = maxHeight + "px";'."\n";
+            $js .= '                            }'."\n";
             $js .= '                        }'."\n";
             $js .= '                    }'."\n";
 
@@ -445,9 +465,35 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '            }'."\n";
             $js .= '        }'."\n";
 
+            $js .= '        for (var f=0; f<f_max; f++) {'."\n";
+            $js .= '            if (fieldsets[f].id.match(hdrFieldsetId)) {'."\n";
+
+            $js .= '                var divs = fieldsets[f].getElementsByTagName("DIV");'."\n";
+            $js .= '                if (divs) {'."\n";
+
+            $js .= '                    var d_max = divs.length;'."\n";
+            $js .= '                    for (var d=0; d<d_max; d++) {'."\n";
+            $js .= '                        if (divs[d].parentNode && divs[d].parentNode.className && divs[d].parentNode.className.match(fcontainerClass)) {'."\n";
+            $js .= '                            var col = divs[d].id.replace(fitemId, "$1");'."\n";
+            $js .= '                            if (col) {'."\n";
+            $js .= '                                if (maxWidths[col] && maxWidths[col] != divs[d].offsetWidth) {'."\n";
+            $js .= '                                    divs[d].style.width = maxWidths[col] + "px";'."\n";
+            $js .= '                                }'."\n";
+            $js .= '                            }'."\n";
+            $js .= '                        }'."\n";
+            $js .= '                    }'."\n";
+
+            $js .= '                 }'."\n";
+            $js .= '                 divs = null;'."\n";
+            $js .= '            }'."\n";
+            $js .= '        }'."\n";
+
+
             $js .= '        hdrFieldsetId = null;'."\n";
-            $js .= '        fitemDivClass = null;'."\n";
+            $js .= '        fcontainerClass = null;'."\n";
             $js .= '        felementClass = null;'."\n";
+            $js .= '        fitemClass = null;'."\n";
+            $js .= '        fitemId = null;'."\n";
 
             $js .= '    }'."\n";
             $js .= '    fieldsets = null;'."\n";
@@ -1166,7 +1212,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
         $label = $this->get_fieldlabel($field);
         $list = $this->get_sortfield_fields();
         $this->mform->addElement('select', $name, $label, $list);
-        $this->mform->addHelpButton($name, $field, 'taskchain');
+        $this->add_helpbutton($name, $field, 'taskchain');
         $this->mform->setType($name, PARAM_ALPHA);
         $this->mform->setDefault($name, 'sortorder');
         $this->mform->disabledIf($name, 'action', 'ne', 'reordertasks');
@@ -1183,7 +1229,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
         $label = $this->get_fieldlabel($field);
         $list = array('asc' => get_string('asc'), 'desc' => get_string('desc'));
         $this->mform->addElement('select', $name, $label, $list);
-        $this->mform->addHelpButton($name, $field, 'taskchain');
+        $this->add_helpbutton($name, $field, 'taskchain');
         $this->mform->setType($name, PARAM_ALPHA);
         $this->mform->setDefault($name, 'asc');
         $this->mform->disabledIf($name, 'action', 'ne', 'reordertasks');
@@ -1200,7 +1246,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
         $label = $this->get_fieldlabel($field);
         $types = $this->recordstype.'s';
         $this->mform->addElement('text', $name, $label, array('size' => 2));
-        $this->mform->addHelpButton($name, $field, 'taskchain');
+        $this->add_helpbutton($name, $field, 'taskchain');
         $this->mform->setType($name, PARAM_INT);
         $this->mform->setDefault($name, self::SORT_INCREMENT);
         $this->mform->disabledIf($name, 'action', 'ne', 'reorder'.$types);

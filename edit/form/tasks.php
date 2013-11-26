@@ -59,7 +59,7 @@ class mod_taskchain_edit_tasks_form extends moodleform {
         $this->form_helper->add_sections();
 
         // add standard buttons ("Save changes" and "Cancel")
-        $this->add_action_buttons(false, get_string('go'));
+        $this->form_helper->add_action_buttons(false, get_string('go'));
     }
 
     /**

@@ -648,19 +648,7 @@ After students have attempted the tasks, a number of reports are available which
 $string['movetasks'] = 'Move selected tasks';
 $string['myattempts'] = 'My attempts';
 $string['name'] = 'Name';
-$string['name_help'] = 'The name can be specfic text entered by the teacher or it can be automatically generated.
-
-**Get from source file**
-: the name will be extracted from the source file.
-
-**Use source file name**
-: the source file name will be used as the name.
-
-**Use source file path**
-: the source file path will be used as the name. Any slashes in the file path will be replaced by spaces.
-
-**Specific text**
-: the specific text entered by the teacher will be used as the name.';
+$string['name_help'] = 'The specific text that is displayed to the students';
 $string['nameadd_help'] = 'The name can be specfic text entered by the teacher or it can be automatically generated.
 
 **Get from source file**
@@ -675,8 +663,6 @@ Any slashes in the file path will be replaced by spaces.
 
 **Specific text**
 The specific text entered by the teacher will be used as the name.';
-$string['nameedit'] = 'Name';
-$string['nameedit_help'] = 'The specific text that is displayed to the students';
 $string['navigation'] = 'Navigation';
 $string['navigation_embed'] = 'Embedded web page';
 $string['navigation_frame'] = 'Moodle navigation frame';

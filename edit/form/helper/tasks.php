@@ -201,7 +201,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
 
                 $elements = array();
                 $elements[] = $this->mform->createElement('select', $name_type,   '', $filterlist);
-                $elements[] = $this->mform->createElement('text',   $name_value,  '', array('size', self::TEXT_FIELD_SIZE));
+                $elements[] = $this->mform->createElement('text',   $name_value,  '', array('size', $this->text_field_size));
                 $this->mform->addGroup($elements, $name_elements, $filterlabel, ' ', false);
 
                 $this->mform->setType($name_type, PARAM_INT);

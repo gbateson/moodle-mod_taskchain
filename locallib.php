@@ -169,8 +169,7 @@ class mod_taskchain extends taskchain_base {
             $taskchainid    = optional_param('tc',             0, PARAM_INT);
             $chainid        = optional_param('chainid',        0, PARAM_INT);
             $taskid         = optional_param('taskid',         0, PARAM_INT);
-            $conditionid    = optional_param('
-            ',    0, PARAM_INT);
+            $conditionid    = optional_param('conditionid',    0, PARAM_INT);
             $chaingradeid   = optional_param('chaingradeid',   0, PARAM_INT);
             $chainattemptid = optional_param('chainattemptid', 0, PARAM_INT);
             $taskscoreid    = optional_param('taskscoreid',    0, PARAM_INT);
@@ -362,7 +361,7 @@ class mod_taskchain extends taskchain_base {
             }
 
             // distribute the database information into the relevant objects
-            foreach(get_object_vars($record) as $field=>$value) {
+            foreach(get_object_vars($record) as $field => $value) {
                 $pos = strrpos($field, '_');
                 $table = substr($field, 0, $pos);
                 $field = substr($field, $pos + 1);
@@ -1057,7 +1056,7 @@ class mod_taskchain extends taskchain_base {
      * @return string
      */
     static public function format_time($time, $format=null, $notime='&nbsp;') {
-        if ($time>0) {
+        if ($time > 0) {
             return format_time($time, $format);
         } else {
             return $notime;
@@ -1587,10 +1586,8 @@ class mod_taskchain extends taskchain_base {
             $this->get_tasks();
         }
 
-        // initialize sortorder
+        // initialize sortorder ($condition->sortorder should always be >=0 in the database)
         $sortorder = -1;
-        // Note: $condition->sortorder is always >=0 because
-        // the sortorder field in the database is UNSIGNED
 
         foreach ($conditions as $condition) {
 

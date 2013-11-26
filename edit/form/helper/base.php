@@ -149,10 +149,14 @@ abstract class taskchain_form_helper_base {
     // is controlled by the __get() and __set() methods
 
     /** default text field size */
-    const TEXT_FIELD_SIZE = 40;
+    const TEXT_FIELD_SIZE_LONG  = 40;
+    const TEXT_FIELD_SIZE_SHORT = 15;
+
+    /** the text field size */
+    protected $text_field_size = 0;
 
     /** reference to global $TC object */
-    protected $TC= null;
+    protected $TC = null;
 
     /** array to map each form section to an array of fields */
     protected $sections = array();
@@ -172,8 +176,8 @@ abstract class taskchain_form_helper_base {
     /** boolean switch denoting whether or not this $record is one of multiple child $records */
     protected $multiple = null;
 
-    /** boolean switch denoting whether or not this form is for a single field */
-    protected $singlefield = false;
+    /** if this form is for a single field, this string holds the name of that field */
+    protected $singlefield = '';
 
     /** the current database $record */
     protected $record = null;
@@ -210,13 +214,16 @@ abstract class taskchain_form_helper_base {
                     continue; // e.g. "id" field
                 }
                 if (in_array($field, $fields)) {
-                    $this->singlefield = true;
+                    $this->singlefield = $field;
                     break;
                 }
             }
             if ($this->singlefield) {
                 $this->sections = array('singlefield' => array($field));
             }
+            $this->text_field_size = self::TEXT_FIELD_SIZE_SHORT;
+        } else {
+            $this->text_field_size = self::TEXT_FIELD_SIZE_LONG;
         }
 
     }
@@ -1029,6 +1036,9 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function get_fieldlabel($field) {
+        if ($this->singlefield) {
+            return '';
+        }
         $method = 'get_fieldlabel_'.$field;
         if (method_exists($this, $method)) {
             return $this->$method();
@@ -1273,8 +1283,8 @@ abstract class taskchain_form_helper_base {
             // default action is to add a text field
             $name = $this->get_fieldname($field);
             $label = $this->get_fieldlabel($field);
-            $this->mform->addElement('text', $name, $label, array('size' => self::TEXT_FIELD_SIZE));
-            $this->mform->addHelpButton($name, $field, 'taskchain');
+            $this->mform->addElement('text', $name, $label, array('size' => $this->text_field_size));
+            $this->add_helpbutton($name, $field, 'taskchain');
             $this->set_type_text($field);
         }
     }
@@ -1293,7 +1303,7 @@ abstract class taskchain_form_helper_base {
         $this->mform->addElement('selectyesno', $name, $label);
         $this->mform->setType($name, PARAM_INT);
         $this->mform->setDefault($name, $this->get_defaultvalue($field));
-        $this->mform->addHelpButton($name, $field, 'taskchain');
+        $this->add_helpbutton($name, $field, 'taskchain');
         if ($advanced) {
             $this->mform->setAdvanced($name);
         }
@@ -1314,7 +1324,7 @@ abstract class taskchain_form_helper_base {
         $this->mform->addElement('select', $name, $label, taskchain_available::$list());
         $this->mform->setType($name, PARAM_INT);
         $this->mform->setDefault($name, $this->get_defaultvalue($field));
-        $this->mform->addHelpButton($name, $field, 'taskchain');
+        $this->add_helpbutton($name, $field, 'taskchain');
         if ($advanced) {
             $this->mform->setAdvanced($name);
         }
@@ -1599,12 +1609,15 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function format_fieldlabel($field) {
+        global $OUTPUT;
+        $strman = get_string_manager();
+
         $method = 'format_fieldlabel_'.$field;
         if (method_exists($this, $method)) {
             $this->$method();
         } else {
             $name = $field.'_label';
-            $text = $this->get_fieldlabel($field);
+            $text = $this->get_fieldlabel($field).$this->get_helpicon($field);
             $text = html_writer::tag('span', $text, array('class' => 'headerfield'));
             $this->mform->addElement('static', $name, '', $text);
         }
@@ -1639,7 +1652,7 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function format_fieldvalue($field, $value) {
-        global $CFG, $PAGE;
+        global $CFG, $OUTPUT, $PAGE;
 
         static $ajax = null;
         if ($ajax===null) {
@@ -1673,9 +1686,12 @@ abstract class taskchain_form_helper_base {
                             'field'   => $field,
                             'sesskey' => sesskey());
             $helper = new moodle_url('/mod/taskchain/edit/form/helper.js.php', $params);
-
             $onclick = 'TC_request("'.$helper.'", "'.$name.'"); return false;';
+
             $params  = array('id' => $name, 'title' => $label, 'onclick' => $onclick);
+            if ($value=='') {
+                $value = $OUTPUT->pix_icon('t/edit', get_string('edit'));
+            }
             $value   = html_writer::link($href, $value, $params);
         }
 
@@ -2111,5 +2127,69 @@ abstract class taskchain_form_helper_base {
     public function field_form($field) {
         print_object($this->mform);
         die;
+    }
+
+    /**
+     * add_action_buttons
+     *
+     * @param bool $cancel whether to show cancel button, default true
+     * @param string $submit label for submit button, defaults to get_string('savechanges')
+     */
+    public function add_action_buttons($cancel=true, $submit=null) {
+        if ($cancel===true) {
+            $cancel = get_string('cancel');
+        }
+        if ($submit===null) {
+            $submit = ($this->singlefield ? get_string('save', 'admin') : get_string('savechanges'));
+        }
+        if ($cancel) {
+            $elements = array(
+                $this->mform->createElement('submit', 'submitbutton', $submit),
+                $this->mform->createElement('cancel', 'cancelbutton', $cancel)
+            );
+            $name = 'actionbuttons';
+            $this->mform->addGroup($elements, $name, '', array(' '), false);
+            $this->mform->closeHeaderBefore($name);
+        } else {
+            $name = 'submitbutton';
+            $this->mform->addElement('submit', $name, $submit);
+            $this->mform->closeHeaderBefore($name);
+        }
+    }
+
+    /**
+     * add_helpbutton
+     *
+     * @param string $fieldname
+     * @param string $stringname
+     * @param string $component
+     */
+    public function add_helpbutton($fieldname, $stringname, $component) {
+        if ($this->singlefield==false) {
+            $this->mform->addHelpButton($fieldname, $stringname, $component);
+        }
+    }
+
+    /**
+     * add_helpbutton
+     *
+     * @param string $field
+     */
+    public function get_helpicon($field) {
+        global $OUTPUT;
+
+        $method = 'get_helpicon_'.$field;
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        }
+
+        return ' '.$OUTPUT->help_icon($field, 'taskchain');
+    }
+
+    /**
+     * add_helpbutton_edit
+     */
+    public function get_helpicon_edit() {
+        return '';
     }
 }

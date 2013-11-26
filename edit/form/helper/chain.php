@@ -339,7 +339,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     protected function add_field_showdescription() {
         if (defined('FEATURE_SHOW_DESCRIPTION')) { // Moodle >= 2.2
             $this->mform->addElement('checkbox', 'showdescription', get_string('showdescription', 'taskchain'));
-            $this->mform->addHelpButton('showdescription', 'showdescription', 'taskchain');
+            $this->add_helpbutton('showdescription', 'showdescription', 'taskchain');
         } else {
             $this->mform->addElement('hidden', 'showdescription', 0);
         }
@@ -455,7 +455,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             1 => get_string('windownew', 'taskchain')
         );
         $this->mform->addElement('select', 'showpopup', get_string('window', 'taskchain'), $options);
-        $this->mform->addHelpButton('showpopup', 'window', 'taskchain');
+        $this->add_helpbutton('showpopup', 'window', 'taskchain');
 
         // New window options
         $elements = array();
@@ -525,7 +525,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $optgroups[get_string('yes').': '.$str] = $options;
 
         $this->mform->addElement('selectgroups', 'allowfreeaccess', get_string('allowfreeaccess', 'taskchain'), $optgroups);
-        $this->mform->addHelpButton('allowfreeaccess', 'allowfreeaccess', 'taskchain');
+        $this->add_helpbutton('allowfreeaccess', 'allowfreeaccess', 'taskchain');
         $this->mform->setAdvanced('allowfreeaccess');
     }
 
@@ -591,7 +591,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $label = $this->get_fieldlabel($field);
         $options = grade_get_categories_menu($PAGE->course->id);
         $this->mform->addElement('select', $name, $label, $options);
-        $this->mform->addHelpButton($name, 'gradecategoryonmodform', 'grades');
+        $this->add_helpbutton($name, 'gradecategoryonmodform', 'grades');
         $this->mform->setType($name, PARAM_INT);
         // this element is not available if gradeweighting==0 or gradelimit==0
         $this->mform->disabledIf($name, 'gradeweighting', 'eq', 0);
@@ -626,11 +626,11 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             $this->mform->addGroup($elements, $type.'page_elements', $label, array(' '), false);
             $this->mform->setDefault($type_page, $this->get_defaultvalue($type_page, 0));
             $this->mform->setAdvanced($type.'page_elements');
-            $this->mform->addHelpButton($type.'page_elements', $type_page, 'taskchain');
+            $this->add_helpbutton($type.'page_elements', $type_page, 'taskchain');
             $this->mform->disabledIf($type.'page_elements', $type_page, 'ne', 1);
         } else {
             $this->mform->addElement('selectyesno', $type_page, $label);
-            $this->mform->addHelpButton($type_page, $type_page, 'taskchain');
+            $this->add_helpbutton($type_page, $type_page, 'taskchain');
             $this->mform->addElement('hidden', $type_textsource, mod_taskchain::TEXTSOURCE_SPECIFIC);
         }
         $this->mform->setType($type_page, PARAM_INT);
@@ -703,7 +703,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
             $this->mform->addGroup($elements, $name_elements, $label, html_writer::empty_tag('br'), false);
             $this->mform->setAdvanced($name_elements);
-            $this->mform->addHelpButton($name_elements, $groupname, 'taskchain');
+            $this->add_helpbutton($name_elements, $groupname, 'taskchain');
             $this->mform->disabledIf($name_elements, $type.'page', 'ne', 1);
         }
     }
@@ -785,7 +785,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         );
 
         $this->mform->addGroup($elements, $type.'cm_elements', get_string($type.'cm', 'taskchain'), array(' '), false);
-        $this->mform->addHelpButton($type.'cm_elements', $type.'cm', 'taskchain');
+        $this->add_helpbutton($type.'cm_elements', $type.'cm', 'taskchain');
         if ($type=='entry') {
             $defaultcm = mod_taskchain::ACTIVITY_NONE;
             $defaultgrade = 100;
@@ -1397,5 +1397,62 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     protected function format_selectfield_name($field) {
         $name = $this->get_fieldname($field);
         $this->mform->addElement('static', $name, '', '');
+    }
+
+    /**
+     * get_helpicon_entrytext
+     *
+     * @uses $OUTPUT
+     */
+    public function get_helpicon_entrytext() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('entrycm', 'taskchain');
+    }
+
+    /**
+     * get_helpicon_entrygrade
+     *
+     * @uses $OUTPUT
+     */
+    public function get_helpicon_entrygrade() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('entrycm', 'taskchain');
+    }
+
+    /**
+     * get_helpicon_exittext
+     *
+     * @uses $OUTPUT
+     */
+    public function get_helpicon_exittext() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('exitcm', 'taskchain');
+    }
+
+    /**
+     * get_helpicon_exitgrade
+     *
+     * @uses $OUTPUT
+     */
+    public function get_helpicon_exitgrade() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('exitcm', 'taskchain');
+    }
+
+    /**
+     * get_helpicon_exitoptions
+     *
+     * @uses $OUTPUT
+     */
+    public function get_helpicon_exitoptions() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('exitcm', 'taskchain');
+    }
+
+    /**
+     * get_helpicon_gradecategory
+     */
+    public function get_helpicon_gradecategory() {
+        return '';
     }
 }

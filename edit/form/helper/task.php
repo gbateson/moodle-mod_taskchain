@@ -204,7 +204,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $sourcetype = $this->get_original_value('sourcetype', '');
         $options = taskchain_available::outputformats_list($sourcetype);
         $this->mform->addElement('select', $name, $label, $options);
-        $this->mform->addHelpButton($name, $field, 'taskchain');
+        $this->add_helpbutton($name, $field, 'taskchain');
         //$this->mform->setAdvanced($name);
     }
 
@@ -243,7 +243,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $elements[] = $this->mform->createElement('checkbox', $name_append,  '', get_string($field_append,  'taskchain'));
 
         $this->mform->addGroup($elements, $name_elements, $label, html_writer::empty_tag('br'), false);
-        $this->mform->addHelpButton($name_elements, $field, 'taskchain');
+        $this->add_helpbutton($name_elements, $field, 'taskchain');
         $this->mform->setAdvanced($name_elements);
 
         $this->mform->setType($name_source,  PARAM_INT);
@@ -276,7 +276,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $elements[] = $this->mform->createElement('text', $name_text, '', array('size' => '20'));
 
         $this->mform->addGroup($elements, $name_elements, $label, ' ', false);
-        $this->mform->addHelpButton($name_elements, $field, 'taskchain');
+        $this->add_helpbutton($name_elements, $field, 'taskchain');
         $this->mform->setAdvanced($name_elements);
 
         $this->mform->setType($name_yesno, PARAM_INT);
@@ -352,14 +352,14 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         $elements = array();
         $elements[] = $this->mform->createElement('select', $name, '', taskchain_available::feedbacks_list());
-        $elements[] = $this->mform->createElement('text', $name_url, '', array('size'=>self::TEXT_FIELD_SIZE));
+        $elements[] = $this->mform->createElement('text', $name_url, '', array('size'=>$this->text_field_size));
         $this->mform->addGroup($elements, $name_elements, $label, array(' '), false);
 
         $this->mform->disabledIf($name_url, $name, 'eq', mod_taskchain::FEEDBACK_NONE);
         $this->mform->disabledIf($name_url, $name, 'eq', mod_taskchain::FEEDBACK_MOODLEFORUM);
         $this->mform->disabledIf($name_url, $name, 'eq', mod_taskchain::FEEDBACK_MOODLEMESSAGING);
 
-        $this->mform->addHelpButton($name_elements, $field, 'taskchain');
+        $this->add_helpbutton($name_elements, $field, 'taskchain');
         $this->mform->setAdvanced($name_elements);
 
         $this->mform->setType($name, PARAM_INT);
@@ -971,5 +971,32 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         $name_elements = $this->get_fieldname($field.'_elements');
         $this->mform->addGroup($elements, $name_elements, '', html_writer::empty_tag('br'));
+    }
+
+    /**
+     * get_helpicon_reviewoptions
+     */
+    public function get_helpicon_reviewoptions() {
+        return '';
+    }
+
+    /**
+     * get_helpicon_stoptext
+     *
+     * @uses $OUTPUT
+     */
+    public function get_helpicon_stoptext() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('stopbutton', 'taskchain');
+    }
+
+    /**
+     * get_helpicon_studentfeedbackurl
+     *
+     * @uses $OUTPUT
+     */
+    public function get_helpicon_studentfeedbackurl() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('studentfeedback', 'taskchain');
     }
 }

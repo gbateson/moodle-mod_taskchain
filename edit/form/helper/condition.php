@@ -255,7 +255,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             $this->mform->addElement('select', $name, $label, $options);
             $this->mform->setType($name, PARAM_INT);
             $this->mform->setDefault($name, $this->get_defaultvalue($field));
-            $this->mform->addHelpButton($name, $field, 'taskchain');
+            $this->add_helpbutton($name, $field, 'taskchain');
         } else {
             $this->mform->addElement('hidden', $name, '0');
             $this->mform->setType($name, PARAM_INT);
@@ -281,7 +281,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             $this->mform->addElement('select', $name, $label, $options);
             $this->mform->setType($name, PARAM_INT);
             $this->mform->setDefault($name, $this->get_defaultvalue($field));
-            $this->mform->addHelpButton($name, $field, 'taskchain');
+            $this->add_helpbutton($name, $field, 'taskchain');
             $this->mform->setAdvanced($name);
         } else {
             // post-conditions don't use the sort order field (but they could)
@@ -316,7 +316,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             $this->mform->addElement('select', $name, $label, $options);
             $this->mform->setType($name, PARAM_INT);
             $this->mform->setDefault($name, $this->get_defaultvalue($field));
-            $this->mform->addHelpButton($name, $field, 'taskchain');
+            $this->add_helpbutton($name, $field, 'taskchain');
         } else {
             // post-conditions always use the current task as the condition task
             $this->mform->addElement('hidden', $name, $this->TC->get_taskid());
@@ -344,7 +344,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
         $elements[] = $this->mform->createElement('checkbox', $name_enable, '', get_string('enable'));
 
         $this->mform->addGroup($elements, $name_elements, $label, array(' '), false);
-        $this->mform->addHelpButton($name_elements, $field, 'taskchain');
+        $this->add_helpbutton($name_elements, $field, 'taskchain');
 
         $this->mform->setType($name_minmax, PARAM_INT);
         $this->mform->setType($name, PARAM_INT);
@@ -383,7 +383,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
         $this->mform->setType($name_enable, PARAM_INT);
         $this->mform->setDefault($name_enable, 0); // i.e. disabled by default
         $this->mform->disabledIf($name_elements, $name_enable, 'notchecked');
-        $this->mform->addHelpButton($name_elements, $field, 'taskchain');
+        $this->add_helpbutton($name_elements, $field, 'taskchain');
         $this->mform->setAdvanced($name_elements);
     }
 

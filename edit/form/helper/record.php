@@ -399,7 +399,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             $list  = $field.'s_list';
             $this->mform->addElement('select', $name, $label, taskchain_available::$list());
             $this->mform->setDefault($name, $this->get_defaultvalue($field));
-            $this->mform->addHelpButton($name, $field, 'taskchain');
+            $this->add_helpbutton($name, $field, 'taskchain');
             //$this->mform->setAdvanced($name);
         } else {
             $this->mform->addElement('hidden', $name, 0);
@@ -477,7 +477,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $this->mform->addElement('select', $name, $label, taskchain_available::$list());
         $this->mform->setDefault($name, $this->get_defaultvalue($field));
         $this->mform->setAdvanced($name);
-        $this->mform->addHelpButton($name, $field, 'taskchain');
+        $this->add_helpbutton($name, $field, 'taskchain');
     }
 
     /**
@@ -490,7 +490,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $label = $this->get_fieldlabel($field);
         $list  = $field.'s_list';
         $this->mform->addElement('select', $name, $label, taskchain_available::$list());
-        $this->mform->addHelpButton($name, $field, 'taskchain');
+        $this->add_helpbutton($name, $field, 'taskchain');
         $this->mform->setAdvanced($name);
     }
 
@@ -504,7 +504,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $label = $this->get_fieldlabel($field);
         $this->mform->addElement('text', $name, $label);
         $this->mform->setType($name, PARAM_TEXT);
-        $this->mform->addHelpButton($name, 'requirepassword', 'taskchain');
+        $this->add_helpbutton($name, 'requirepassword', 'taskchain');
         $this->mform->setAdvanced($name);
     }
 
@@ -518,7 +518,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $label = $this->get_fieldlabel($field);
         $this->mform->addElement('text', $name, $label);
         $this->mform->setType($name, PARAM_TEXT);
-        $this->mform->addHelpButton($name, 'requiresubnet', 'taskchain');
+        $this->add_helpbutton($name, 'requiresubnet', 'taskchain');
         $this->mform->setAdvanced($name);
     }
 
@@ -536,7 +536,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $name  = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
         $this->mform->addElement('date_time_selector', $name, $label, array('optional' => true));
-        $this->mform->addHelpButton($name, 'timeopenclose', 'taskchain');
+        $this->add_helpbutton($name, 'timeopenclose', 'taskchain');
         $this->mform->setAdvanced($name);
     }
 
@@ -580,7 +580,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         }
 
         $this->mform->addGroup($elements, $name_elements, $label, '', false);
-        $this->mform->addHelpButton($name_elements, $field, 'taskchain');
+        $this->add_helpbutton($name_elements, $field, 'taskchain');
 
         // the standard disabledIf for the "enable" checkbox doesn't work because we are in group, so ...
         if ($optional) {
@@ -636,7 +636,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         if ($params['advanced']) {
             $this->mform->setAdvanced($name);
         }
-        $this->mform->addHelpButton($name, $type.'file', 'taskchain');
+        $this->add_helpbutton($name, $type.'file', 'taskchain');
     }
 
     /**
@@ -667,7 +667,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
 
         $name = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
-        $size = array('size' => self::TEXT_FIELD_SIZE);
+        $size = array('size' => $this->text_field_size);
 
         $name_source = $this->get_fieldname($field.'source');
         $name_elements = $this->get_fieldname($field.'_elements');
@@ -684,7 +684,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
 
             $default = $this->get_defaultvalue($name_source);
             $this->mform->setDefault($name_source, $default);
-            $this->mform->addHelpButton($name_elements, $field, 'taskchain');
+            $this->add_helpbutton($name_elements, $field.'add', 'taskchain');
 
             if ($params['required']) {
                 $required = $name_elements;
@@ -700,7 +700,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             } else {
                 $this->mform->addElement('text', $name, $label, $size);
                 $this->mform->addElement('hidden', $name_source, mod_taskchain::TEXTSOURCE_SPECIFIC);
-                $this->mform->addHelpButton($name, $field, 'taskchain');
+                $this->add_helpbutton($name, $field, 'taskchain');
                 $this->mform->addRule($name, get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
                 if ($params['required']) {
                     $required = $name;
@@ -746,7 +746,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $this->mform->addElement('selectyesno', $name, $label);
         $this->mform->setType($name, PARAM_INT);
         $this->mform->setDefault($name, $this->get_defaultvalue($field));
-        $this->mform->addHelpButton($name, $field, 'taskchain');
+        $this->add_helpbutton($name, $field, 'taskchain');
         $this->mform->setAdvanced($name);
         $this->mform->disabledIf($name, $name_method, 'eq', mod_taskchain::GRADEMETHOD_HIGHEST);
     }
@@ -1553,5 +1553,45 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             'conditionid'  => $condition->id,    'conditiontype'  => $condition->conditiontype
         );
         return $output->commands($types, 'edit/condition.php', 'conditionid', $params, 'taskchainpopup', true);
+    }
+
+    /**
+     * get_helpicon_password
+     *
+     * @uses $OUTPUT
+     */
+    public function get_helpicon_password() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('requirepassword', 'taskchain');
+    }
+
+    /**
+     * get_helpicon_subnet
+     *
+     * @uses $OUTPUT
+     */
+    public function get_helpicon_subnet() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('requiresubnet', 'taskchain');
+    }
+
+    /**
+     * get_helpicon_timeopen
+     *
+     * @uses $OUTPUT
+     */
+    public function get_helpicon_timeopen() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('timeopenclose', 'taskchain');
+    }
+
+    /**
+     * get_helpicon_timeclose
+     *
+     * @uses $OUTPUT
+     */
+    public function get_helpicon_timeclose() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('timeopenclose', 'taskchain');
     }
 }
