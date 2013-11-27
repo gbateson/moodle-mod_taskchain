@@ -649,6 +649,7 @@ $string['movetasks'] = 'Move selected tasks';
 $string['myattempts'] = 'My attempts';
 $string['name'] = 'Name';
 $string['name_help'] = 'The specific text that is displayed to the students';
+$string['nameadd'] = 'Name';
 $string['nameadd_help'] = 'The name can be specfic text entered by the teacher or it can be automatically generated.
 
 **Get from source file**

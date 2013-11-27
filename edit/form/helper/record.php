@@ -660,7 +660,6 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function add_template_textsource($field, $params) {
-
         // name of required and advanced fields, if any
         $required = '';
         $advanced = '';
@@ -682,9 +681,16 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             $this->mform->addGroup($elements, $name_elements, $label, array(' '), false);
             $this->mform->disabledIf($name_elements, $name_source, 'ne', mod_taskchain::TEXTSOURCE_SPECIFIC);
 
+            $strman = get_string_manager();
+            if ($strman->string_exists($field.'add', 'taskchain')) {
+                $helpstring = $field.'add';
+            } else {
+                $helpstring = $field;
+            }
+
             $default = $this->get_defaultvalue($name_source);
             $this->mform->setDefault($name_source, $default);
-            $this->add_helpbutton($name_elements, $field.'add', 'taskchain');
+            $this->add_helpbutton($name_elements, $helpstring, 'taskchain');
 
             if ($params['required']) {
                 $required = $name_elements;
