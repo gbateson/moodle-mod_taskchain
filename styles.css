@@ -403,8 +403,8 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.actionjs {display:none;}
 
 #page-mod-taskchain-edit-tasks div.conditions {text-align: left; padding: 0px;}
-#page-mod-taskchain-edit-tasks div.conditions ul {list-style-position: inside; margin: 0px; padding: 0px; white-space: nowrap;}
-#page-mod-taskchain-edit-tasks div.conditions ul li {margin: 0px; padding: 0px;}
+#page-mod-taskchain-edit-tasks div.conditions ul {margin: 0px; padding: 0px; white-space: nowrap;}
+#page-mod-taskchain-edit-tasks div.conditions ul li {margin: 0px; padding: 0px; list-style: disc inside; }
 #page-mod-taskchain-edit-tasks span.commands {font-size: 0.8em;}
 #page-mod-taskchain-edit-tasks p.taskchainconditionsintro {margin: 0px 0px 12px 0px;}
 #page-mod-taskchain-edit-tasks p.taskchainconditionsor {margin: 0px;}
