@@ -782,7 +782,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
             if ($this->TC->chain->attemptlimit > 1) {
                 $table->data[] = new html_table_row(array(
-                    new html_table_cell(get_string('attemptsallowed', 'task').':'),
+                    new html_table_cell(get_string('attemptsallowed', 'taskchain').':'),
                     new html_table_cell($this->TC->chain->attemptlimit)
                 ));
             }

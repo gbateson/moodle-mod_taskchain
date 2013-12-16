@@ -389,17 +389,16 @@ class taskchain_require extends taskchain_base {
             $attempts = "{$type}attempts";
             if ($record->attemptlimit && $record->attemptlimit <= count($this->TC->$attempts)) {
                 // maximum number of chain/task attempts reached
-                if ($type=='chain') {
-                    $name = $this->TC->taskchain->get_name();
-                } else {
-                    $name = $record->get_name(); // task
-                }
-                if ($shorterror) {
-                    $error = get_string('nomore'.$type.'attempts', 'taskchain');
-                } else {
+                $error = get_string('nomore'.$type.'attempts', 'taskchain');
+                if ($shorterror==false) {
+                    if ($type=='chain') {
+                        $name = $this->TC->taskchain->get_name();
+                    } else {
+                        $name = $record->get_name(); // task
+                    }
                     $attemptlimitstr = mod_taskchain::textlib('strtolower', get_string('attemptlimit', 'taskchain'));
-                    $msg = html_writer::tag('b', format_string($this->name))." ($attemptlimitstr = $this->attemptlimit)";
-                    $error = html_writer::tag('p', get_string('nomoreattempts', 'taskchain')).html_writer::tag('p', $msg);
+                    $msg = html_writer::tag('b', format_string($name))." ($attemptlimitstr = $record->attemptlimit)";
+                    $error = html_writer::tag('p', $error).html_writer::tag('p', $msg);
                 }
             }
         }
