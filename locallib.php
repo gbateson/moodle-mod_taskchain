@@ -595,11 +595,12 @@ class mod_taskchain extends taskchain_base {
      * @todo Finish documenting this function
      */
     static public function set_user_editing() {
-        global $USER;
-        $editmode = optional_param('editmode', null, PARAM_BOOL);
-        if (! is_null($editmode)) {
-            $USER->editing = $editmode;
+        global $PAGE, $USER;
+        if ($editing = $PAGE->user_allowed_editing()) {
+            $editing = (isset($USER->editing) && $USER->editing);
+            $editing = optional_param('editmode', $editing, PARAM_BOOL);
         }
+        $USER->editing = $editing;
     }
 
     /**

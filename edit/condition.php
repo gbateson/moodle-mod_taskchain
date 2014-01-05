@@ -40,9 +40,7 @@ if (isset($TC->condition->id)) {
 }
 
 // Set editing mode
-if ($PAGE->user_allowed_editing()) {
-    mod_taskchain::set_user_editing();
-}
+mod_taskchain::set_user_editing();
 
 // initialize $PAGE (and compute blocks)
 $PAGE->set_url($TC->url->edit('condition', array('id' => $TC->get_conditionid())));

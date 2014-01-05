@@ -37,9 +37,7 @@ $url = $TC->url->edit('columnlists');
 //add_to_log($TC->course->id, 'taskchain', 'editcolumnlists', $url, $TC->columnlisttype, $TC->columnlistid);
 
 // Set editing mode
-if ($PAGE->user_allowed_editing()) {
-    mod_taskchain::set_user_editing();
-}
+mod_taskchain::set_user_editing();
 
 // initialize $PAGE (and compute blocks)
 $PAGE->set_url($TC->url->edit('columnlists', array('id' => $TC->get_courseid(), 'columnlisttype' => $TC->columnlisttype)));

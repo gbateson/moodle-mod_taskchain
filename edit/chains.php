@@ -42,9 +42,7 @@ require_once($CFG->dirroot.'/course/lib.php');
 add_to_log($TC->course->id, 'taskchain', 'editchains', 'edit/chains.php?id='.$TC->course->id);
 
 // Set editing mode
-if ($PAGE->user_allowed_editing()) {
-    mod_taskchain::set_user_editing();
-}
+mod_taskchain::set_user_editing();
 
 // initialize $PAGE (and compute blocks)
 $PAGE->set_url($TC->url->edit('chains', array('id' => $TC->course->id)));

@@ -40,9 +40,7 @@ if ($TC->task) {
 }
 
 // Set editing mode
-if ($PAGE->user_allowed_editing()) {
-    mod_taskchain::set_user_editing();
-}
+mod_taskchain::set_user_editing();
 
 if (isset($TC->task->id)) {
     $PAGE->set_url($TC->url->edit('task', array('id' => $TC->task->id)));
