@@ -38,11 +38,7 @@ if (! $TC->show_entrypage()) {
 }
 
 if ($TC->action=='deleteselected') {
-    if ($TC->confirmed) {
-        $TC->delete_selected_attempts($TC->selected);
-    } else {
-        // show a confirm button ?
-    }
+    $TC->delete_selected_attempts();
 }
 
 // Log this request

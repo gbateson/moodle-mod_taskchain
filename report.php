@@ -33,11 +33,7 @@ require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 $TC = new mod_taskchain();
 
 if ($TC->action=='deleteselected') {
-    if ($TC->confirmed) {
-        $TC->delete_selected_attempts($TC->selected, false);
-    } else {
-        // show a confirm button ?
-    }
+    $TC->delete_selected_attempts();
 }
 
 // Log this request

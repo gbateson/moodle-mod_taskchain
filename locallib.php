@@ -2116,12 +2116,24 @@ class mod_taskchain extends taskchain_base {
      * @return array $deleted[taskattempts, taskscores, chainattempts, chaingrades, total]
      * @todo Finish documenting this function
      */
-    public function delete_selected_attempts(&$selected, $status=0) {
+    public function delete_selected_attempts() {
         global $DB;
+
+        if (! $TC->confirmed) {
+            return false; // show a confirm button ?
+        }
+
+        if (! $selected = $this->selected) {
+            return false; // no attempts selected
+        }
 
         if (! $userfilter = $this->get_userfilter('')) {
             return false; // no users selected
         }
+
+        // TODO: get status from filters
+        //       and maybe other fields too
+        $status=0;
 
         // we are going to return some totals of how many records were deleted
         $this->deleted = (object)array(

@@ -105,6 +105,7 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
 
         // sql to select all grades for this TaskChain - what about Moodle grade?
         $select = 'tc_chn_att.id AS id, '.
+                  'tc_chn_att.chainid AS chainattemptchainid, '.
                   'tc_chn_att.cnumber AS chainattemptcnumber, '.
                   'tc_chn_att.grade AS chainattemptgrade, '.
                   'tc_chn_att.status AS chainattemptstatus, '.

@@ -113,6 +113,7 @@ class mod_taskchain_report_chainattempt_renderer extends mod_taskchain_report_re
                   'tc_tsk_scr.duration AS taskscoreduration, '.
                   'tc_tsk_scr.timemodified AS taskscoretimemodified, '.
                   'tc_chn_att.id AS chainattemptid, '.
+                  'tc_chn_att.chainid AS chainattemptchainid, '.
                   'tc_chn_att.cnumber AS chainattemptcnumber, '.
                   'tc_chn_att.grade AS chainattemptgrade, '.
                   'tc_chn_att.status AS chainattemptstatus, '.

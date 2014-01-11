@@ -605,7 +605,35 @@ class taskchain_report_table extends table_sql {
      * @return xxx
      */
     function col_selected($row)  {
-        return html_writer::checkbox('selected['.$row->id.']', 1, false);
+        $id = $this->col_selected_id($row);
+        return html_writer::checkbox('selected'.$id, 1, false);
+    }
+
+    /**
+     * col_selected_id
+     *
+     * @param xxx $row
+     * @return xxx
+     */
+    function col_selected_id($row)  {
+        // $selected[chainid][cnumber][taskid][tnumber][taskattemptid]
+        switch ($this->TC->mode) {
+
+            case 'chaingrade':
+            case 'chaingrades':
+            case 'chainattempt':
+            case 'chainattempts':
+                return '['.$row->chainattemptchainid.']['.$row->chainattemptcnumber.']';
+
+            case 'taskscore':
+            case 'taskscores':
+            case 'taskattempt':
+            case 'taskattempts':
+                return '['.$row->taskscorechainid.']['.$row->taskattemptcnumber.']['.$row->taskattempttaskid.']['.$row->taskattempttnumber.']['.$row->id.']';
+
+            default:
+                return ''; // shouldn't happen !!
+        }
     }
 
     /**

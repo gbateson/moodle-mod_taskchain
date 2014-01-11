@@ -106,12 +106,15 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
 
         // sql to select all grades for this TaskChain - what about Moodle grade?
         $select = 'tc_tsk_att.id AS id, '.
+                  'tc_tsk_att.taskid AS taskattempttaskid, '.
+                  'tc_tsk_att.cnumber AS taskattemptcnumber, '.
                   'tc_tsk_att.tnumber AS taskattempttnumber, '.
                   'tc_tsk_att.penalties AS taskattemptpenalties, '.
                   'tc_tsk_att.score AS taskattemptscore, '.
                   'tc_tsk_att.status AS taskattemptstatus, '.
                   'tc_tsk_att.duration AS taskattemptduration, '.
                   'tc_tsk_att.timestart AS taskattempttimemodified, '.
+                  'tc_tsk.chainid AS taskscorechainid, '.
                   'tc_tsk.name AS taskscoretaskname, '.
                   'tc_tsk_scr.id AS taskscoreid, '.
                   'tc_tsk_scr.cnumber AS taskscorecnumber, '.

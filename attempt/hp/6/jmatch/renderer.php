@@ -393,9 +393,7 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
         if (preg_match($search, $this->bodycontent, $matches)) {
             $title = $this->get_title();
             if ($this->TC->can->manage()) {
-                $url = new moodle_url('/course/modedit.php', array('update' => $this->TC->cm->id, 'return' => 1, 'sesskey' => sesskey()));
-                $img = html_writer::empty_tag('img', array('src' => $this->pix_url('t/edit')));
-                $title .= html_writer::link($url, $img);
+                $title .= $this->taskedit_icon();
             }
             $replace = $matches[1].$title.$matches[3];
             $this->bodycontent = str_replace($matches[0], $replace, $this->bodycontent);
