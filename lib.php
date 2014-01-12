@@ -1473,6 +1473,7 @@ function taskchain_get_file_areas($course, $cm, $context) {
  */
 function mod_taskchain_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options=array()) {
     global $CFG;
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
     require_course_login($course, true, $cm);
 
