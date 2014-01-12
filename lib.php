@@ -1511,7 +1511,7 @@ function mod_taskchain_pluginfile($course, $cm, $context, $filearea, $args, $for
     );
 
     // search in external directory
-    if ($file = taskchain_pluginfile_externalfile($context, 'mod_taskchain', $filearea, $filepath, $filename, $file_record)) {
+    if ($file = taskchain_pluginfile_externalfile($context, 'mod_taskchain', $filearea, $filepath, $filename)) {
         send_stored_file($file, $lifetime, 0);
     }
 
@@ -1550,7 +1550,7 @@ function mod_taskchain_pluginfile($course, $cm, $context, $filearea, $args, $for
 }
 
 /**
- * Gets main file in a file area
+ * taskchain_pluginfile_externalfile
  *
  * if the main file is a link from an external repository
  * look for the target file in the main file's repository
@@ -1561,10 +1561,9 @@ function mod_taskchain_pluginfile($course, $cm, $context, $filearea, $args, $for
  * @param string $filearea  'sourcefile', 'entrytext' or 'exittext'
  * @param string $filepath  despite the name, this is a dir path with leading and trailing "/"
  * @param string $filename
- * @param array $file_record
  * @return stdclass if external file found, false otherwise
  */
-function taskchain_pluginfile_externalfile($context, $component, $filearea, $filepath, $filename, $file_record) {
+function taskchain_pluginfile_externalfile($context, $component, $filearea, $filepath, $filename) {
 
     // get file storage
     $fs = get_file_storage();
@@ -1727,6 +1726,11 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
                     $source = file_storage::pack_reference($params);
                 }
 
+                $file_record = array(
+                    'contextid' => $context->id, 'component' => $component, 'filearea' => $filearea,
+                    'sortorder' => 0, 'itemid' => 0, 'filepath' => $filepath, 'filename' => $filename
+                );
+
                 if ($file = $fs->create_file_from_reference($file_record, $repositoryid, $source)) {
                     return $file;
                 }
@@ -1743,9 +1747,9 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
  * Gets main file in a file area
  *
  * @param stdclass $context
- * @param string $component e.g. 'mod_taskchain'
- * @param string $filearea
- * @param int $itemid (optional, default=0)
+ * @param string   $component e.g. 'mod_taskchain'
+ * @param string   $filearea
+ * @param integer  $itemid (optional, default=0)
  * @return stdclass if main file found, false otherwise
  */
 function taskchain_pluginfile_mainfile($context, $component, $filearea, $itemid=0) {

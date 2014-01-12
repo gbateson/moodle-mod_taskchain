@@ -93,7 +93,7 @@ class taskchain_source_html_xerte extends taskchain_source_html {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function get_template_value($tags, $default=null) {
+    public function get_template_value($tags, $default=null) {
         $value = $this->get_template_xml();
         foreach($tags as $tag) {
             if (! is_array($value)) {

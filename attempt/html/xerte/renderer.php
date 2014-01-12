@@ -55,7 +55,7 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
         parent::__construct($page, $target);
 
         // forcibly disable mediafilters
-        $this->TC->chain->set_usemediafilter(0);
+        $this->TC->task->set_usemediafilter(0);
     }
 
     /**

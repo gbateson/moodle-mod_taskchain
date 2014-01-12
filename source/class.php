@@ -900,22 +900,26 @@ class taskchain_source {
      *
      * @return string
      */
-    public function get_real_path() {
+    public function get_real_path($file=null) {
         global $CFG, $PAGE;
 
+        if ($file===null) {
+            $file = $this->file;
+        }
+
         // sanity check
-        if (empty($this->file)) {
+        if (empty($file)) {
             return '';
         }
 
         // set default path (= cached file in filedir)
-        $hash = $this->file->get_contenthash();
+        $hash = $file->get_contenthash();
         $path = $CFG->dataroot.'/filedir/'.$hash[0].$hash[1].'/'.$hash[2].$hash[3].'/'.$hash;
 
-        if (! method_exists($this->file, 'get_repository_id')) {
+        if (! method_exists($file, 'get_repository_id')) {
             return $path; // Moodle <= 2.2
         }
-        if (! $repositoryid = $this->file->get_repository_id()) {
+        if (! $repositoryid = $file->get_repository_id()) {
             return $path; // shoudn't happen !!
         }
 
@@ -940,9 +944,9 @@ class taskchain_source {
         switch ($type) {
             case 'filesystem':
                 if (method_exists($repository, 'get_rootpath')) {
-                    $path = $repository->get_rootpath().'/'.$this->file->get_reference();
+                    $path = $repository->get_rootpath().'/'.$file->get_reference();
                 } else if (isset($repository->root_path)) {
-                    $path = $repository->root_path.'/'.$this->file->get_reference();
+                    $path = $repository->root_path.'/'.$file->get_reference();
                 }
                 break;
             case 'user':
@@ -1008,21 +1012,46 @@ class taskchain_source {
      * @todo Finish documenting this function
      */
     public function get_sibling_filecontents($filename, $xmlize=false) {
-        $this->filecontents = '';
+        $filecontents = '';
+
         if (is_object($this->file)) {
             $fs = get_file_storage();
-            if ($file = $fs->get_file($this->file->get_contextid(), $this->file->get_component(), $this->file->get_filearea(), 0, $this->file->get_filepath(), $filename)) {
-                $this->filecontents = $file->get_content();
-            }
-        }
-        if ($xmlize) {
-            if (empty($this->filecontents)) {
-                $this->filecontents = array();
+
+            $contextid = $this->file->get_contextid();
+            $component = $this->file->get_component();
+            $filearea  = $this->file->get_filearea();
+            $filepath  = $this->file->get_filepath();
+
+            if ($file = $fs->get_file($contextid, $component, $filearea, 0, $filepath, $filename)) {
+                // file already exists in this filearea
             } else {
-                $this->filecontents = xmlize($this->filecontents, 0);
+                // try to locate and import the sibling file from the file repository
+                if ($this->TC->coursemodule) {
+                    $context = $this->TC->coursemodule->context;
+                } else if ($this->TC->course) {
+                    $context = $this->TC->course->context;
+                }
+                $file = taskchain_pluginfile_externalfile($context, $component, $filearea, $filepath, $filename);
+            }
+
+            if ($file) {
+                if (! $filecontents = $file->get_content()) {
+                    if ($path = $this->get_real_path($file)) {
+                        $filecontents = file_get_contents($path);
+                    }
+                }
             }
         }
-        return $this->filecontents;
+
+        if ($xmlize) {
+            if (empty($filecontents)) {
+                $filecontents = array();
+            } else {
+                $filecontents = xmlize($filecontents, 0);
+            }
+        }
+
+        return $filecontents;
     }
 
     /**

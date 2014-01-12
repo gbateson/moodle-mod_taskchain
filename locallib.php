@@ -2119,7 +2119,7 @@ class mod_taskchain extends taskchain_base {
     public function delete_selected_attempts() {
         global $DB;
 
-        if (! $TC->confirmed) {
+        if (! $this->confirmed) {
             return false; // show a confirm button ?
         }
 
