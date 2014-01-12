@@ -1302,7 +1302,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
         if ($this->TC->chain->gradeweighting==0) {
             if ($exitoptions & mod_taskchain::EXITOPTIONS_ATTEMPTSCORE || $exitoptions & mod_taskchain::EXITOPTIONS_TASKCHAINGRADE) {
-                $text = get_string('exit_noscore', 'taskchain');
+                $text = get_string('exit_nograde', 'taskchain');
                 $feedback[] = html_writer::tag('li', $text);
             }
         } else if ($this->TC->get_gradeitem() && $this->TC->get_chainattempt()) {
@@ -1339,23 +1339,23 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                             $feedback[] = html_writer::tag('li', $text);
                         } else if ($this->TC->get_chainattempts()) {
                             // current attempt is highest so far
-                            $maxscore = null;
+                            $maxgrade = null;
                             foreach ($this->TC->chainattempts as $attempt) {
                                 if ($attempt->id==$this->TC->chainattempt->id) {
                                     continue; // skip current attempt
                                 }
-                                if (is_null($maxscore) || $maxscore<$attempt->score) {
-                                    $maxscore = $attempt->score;
+                                if ($maxgrade===null || $maxgrade < $attempt->grade) {
+                                    $maxgrade = $attempt->grade;
                                 }
                             }
-                            if (is_null($maxscore)) {
+                            if ($maxgrade===null) {
                                 // do nothing (no previous attempt)
-                            } else if ($maxscore==$this->TC->chainattempt->grade) {
+                            } else if ($maxgrade==$this->TC->chainattempt->grade) {
                                 // attempt grade equals previous best
                                 $text = get_string('exit_taskchaingrade_highest_equal', 'taskchain');
                                 $feedback[] = html_writer::tag('li', $text);
                             } else {
-                                $text = get_string('exit_taskchaingrade_highest_previous', 'taskchain', $maxscore.$percentsign);
+                                $text = get_string('exit_taskchaingrade_highest_previous', 'taskchain', $maxgrade.$percentsign);
                                 $feedback[] = html_writer::tag('li', $text);
                             }
                         } else {

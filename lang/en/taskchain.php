@@ -511,7 +511,7 @@ $string['exit_links_help'] = 'These options enable and disable the display of ce
 : if checked, a link to the Moodle gradebook will be displayed.';
 $string['exit_next'] = 'Next';
 $string['exit_next_text'] = 'Try the next activity';
-$string['exit_noscore'] = 'You have successfully completed this activity!';
+$string['exit_nograde'] = 'You have successfully completed this activity!';
 $string['exit_retry'] = 'Retry';
 $string['exit_retry_text'] = 'Retry this activity';
 $string['exit_taskchaingrade'] = 'Your grade for this activity is {$a}';

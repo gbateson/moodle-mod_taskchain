@@ -365,15 +365,16 @@ class taskchain_source_hp extends taskchain_source {
             }
 
             $this->compact_filecontents();
+            $this->xml_root = $this->hbs_software.'-'.$this->hbs_tasktype.'-file';
+
+            // sanity check
             if (! $this->xml = xmlize($this->filecontents, 0)) {
                 debugging('Could not parse XML file: '.$this->filepath);
-            }
-
-            $this->xml_root = $this->hbs_software.'-'.$this->hbs_tasktype.'-file';
-            if (! array_key_exists($this->xml_root, $this->xml)) {
+            } else if (! array_key_exists($this->xml_root, $this->xml)) {
                 debugging('Could not find XML root node: '.$this->xml_root);
             }
 
+            // merge config settings, if necessary
             if (isset($this->config) && $this->config->get_filecontents()) {
 
                 $this->config->compact_filecontents();
