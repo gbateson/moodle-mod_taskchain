@@ -66,7 +66,9 @@ class taskchain_source_html_xerte extends taskchain_source_html {
         if (! preg_match('/<script[^>]*src\s*=\s*"[^"]*rloObject.js"[^>]*>/', $this->filecontents)) {
             return false;
         }
-        if (! preg_match("/myRLO = new rloObject\('\d*','\d*','[^']*.rlt'\)/", $this->filecontents)) {
+        // myRLO = new rloObject('800','600','template.rlt');
+        // myRLO = new rloObject('800','600','numbers_3.rlo');
+        if (! preg_match("/myRLO = new rloObject\('\d*','\d*','[^']*.rl[ot]'\)/", $this->filecontents)) {
             return false;
         }
         return true;
