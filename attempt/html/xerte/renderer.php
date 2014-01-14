@@ -98,10 +98,12 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
         $js = $this->TC->task->source->get_sibling_filecontents($match[1]);
 
         // set baseurl
-        $baseurl = $this->TC->task->source->baseurl.'/';
+        $baseurl = $this->TC->task->source->baseurl;
         if ($pos = strrpos($this->TC->task->source->filepath, '/')) {
-            $baseurl .= substr($this->TC->task->source->filepath, 0, $pos + 1);
+            $baseurl .= substr($this->TC->task->source->filepath, 0, $pos);
+        } else {
         }
+        $baseurl .= '/';
 
         // several search-and-replace fixes
         //  - add style to center the Flash Object
