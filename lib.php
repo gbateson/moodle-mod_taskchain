@@ -48,13 +48,13 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * taskchain_supports
  *
- * @param xxx $feature
- * @return xxx
+ * @param  string   $feature (see "lib/moodlelib.php")
+ * @return boolean  TRUE this module supports $feature, otherwise FALSE
  * @todo Finish documenting this function
  */
 function taskchain_supports($feature) {
     $constants = array(
-        'FEATURE_ADVANCED_GRADING' => true, // default=false
+        'FEATURE_ADVANCED_GRADING' => true,  // default=false
         'FEATURE_BACKUP_MOODLE2'   => false, // default=false
         'FEATURE_COMMENT'          => true,
         'FEATURE_COMPLETION_HAS_RULES' => true,
@@ -73,6 +73,7 @@ function taskchain_supports($feature) {
         'FEATURE_PLAGIARISM'       => false,
         'FEATURE_RATE'             => false,
         'FEATURE_SHOW_DESCRIPTION' => true,  // default=false (Moodle 2.2)
+        'FEATURE_USES_QUESTIONS'   => false,
     );
     foreach ($constants as $constant => $value) {
         if (defined($constant) && $feature==constant($constant)) {
