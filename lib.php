@@ -1311,14 +1311,15 @@ function taskchain_update_grades($taskchain=null, $userid=0, $nullifnone=true) {
 
     taskchain_add_grade_settings($taskchain);
 
-    if (is_null($taskchain)) {
+    if ($taskchain===null) {
         // update/create grades for all taskchains
 
         // set up sql strings
         $strupdating = get_string('updatinggrades', 'taskchain');
-        $fields = 'q.*, cm.idnumber AS cmidnumber, qu.gradelimit AS gradelimit, qu.gradeweighting AS gradeweighting';
-        $tables = '{taskchain_chains} qu, {taskchain} q, {course_modules} cm, {modules} m';
-        $select = "m.name='taskchain' AND m.id=cm.module AND cm.instance=q.id AND q.id=qu.parentid AND qu.parenttype=".mod_taskchain::PARENTTYPE_ACTIVITY;
+        $select = 't.*, tc.gradelimit, tc.gradeweighting, cm.idnumber AS cmidnumber';
+        $from   = '{taskchain} t, {taskchain_chains} tc, {course_modules} cm, {modules} m';
+        $where  = 't.id = tc.parentid AND tc.parenttype='.mod_taskchain::PARENTTYPE_ACTIVITY.' AND t.id = cm.instance AND cm.module = m.id AND m.name = ?';
+        $params = array('taskchain');
 
         // get previous record index (if any)
         if (! $config = $DB->get_record('config', array('name'=>'taskchain_update_grades'))) {
@@ -1326,43 +1327,39 @@ function taskchain_update_grades($taskchain=null, $userid=0, $nullifnone=true) {
         }
         $i_min = intval($config->value);
 
-        $i_max = $DB->count_records_sql("SELECT COUNT('x') FROM $tables WHERE $select");
-        if ($rs = $DB->get_recordset_sql("SELECT $fields FROM $tables WHERE $select")) {
-            $next = 'next';
-            $bar = new progress_bar('taskchainupgradegrades', 500, true);
-            $i = 0;
-            while ($taskchain = $next($rs)) {
+        if ($i_max = $DB->count_records_sql("SELECT COUNT('x') FROM $from WHERE $where", $params)) {
+            if ($rs = $DB->get_recordset_sql("SELECT $select FROM $from WHERE $where", $params)) {
+                $bar = new progress_bar('taskchainupgradegrades', 500, true);
+                $i = 0;
+                foreach ($rs as $taskchain) {
 
-                // update grade
-                if ($i >= $i_min) {
-                    upgrade_set_timeout(60 * 5); // another 5 minutes
-                    taskchain_update_grades($taskchain, 0, false);
-                }
+                    // update grade
+                    if ($i >= $i_min) {
+                        upgrade_set_timeout(); // another 3 minutes
+                        taskchain_update_grades($taskchain, $userid, $nullifnone);
+                    }
 
-                // update progress bar
-                $i++;
-                $bar->update($i, $i_max, $strupdating.": ($i/$i_max)");
+                    // update progress bar
+                    $i++;
+                    $bar->update($i, $i_max, $strupdating.": ($i/$i_max)");
 
-                // update record index
-                if ($i > $i_min) {
-                    $config->value = "$i";
-                    if ($config->id) {
-                        if (! $DB->update_record('config', $config)) {
-                            print_error('error_updaterecord', 'taskchain', '', 'config (id='.$config->id.')');
-                        }
-                    } else {
-                        if (! $config->id = $DB->insert_record('config', $config)) {
-                            print_error('error_insertrecord', 'taskchain', '', 'config (name='.$config->name.')');
+                    // update record index
+                    if ($i > $i_min) {
+                        $config->value = "$i";
+                        if ($config->id) {
+                            $DB->update_record('config', $config);
+                        } else {
+                            $config->id = $DB->insert_record('config', $config);
                         }
                     }
                 }
+                $rs->close();
             }
-            $rs->close();
         }
 
         // delete the record index
-        if ($config->id && ! $DB->delete_records('config', array('id'=>$config->id))) {
-            print_error('error_deleterecords', 'taskchain', '', 'config (id='.$config->id.')');
+        if ($config->id) {
+            $DB->delete_records('config', array('id'=>$config->id));
         }
 
     } else {

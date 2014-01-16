@@ -1052,6 +1052,7 @@ $string['totaltaskscores'] = 'Total of task scores';
 $string['unansweredtask'] = 'Unanswered task';
 $string['unseentask'] = 'Unseen task';
 $string['updated'] = 'Updated';
+$string['updatinggrades'] = 'Updating TaskChain grades';
 $string['usefilters'] = 'Use filters';
 $string['usefilters_help'] = 'If this setting is enabled, the content will be passed through the Moodle filters before being sent to the browser.';
 $string['useglossary'] = 'Use glossary';
