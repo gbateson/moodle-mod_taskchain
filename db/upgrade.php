@@ -202,7 +202,7 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $newversion = 2014011773;
     if ($oldversion < $newversion) {
-        require_once($CFG->dirroot.'/mod/taskchain/lib.php');
+        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
         taskchain_update_grades();
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
