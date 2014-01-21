@@ -204,6 +204,52 @@ function xmldb_taskchain_upgrade($oldversion) {
     if ($oldversion < $newversion) {
         require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
         taskchain_update_grades();
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
+    $newversion = 2014012175;
+    if ($oldversion < $newversion) {
+
+        // get required script libraries
+        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+        require_once($CFG->dirroot.'/mod/taskchain/locallib/base.php');
+
+        // set up SQL query
+        $select = 'tt.*, t.id AS taskchainid';
+        $from   = '{taskchain_tasks} tt '.
+                  'JOIN {taskchain_chains} tc ON tt.chainid = tc.id '.
+                  'JOIN {taskchain} t ON tc.parentid = t.id AND tc.parenttype = ?';
+        $where  = 'tt.sourcetype IN (?, ?) AND '.$DB->sql_like('tt.name', '?');
+        $orderby = 'tt.chainid, tt.sortorder';
+        $params = array(mod_taskchain::PARENTTYPE_ACTIVITY,
+                        'html_xhtml',
+                        'html_xerte',
+                        get_string('task', 'taskchain').' (%)');
+
+        // get tasks
+        if ($tasks = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $orderby", $params)) {
+            global $TC;
+            $TC = null;
+            foreach ($tasks as $task) {
+                if ($TC===null || $TC->taskchain->id != $task->taskchainid) {
+                    $TC = $DB->get_record('taskchain', array('id' => $task->taskchainid));
+                    $TC = new mod_taskchain($TC);
+                }
+                unset($task->taskchainid);
+                $task = new taskchain_task($task, array('TC' => $TC));
+                $task->get_source();
+                $oldname = $task->get_name();
+                $newname = $task->source->get_name();
+                if ($newname=='' || $newname==$oldname) {
+                    // do nothing
+                } else {
+                    $task->set_name($newname);
+                    $task = $task->to_stdclass();
+                    $DB->update_record('taskchain_tasks', $task);
+                }
+            }
+        }
+
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }

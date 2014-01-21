@@ -972,13 +972,18 @@ abstract class taskchain_form_helper_base {
         $type = $this->TC->get_columnlisttype();
         $lists = $this->TC->get_columnlists($type, true);
 
-        // a custom column list
-        if (array_key_exists($id, $lists)) {
-            return array('general' => $this->sections['general'], $id => $lists[$id]);
+        $sections = array();
+        if (array_key_exists('general', $this->sections)) {
+            $sections['general'] = $this->sections['general'];
         }
-
-        // default sections
-        return array_merge(array('general' => $this->sections['general']), $this->defaultsections);
+        if (array_key_exists($id, $lists)) {
+            // a custom column list
+            $sections[$id] = $lists[$id];
+        } else {
+            // use default sections
+            $sections = array_merge($sections, $this->defaultsections);
+        }
+        return $sections;
     }
 
     /**
@@ -1681,18 +1686,15 @@ abstract class taskchain_form_helper_base {
             $params  = array($idfield => $idvalue, 'field' => $field);
             $href    = $this->TC->url->edit($types, $params);
 
-            $params = array('id'      => $this->get_fieldvalue('id'),
+            $params  = array('id'      => $this->get_fieldvalue('id'),
                             'type'    => $this->recordtype,
                             'field'   => $field,
                             'sesskey' => sesskey());
-            $helper = new moodle_url('/mod/taskchain/edit/form/helper.js.php', $params);
+            $helper  = new moodle_url('/mod/taskchain/edit/form/helper.js.php', $params);
             $onclick = 'TC_request("'.$helper.'", "'.$name.'"); return false;';
-
             $params  = array('id' => $name, 'title' => $label, 'onclick' => $onclick);
-            if ($value=='') {
-                $value = $OUTPUT->pix_icon('t/edit', get_string('edit'));
-            }
-            $value   = html_writer::link($href, $value, $params);
+            $icon    = $OUTPUT->pix_icon('t/edit', get_string('edit'));
+            $value  .= ($value=='' ? '' : ' ').html_writer::link($href, $icon, $params);
         }
 
         return $value;

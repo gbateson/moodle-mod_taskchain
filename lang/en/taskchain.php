@@ -893,6 +893,7 @@ The TaskChain activity will be shown in the same window as the Moodle course pag
 The TaskChain activity will be shown in a popup window.
 Several features of the popup window can be enabled or disabled with check boxes.
 The required width and height of the popup window are specified as a number of pixels.';
+$string['singlefieldhdr'] = 'Single field';
 $string['sortdirection'] = 'Sort direction';
 $string['sortdirection_help'] = 'The direction in which you wish to sort these records';
 $string['sortfield'] = 'Sort field';

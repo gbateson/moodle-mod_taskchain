@@ -50,7 +50,7 @@ class taskchain_source_html extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function html_get_name($textonly=true)  {
+    public function get_name()  {
         if (! isset($this->name)) {
             $this->name = '';
             $this->title = '';
@@ -59,24 +59,25 @@ class taskchain_source_html extends taskchain_source {
                 // empty file - shouldn't happen !!
                 return false;
             }
-            if (preg_match('/<h(\d)[^>]>(.*?)<\/h$1>/is', $this->filecontents, $matches)) {
-                $this->name = trim(strip_tags($this->title));
-                $this->title = trim($matches[1]);
-            }
-            if (! $this->name) {
-                if (preg_match('/<title[^>]*>(.*?)<\/title>/is', $this->filecontents, $matches)) {
-                    $this->name = trim(strip_tags($matches[1]));
-                    if (! $this->title) {
-                        $this->title = trim($matches[1]);
+
+            $tags = array('h[1-6]', 'p', 'div', 'title');
+            foreach ($tags as $tag) {
+                $search = '/<'.$tag.'[^>]*>(.*?)<\/'.$tag.'>/is';
+                if (preg_match_all($search, $this->filecontents, $matches)) {
+                    $i_max = count($matches[0]);
+                    for ($i=0; $i<$i_max; $i++) {
+                        if ($this->name = trim(strip_tags($matches[$i][1]))) {
+                            $this->title = trim($matches[$i][1]);
+                            break;
+                        }
+                    }
+                    if ($this->name) {
+                        break;
                     }
                 }
             }
         }
-        if ($textonly) {
-            return $this->name;
-        } else {
-            return $this->title;
-        }
+        return $this->name;
     }
 
     /**
@@ -86,7 +87,9 @@ class taskchain_source_html extends taskchain_source {
      * @todo Finish documenting this function
      */
     public function get_title() {
-        return $this->html_get_name(false);
+        $this->get_name(); // set name and title
+        return $this->title;
+
     }
 
     // returns the introduction text for a task

@@ -69,6 +69,10 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
             return true;
         }
 
+        if (! $this->TC->task->source) {
+            $this->TC->task->get_source();
+        }
+
         if (! $this->TC->task->source->get_filecontents()) {
             // empty source file - shouldn't happen !!
             return false;

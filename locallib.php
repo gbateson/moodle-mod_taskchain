@@ -160,7 +160,7 @@ class mod_taskchain extends taskchain_base {
         // do TaskChain initialization if this is a TaskChain page
         // i.e. don't initalize for backup, restore or upgrade
 
-        if ($pageclass=='mod-taskchain' || $pageclass=='mod-taskchain-edit' || $pageclass=='mod-taskchain-edit-form' || $pageclass=='course') {
+        if ($pageclass=='mod-taskchain' || $pageclass=='mod-taskchain-edit' || $pageclass=='mod-taskchain-edit-form' || $pageclass=='course' || $pageclass=='admin') {
 
             // get input params passed to this page
             $course         = optional_param('course',         0, PARAM_INT);
@@ -177,6 +177,7 @@ class mod_taskchain extends taskchain_base {
             $blockid        = optional_param('blockid',        0, PARAM_INT);
 
             //get main id for this page
+            $set_page_context = true;
             switch ($pageid) {
                 case 'course-mod':
                     $coursemoduleid = optional_param('delete', $coursemoduleid, PARAM_INT);
@@ -223,6 +224,12 @@ class mod_taskchain extends taskchain_base {
                         case 'taskscore'    : $taskscoreid    = optional_param('id', 0, PARAM_INT); break;
                         //${$type.'id'} = optional_param('id', 0, PARAM_INT);
                     }
+                    break;
+                case 'admin-index':
+                    if (isset($dbrecord)) {
+                        $taskchainid = $dbrecord->id;
+                    }
+                    $set_page_context = false;
                     break;
                 default:
                     throw new moodle_exception('error_unrecognizedpageid', 'taskchain', '', $pageid);
@@ -389,9 +396,13 @@ class mod_taskchain extends taskchain_base {
                 $this->coursemodule->name = $this->taskchain->name;
                 $this->coursemodule->modname = $this->module->name;
                 $this->coursemodule->context = mod_taskchain::context(CONTEXT_MODULE, $this->coursemodule->id);
-                $PAGE->set_context($this->coursemodule->context);
+                if ($set_page_context) {
+                    $PAGE->set_context($this->coursemodule->context);
+                }
             } else {
-                $PAGE->set_context($this->course->context);
+                if ($set_page_context) {
+                    $PAGE->set_context($this->course->context);
+                }
             }
 
             // the main objects have now been set up - yay !

@@ -77,6 +77,10 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         $this->bodyattributes = '';
         $this->bodycontent = '';
 
+        if (! $this->TC->task->source) {
+            $this->TC->task->get_source();
+        }
+
         if (! $this->TC->task->source->get_filecontents()) {
             // empty source file - shouldn't happen !!
             return false;
