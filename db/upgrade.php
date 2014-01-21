@@ -207,7 +207,7 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2014012175;
+    $newversion = 2014012276;
     if ($oldversion < $newversion) {
 
         // get required script libraries
@@ -230,7 +230,7 @@ function xmldb_taskchain_upgrade($oldversion) {
         if ($tasks = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $orderby", $params)) {
             global $TC;
             $TC = null;
-            foreach ($tasks as $task) {
+            foreach ($tasks as $taskid => $task) {
                 if ($TC===null || $TC->taskchain->id != $task->taskchainid) {
                     $TC = $DB->get_record('taskchain', array('id' => $task->taskchainid));
                     $TC = new mod_taskchain($TC);
@@ -243,9 +243,7 @@ function xmldb_taskchain_upgrade($oldversion) {
                 if ($newname=='' || $newname==$oldname) {
                     // do nothing
                 } else {
-                    $task->set_name($newname);
-                    $task = $task->to_stdclass();
-                    $DB->update_record('taskchain_tasks', $task);
+                    $DB->set_field('taskchain_tasks', 'name', $newname, array('id' => $taskid));
                 }
             }
         }
