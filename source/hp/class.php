@@ -377,7 +377,7 @@ class taskchain_source_hp extends taskchain_source {
             // merge config settings, if necessary
             if (isset($this->config) && $this->config->get_filecontents()) {
 
-                $this->config->compact_filecontents();
+                $this->config->compact_filecontents(array('header-code'));
                 $xml = xmlize($this->config->filecontents, 0);
 
                 $config_file = $this->hbs_software.'-config-file';

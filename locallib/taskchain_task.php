@@ -859,6 +859,7 @@ class taskchain_task extends taskchain_base {
             $classname = 'taskchain_source_'.$sourcetype;
             $this->TC->load_class($classname, 'class.php');
             $this->source = new $classname($file, $this->TC);
+            $this->source->config = $this->get_config();
         }
         return $this->source;
     }

@@ -60,11 +60,12 @@ class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
     /**
      * compact_filecontents
      *
+     * @param array $tags (optional, default=null) specific tags to remove comments from
      * @todo Finish documenting this function
      */
-    public function compact_filecontents() {
+    public function compact_filecontents($tags=null) {
         // remove white space within tags
-        parent::compact_filecontents();
+        parent::compact_filecontents($tags);
 
         // fix white space and html entities in open text
 
