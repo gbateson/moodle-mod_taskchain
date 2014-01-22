@@ -790,8 +790,6 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
     global $CFG, $DB, $OUTPUT;
     $result = false;
 
-    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
-
     // the Moodle "logs" table contains the following fields:
     //     time, userid, course, ip, module, cmid, action, url, info
 
@@ -801,7 +799,7 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
     // log records are added by the following function in "lib/datalib.php":
     //     add_to_log($courseid, $module, $action, $url='', $info='', $cm=0, $user=0)
 
-    // log records are added by the following TaskChain scripts:
+    // log records are added by the following HotPot scripts:
     //     (scriptname : log action)
     //     attempt.php : attempt
     //     index.php   : index
@@ -811,41 +809,33 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
     //     view.php    : view
     // all these actions have a record in the "log_display" table
 
-    $select = "time>? AND course=? AND module=? AND action IN (?, ?, ?, ?, ?)";
+    $select = "time > ? AND course = ? AND module = ? AND action IN (?, ?, ?, ?, ?)";
     $params = array($timestart, $course->id, 'taskchain', 'add', 'update', 'view', 'attempt', 'submit');
 
     if ($logs = $DB->get_records_select('log', $select, $params, 'time ASC')) {
 
-        //$coursecontext = context_course::instance($course->id);
-        $coursecontext = mod_taskchain::context(CONTEXT_COURSE, $course->id); // Moodle 2.0 - 2.1
-        $viewhiddensections = has_capability('moodle/course:viewhiddensections', $coursecontext);
-
-        if ($modinfo = unserialize($course->modinfo)) {
-            $coursemoduleids = array_keys($modinfo);
-        } else {
-            $coursemoduleids = array();
-        }
+        $modinfo = get_fast_modinfo($course);
+        $cmids   = array_keys($modinfo->get_cms());
 
         $stats = array();
         foreach ($logs as $log) {
             $cmid = $log->cmid;
-            if (! array_key_exists($cmid, $modinfo)) {
+            if (! in_array($cmid, $cmids)) {
                 continue; // invalid $cmid - shouldn't happen !!
             }
-            if (! $viewhiddensections && ! $modinfo[$cmid]->visible) {
+            $cm = $modinfo->get_cm($cmid);
+            if (! $cm->uservisible) {
                 continue; // coursemodule is hidden from user
             }
-            $sortorder = array_search($cmid, $coursemoduleids);
+            $sortorder = array_search($cmid, $cmids);
             if (! array_key_exists($sortorder, $stats)) {
-                // $modulecontext = context_module::instance($cmid);
-                $modulecontext = mod_taskchain::context(CONTEXT_MODULE, $cmid); // Moodle 2.0 - 2.1
-                if (has_capability('mod/taskchain:reviewmyattempts', $modulecontext) || has_capability('mod/taskchain:reviewallattempts', $modulecontext)) {
+                if (has_capability('mod/taskchain:reviewmyattempts', $cm->context) || has_capability('mod/taskchain:reviewallattempts', $cm->context)) {
                     $viewreport = true;
                 } else {
                     $viewreport = false;
                 }
                 $stats[$sortorder] = (object)array(
-                    'name' => format_string(urldecode($modinfo[$cmid]->name)),
+                    'name' => $cm->get_formatted_name(array('context' => $cm->context)),
                     'cmid' => $cmid, 'add'=>0, 'update'=>0, 'view'=>0, 'attempt'=>0, 'submit'=>0,
                     'viewreport' => $viewreport,
                     'users' => array()
@@ -964,29 +954,37 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
  */
 function taskchain_get_recent_mod_activity(&$activities, &$index, $date, $courseid, $coursemoduleid=0, $userid=0, $groupid=0) {
     global $CFG, $DB, $OUTPUT;
-    if (! $course = $DB->get_record('course', array('id'=>$courseid))) {
-        // invalid course id !!
-        return;
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+
+    // CONTRIB-4025 don't allow students to see each other's scores
+    $coursecontext = mod_taskchain::context(CONTEXT_COURSE, $courseid);
+    if (! has_capability('mod/taskchain:reviewmyattempts', $coursecontext)) {
+        return; // can't view recent activity
     }
-    if (! $modinfo = unserialize($course->modinfo)) {
-        // no activity mods !!
-        return;
+    if (! has_capability('mod/taskchain:reviewallattempts', $coursecontext)) {
+        $userid = $USER->id; // force this user only
     }
-    $taskchains = array();
-    foreach (array_keys($modinfo) as $cmid) {
-        if ($modinfo[$cmid]->mod=='taskchain' && ($coursemoduleid==0 || $coursemoduleid==$cmid)) {
+
+    $modinfo = get_fast_modinfo($courseid);
+    $course  = $modinfo->get_course();
+    $cms     = $modinfo->get_cms();
+
+    $taskchains = array(); // taskchainid => cmid
+    $users      = array(); // cmid => array(userids)
+
+    foreach ($cms as $cmid => $cm) {
+        if ($cm->modname=='taskchain' && ($coursemoduleid==0 || $coursemoduleid==$cmid)) {
             // save mapping from taskchainid => coursemoduleid
-            $taskchainid = $modinfo[$cmid]->id;
-            $taskchains[$taskchainid] = $cmid;
-            // initialize array of users who have recently attempted this QuizPort
-            $modinfo[$cmid]->users = array();
+            $taskchains[$cm->instance] = $cmid;
+            // initialize array of users who have recently attempted this HotPot
+            $users[$cmid] = array();
         } else {
             // we are not interested in this mod
-            unset($modinfo[$cmid]);
+            unset($cms[$cmid]);
         }
     }
-    if (count($modinfo)==0) {
-        return false; // no taskchains
+    if (empty($taskchains)) {
+        return; // no taskchains
     }
 
     $userfields = taskchain_get_userfields('u', null, 'theuserid');
@@ -1013,41 +1011,36 @@ function taskchain_get_recent_mod_activity(&$activities, &$index, $date, $course
     $orderby = 'tca.userid, tca.cnumber';
 
     if (! $attempts = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $orderby", $params)) {
-        // no recent attempts at these taskchains
-        return;
+        return; // no recent attempts at these taskchains
     }
 
     foreach (array_keys($attempts) as $attemptid) {
         $attempt = &$attempts[$attemptid];
 
-        $cmid = $taskchains[$attempt->taskchainid];
-        $mod = &$modinfo[$cmid];
-
-        $userid = $attempt->userid;
-        if (! isset($mod->users)) {
-            $mod->users = array();
+        if (! array_key_exists($attempt->taskchainid, $taskchains)) {
+            continue; // invalid taskchainid - shouldn't happen !!
         }
-        if (! isset($mod->users[$userid])) {
-            $mod->users[$userid] = (object)array(
+
+        $cmid = $taskchains[$attempt->taskchainid];
+        $userid = $attempt->userid;
+        if (! array_key_exists($userid, $users[$cmid])) {
+            $users[$cmid][$userid] = (object)array(
                 'userid'   => $userid,
                 'fullname' => fullname($attempt),
-                'picture'  => $OUTPUT->user_picture($attempt, array('courseid'=>$courseid)),
+                'picture'  => $OUTPUT->user_picture($attempt, array('courseid' => $courseid)),
                 'attempts' => array(),
             );
         }
         // add this attempt by this user at this course module
-        $mod->users[$userid]->attempts[$attempt->cnumber] = &$attempt;
-        unset($mod);
+        $users[$cmid][$userid]->attempts[$attempt->cnumber] = &$attempt;
     }
 
-    foreach (array_keys($modinfo) as $cmid) {
-        $mod = $modinfo[$cmid];
-        if (empty($mod->users)) {
+    foreach ($cms as $cmid => $cm) {
+        if (empty($users[$cmid])) {
             continue;
         }
         // add an activity object for each user's attempts at this taskchain
-        foreach (array_keys($mod->users) as $userid) {
-            $user = $mod->users[$userid];
+        foreach ($users[$cmid] as $userid => $user) {
 
             // get index of last (=most recent) attempt
             $max_unumber = max(array_keys($user->attempts));
@@ -1055,12 +1048,8 @@ function taskchain_get_recent_mod_activity(&$activities, &$index, $date, $course
             $activities[$index++] = (object)array(
                 'type' => 'taskchain',
                 'cmid' => $cmid,
-                'name' => format_string(urldecode($mod->name)),
-                'user' => (object)array(
-                    'userid'   => $user->userid,
-                    'fullname' => $user->fullname,
-                    'picture'  => $user->picture
-                ),
+                'name' => $cm->get_formatted_name(array('context' => $cm->context)),
+                'user' => $user,
                 'attempts'  => $user->attempts,
                 'timestamp' => $user->attempts[$max_unumber]->timemodified
             );
