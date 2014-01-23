@@ -66,8 +66,8 @@ class taskchain_source_html extends taskchain_source {
                 if (preg_match_all($search, $this->filecontents, $matches)) {
                     $i_max = count($matches[0]);
                     for ($i=0; $i<$i_max; $i++) {
-                        if ($this->name = trim(strip_tags($matches[$i][1]))) {
-                            $this->title = trim($matches[$i][1]);
+                        if ($this->name = trim(strip_tags($matches[1][$i]))) {
+                            $this->title = trim($matches[1][$i]);
                             break;
                         }
                     }
