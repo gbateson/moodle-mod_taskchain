@@ -209,6 +209,7 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $newversion = 2014012276;
     if ($oldversion < $newversion) {
+        // fix HTML task names such as "Task (99)"
 
         // get required script libraries
         require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
@@ -250,7 +251,7 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2014012380;
+    $newversion = 2014012681;
     if ($oldversion < $newversion) {
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
