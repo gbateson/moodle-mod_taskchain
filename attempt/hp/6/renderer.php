@@ -1617,8 +1617,10 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      */
     public function filter_text_bodycontent()  {
         // convert entities to utf8, filter text and convert back
+        $filter = filter_manager::instance();
+        $context = $this->TC->coursemodule->context;
         $this->bodycontent = mod_taskchain::textlib('entities_to_utf8', $this->bodycontent);
-        $this->bodycontent = filter_text($this->bodycontent);
+        $this->bodycontent = $filter->filter_text($this->bodycontent, $context);
         $this->bodycontent = mod_taskchain::textlib('utf8_to_entities', $this->bodycontent);
     }
 

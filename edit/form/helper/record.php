@@ -104,10 +104,10 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     protected function prepare_template_filearea(&$data, $type) {
 
         // set parameters for accessing filearea
-        if ($this->is_add()) {
-            $contextid = null;
-        } else {
+        if (isset($this->context) && $this->context->contextlevel==CONTEXT_MODULE) {
             $contextid = $this->context->id;
+        } else {
+            $contextid = null;
         }
         $component = 'mod_taskchain';
         $filearea  = $type.'file';
@@ -115,8 +115,13 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $itemid    = 0;
 
         // set current source file as the "main file" in this filearea
-        if (isset($data['sourcefile'])) {
-            $sourcefile = $data['sourcefile'];
+        if ($contextid) {
+
+            if (isset($data['sourcefile'])) {
+                $sourcefile = $data['sourcefile'];
+            } else {
+                $sourcefile = '';
+            }
 
             $fs = get_file_storage();
             $area_files = $fs->get_area_files($contextid, $component, $filearea, $itemid);
@@ -125,8 +130,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                 if ($file->is_directory()) {
                     continue;
                 }
-                if ($sourcefile==$file->get_filepath().$file->get_filename()) {
-                    $sortorder = 1;
+                if ($sourcefile && $sourcefile==$file->get_filepath().$file->get_filename()) {
+                    $sortorder = 1; // main file
                 } else {
                     $sortorder = 0;
                 }

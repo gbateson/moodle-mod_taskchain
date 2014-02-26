@@ -56,7 +56,8 @@ if ($newdata && isset($newdata->action) && $newdata->action=='addtasks' && isset
         case 'after' : $aftertaskid = (empty($data->aftertaskid) ? 0 : $data->aftertaskid); break;
         default      : $aftertaskid = 0;
     }
-    redirect($TC->url->edit('task', array('chainid' => $TC->chain->id, 'aftertaskid' => $aftertaskid)));
+    $params = array('taskattemptid' => 0, 'taskscoreid' => 0, 'taskid' => 0, 'aftertaskid' => $aftertaskid);
+    redirect($TC->url->edit('task', $params));
 }
 
 // display the page
