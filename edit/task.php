@@ -126,6 +126,17 @@ switch ($TC->action) {
         $newdata->sourcetype     = $source->get_type();
         unset($source);
 
+        // make sure outputformat is valid for this source file
+        $list = taskchain_available::outputformats_list($newdata->sourcetype);
+        if (isset($newdata->outputformat) && array_key_exists($newdata->outputformat, $list)) {
+            // do nothing - outputformat is valid
+        } else {
+            // outputformat is (no longer) valid
+            // reset it to "Best" value e.g. "0"
+            $newdata->outputformat = key($list);
+        }
+        unset($list);
+
         $newdata->id = $TC->get_taskid();
         if (empty($newdata->id)) {
             // add new TaskChain task(s)
