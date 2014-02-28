@@ -1616,11 +1616,84 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @todo Finish documenting this function
      */
     public function filter_text_bodycontent()  {
-        // convert entities to utf8, filter text and convert back
+
+        // convert entities to utf8
+        $this->bodycontent = mod_taskchain::textlib('entities_to_utf8', $this->bodycontent);
+
+        // we will skip these tags and everything they contain
+        $tags = array('audio'  => '</audio>',
+                      'button' => '</button>',
+                      'embed'  => '</embed>',
+                      'object' => '</object>',
+                      'script' => '</script>',
+                      'style'  => '</style>',
+                      'video'  => '</video>',
+                      '!--'    => '-->',
+                      ''       => '>');
+
+        // cache the lengths of the tag strings
+        $len = array();
+        foreach ($tags as $tag => $end) {
+            $len[$tag] = strlen($tag);
+            $len[$end] = strlen($end);
+        }
+
+        // array to store start and end positions
+        // of $texts passed to the Moodle filters
+        $texts = array();
+
+        // detect start and end of all $texts[$i] = $ii;
+        //   $i  : start position of text segment
+        //   $ii : end position of text segment
+        $i = 0;
+        $i_max = strlen($this->bodycontent);
+        while ($i < $i_max) {
+            $ii = strpos($this->bodycontent, '<', $i);
+            if ($ii===false) {
+                $ii = $i_max;
+            }
+            $texts[$i] = $ii;
+            if ($i < $i_max) {
+                foreach ($tags as $tag => $end) {
+                    if ($len[$tag]==0 || substr($this->bodycontent, $ii+1, $len[$tag])==$tag) {
+                        $char = substr($this->bodycontent, $ii+$len[$tag], 1);
+                        if ($len[$tag]==0 || $char==' ' || $char=='>') {
+                            if ($ii = strpos($this->bodycontent, $end, $ii + $len[$tag])) {
+                                $ii += $len[$end];
+                            } else {
+                                $ii = $i_max; // no end tag - shouldn't happen !!
+                            }
+                            break; // foreach loop
+                        }
+                    }
+                }
+            }
+            $i = $ii;
+        }
+        unset($tags, $len);
+
+        // reverse the $texts array (preserve keys)
+        $texts = array_reverse($texts, true);
+
+        // cache the $filter and $context objects
         $filter = filter_manager::instance();
         $context = $this->TC->coursemodule->context;
-        $this->bodycontent = mod_taskchain::textlib('entities_to_utf8', $this->bodycontent);
-        $this->bodycontent = $filter->filter_text($this->bodycontent, $context);
+
+        // specify chars to be trimmed (whitespace and punctuation)
+        $trimchars = "\0\t\n\r !\"#$%&'()*+,-./:;<=>?@[\\]^_`{¦}~\x0B";
+
+        // filter all $texts
+        foreach ($texts as $i => $ii) {
+            $len = ($ii - $i);
+            $text = substr($this->bodycontent, $i, $len);
+            // ignore strings that contain only whitespace and punctuation
+            if (trim($text, $trimchars)) {
+                $text = $filter->filter_text($text, $context);
+                $this->bodycontent = substr_replace($this->bodycontent, $text, $i, $len);
+            }
+        }
+
+        // convert back to HTML entities
         $this->bodycontent = mod_taskchain::textlib('utf8_to_entities', $this->bodycontent);
     }
 
