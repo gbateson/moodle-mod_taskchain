@@ -285,6 +285,20 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     }
 
     /////////////////////////////////////////////////////////
+    // get_defaultvalue_ ...
+    /////////////////////////////////////////////////////////
+
+    /**
+     * get_defaultvalue_name
+     *
+     * @return string default name for this record type
+     * @todo Finish documenting this function
+     */
+    protected function get_defaultvalue_name() {
+        return get_string($this->recordtype, 'taskchain');
+    }
+
+    /////////////////////////////////////////////////////////
     // add_field ...
     /////////////////////////////////////////////////////////
 
@@ -652,7 +666,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      */
     protected function add_template_location($type) {
         $name = $this->get_fieldname($type.'location');
-        $location = $this->get_original_value($name, 0);
+        $location = $this->get_originalvalue($name, 0);
         $this->mform->addElement('hidden', $name, $location);
         $this->mform->setType($name, PARAM_INT);
     }
@@ -822,7 +836,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function fix_field_name(&$data, $field) {
-        $this->fix_template_textsource($data, $field, $this->get_default_name());
+        $this->fix_template_textsource($data, $field, $this->get_defaultvalue($field));
     }
 
     /**
@@ -943,7 +957,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                     $data->$name = preg_replace('/((<p>\s*<\/p>)|(<br[^>]*>)|\s)+$/is', '', $data->$field);
                     $data->$name = trim($data->$field);
                 } else {
-                    $data->$name = $this->get_original_value($name, '');
+                    $data->$name = $this->get_originalvalue($name, '');
                 }
         }
 

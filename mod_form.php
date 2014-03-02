@@ -102,8 +102,8 @@ class mod_taskchain_mod_form extends moodleform_mod {
      * @param mixed the $default value
      * @return mixed the field value if it exists, $default otherwise
      */
-    public function get_original_value($field, $default) {
-        $this->form_helper->get_original_value($field, $default);
+    public function get_originalvalue($field, $default) {
+        $this->form_helper->get_originalvalue($field, $default);
     }
 
     /**

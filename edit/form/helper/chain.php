@@ -248,10 +248,11 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function prepare_field_showpopup(&$data) {
-        $data['popupoptions'] = $this->get_original_value('popupoptions', 0);
+        $field = 'popupoptions';
+        $data[$field] = $this->get_originalvalue($field, $this->get_defaultvalue($field));
 
         $window_options = mod_taskchain::window_options();
-        $options = explode(',', strtolower($data['popupoptions']));
+        $options = explode(',', strtolower($data[$field]));
         foreach ($options as $option) {
             if (preg_match('/^([a-z]+)(?:=(.*))?$/', $option, $matches)) {
                 $name = $matches[1];
@@ -299,10 +300,10 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $options = $type.'options';
         $editor = $type.'editor';
 
-        $data[$page] = $this->get_original_value($page, 0);
-        $data[$text] = $this->get_original_value($text, '');
-        $data[$format] = $this->get_original_value($format, editors_get_preferred_format());
-        $data[$options] = $this->get_original_value($options, 0);
+        $data[$page] = $this->get_originalvalue($page, $this->get_defaultvalue($page));
+        $data[$text] = $this->get_originalvalue($text, $this->get_defaultvalue($text));
+        $data[$format] = $this->get_originalvalue($format, editors_get_preferred_format());
+        $data[$options] = $this->get_originalvalue($options, $this->get_defaultvalue($options));
 
         // extract boolean switches for page options
         foreach (mod_taskchain::text_page_options($type) as $name => $mask) {
@@ -849,13 +850,13 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         // ensure text, format and option fields are set
         // (these fields can't be null in the database)
         if (! isset($data->$textfield)) {
-            $data->$textfield = $this->get_original_value($textfield, '');
+            $data->$textfield = $this->get_originalvalue($textfield, '');
         }
         if (! isset($data->$formatfield)) {
-            $data->$formatfield = $this->get_original_value($formatfield, FORMAT_HTML);
+            $data->$formatfield = $this->get_originalvalue($formatfield, FORMAT_HTML);
         }
         if (! isset($data->$sourcefield)) {
-            $data->$sourcefield = $this->get_original_value($sourcefield, mod_taskchain::TEXTSOURCE_SPECIFIC);
+            $data->$sourcefield = $this->get_originalvalue($sourcefield, mod_taskchain::TEXTSOURCE_SPECIFIC);
         }
 
         // set text and format fields
@@ -905,7 +906,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         if (isset($data->$options)) {
             $value = $data->$options;
         } else {
-            $value = $this->get_original_value($options, 0);
+            $value = $this->get_originalvalue($options, 0);
         }
 
         // check all options for this page type

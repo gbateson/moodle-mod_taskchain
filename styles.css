@@ -129,15 +129,16 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 
 /** make overflow visible (because this is a w-i-d-e page) */
 #page-mod-taskchain-edit-tasks div#page,
-#page-mod-taskchain-edit-tasks div#page div#page-content,
-#page-mod-taskchain-edit-tasks div#page div#page-content div#region-main-box,
-#page-mod-taskchain-edit-tasks div#page div#page-content div#region-main-box div#region-pre-box,
-#page-mod-taskchain-edit-tasks div#page div#page-content div#region-main-box div#region-pre-box div#region-main,
-#page-mod-taskchain-edit-tasks div#page div#page-content div#region-main-box div#region-post-box,
-#page-mod-taskchain-edit-tasks div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap,
-#page-mod-taskchain-edit-tasks div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap div#region-main,
-#page-mod-taskchain-edit-tasks div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap div#region-main div.region-content {
-    overflow   : visible;
+#page-mod-taskchain-edit-tasks div#page-wrapper,
+#page-mod-taskchain-edit-tasks div#page-content,
+#page-mod-taskchain-edit-tasks div#region-pre-box,
+#page-mod-taskchain-edit-tasks div#region-main-box,
+#page-mod-taskchain-edit-tasks div#region-post-box,
+#page-mod-taskchain-edit-tasks div#region-main-wrap,
+#page-mod-taskchain-edit-tasks div#region-main-pad,
+#page-mod-taskchain-edit-tasks div#region-main,
+#page-mod-taskchain-edit-tasks div.region-content {
+    overflow   : visible !important;
     /*
     the following changes allow the fieldsets to be narrower than the full page width
     but they will mess up the navigation and settings blocks when they are docked :-(
@@ -188,8 +189,8 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 
 #page-mod-taskchain-edit-tasks fieldset.clearfix,
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fcontainer {
-    white-space  : nowrap;
     text-align   : left;
+    white-space  : nowrap;
 }
 #page-mod-taskchain-edit-tasks fieldset.clearfix {
     min-width    : 600px;
@@ -265,6 +266,17 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.defaultrecord,
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.selectrecord {width: 50px;}
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.name {width: 180px;}
+
+/** allow certain fields to wrap mid-word */
+#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.name,
+#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sourcefile,
+#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sourcetype,
+#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sourcelocation,
+#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.configfile,
+#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.configlocation {word-wrap: break-word;}
+
+/** hide unused legend */
+#page-mod-taskchain-edit-tasks legend.ftoggler {display: none;}
 
 /** adjust widths of pre/post condition columns */
 #page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.preconditions,
@@ -356,14 +368,14 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasks,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasksafter,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetaskschain,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults {padding-left: 24px; width: 456px;}
+#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults {padding-left: 24px; width: 484px;}
 
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtercoursename,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filteractivityname,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskname,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskposition,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcefile,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcetype {padding-left: 48px; width: 432px;}
+#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcetype {padding-left: 48px; width: 460px;}
 
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_reordertasks_sortfield,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_addtasks_start,

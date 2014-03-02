@@ -121,7 +121,7 @@ function taskchain_update_instance(stdclass $data, $mform) {
     $DB->update_record('taskchain', $data);
 
     // update gradebook item
-    if ($data->grademethod==$mform->get_original_value('grademethod', 0)) {
+    if ($data->grademethod==$mform->get_originalvalue('grademethod', 0)) {
         taskchain_grade_item_update($data);
     } else {
         // recalculate grades for all users

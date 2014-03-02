@@ -186,7 +186,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
             // field has already be prepared
         } else {
             // copy value across from record
-            $data[$field] = $this->get_original_value($field, '');
+            $data[$field] = $this->get_originalvalue($field, '');
         }
     }
 

@@ -49,8 +49,7 @@
  *     |
  *     |    METHODS:
  *     |    __get, __set, property_error
- *     |    is_add, is_update, get_original_value,
- *     |    get_default_name, get_default_value,
+ *     |    is_add, is_update, get_originalvalue, get_defaultvalue,
  *     |    get_context, set_context, set_type_text,
  *     |    prepare_sections, prepare_section, prepare_field,
  *     |    get_sections, get_sectionlabel, get_fieldlabel,
@@ -298,7 +297,7 @@ abstract class taskchain_form_helper_base {
      * @return bool True if we are adding an new activity instance, false otherwise
      */
     public function is_add() {
-        $id = $this->get_original_value('id', null);
+        $id = $this->get_originalvalue('id', null);
         return ($id ? false : true);
     }
 
@@ -309,7 +308,7 @@ abstract class taskchain_form_helper_base {
      * @return bool True if we are adding an new activity instance, false otherwise
      */
     public function is_update() {
-        $id = $this->get_original_value('id', null);
+        $id = $this->get_originalvalue('id', null);
         return ($id ? true : false);
     }
 
@@ -321,7 +320,7 @@ abstract class taskchain_form_helper_base {
      * @param mixed the $default value
      * @return mixed the field value if it exists, $default otherwise
      */
-    public function get_original_value($field, $default) {
+    public function get_originalvalue($field, $default) {
         if (isset($this->record)) {
             $method = 'get_'.$field;
             if (method_exists($this->record, $method)) {
@@ -332,16 +331,6 @@ abstract class taskchain_form_helper_base {
             }
         }
         return $default;
-    }
-
-    /**
-     * get_default_name
-     *
-     * @return string default name for this record type
-     * @todo Finish documenting this function
-     */
-    protected function get_default_name() {
-        return get_string($this->recordtype, 'taskchain');
     }
 
     /**
@@ -936,7 +925,7 @@ abstract class taskchain_form_helper_base {
             // field has already be prepared
         } else {
             // copy value across from record
-            $data[$field] = $this->get_original_value($field, '');
+            $data[$field] = $this->get_originalvalue($field, '');
         }
     }
 

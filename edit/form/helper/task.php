@@ -201,7 +201,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     protected function add_field_outputformat($field) {
         $name  = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
-        $sourcetype = $this->get_original_value('sourcetype', '');
+        $sourcetype = $this->get_originalvalue('sourcetype', '');
         $options = taskchain_available::outputformats_list($sourcetype);
         $this->mform->addElement('select', $name, $label, $options);
         $this->add_helpbutton($name, $field, 'taskchain');
