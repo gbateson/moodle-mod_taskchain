@@ -853,7 +853,7 @@ class taskchain_source {
 
         // file contents were successfully read
 
-        // remove BOMs - http://en.wikipedia.org/wiki/Byte_order_mark
+        // detect BOMs - http://en.wikipedia.org/wiki/Byte_order_mark
         switch (true) {
             case substr($this->filecontents, 0, 4)=="\xFF\xFE\x00\x00":
                 $start = 4;

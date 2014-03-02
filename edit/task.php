@@ -138,6 +138,7 @@ switch ($TC->action) {
         unset($list);
 
         $newdata->id = $TC->get_taskid();
+
         if (empty($newdata->id)) {
             // add new TaskChain task(s)
             $aftertaskid = optional_param('aftertaskid', 0, PARAM_INT);
@@ -166,17 +167,9 @@ switch ($TC->action) {
                 print_error('error_updaterecord', 'taskchain', '', 'tasks');
             }
 
-            // recreate cache, as necessary
-            if ($CFG->taskchain_enablecache) {
-
-                $subtype = $TC->get_attempt_subtype();
-                $TC->load_class($subtype, 'renderer.php');
-
-                $rendererclass = 'mod_taskchain_'.$subtype.'_renderer';
-                if ($rendererclass::USE_CACHE) { // PHP 5.2
-                //    $TC->task->output->generate(true);
-                }
-            }
+            // recreate $TC->task using updated values
+            $TC->task = $DB->get_record('taskchain_tasks', array('id' => $newdata->id));
+            $TC->task = new taskchain_task($TC->task, array('TC' => &$TC));
 
             // regrade task, if necessary
             if ($regrade) {

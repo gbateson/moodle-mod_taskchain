@@ -375,7 +375,7 @@ class taskchain_require extends taskchain_base {
     }
 
     /**
-     * require_moreattempts
+     * moreattempts
      *
      * @param string $type ("chain" or "task")
      * @param boolean $shorterror (optional, default=false)
@@ -745,7 +745,7 @@ class taskchain_require extends taskchain_base {
     }
 
     /**
-     * require_entrycm
+     * entrycm
      *
      * @uses $CFG
      * @uses $DB
@@ -771,7 +771,7 @@ class taskchain_require extends taskchain_base {
         }
         $href = new moodle_url('/mod/'.$cm->modname.'/view.php', $params);
 
-        if ($this->chain->entrygrade) {
+        if ($this->TC->chain->entrygrade) {
             if ($grades = grade_get_grades($cm->course, 'mod', $cm->modname, $cm->instance, $USER->id)) {
                 $grade = 0;
                 if (isset($grades->items[0]) && $grades->items[0]->grademax > 0) {
@@ -781,12 +781,12 @@ class taskchain_require extends taskchain_base {
                     } else {
                         $grade = 0;
                     }
-                    if ($grade < $this->chain->entrygrade) {
+                    if ($grade < $this->TC->chain->entrygrade) {
                         // either this user has not attempted the entry activity
                         // or their grade so far on the entry activity is too low
                         $a = (object)array(
                             'usergrade' => intval($grade),
-                            'entrygrade' => $this->chain->entrygrade,
+                            'entrygrade' => $this->TC->chain->entrygrade,
                             'entryactivity' => html_writer::tag('a', format_string(urldecode($cm->name)), array('href' => $href))
                         );
                         return get_string('entrygradewarning', 'taskchain', $a);
@@ -822,7 +822,7 @@ class taskchain_require extends taskchain_base {
     }
 
     /**
-     * require_exitgrade
+     * exitgrade
      *
      * @return xxx
      * @todo Finish documenting this function
