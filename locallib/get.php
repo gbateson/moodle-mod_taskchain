@@ -93,7 +93,6 @@ class taskchain_get extends taskchain_base {
                 $sectionnum = $modinfo->get_cm($this_cmid)->sectionnum;
             }
         }
-        $sectionnum = 1;
 
         // get grade info, if required (we just need to know if an activity has a grade or not)
         if ($graded) {

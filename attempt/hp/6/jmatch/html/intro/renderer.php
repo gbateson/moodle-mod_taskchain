@@ -75,7 +75,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_intro_renderer extends mod_taskchai
     }
 
     /**
-     * fix_js_ShowDescription
+     * fix_js_StartUp
      *
      * @param xxx $str (passed by reference)
      * @param xxx $start
