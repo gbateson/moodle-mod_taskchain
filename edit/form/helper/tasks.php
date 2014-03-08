@@ -537,7 +537,16 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
             $DB->delete_records_list('taskchain_conditions', 'id', $conditionids);
         }
 
-        // update form fields if necessary
+        // update default conditions
+        $name = $field.'_elements[0]';
+        if ($this->mform->elementExists($name)) {
+            $record = &$this->records[$targetid];
+            $value = $record->format_conditions($targetid, $type, false, false, false);
+            $this->mform->getElement($name)->setValue($value);
+            unset($record);
+        }
+
+        // update conditions of each record in form, if necessary
         foreach ($recordids as $recordid) {
 
             // update form field if this is one the current tasks
@@ -558,10 +567,8 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                 // get form element name and check it exists
                 $name = $record->get_fieldname($field.'_elements');
                 if ($this->mform->elementExists($name)) {
-
-                    // update the formatted conditions for this task
-                    $formatted_conditions = $record->format_conditions($recordid, $type, false);
-                    $this->mform->getElement($name)->setValue($formatted_conditions);
+                    $value = $record->format_conditions($recordid, $type, false);
+                    $this->mform->getElement($name)->setValue($value);
                 }
 
                 // release $record reference

@@ -969,7 +969,9 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         $elements[] = $this->mform->createElement('static', '', '', $text);
 
-        $name_elements = $this->get_fieldname($field.'_elements');
+        // don't use standard $this->get_fieldname($field.'_elements')
+        // because that attaches the record id of the default record
+        $name_elements = $field.'_elements'.($this->multiple ? '[0]' : '');
         $this->mform->addGroup($elements, $name_elements, '', html_writer::empty_tag('br'));
     }
 

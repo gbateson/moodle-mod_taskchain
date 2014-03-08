@@ -1603,9 +1603,6 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function format_fieldlabel($field) {
-        global $OUTPUT;
-        $strman = get_string_manager();
-
         $method = 'format_fieldlabel_'.$field;
         if (method_exists($this, $method)) {
             $this->$method();
