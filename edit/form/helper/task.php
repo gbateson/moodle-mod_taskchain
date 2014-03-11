@@ -877,7 +877,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     protected function format_fieldtemplate_conditions($field, $type) {
         $elements = array();
         $taskid = $this->get_fieldvalue('id');
-        $return_intro = ($this->multiple ? false : true);
+        $return_intro = ($this->is_multiple ? false : true);
         $text = $this->format_conditions($taskid, $type, $return_intro);
         $elements[] = $this->mform->createElement('static', '', '', $text);
         $name_elements = $this->get_fieldname($field.'_elements');
@@ -962,16 +962,15 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         if (empty($taskid)) {
             $text = '';
         } else {
-            $return_intro = ($this->multiple ? false : true);
+            $return_intro = ($this->is_multiple ? false : true);
             $text = $this->format_conditions($taskid, $type, $return_intro, false, false);
         }
         $text = html_writer::tag('span', $text, array('class' => 'defaultfield'));
 
         $elements[] = $this->mform->createElement('static', '', '', $text);
 
-        // don't use standard $this->get_fieldname($field.'_elements')
-        // because that attaches the record id of the default record
-        $name_elements = $field.'_elements'.($this->multiple ? '[0]' : '');
+        $name_elements = $this->get_fieldname($field.'_elements');
+        // $name_elements = $field.'_elements'.($this->is_multiple ? '[0]' : '');
         $this->mform->addGroup($elements, $name_elements, '', html_writer::empty_tag('br'));
     }
 

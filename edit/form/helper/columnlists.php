@@ -70,10 +70,10 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * @param object $mform a MoodleQuickForm
      * @param object $context a context record from the database
      * @param string $type "chains" or "tasks"
-     * @param boolean $multiple (optional, default=false)
+     * @param boolean $is_multiple (optional, default=false)
      * @todo Finish documenting this function
      */
-    public function __construct(&$mform, &$context, &$type, $multiple=false) {
+    public function __construct(&$mform, &$context, &$type, $is_multiple=false) {
         global $CFG, $TC;
 
         if (empty($TC)) {
@@ -127,11 +127,11 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
         // overwrite hidden section
         $this->sections['hidden'] = array('id');
 
-        $this->TC       = &$TC;
-        $this->mform    = $mform;
-        $this->context  = $context;
-        $this->record   = $record;
-        $this->multiple = $multiple;
+        $this->TC          = &$TC;
+        $this->mform       = $mform;
+        $this->context     = $context;
+        $this->record      = $record;
+        $this->is_multiple = $is_multiple;
     }
 
     /**

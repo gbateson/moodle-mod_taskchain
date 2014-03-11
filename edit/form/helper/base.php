@@ -172,9 +172,6 @@ abstract class taskchain_form_helper_base {
     /** the current $context */
     protected $context = null;
 
-    /** boolean switch denoting whether or not this $record is one of multiple child $records */
-    protected $multiple = null;
-
     /** if this form is for a single field, this string holds the name of that field */
     protected $singlefield = '';
 
@@ -183,6 +180,12 @@ abstract class taskchain_form_helper_base {
 
     /** type of record */
     protected $recordtype = '';
+
+    /** boolean switch denoting whether or not this $record is one of multiple child $records */
+    protected $is_multiple = false;
+
+    /** boolean switch denoting whether or not this record is the default record */
+    protected $is_default_record = false;
 
     /**
      * __construct
@@ -193,7 +196,7 @@ abstract class taskchain_form_helper_base {
      * @param boolean $multiple (optional, default=false)
      * @todo Finish documenting this function
      */
-    public function __construct(&$mform, &$context, &$record, $multiple=false) {
+    public function __construct(&$mform, &$context, &$record, $is_multiple=false) {
         global $CFG, $TC;
 
         if (empty($TC)) {
@@ -204,7 +207,7 @@ abstract class taskchain_form_helper_base {
         $this->mform    = $mform;
         $this->context  = $context;
         $this->record   = $record;
-        $this->multiple = $multiple;
+        $this->is_multiple = $is_multiple;
 
         // if this form is for a single field, adjust the $sections array
         if ($field = optional_param('field', '' , PARAM_ALPHANUM)) {
@@ -354,6 +357,21 @@ abstract class taskchain_form_helper_base {
         }
         // throw new moodle_exception(get_class($this)." - missing default value: $field");
         return null; // shouldn't happen !!
+    }
+
+    /**
+     * is_default_record
+     * get or set the $this->is_default_record boolean switch
+     *
+     * @param mixed $value TRUE, FALSE or NULL
+     * @return mixed if $value is NULL then return $this->is_default_record
+     *               otherwise assign $value to this->is_default_record
+     */
+    protected function is_default_record($value=null) {
+        if ($value===null) {
+            return $this->is_default_record;
+        }
+        $this->is_default_record = $value;
     }
 
     /**
@@ -936,11 +954,12 @@ abstract class taskchain_form_helper_base {
     /**
      * get_sections
      *
+     * @return boolean $all (optional, default=false)
      * @return xxx
      * @todo Finish documenting this function
      */
     public function get_sections($all=false) {
-        if (empty($this->multiple) || $all) {
+        if (empty($this->is_multiple) || $all) {
             $id = 'all'; // single record form
         } else {
             // one of multiple records on the edit chains/tasks page
@@ -1055,7 +1074,7 @@ abstract class taskchain_form_helper_base {
         } else {
             $name = $field;
         }
-        if ($this->multiple) {
+        if ($this->is_multiple) {
             $name .= '['.$this->get_fieldvalue('id').']';
         }
         return $name;
@@ -1069,6 +1088,9 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function get_fieldvalue($field) {
+        if ($field=='id' && $this->is_default_record()) {
+            return 0;
+        }
         $method = 'get_fieldvalue_'.$field;
         if (method_exists($this, $method)) {
             return $this->$method();
@@ -1430,7 +1452,7 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function fix_field(&$data, $field) {
-        if ($this->multiple) {
+        if ($this->is_multiple) {
             $id = $this->get_fieldvalue('id');
             if (isset($data->$field) && is_array($data->$field) && array_key_exists($id, $data->$field)) {
                 $name = $this->get_fieldname($field);
@@ -1672,7 +1694,7 @@ abstract class taskchain_form_helper_base {
             $params  = array($idfield => $idvalue, 'field' => $field);
             $href    = $this->TC->url->edit($types, $params);
 
-            $params  = array('id'      => $this->get_fieldvalue('id'),
+            $params  = array('id'     => $this->get_fieldvalue('id'),
                             'type'    => $this->recordtype,
                             'field'   => $field,
                             'sesskey' => sesskey());

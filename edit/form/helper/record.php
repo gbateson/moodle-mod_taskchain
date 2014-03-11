@@ -308,7 +308,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function add_field_sortorder($field) {
-        if ($this->multiple) {
+        if ($this->is_multiple) {
             $name = $this->get_fieldname($field);
             $label = ''; // $this->get_fieldlabel($field);
             $this->mform->addElement('text', $name, $label, array('size' => 2));
@@ -811,7 +811,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     protected function validate_field_sourcefile(&$errors, &$data, &$files) {
         global $USER;
 
-        if ($this->multiple) {
+        if ($this->is_multiple) {
             return;
         }
 

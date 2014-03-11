@@ -252,7 +252,9 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      */
     public function add_section_defaults($section, $fields) {
         if ($record = $this->get_live_records(1)) {
+            $record->is_default_record(true);
             $record->format_section_defaults();
+            $record->is_default_record(false);
         }
     }
 
@@ -619,6 +621,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * get_live_records
+     * "live" records are those that have NOT been deleted
      *
      * @param integer $limit (optional, default=0)
      * @todo Finish documenting this function
