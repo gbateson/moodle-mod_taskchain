@@ -59,7 +59,18 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
 
         // root element describing taskchain instance
         $fieldnames = $this->get_fieldnames('taskchain', array('id', 'course'));
-        $taskchain     = new backup_nested_element('taskchain', array('id'), $fieldnames);
+        $taskchain  = new backup_nested_element('taskchain', array('id'), $fieldnames);
+
+        $fieldnames = $this->get_fieldnames('taskchain_chains', array('id', 'parenttype', 'parentid'));
+        $chain      = new backup_nested_element('unit', array('id'), $fieldnames);
+
+        $tasks      = new backup_nested_element('tasks');
+        $fieldnames = $this->get_fieldnames('taskchain_tasks', array('id', 'chainid'));
+        $task       = new backup_nested_element('task', array('id'), $fieldnames);
+
+        $conditions = new backup_nested_element('conditions');
+        $fieldnames = $this->get_fieldnames('taskchain_conditions', array('id', 'taskid'));
+        $condition  = new backup_nested_element('condition', array('id'), $fieldnames);
 
         ////////////////////////////////////////////////////////////////////////
         // XML nodes declaration - user data
@@ -67,39 +78,72 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
 
         if ($userinfo) {
 
-            // attempts at taskchains
-            $fieldnames = $this->get_fieldnames('taskchain_attempts', array('id', 'taskchainid'));
-            $attempt    = new backup_nested_element('attempt', array('id'), $fieldnames);
-            $attempts   = new backup_nested_element('attempts');
+            // chain grades
+            $chaingrades = new backup_nested_element('chaingrades');
+            $fieldnames = $this->get_fieldnames('taskchain_chain_grades', array('id', 'parenttype', 'parentid'));
+            $chaingrade  = new backup_nested_element('chaingrade', array('id'), $fieldnames);
 
-            // questions in taskchains
-            $fieldnames = $this->get_fieldnames('taskchain_questions', array('id', 'taskchainid', 'md5key'));
-            $question   = new backup_nested_element('question', array('id'), $fieldnames);
+            // chain attempts
+            $chainattempts = new backup_nested_element('chainattempts');
+            $fieldnames   = $this->get_fieldnames('taskchain_chain_attempts', array('id', 'chainid'));
+            $chainattempt  = new backup_nested_element('chainattempt', array('id'), $fieldnames);
+
+            // task scores
+            $taskscores = new backup_nested_element('taskscores');
+            $fieldnames = $this->get_fieldnames('taskchain_task_scores', array('id', 'taskid'));
+            $taskscore  = new backup_nested_element('taskscore', array('id'), $fieldnames);
+
+            // task attempts
+            $taskattempts = new backup_nested_element('taskattempts');
+            $fieldnames   = $this->get_fieldnames('taskchain_task_attempts', array('id', 'taskid'));
+            $taskattempt  = new backup_nested_element('taskattempt', array('id'), $fieldnames);
+
+            // questions in task attempts
             $questions  = new backup_nested_element('questions');
+            $fieldnames = $this->get_fieldnames('taskchain_questions', array('id', 'taskid', 'md5key'));
+            $question   = new backup_nested_element('question', array('id'), $fieldnames);
 
             // responses to questions
+            $responses  = new backup_nested_element('responses');
             $fieldnames = $this->get_fieldnames('taskchain_responses', array('id', 'questionid'));
             $response   = new backup_nested_element('response', array('id'), $fieldnames);
-            $responses  = new backup_nested_element('responses');
 
              // strings used in questions and responses
+            $strings    = new backup_nested_element('strings');
             $fieldnames = $this->get_fieldnames('taskchain_strings', array('id', 'md5key'));
             $string     = new backup_nested_element('string', array('id'), $fieldnames);
-            $strings    = new backup_nested_element('strings');
         }
 
         ////////////////////////////////////////////////////////////////////////
         // build the tree in the order needed for restore
         ////////////////////////////////////////////////////////////////////////
 
+        $taskchain->add_child($chain);
+        $chain->add_child($tasks);
+        $tasks->add_child($task);
+        $task->add_child($conditions);
+        $conditions->add_child($condition);
+
         if ($userinfo) {
 
-            // attempts
-            $taskchain->add_child($attempts);
-            $attempts->add_child($attempt);
+            // chain grades
+            $chain->add_child($chaingrades);
+            $chaingrades->add_child($chaingrade);
+
+            // chain attempts
+            $chain->add_child($chainattempts);
+            $chainattempts->add_child($chainattempt);
+
+            // task scores
+            $task->add_child($taskscores);
+            $taskscores->add_child($taskscore);
+
+            // task attempts
+            $task->add_child($taskattempts);
+            $taskattempts->add_child($taskattempt);
 
             // questions
-            $taskchain->add_child($questions);
+            $task->add_child($questions);
             $questions->add_child($question);
 
             // responses
@@ -116,6 +160,9 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         ////////////////////////////////////////////////////////////////////////
 
         $taskchain->set_source_table('taskchain', array('id' => backup::VAR_ACTIVITYID));
+        $chain->set_source_table('taskchain_chains', array('parentid' => backup::VAR_PARENTID));
+        $task->set_source_table('taskchain_tasks', array('chainid' => backup::VAR_PARENTID));
+        $condition->set_source_table('taskchain_conditions', array('taskid' => backup::VAR_PARENTID));
 
         ////////////////////////////////////////////////////////////////////////
         // data sources - user related data
@@ -123,12 +170,16 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
 
         if ($userinfo) {
 
-            // attempts
-            $attempt->set_source_table('taskchain_attempts', array('taskchainid' => backup::VAR_PARENTID));
+            // chain grades and attempts
+            $chaingrade->set_source_table('taskchain_chain_grades', array('parentid' => array('sqlparam' => 'parentid')));
+            $chainattempt->set_source_table('taskchain_chain_attempts', array('chainid' => backup::VAR_PARENTID));
+
+            // task scores and attempts
+            $taskscore->set_source_table('taskchain_task_scores', array('taskid' => backup::VAR_PARENTID));
+            $taskattempt->set_source_table('taskchain_task_attempts', array('taskid' => backup::VAR_PARENTID));
 
             // questions
-            $question->set_source_table('taskchain_questions', array('taskchainid' => backup::VAR_PARENTID));
-
+            $question->set_source_table('taskchain_questions', array('taskid' => backup::VAR_PARENTID));
             // responses
             $response->set_source_table('taskchain_responses', array('questionid' => backup::VAR_PARENTID));
 
@@ -142,8 +193,12 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         ////////////////////////////////////////////////////////////////////////
 
         if ($userinfo) {
-            $attempt->annotate_ids('user', 'userid');
-            $response->annotate_ids('taskchain_attempts', 'attemptid');
+            $condition->annotate_ids('groups', 'groupid');
+            $chaingrade->annotate_ids('user', 'userid');
+            $chainattempt->annotate_ids('user', 'userid');
+            $taskscore->annotate_ids('user', 'userid');
+            $taskattempt->annotate_ids('user', 'userid');
+            $response->annotate_ids('taskchain_task_attempts', 'attemptid');
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -197,8 +252,17 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         // the id of the current taskchain
         $taskchainid = $this->get_setting_value(backup::VAR_ACTIVITYID);
 
+        $select = 'tq.*, tc.id AS chainid, t.id AS taskchainid';
+        $from   = '{taskchain_questions} tq '.
+                  'JOIN {taskchain_tasks} tt ON tq.taskid = tt.id '.
+                  'JOIN {taskchain_chains} tc ON tt.chainid = tc.id '.
+                  'JOIN {taskchain} t ON tc.parenttype = ? AND tc.parentid = t.id';
+        $where  = 't.id = ?';
+        $order  = 'tq.id, tq.text';
+        $params = array(0, $taskchainid); // 0 = mod_taskchain::PARENTTYPE_ACTIVITY
+
         // get questions in this taskchain
-        if ($questions = $DB->get_records('taskchain_questions', array('taskchainid' => $taskchainid), '', 'id, text')) {
+        if ($questions = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $order", $params)) {
 
             // extract string ids in the "text" field of these questions
             foreach ($questions as $question) {

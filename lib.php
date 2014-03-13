@@ -54,17 +54,17 @@ defined('MOODLE_INTERNAL') || die();
  */
 function taskchain_supports($feature) {
     $constants = array(
-        'FEATURE_ADVANCED_GRADING' => true,  // default=false
-        'FEATURE_BACKUP_MOODLE2'   => false, // default=false
+        'FEATURE_ADVANCED_GRADING' => true, // default=false
+        'FEATURE_BACKUP_MOODLE2'   => true, // default=false
         'FEATURE_COMMENT'          => true,
         'FEATURE_COMPLETION_HAS_RULES' => true,
         'FEATURE_COMPLETION_TRACKS_VIEWS' => false,
         'FEATURE_CONTROLS_GRADE_VISIBILITY' => true,
-        'FEATURE_GRADE_HAS_GRADE'  => true,  // default=false
+        'FEATURE_GRADE_HAS_GRADE'  => true, // default=false
         'FEATURE_GRADE_OUTCOMES'   => true,
+        'FEATURE_GROUPINGS'        => true, // default=false
+        'FEATURE_GROUPMEMBERSONLY' => true, // default=false
         'FEATURE_GROUPS'           => true,
-        'FEATURE_GROUPINGS'        => true,  // default=false
-        'FEATURE_GROUPMEMBERSONLY' => true,  // default=false
         'FEATURE_IDNUMBER'         => true,
         'FEATURE_MOD_ARCHETYPE'    => MOD_ARCHETYPE_OTHER,
         'FEATURE_MOD_INTRO'        => false, // default=true
@@ -72,7 +72,7 @@ function taskchain_supports($feature) {
         'FEATURE_NO_VIEW_LINK'     => false,
         'FEATURE_PLAGIARISM'       => false,
         'FEATURE_RATE'             => false,
-        'FEATURE_SHOW_DESCRIPTION' => true,  // default=false (Moodle 2.2)
+        'FEATURE_SHOW_DESCRIPTION' => true, // default=false (Moodle 2.2)
         'FEATURE_USES_QUESTIONS'   => false,
     );
     foreach ($constants as $constant => $value) {
