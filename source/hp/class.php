@@ -611,7 +611,7 @@ class taskchain_source_hp extends taskchain_source {
 
         // convert unicode chars to html entities, if required
         // Note that this will also decode named entities such as &apos; and &quot;
-        // so we have to put "strtr()" AFTER this call to textlib::utf8_to_entities()
+        // so we have to put "strtr()" AFTER this call to utf8_to_entities()
         if ($convert_to_unicode) {
             $str = mod_taskchain::textlib('utf8_to_entities', $str, false, true);
         }

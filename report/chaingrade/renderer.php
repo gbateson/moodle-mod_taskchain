@@ -71,7 +71,8 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
         $from   = '{taskchain_chain_attempts} tc_chn_att '.
                   ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_chn_att.chainid'.
                   ' JOIN {taskchain_chain_grades} tc_chn_grd ON (tc_chn.parenttype = tc_chn_grd.parenttype '.
-                                                              'AND tc_chn.parentid = tc_chn_grd.parentid)';
+                                                              'AND tc_chn.parentid = tc_chn_grd.parentid '.
+                                                              'AND tc_chn_att.userid = tc_chn_grd.userid)';
         $where  = 'tc_chn.parenttype = ? AND tc_chn.parentid = ?';
         $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $this->TC->taskchain->id);
 
@@ -119,7 +120,8 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
         $from   = '{taskchain_chain_attempts} tc_chn_att '.
                   ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_chn_att.chainid'.
                   ' JOIN {taskchain_chain_grades} tc_chn_grd ON (tc_chn.parenttype = tc_chn_grd.parenttype '.
-                                                              'AND tc_chn.parentid = tc_chn_grd.parentid)';
+                                                              'AND tc_chn.parentid = tc_chn_grd.parentid '.
+                                                              'AND tc_chn_att.userid = tc_chn_grd.userid)';
         if ($this->TC->get_chaingrade()) {
             $where  = 'tc_chn_grd.id = ?';
             $params = array($this->TC->chaingrade->id);

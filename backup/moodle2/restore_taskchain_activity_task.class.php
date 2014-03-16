@@ -53,7 +53,7 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * Define (add) particular steps this activity can have
      */
     protected function define_my_steps() {
-        // $this->add_step(new restore_taskchain_activity_structure_step('taskchain_structure', 'taskchain.xml'));
+        $this->add_step(new restore_taskchain_activity_structure_step('taskchain_structure', 'taskchain.xml'));
     }
 
     /**
@@ -64,10 +64,9 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * @todo Finish documenting this function
      */
     static public function define_decode_contents() {
-        return array();
-        //return array(
-        //    new restore_decode_content('taskchain', array('entrytext', 'exittext'), 'taskchain')
-        //);
+        return array(
+            new restore_decode_content('taskchain_chains', array('entrytext', 'exittext'))
+        );
     }
 
     /**
@@ -78,10 +77,9 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * @todo Finish documenting this function
      */
     static public function define_decode_rules() {
-        return array();
-        //return array(
-        //    new restore_decode_rule('TASKCHAINVIEWBYID', '/mod/taskchain/view.php?id=$1', 'course_module'),
-        //    new restore_decode_rule('TASKCHAININDEX', '/mod/taskchain/index.php?id=$1', 'course')
-        //);
+        return array(
+            new restore_decode_rule('TASKCHAINVIEWBYID', '/mod/taskchain/view.php?id=$1', 'course_module'),
+            new restore_decode_rule('TASKCHAININDEX', '/mod/taskchain/index.php?id=$1', 'course')
+        );
     }
 }

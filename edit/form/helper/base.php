@@ -491,6 +491,24 @@ abstract class taskchain_form_helper_base {
         }
     }
 
+    /**
+     * get_preferencelength
+     *
+     * @todo Finish documenting this function
+     */
+    protected function get_preferencelength($default=255) {
+        global $DB;
+
+        $table = 'user_preferences';
+        $field = 'value';
+        $columns = $DB->get_columns($table);
+
+        if (array_key_exists($field, $columns) && isset($columns[$field]->max_length)) {
+            return $columns[$field]->max_length;
+        } else {
+            return $default; // shouldn't happen !!
+        }
+    }
 
     /**
      * get_preferencefields
@@ -625,6 +643,7 @@ abstract class taskchain_form_helper_base {
      */
     public function set_preferences(&$data) {
         $fields = $this->get_preferencefields();
+        $length = $this->get_preferencelength();
 
         $preferences = array();
         foreach ($fields as $field) {
@@ -632,6 +651,11 @@ abstract class taskchain_form_helper_base {
             $value = $this->get_datavalue($data, $field);
             if (is_null($value)) {
                 continue;
+            }
+
+            // make sure $value is not too long for "user_preferences.value" field
+            if (mod_taskchain::textlib('strlen', $value) > $length) {
+                $this->truncate_string($value, $length);
             }
 
             // add this value to user preferences
@@ -648,6 +672,84 @@ abstract class taskchain_form_helper_base {
 
         // update this user's preferences
         set_user_preferences($preferences);
+    }
+
+    /**
+     * truncate_string
+     *
+     * @param string $str (passed by refererence)
+     * @param integer $length the maximum allowed length for this $str
+     * @return void, but may reduce $str to required $length
+     */
+    protected function truncate_string(&$str, $length) {
+        // remove HTML comments
+        $str = preg_replace('/\<\!\-\-.*?\-\-\>\s*/s', '', $str);
+
+        // remove script|style blocks
+        $str = preg_replace('/<(script|style)[^>]*>.*?<\/\1>\s*/is', '', $str);
+
+        // truncate $str to maximum $length
+        $str = mod_taskchain::textlib('substr', $str, 0, $length);
+
+        // remove incomplete trailing HTML tags
+        $str = preg_replace('/<[^>]*$/s', '', $str);
+
+        // remove incomplete trailing HTML blocks
+        $tags = array('audio', 'embed', 'object', 'video', 'button'); // , 'form', 'table', 'dl', 'ol', 'ul'
+        foreach ($tags as $tag) {
+            $pos = -1;
+            $tag1 = "/<$tag\b[^>]*>/is";
+            $tag2 = "/<\/$tag\b[^>]*>/is";
+            while (preg_match($tag1, $str, $matches, PREG_OFFSET_CAPTURE, $pos+1)) {
+                list($match, $pos) = $matches[0];
+                if (preg_match($tag2, $str, $matches, PREG_OFFSET_CAPTURE, $pos + mod_taskchain::textlib('strlen', $match))) {
+                    list($match, $pos) = $matches[0];
+                    $pos += mod_taskchain::textlib('strlen', $match);
+                } else {
+                    $str = mod_taskchain::textlib('substr', $str, 0, $pos);
+                    break; // finish while loop
+                }
+            }
+        }
+
+        // add closing tags
+        $tags = array('b', 'u', 'i', 'font', 'span', 'p', 'div');
+        foreach ($tags as $tag) {
+            $pos = -1;
+            $tag1 = "/<$tag\b[^>]*>/is";
+            $tag2 = "/<\/$tag\b[^>]*>/is";
+            while (preg_match($tag1, $str, $matches, PREG_OFFSET_CAPTURE, $pos+1)) {
+                list($match, $pos) = $matches[0];
+                $pos += mod_taskchain::textlib('strlen', $match);
+                if (preg_match($tag2, $str, $matches, PREG_OFFSET_CAPTURE, $pos+1)) {
+                    list($match, $pos) = $matches[0];
+                    $pos += mod_taskchain::textlib('strlen', $match);
+                } else {
+                    $str .= "</$tag>"; // this may make the string too long again
+                }
+            }
+        }
+
+        // remove plain text chars to reduce length, if necessary
+        $i_max = mod_taskchain::textlib('strlen', $str) - 1;
+        $state = 0; // 0=outside a tag, 1=within a tag
+        for ($i=$i_max; $i>0 && $i_max>=$length; $i--) {
+            $char = mod_taskchain::textlib('substr', $str, $i, 1);
+            if ($state==0) {
+                if ($char=='>') {
+                    $state = 1;
+                } else {
+                    // decrease $i_max and remove char $i
+                    $i_max--;
+                    $str = mod_taskchain::textlib('substr', $str, 0, $i).
+                           mod_taskchain::textlib('substr', $str, $i+1);
+                }
+            } else {
+                if ($char=='<') {
+                    $state = 0;
+                }
+            }
+        }
     }
 
     /////////////////////////////////////////////////////////
@@ -1694,6 +1796,14 @@ abstract class taskchain_form_helper_base {
             $params  = array($idfield => $idvalue, 'field' => $field);
             $href    = $this->TC->url->edit($types, $params);
 
+            if (file_exists($CFG->dirroot.'/pix/t/editstring.png')) {
+                // Moodle >= 2.3
+                $icon = 't/editstring';
+            } else {
+                // Moodle <= 2.2
+                $icon = 't/edit';
+            }
+
             $params  = array('id'     => $this->get_fieldvalue('id'),
                             'type'    => $this->recordtype,
                             'field'   => $field,
@@ -1701,7 +1811,7 @@ abstract class taskchain_form_helper_base {
             $helper  = new moodle_url('/mod/taskchain/edit/form/helper.js.php', $params);
             $onclick = 'TC_request("'.$helper.'", "'.$name.'"); return false;';
             $params  = array('id' => $name, 'title' => $label, 'onclick' => $onclick);
-            $icon    = $OUTPUT->pix_icon('t/edit', get_string('edit'));
+            $icon    = $OUTPUT->pix_icon($icon, get_string('edit'));
             $value  .= ($value=='' ? '' : ' ').html_writer::link($href, $icon, $params);
         }
 

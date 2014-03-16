@@ -612,13 +612,13 @@ class taskchain_mediafilter {
 
         // entities_to_utf8() is required undo the call to htmlentities(), see MDL-5223
         // this is necessary to allow waitForPlay and autoPlay to be effective on Firefox
-        $flashvars = taskchain_textlib('entities_to_utf8', $flashvars);
+        $flashvars = mod_taskchain::textlib('entities_to_utf8', $flashvars);
 
         $vars = explode('&', $flashvars);
         foreach ($this->moodle_flashvars as $var) {
             if (array_key_exists($var, $options)) {
                 $vars = preg_grep("/^$var=/", $vars, PREG_GREP_INVERT);
-                $vars[] = "$var=".taskchain_textlib('utf8_to_entities', $options[$var]);
+                $vars[] = "$var=".mod_taskchain::textlib('utf8_to_entities', $options[$var]);
             }
         }
 

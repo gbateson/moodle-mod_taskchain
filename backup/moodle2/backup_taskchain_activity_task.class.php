@@ -68,14 +68,14 @@ class backup_taskchain_activity_task extends backup_activity_task {
     static public function encode_content_links($content) {
         global $CFG;
 
-        $base = preg_quote($CFG->wwwroot,"/");
+        $wwwroot = preg_quote($CFG->wwwroot, '/');
 
         // Link to the list of taskchains
-        $search = "/(" . $base . "\/mod\/taskchain\/index.php\?id\=)([0-9]+)/";
+        $search = '/('.$wwwroot.'\/mod\/taskchain\/index.php\?id\=)([0-9]+)/';
         $content = preg_replace($search, '$@TASKCHAININDEX*$2@$', $content);
 
         //Link to taskchain view by moduleid
-        $search = "/(" . $base . "\/mod\/taskchain\/view.php\?id\=)([0-9]+)/";
+        $search = '/('.$wwwroot.'\/mod\/taskchain\/view.php\?id\=)([0-9]+)/';
         $content= preg_replace($search, '$@TASKCHAINVIEWBYID*$2@$', $content);
 
         return $content;

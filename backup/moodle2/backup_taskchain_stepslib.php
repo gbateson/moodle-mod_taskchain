@@ -42,6 +42,8 @@ defined('MOODLE_INTERNAL') || die();
 
 class backup_taskchain_activity_structure_step extends backup_activity_structure_step {
 
+    /** maximum number of questions to retrieve in one DB query */
+    const GET_QUESTIONS_LIMIT = 100;
     /**
      * define_structure
      *
@@ -57,19 +59,26 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         // XML nodes declaration - non-user data
         ////////////////////////////////////////////////////////////////////////
 
-        // root element describing taskchain instance
-        $fieldnames = $this->get_fieldnames('taskchain', array('id', 'course'));
+        // taskchain
+        $fieldnames = array('id', 'course'); // excluded fields
+        $fieldnames = $this->get_fieldnames('taskchain', $fieldnames);
         $taskchain  = new backup_nested_element('taskchain', array('id'), $fieldnames);
 
-        $fieldnames = $this->get_fieldnames('taskchain_chains', array('id', 'parenttype', 'parentid'));
-        $chain      = new backup_nested_element('unit', array('id'), $fieldnames);
+        // chain
+        $fieldnames = array('id', 'parenttype', 'parentid'); // excluded fields
+        $fieldnames = $this->get_fieldnames('taskchain_chains', $fieldnames);
+        $chain      = new backup_nested_element('chain', array('id'), $fieldnames);
 
+        // tasks
         $tasks      = new backup_nested_element('tasks');
-        $fieldnames = $this->get_fieldnames('taskchain_tasks', array('id', 'chainid'));
+        $fieldnames = array('id', 'chainid'); // excluded fields
+        $fieldnames = $this->get_fieldnames('taskchain_tasks', $fieldnames);
         $task       = new backup_nested_element('task', array('id'), $fieldnames);
 
+        // conditions
         $conditions = new backup_nested_element('conditions');
-        $fieldnames = $this->get_fieldnames('taskchain_conditions', array('id', 'taskid'));
+        $fieldnames = array('id', 'taskid'); // excluded fields
+        $fieldnames = $this->get_fieldnames('taskchain_conditions', $fieldnames);
         $condition  = new backup_nested_element('condition', array('id'), $fieldnames);
 
         ////////////////////////////////////////////////////////////////////////
@@ -80,43 +89,56 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
 
             // chain grades
             $chaingrades = new backup_nested_element('chaingrades');
-            $fieldnames = $this->get_fieldnames('taskchain_chain_grades', array('id', 'parenttype', 'parentid'));
-            $chaingrade  = new backup_nested_element('chaingrade', array('id'), $fieldnames);
+            $fieldnames = array('id', 'parenttype', 'parentid'); // excluded fields
+            $fieldnames = $this->get_fieldnames('taskchain_chain_grades', $fieldnames);
+            $chaingrade = new backup_nested_element('chaingrade', array('id'), $fieldnames);
 
             // chain attempts
             $chainattempts = new backup_nested_element('chainattempts');
-            $fieldnames   = $this->get_fieldnames('taskchain_chain_attempts', array('id', 'chainid'));
-            $chainattempt  = new backup_nested_element('chainattempt', array('id'), $fieldnames);
+            $fieldnames = array('id', 'chainid'); // excluded fields
+            $fieldnames = $this->get_fieldnames('taskchain_chain_attempts', $fieldnames);
+            $chainattempt = new backup_nested_element('chainattempt', array('id'), $fieldnames);
 
             // task scores
             $taskscores = new backup_nested_element('taskscores');
-            $fieldnames = $this->get_fieldnames('taskchain_task_scores', array('id', 'taskid'));
+            $fieldnames = array('id', 'taskid'); // excluded fields
+            $fieldnames = $this->get_fieldnames('taskchain_task_scores', $fieldnames);
             $taskscore  = new backup_nested_element('taskscore', array('id'), $fieldnames);
 
             // task attempts
             $taskattempts = new backup_nested_element('taskattempts');
-            $fieldnames   = $this->get_fieldnames('taskchain_task_attempts', array('id', 'taskid'));
-            $taskattempt  = new backup_nested_element('taskattempt', array('id'), $fieldnames);
+            $fieldnames  = array('id', 'taskid'); // excluded fields
+            $fieldnames  = $this->get_fieldnames('taskchain_task_attempts', $fieldnames);
+            $taskattempt = new backup_nested_element('taskattempt', array('id'), $fieldnames);
 
-            // questions in task attempts
+            // questions (in task attempts)
             $questions  = new backup_nested_element('questions');
-            $fieldnames = $this->get_fieldnames('taskchain_questions', array('id', 'taskid', 'md5key'));
+            $fieldnames = array('id', 'taskid', 'md5key'); // excluded fields
+            $fieldnames = $this->get_fieldnames('taskchain_questions', $fieldnames);
             $question   = new backup_nested_element('question', array('id'), $fieldnames);
 
-            // responses to questions
+            // responses (to questions)
             $responses  = new backup_nested_element('responses');
-            $fieldnames = $this->get_fieldnames('taskchain_responses', array('id', 'questionid'));
+            $fieldnames = array('id', 'questionid'); // excluded fields
+            $fieldnames = $this->get_fieldnames('taskchain_responses', $fieldnames);
             $response   = new backup_nested_element('response', array('id'), $fieldnames);
 
-             // strings used in questions and responses
+             // strings (used in questions and responses)
             $strings    = new backup_nested_element('strings');
-            $fieldnames = $this->get_fieldnames('taskchain_strings', array('id', 'md5key'));
+            $fieldnames = array('id', 'md5key'); // excluded fields
+            $fieldnames = $this->get_fieldnames('taskchain_strings', $fieldnames);
             $string     = new backup_nested_element('string', array('id'), $fieldnames);
         }
 
         ////////////////////////////////////////////////////////////////////////
         // build the tree in the order needed for restore
         ////////////////////////////////////////////////////////////////////////
+
+        if ($userinfo) {
+            // strings must come before chain
+            $taskchain->add_child($strings);
+            $strings->add_child($string);
+        }
 
         $taskchain->add_child($chain);
         $chain->add_child($tasks);
@@ -147,12 +169,8 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
             $questions->add_child($question);
 
             // responses
-            $questions->add_child($responses);
+            $question->add_child($responses);
             $responses->add_child($response);
-
-            // strings
-            $taskchain->add_child($strings);
-            $strings->add_child($string);
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -170,18 +188,31 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
 
         if ($userinfo) {
 
-            // chain grades and attempts
-            $chaingrade->set_source_table('taskchain_chain_grades', array('parentid' => array('sqlparam' => 'parentid')));
-            $chainattempt->set_source_table('taskchain_chain_attempts', array('chainid' => backup::VAR_PARENTID));
+            // chain grades
+            $taskchainid = $this->get_setting_value(backup::VAR_ACTIVITYID);
+            $params = array('parenttype' => array('sqlparam' => 0), 'parentid' => array('sqlparam' => $taskchainid));
+            $chaingrade->set_source_sql('SELECT * FROM {taskchain_chain_grades} WHERE parenttype = ? AND parentid = ?', $params);
+            //$chaingrade->set_source_sql("SELECT * FROM {taskchain_chain_grades} WHERE parenttype=0 AND parentid=$taskchainid", array());
 
-            // task scores and attempts
-            $taskscore->set_source_table('taskchain_task_scores', array('taskid' => backup::VAR_PARENTID));
-            $taskattempt->set_source_table('taskchain_task_attempts', array('taskid' => backup::VAR_PARENTID));
+            // chain attempts
+            $params = array('chainid' => backup::VAR_PARENTID);
+            $chainattempt->set_source_table('taskchain_chain_attempts', $params);
+
+            // task scores
+            $params = array('taskid' => backup::VAR_PARENTID);
+            $taskscore->set_source_table('taskchain_task_scores', $params);
+
+            // task attempts
+            $params = array('taskid' => backup::VAR_PARENTID);
+            $taskattempt->set_source_table('taskchain_task_attempts', $params);
 
             // questions
-            $question->set_source_table('taskchain_questions', array('taskid' => backup::VAR_PARENTID));
+            $params = array('taskid' => backup::VAR_PARENTID);
+            $question->set_source_table('taskchain_questions', $params);
+
             // responses
-            $response->set_source_table('taskchain_responses', array('questionid' => backup::VAR_PARENTID));
+            $params = array('questionid' => backup::VAR_PARENTID);
+            $response->set_source_table('taskchain_responses', $params);
 
             // strings
             list($filter, $params) = $this->get_strings_sql();
@@ -191,6 +222,12 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         ////////////////////////////////////////////////////////////////////////
         // id annotations (foreign keys on non-parent tables)
         ////////////////////////////////////////////////////////////////////////
+
+        $chain->annotate_ids('course_modules', 'entrycm');
+        $chain->annotate_ids('course_modules', 'exitcm');
+
+        $condition->annotate_ids('taskchain_conditions', 'conditiontaskid');
+        $condition->annotate_ids('taskchain_conditions', 'nexttaskid');
 
         if ($userinfo) {
             $condition->annotate_ids('groups', 'groupid');
@@ -205,7 +242,7 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         // file annotations
         ////////////////////////////////////////////////////////////////////////
 
-        $taskchain->annotate_files('mod_taskchain', 'sourcefile', 'id');
+        $taskchain->annotate_files('mod_taskchain', 'sourcefile', null);
         $taskchain->annotate_files('mod_taskchain', 'entrytext',  null);
         $taskchain->annotate_files('mod_taskchain', 'exittext',   null);
 
@@ -224,8 +261,7 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
     protected function get_fieldnames($tablename, array $excluded_fieldnames)   {
         global $DB;
         $fieldnames = array_keys($DB->get_columns($tablename));
-        $search = '/^'.implode('|', $excluded_fieldnames).'$/';
-        return preg_grep($search, $fieldnames, PREG_GREP_INVERT);
+        return array_diff($fieldnames, $excluded_fieldnames);
     }
 
     /**
@@ -271,22 +307,26 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
                 }
             }
 
-            // get the responses to these questions
-            list($filter, $params) = $DB->get_in_or_equal(array_keys($questions));
-            if ($responses = $DB->get_records_select('taskchain_responses', "questionid $filter", $params)) {
+            $questions = array_keys($questions);
+            while (($questionids = array_splice($questions, 0, self::GET_QUESTIONS_LIMIT)) && count($questionids)) {
 
-                // extract string ids from the string fields of these responses
-                foreach ($responses as $response) {
-                    foreach ($stringfields as $stringfield) {
-                        $ids = explode(',', trim($response->$stringfield));
-                        foreach ($ids as $id) {
-                            if ($id = intval($id)) {
-                                $stringids[$id] = true;
+                // get the responses to these questions
+                list($filter, $params) = $DB->get_in_or_equal($questionids);
+                if ($responses = $DB->get_records_select('taskchain_responses', "questionid $filter", $params)) {
+
+                    // extract string ids from the string fields of these responses
+                    foreach ($responses as $response) {
+                        foreach ($stringfields as $stringfield) {
+                            $ids = explode(',', trim($response->$stringfield));
+                            foreach ($ids as $id) {
+                                if ($id = intval($id)) {
+                                    $stringids[$id] = true;
+                                }
                             }
                         }
                     }
-                }
-            } // end if $responses
+                } // end if $responses
+            } // while $questionids
         } // end if $questions
 
         // get the distinct string ids
