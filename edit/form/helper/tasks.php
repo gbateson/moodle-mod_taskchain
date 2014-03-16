@@ -539,7 +539,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
 
         // update default conditions
         $name = $field.'_elements[0]';
-        if ($this->mform->elementExists($name)) {
+        if ($this->mform->elementExists($name) && array_key_exists($targetid, $this->records)) {
             $record = &$this->records[$targetid];
             $value = $record->format_conditions($targetid, $type, false, false, false);
             $this->mform->getElement($name)->setValue($value);
