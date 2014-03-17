@@ -77,6 +77,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'sourcelocation'  => mod_taskchain::LOCATION_COURSEFILES,
         'configfile'      => '',
         'configlocation'  => mod_taskchain::LOCATION_COURSEFILES,
+        'addtype'         => mod_taskchain::ADDTYPE_AUTO,
         'outputformat'    => '',
         'navigation'      => mod_taskchain::NAVIGATION_MOODLE,
         'titlesource'     => mod_taskchain::TEXTSOURCE_FILE,
@@ -112,6 +113,9 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'preconditions'   => '',
         'postconditions'  => ''
     );
+
+    /** fields that are only used when adding a new record */
+    protected $addonlyfields = array('namesource', 'tasknamessource', 'addtype');
 
     /**
      * prepare title's "source", "prependchainname" and "appendsortorder" values
@@ -531,6 +535,17 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function get_fieldvalue_aftertaskid() {
         return optional_param('aftertaskid', 0, PARAM_INT);
+    }
+
+    /**
+     * get_defaultvalue_tasknamessource
+     *
+     * @param string $field the field name
+     * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
+     * @todo Finish documenting this function
+     */
+    protected function get_defaultvalue_tasknamessource($field) {
+        return $this->get_defaultvalue_template_source($field);
     }
 
     /**

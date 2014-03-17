@@ -298,6 +298,17 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         return get_string($this->recordtype, 'taskchain');
     }
 
+    /**
+     * get_defaultvalue_namesource
+     *
+     * @param string $field the field name
+     * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
+     * @todo Finish documenting this function
+     */
+    protected function get_defaultvalue_namesource($field) {
+        return $this->get_defaultvalue_template_source($field);
+    }
+
     /////////////////////////////////////////////////////////
     // add_field ...
     /////////////////////////////////////////////////////////

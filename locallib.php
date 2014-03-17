@@ -2696,11 +2696,6 @@ class mod_taskchain extends taskchain_base {
             // Moodle 2.3 - 2.5
             $textlib = 'textlib';
         }
-        if (method_exists('textlib', 'textlib')) {
-            $textlib = textlib_get_instance();
-        } else {
-            $textlib = 'textlib'; // Moodle >= 2.2
-        }
         $args = func_get_args();
         $method = array_shift($args);
         $callback = array($textlib, $method);

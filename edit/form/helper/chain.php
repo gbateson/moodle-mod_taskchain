@@ -80,11 +80,13 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'addtype'            => mod_taskchain::ADDTYPE_AUTO,
         'tasknames'          => mod_taskchain::TEXTSOURCE_FILE,
         'entrypage'          => mod_taskchain::YES,
+        'entrytextsource'    => mod_taskchain::TEXTSOURCE_FILE,
         'entrytext'          => '',
         'entryoptions'       => 0,
         'entrycm'            => 0,
         'entrygrade'         => 0,
         'exitpage'           => mod_taskchain::YES,
+        'exittextsource'     => mod_taskchain::TEXTSOURCE_FILE,
         'exittext'           => '',
         'exitoptions'        => 0,
         'exitcm'             => 0,
@@ -120,6 +122,9 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'gradeweighting'     => 100,
         'gradecategory'      => 0
     );
+
+    /** fields that are only used when adding a new record */
+    protected $addonlyfields = array('namesource', 'tasknamessource', 'addtype', 'entrytextsource', 'exittextsource');
 
     /**
      * constructor method
@@ -217,6 +222,28 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         }
     }
 
+    /**
+     * get_defaultvalue_entrytextsource
+     *
+     * @param string $field the field name
+     * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
+     * @todo Finish documenting this function
+     */
+    protected function get_defaultvalue_entrytextsource($field) {
+        return $this->get_defaultvalue_template_source($field);
+    }
+
+    /**
+     * get_defaultvalue_exittextsource
+     *
+     * @param string $field the field name
+     * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
+     * @todo Finish documenting this function
+     */
+    protected function get_defaultvalue_exittextsource($field) {
+        return $this->get_defaultvalue_template_source($field);
+    }
+
     /////////////////////////////////////////////////////////
     // prepare_field ...
     /////////////////////////////////////////////////////////
@@ -294,39 +321,37 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      */
     protected function prepare_template_page(&$data, $type) {
 
-        $page = $type.'page';
-        $text = $type.'text';
-        $format = $type.'format';
-        $options = $type.'options';
-        $editor = $type.'editor';
+        $page       = $type.'page';
+        $text       = $type.'text';
+        $textsource = $type.'textsource';
+        $format     = $type.'format';
+        $options    = $type.'options';
+        $editor     = $type.'editor';
 
-        $data[$page] = $this->get_originalvalue($page, $this->get_defaultvalue($page));
-        $data[$text] = $this->get_originalvalue($text, $this->get_defaultvalue($text));
-        $data[$format] = $this->get_originalvalue($format, editors_get_preferred_format());
-        $data[$options] = $this->get_originalvalue($options, $this->get_defaultvalue($options));
+        $data[$page]       = $this->get_originalvalue($page, $this->get_defaultvalue($page));
+        $data[$text]       = $this->get_originalvalue($text, $this->get_defaultvalue($text));
+        $data[$textsource] = $this->get_originalvalue($text, $this->get_defaultvalue($textsource));
+        $data[$format]     = $this->get_originalvalue($format, editors_get_preferred_format());
+        $data[$options]    = $this->get_originalvalue($options, $this->get_defaultvalue($options));
 
-        // extract boolean switches for page options
+        // prepare boolean switches for page options
         foreach (mod_taskchain::text_page_options($type) as $name => $mask) {
             $data[$type.'_'.$name] = $data[$options] & $mask;
         }
 
-        // setup custom wysiwyg editor
+        // prepare text editor
+        $itemid = 0;
         if ($this->is_add()) {
-            // adding a new taskchain instance
-            $data[$editor] = array(
-                'text'   => file_prepare_draft_area($itemid, null, 'mod_taskchain', $type, 0), // $this->context is course context
-                'format' => $data[$format],
-                'itemid' => file_get_submitted_draft_itemid($type)
-            );
+            $contextid = null;
         } else {
-            // editing an existing taskchain
-            $options = mod_taskchain::filearea_options();
-            $data[$editor] = array(
-                'text'   => file_prepare_draft_area($itemid, $this->context->id, 'mod_taskchain', $type, 0, $options, $data[$text]),
-                'format' => $data[$format],
-                'itemid' => file_get_submitted_draft_itemid($type)
-            );
+            $contextid = $this->context->id;
         }
+        $options = mod_taskchain::filearea_options();
+        $data[$editor] = array(
+            'text'   => file_prepare_draft_area($itemid, $contextid, 'mod_taskchain', $type, 0, $options, $data[$text]),
+            'format' => $data[$format],
+            'itemid' => file_get_submitted_draft_itemid($itemid)
+        );
     }
 
     /////////////////////////////////////////////////////////
@@ -635,7 +660,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                 $this->mform->createElement('select', $type_textsource, '', $options)
             );
             $this->mform->addGroup($elements, $type.'page_elements', $label, array(' '), false);
-            $this->mform->setDefault($type_page, $this->get_defaultvalue($type_page, 0));
             $this->mform->setAdvanced($type.'page_elements');
             $this->add_helpbutton($type.'page_elements', $type_page, 'taskchain');
             $this->mform->disabledIf($type.'page_elements', $type_page, 'ne', 1);

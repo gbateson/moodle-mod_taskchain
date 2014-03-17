@@ -163,8 +163,11 @@ abstract class taskchain_form_helper_base {
     /** the default sections/fields shown on forms for multiple records */
     protected $defaultsections = array();
 
-    /** default values for each field in this $record */
+    /** default values for each field in this input form */
     protected $defaultvalues = array();
+
+    /** fields that are only used when adding a new record */
+    protected $addonlyfields = array();
 
     /** the moodle form object which we are "helping" to manipulate */
     protected $mform = null;
@@ -360,6 +363,26 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
+     * get_defaultvalue_template_source
+     *
+     * @param string $field the field name
+     * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
+     * @todo Finish documenting this function
+     */
+    protected function get_defaultvalue_template_source($field) {
+        if ($this->is_add()) {
+            $value = $this->get_preference($field);
+            if (isset($value)) {
+                return $value;
+            }
+            if (isset($this->defaultvalues[$field])) {
+                return $this->defaultvalues[$field];
+            }
+        }
+        return mod_taskchain::TEXTSOURCE_SPECIFIC;
+    }
+
+    /**
      * is_default_record
      * get or set the $this->is_default_record boolean switch
      *
@@ -513,9 +536,11 @@ abstract class taskchain_form_helper_base {
     /**
      * get_preferencefields
      *
+     * @param boolean (optional, default=false) $include fieldnames from $this->defaultfields array
+     * @param boolean (optional, default=false) $exclude fieldnames only used when adding new records
      * @todo Finish documenting this function
      */
-    protected function get_preferencefields() {
+    protected function get_preferencefields($include=false, $exclude=false) {
         //$method = 'preferences_fieldnames_'.$this->recordtype;
         //$fields = call_user_func(array('mod_taskchain', $method));
 
@@ -526,6 +551,12 @@ abstract class taskchain_form_helper_base {
                 continue;
             }
             $fields = array_merge($fields, $sectionfields);
+        }
+        if ($include) {
+            $fields = array_merge($fields, array_keys($this->defaultvalues));
+        }
+        if ($exclude) {
+            $fields = array_diff($fields, $this->addonlyfields);
         }
         return $fields;
     }
@@ -602,7 +633,7 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     public function get_preferences($selectedfields=null) {
-        $fields = $this->get_preferencefields();
+        $fields = $this->get_preferencefields(true);
         if ($selectedfields) {
             $fields = array_intersect($fields, $selectedfields);
         }
@@ -642,7 +673,7 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     public function set_preferences(&$data) {
-        $fields = $this->get_preferencefields();
+        $fields = $this->get_preferencefields(true, $this->is_update());
         $length = $this->get_preferencelength();
 
         $preferences = array();
