@@ -2484,7 +2484,7 @@ class mod_taskchain extends taskchain_base {
         // select requested course modules for which this user is allowed to delete attempts at TaskChains
         if (count($taskchainids)) {
 
-            if ($modinfo = get_fast_modinfo($this->course->id)) {
+            if ($modinfo = get_fast_modinfo($this->course)) {
                 foreach ($modinfo->cms as $cmid=>$mod) {
                     if ($mod->modname=='taskchain') {
                         $taskchainid = $mod->instance;

@@ -49,6 +49,9 @@ class taskchain_report_table extends table_sql {
     /** @var string field in the attempt records that refers to the user id */
     public $useridfield = 'userid';
 
+    /** @var date_strings */
+    protected $date_strings = null;
+
     /** @var string time format used for the "timemodified" column */
     protected $timeformat = 'strftimerecentfull';
 
@@ -756,12 +759,31 @@ class taskchain_report_table extends table_sql {
         $field = $type.'duration';
         $value = $row->$field;
         list($prefix, $value) = $this->split_prefix($value);
+
+        // prevent warnings on Moodle 2.0
+        // and speed up later versions too
+        if ($this->date_strings===null) {
+            $this->date_strings = (object)array(
+                'day'   => get_string('day'),
+                'days'  => get_string('days'),
+                'hour'  => get_string('hour'),
+                'hours' => get_string('hours'),
+                'min'   => get_string('min'),
+                'mins'  => get_string('mins'),
+                'sec'   => get_string('sec'),
+                'secs'  => get_string('secs'),
+                'year'  => get_string('year'),
+                'years' => get_string('years'),
+            );
+        }
+
         if ($value) {
-            $value = format_time($value);
+            $value = format_time($value, $this->date_strings);
             $value = $this->format_review_link($type, $row, $value);
         } else {
             $value = ''; // format_text(0) returns "now"
         }
+
         return $prefix.$value;
     }
 
