@@ -44,6 +44,7 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
 
     /** maximum number of questions to retrieve in one DB query */
     const GET_QUESTIONS_LIMIT = 100;
+
     /**
      * define_structure
      *

@@ -216,9 +216,6 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
         if (! $newid = $DB->insert_record('taskchain_conditions', $data)) {
             return false; // could not add new record - shouldn't happen !!
         }
-
-        // store mapping from $oldid to $newid
-        $this->set_mapping('taskchain_condition', $oldid, $newid);
     }
 
     /**
