@@ -1686,6 +1686,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         $filter = filter_manager::instance();
         $context = $this->TC->coursemodule->context;
 
+        // setup filter (Moodle >= 2.3)
+        if (method_exists($filter, 'setup_page_for_filters')) {
+            $filter->setup_page_for_filters($this->page, $context);
+        }
+
         // specify chars to be trimmed (whitespace and punctuation)
         $trimchars = "\0\t\n\r !\"#$%&'()*+,-./:;<=>?@[\\]^_`{¦}~\x0B";
 
