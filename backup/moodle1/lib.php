@@ -89,40 +89,35 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
         // shortcut to TASKCHAIN tags
         $taskchain = '/MOODLE_BACKUP/COURSE/MODULES/MOD/TASKCHAIN';
 
-        $paths = array(
-            new convert_path('taskchain',            $taskchain, array('dropfields' => array('modtype', 'course'))),
-            new convert_path('taskchain_unit',       $taskchain.'/UNIT', array('newfields' => array('entryformat' => '0', 'exitformat' => '0'))),
-            new convert_path('taskchain_quizzes',    $taskchain.'/UNIT/QUIZZES'),
-            new convert_path('taskchain_quiz',       $taskchain.'/UNIT/QUIZZES/QUIZ'),
-            new convert_path('taskchain_conditions', $taskchain.'/UNIT/QUIZZES/QUIZ/CONDITIONS'),
-            new convert_path('taskchain_condition',  $taskchain.'/UNIT/QUIZZES/QUIZ/CONDITIONS/CONDITION')
-        );
-
-        if ($userinfo) {
-            // Note that STRINGS and RESPONSES need to be relocated
-            // (1) Moodle1: TASKCHAIN/UNIT/QUIZZES/QUIZ/STRINGS
-            //     Moodle2: TASKCHAIN/STRINGS
-            // (2) Moodle1: TASKCHAIN/.../QUIZ/QUIZ_ATETMPTS/QUIZ_ATTEMPT/RESPONSES
+        return array(
+            new convert_path('taskchain',              $taskchain, array('dropfields' => array('modtype', 'course'))),
+            new convert_path('taskchain_unit',         $taskchain.'/UNIT', array('newfields' => array('entryformat' => '0', 'exitformat' => '0'))),
+            new convert_path('taskchain_quizzes',      $taskchain.'/UNIT/QUIZZES'),
+            new convert_path('taskchain_quiz',         $taskchain.'/UNIT/QUIZZES/QUIZ'),
+            new convert_path('taskchain_conditions',   $taskchain.'/UNIT/QUIZZES/QUIZ/CONDITIONS'),
+            new convert_path('taskchain_condition',    $taskchain.'/UNIT/QUIZZES/QUIZ/CONDITIONS/CONDITION', array('renamefields' => array('conditionquizid' => 'conditiontaskid', 'nextquizid' => 'nexttaskid'))),
+            // userinfo
+            new convert_path('taskchain_quizscores',   $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_SCORES'),
+            new convert_path('taskchain_quizscore',    $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_SCORES/QUIZ_SCORE', array('renamefields' => array('unumber' => 'cnumber'))),
+            new convert_path('taskchain_quizattempts', $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS'),
+            new convert_path('taskchain_quizattempt',  $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT', array('renamefields' => array('unumber' => 'cnumber', 'qnumber' => 'tnumber'))),
+            // RESPONSES need to be merged and relocated
+            //     Moodle1: TASKCHAIN/.../QUIZ/QUIZ_ATETMPTS/QUIZ_ATTEMPT/RESPONSES
             //     Moodle2: TASKCHAIN/.../QUIZ/QUESTIONS/QUESTION/RESPONSES
-            $paths = array_merge($paths, array(
-                new convert_path('taskchain_quizscores',   $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_SCORES'),
-                new convert_path('taskchain_quizscore',    $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_SCORES/QUIZ_SCORE', array('renamefields' => array('unumber' => 'cnumber'))),
-                new convert_path('taskchain_quizattempts', $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS'),
-                new convert_path('taskchain_quizattempt',  $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT', array('renamefields' => array('unumber' => 'cnumber', 'qnumber' => 'tnumber'))),
-                new convert_path('taskchain_responses',    $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT/RESPONSES'),
-                new convert_path('taskchain_response',     $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT/RESPONSES/RESPONSE'),
-                new convert_path('taskchain_questions',    $taskchain.'/UNIT/QUIZZES/QUIZ/QUESTIONS'),
-                new convert_path('taskchain_question',     $taskchain.'/UNIT/QUIZZES/QUIZ/QUESTIONS/QUESTION'),
-                new convert_path('taskchain_strings',      $taskchain.'/UNIT/QUIZZES/QUIZ/STRINGS'),
-                new convert_path('taskchain_string',       $taskchain.'/UNIT/QUIZZES/QUIZ/STRINGS/STRING', array('dropfields' => array('md5key'))),
-                new convert_path('taskchain_unitattempts', $taskchain.'/UNIT/UNIT_ATTEMPTS'),
-                new convert_path('taskchain_unitattempt',  $taskchain.'/UNIT/UNIT_ATTEMPTS/UNIT_ATTEMPT', array('renamefields' => array('unumber' => 'cnumber'))),
-                new convert_path('taskchain_unitgrades',   $taskchain.'/UNIT_GRADES'),
-                new convert_path('taskchain_unitgrade',    $taskchain.'/UNIT_GRADES/UNIT_GRADE')
-            ));
-        }
-
-        return $paths;
+            // new convert_path('taskchain_responses', $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT/RESPONSES'),
+            new convert_path('taskchain_response',     $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT/RESPONSES/RESPONSE'),
+            new convert_path('taskchain_questions',    $taskchain.'/UNIT/QUIZZES/QUIZ/QUESTIONS'),
+            new convert_path('taskchain_question',     $taskchain.'/UNIT/QUIZZES/QUIZ/QUESTIONS/QUESTION'),
+            // STRINGS need to be merged and relocated
+            //     Moodle1: TASKCHAIN/UNIT/QUIZZES/QUIZ/STRINGS
+            //     Moodle2: TASKCHAIN/STRINGS
+            // new convert_path('taskchain_strings',   $taskchain.'/UNIT/QUIZZES/QUIZ/STRINGS'),
+            new convert_path('taskchain_string',       $taskchain.'/UNIT/QUIZZES/QUIZ/STRINGS/STRING', array('dropfields' => array('md5key'))),
+            new convert_path('taskchain_unitattempts', $taskchain.'/UNIT/UNIT_ATTEMPTS'),
+            new convert_path('taskchain_unitattempt',  $taskchain.'/UNIT/UNIT_ATTEMPTS/UNIT_ATTEMPT', array('renamefields' => array('unumber' => 'cnumber'))),
+            new convert_path('taskchain_unitgrades',   $taskchain.'/UNIT_GRADES'),
+            new convert_path('taskchain_unitgrade',    $taskchain.'/UNIT_GRADES/UNIT_GRADE')
+        );
     }
 
     /**
@@ -303,12 +298,6 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     /**
      * responses
      */
-    public function on_taskchain_responses_start() {
-        // do nothing
-    }
-    public function on_taskchain_response_start() {
-        // do nothing
-    }
     public function process_taskchain_response($data) {
         if ($userid = $this->attemptuserid) {
             $data['userid'] = $userid;
@@ -323,12 +312,6 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
                 }
             }
         }
-    }
-    public function on_taskchain_response_end() {
-        // do nothing
-    }
-    public function on_taskchain_responses_end() {
-        // do nothing
     }
 
     /**
@@ -371,22 +354,10 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     /**
      * strings
      */
-    public function on_taskchain_strings_start() {
-        // do nothing
-    }
-    public function on_taskchain_string_start() {
-        // do nothing
-    }
     public function process_taskchain_string($data) {
         if ($id = $data['id']) {
             $this->strings[$id] = $data;
         }
-    }
-    public function on_taskchain_string_end() {
-        // do nothing
-    }
-    public function on_taskchain_strings_end() {
-        // do nothing
     }
 
     /**

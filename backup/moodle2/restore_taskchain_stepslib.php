@@ -537,6 +537,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @todo Finish documenting this function
      */
     protected function after_execute_foreignkeys(&$record, $table, $keys, $default=0)  {
+        global $DB;
         $update = false;
         foreach ($keys as $field => $itemname) {
             if ($record->$field > 0) {
