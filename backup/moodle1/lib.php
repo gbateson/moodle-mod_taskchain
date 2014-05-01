@@ -20,8 +20,7 @@
  *
  * @package    mod
  * @subpackage taskchain
- * @copyright  2012 Gordon Bateson <gordonbateson@gmail.com>
- *             credit and thanks to Robin de vries <robin@celp.nl>
+ * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -62,7 +61,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     /** user id of current task attempt */
     protected $attemptuserid =  0;
 
-    /** path (below temp dir) to current xml folder */
+    /** path below "$CFG->datadir/temp/" to current xml folder */
     protected $xmlfolder  = '';
 
     /**
@@ -79,12 +78,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
      *
      * @return array of {@link convert_path} instances
      */
-    /**
-     * get_paths
-     */
     public function get_paths() {
-
-        $userinfo = true; // are we including userinfo?
 
         // shortcut to TASKCHAIN tags
         $taskchain = '/MOODLE_BACKUP/COURSE/MODULES/MOD/TASKCHAIN';
@@ -96,22 +90,20 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
             new convert_path('taskchain_quiz',         $taskchain.'/UNIT/QUIZZES/QUIZ'),
             new convert_path('taskchain_conditions',   $taskchain.'/UNIT/QUIZZES/QUIZ/CONDITIONS'),
             new convert_path('taskchain_condition',    $taskchain.'/UNIT/QUIZZES/QUIZ/CONDITIONS/CONDITION', array('renamefields' => array('conditionquizid' => 'conditiontaskid', 'nextquizid' => 'nexttaskid'))),
-            // userinfo
+            // the paths below this line contain the user info
             new convert_path('taskchain_quizscores',   $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_SCORES'),
             new convert_path('taskchain_quizscore',    $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_SCORES/QUIZ_SCORE', array('renamefields' => array('unumber' => 'cnumber'))),
             new convert_path('taskchain_quizattempts', $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS'),
             new convert_path('taskchain_quizattempt',  $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT', array('renamefields' => array('unumber' => 'cnumber', 'qnumber' => 'tnumber'))),
-            // RESPONSES need to be merged and relocated
+            // RESPONSES need to be merged (by question id) and relocated
             //     Moodle1: TASKCHAIN/.../QUIZ/QUIZ_ATETMPTS/QUIZ_ATTEMPT/RESPONSES
             //     Moodle2: TASKCHAIN/.../QUIZ/QUESTIONS/QUESTION/RESPONSES
-            // new convert_path('taskchain_responses', $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT/RESPONSES'),
             new convert_path('taskchain_response',     $taskchain.'/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT/RESPONSES/RESPONSE'),
             new convert_path('taskchain_questions',    $taskchain.'/UNIT/QUIZZES/QUIZ/QUESTIONS'),
             new convert_path('taskchain_question',     $taskchain.'/UNIT/QUIZZES/QUIZ/QUESTIONS/QUESTION'),
             // STRINGS need to be merged and relocated
             //     Moodle1: TASKCHAIN/UNIT/QUIZZES/QUIZ/STRINGS
             //     Moodle2: TASKCHAIN/STRINGS
-            // new convert_path('taskchain_strings',   $taskchain.'/UNIT/QUIZZES/QUIZ/STRINGS'),
             new convert_path('taskchain_string',       $taskchain.'/UNIT/QUIZZES/QUIZ/STRINGS/STRING', array('dropfields' => array('md5key'))),
             new convert_path('taskchain_unitattempts', $taskchain.'/UNIT/UNIT_ATTEMPTS'),
             new convert_path('taskchain_unitattempt',  $taskchain.'/UNIT/UNIT_ATTEMPTS/UNIT_ATTEMPT', array('renamefields' => array('unumber' => 'cnumber'))),
@@ -120,9 +112,6 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
         );
     }
 
-    /**
-     * This is executed every time we find /MOODLE_BACKUP/COURSE/MODULES/MOD/TASKCHAIN
-     */
     /**
      * process_taskchain
      */
@@ -191,7 +180,9 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     }
 
     /**
-     * process_taskchain_unit
+     * convert unit to chain
+     * and add an id as this is expected
+     * in restore_taskchain_stepslib.php
      */
     public function on_taskchain_unit_start() {
         $this->xmlwriter->begin_tag('chain');
@@ -207,7 +198,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     }
 
     /**
-     * quizzes
+     * convert quiz(zes) to task(s)
      */
     public function on_taskchain_quizzes_start() {
         $this->xmlwriter->begin_tag('tasks');
@@ -230,7 +221,9 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     }
 
     /**
-     * conditions
+     * transfer condition(s) as they are
+     * but add an id as this is expected
+     * in restore_taskchain_stepslib.php
      */
     public function on_taskchain_conditions_start() {
         $this->xmlwriter->begin_tag('conditions');
@@ -252,7 +245,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     }
 
     /**
-     * quizscores
+     * convert quizscore(s) to taskscore(s)
      */
     public function on_taskchain_quizscores_start() {
         $this->xmlwriter->begin_tag('taskscores');
@@ -273,7 +266,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     }
 
     /**
-     * quizattempts
+     * convert quizattempt(s) to taskattempt(s)
      */
     public function on_taskchain_quizattempts_start() {
         $this->xmlwriter->begin_tag('taskattempts');
@@ -296,7 +289,8 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     }
 
     /**
-     * responses
+     * cache response(s) by question id, so they can
+     * be attached to the relevant question later on
      */
     public function process_taskchain_response($data) {
         if ($userid = $this->attemptuserid) {
@@ -315,7 +309,8 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     }
 
     /**
-     * questions
+     * transfer question(s) as they are, but
+     * add cached responses if there are any
      */
     public function on_taskchain_questions_start() {
         $this->xmlwriter->begin_tag('questions');
@@ -352,7 +347,10 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     }
 
     /**
-     * strings
+     * cache the string tags, so that they can be
+     * appended to the <taskchain> tag later on
+     *
+     * @param array $data
      */
     public function process_taskchain_string($data) {
         if ($id = $data['id']) {
@@ -361,7 +359,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     }
 
     /**
-     * unitattempts
+     * convert unitattempt(s) to chainattempt(s)
      */
     public function on_taskchain_unitattempts_start() {
         $this->xmlwriter->begin_tag('chainattempts');
@@ -382,7 +380,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     }
 
     /**
-     * unitgrades
+     * convert unitgrade(s) to chaingrade(s)
      */
     public function on_taskchain_unitgrades_start() {
         $this->xmlwriter->begin_tag('chaingrades');
