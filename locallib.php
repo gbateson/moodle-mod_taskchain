@@ -676,28 +676,6 @@ class mod_taskchain extends taskchain_base {
     }
 
     /**
-     * Detects the type of the source file
-     *
-     * @param stored_file $sourcefile the file that has just been uploaded and stored
-     * @return string the type of the source file (e.g. hp_6_jcloze_xml)
-     */
-    static public function get_sourcetype($sourcefile) {
-        // include all the taskchain_source classes
-        $classes = taskchain_get::classes('taskchainsource');
-
-        // loop through the classes checking to see if this file is recognized
-        // use call_user_func() to prevent syntax error in PHP 5.2.x
-        foreach ($classes as $class) {
-            if (call_user_func(array($class, 'is_taskfile'), $sourcefile)) {
-                return call_user_func(array($class, 'get_type'), $class);
-            }
-        }
-
-        // file is not a recognized task type :-(
-        return '';
-    }
-
-    /**
      * Returns a js module object for the TaskChain module
      *
      * @param array $requires

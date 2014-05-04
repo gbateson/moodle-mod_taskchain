@@ -848,12 +848,7 @@ class taskchain_task extends taskchain_base {
             // get sourcetype e.g. hp_6_jcloze_xml
             $file = $this->get_file('source');
             if (! $sourcetype = clean_param($this->sourcetype, PARAM_SAFEDIR)) {
-                if ($sourcetype = mod_taskchain::get_sourcetype($file)) {
-                    $DB->set_field('taskchain', 'sourcetype', $sourcetype, array('id' => $this->id));
-                    $this->sourcetype = $sourcetype;
-                } else {
-                    throw new moodle_exception('missingsourcetype', 'taskchain');
-                }
+                throw new moodle_exception('missingsourcetype', 'taskchain');
             }
             // $classname is something like "taskchain_source_hp_6_jcloze_xml"
             $classname = 'taskchain_source_'.$sourcetype;

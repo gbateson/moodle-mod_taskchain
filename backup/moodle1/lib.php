@@ -34,6 +34,9 @@ require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
  */
 class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
 
+    /** maximum size of moodle.xml that can be read using file_get_contents (256 KB) */
+    const SMALL_FILESIZE = 256000;
+
     /** id of current context */
     protected $contextid  =  0;
 
@@ -79,6 +82,11 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
      * @return array of {@link convert_path} instances
      */
     public function get_paths() {
+        global $CFG;
+
+        if (! empty($CFG->taskchainconvertquizport)) {
+            $this->convert_quizport_to_taskchain();
+        }
 
         // shortcut to TASKCHAIN tags
         $taskchain = '/MOODLE_BACKUP/COURSE/MODULES/MOD/TASKCHAIN';
@@ -208,7 +216,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
         $this->xmlwriter->begin_tag('task');
     }
     public function process_taskchain_quiz($data) {
-        $this->fix_sourcefile($data);
+        $this->fix_fileareas($data);
         foreach ($data as $field => $value) {
             $this->xmlwriter->full_tag($field, $value);
         }
@@ -401,101 +409,61 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     }
 
     /**
-     * fix_sourcefile
+     * fix_fileareas
      *
      * @param array $data (passed by reference)
      */
-    public function fix_sourcefile(&$data) {
-        // set $path, $filepath and $filename
-        $is_url = preg_match('|^https?://|', $data['sourcefile']);
-        if ($is_url) {
+    public function fix_fileareas(&$data) {
 
-            $backupinfo = $this->converter->get_stash('backup_info');
-            $originalcourseinfo = $this->converter->get_stash('original_course_info');
+        $fileareas = array('sourcefile', 'configfile');
+        foreach ($fileareas as $filearea) {
 
-            $original_baseurl = $backupinfo['original_wwwroot'].'/'.$originalcourseinfo['original_course_id'].'/';
-            unset($backupinfo, $originalcourseinfo);
-
-            // if the URL is for a file in the original course files folder
-            // then convert it to a simple path, by removing the original base url
-            $search = '/^'.preg_quote($original_baseurl, '/').'/';
-            if (preg_match($search, $data['sourcefile'])) {
-                $data['sourcefile'] = substr($data['sourcefile'], strlen($original_baseurl));
-                $is_url = false;
+            if (empty($data[$filearea])) {
+                continue;
             }
-        }
 
-        if ($is_url) {
-            $data['sourcetype'] = $this->get_taskchain_sourcetype($data['sourcefile']);
-        } else {
-            $filename = basename($data['sourcefile']);
-            $filepath = dirname($data['sourcefile']);
-            $filepath = trim($filepath, './');
-            if ($filepath=='') {
-                $filepath = '/';
+            $is_url = preg_match('|^https?://|', $data[$filearea]);
+            if ($is_url) {
+
+                $backupinfo = $this->converter->get_stash('backup_info');
+                $originalcourseinfo = $this->converter->get_stash('original_course_info');
+
+                $original_baseurl = $backupinfo['original_wwwroot'].'/'.$originalcourseinfo['original_course_id'].'/';
+                unset($backupinfo, $originalcourseinfo);
+
+                // if the URL is for a file in the original course files folder
+                // then convert it to a simple path, by removing the original base url
+                $search = '/^'.preg_quote($original_baseurl, '/').'/';
+                if (preg_match($search, $data[$filearea])) {
+                    $data[$filearea] = substr($data[$filearea], strlen($original_baseurl));
+                    $is_url = false;
+                }
+
             } else {
-                $filepath = '/'.$filepath.'/';
-            }
-            $data['sourcefile'] = $filepath.$filename;
-            $path = 'course_files'.$filepath.$filename;
 
-            // get a fresh new file manager for this instance
-            $this->fileman = $this->converter->get_file_manager($this->contextid, 'mod_taskchain');
+                $filename = basename($data[$filearea]);
+                $filepath = dirname($data[$filearea]);
+                $filepath = trim($filepath, './');
+                if ($filepath=='') {
+                    $filepath = '/';
+                } else {
+                    $filepath = '/'.$filepath.'/';
+                }
+                $data[$filearea] = $filepath.$filename;
+                $path = 'course_files'.$filepath.$filename;
 
-            // migrate taskchain file
-            $this->fileman->filearea = 'sourcefile';
-            $this->fileman->itemid   = 0;
-            $id = $this->fileman->migrate_file($path, $filepath, $filename);
+                // get a fresh new file manager for this instance
+                $this->fileman = $this->converter->get_file_manager($this->contextid, 'mod_taskchain');
 
-            // get stashed taskchain $filerecord
-            $filerecord = $this->fileman->converter->get_stash('files', $id);
+                // migrate taskchain file
+                $this->fileman->filearea = $filearea;
+                $this->fileman->itemid   = 0;
+                $id = $this->fileman->migrate_file($path, $filepath, $filename);
 
-            // seems like there should be a way to get the file content
-            // using the $filerecord, but I can't see how to do it,
-            // so for now we determine the $fullpath and read from that
-
-            // set sourcetype
-            $fullpath = $this->fileman->converter->get_tempdir_path().'/'.$path;
-            $data['sourcetype'] = $this->get_taskchain_sourcetype($fullpath, $filerecord);
-        }
-    }
-
-    /**
-     * get_taskchain_sourcetype
-     *
-     * given $fullpath to temporary imported Hot Potatoes file
-     * this function returns the TaskChain/TaskChain sourcetype of the file
-     *
-     * Where possible, the sourcetype will be determined from the file name extension
-     * but in some cases, notably html files, it may be necessary to read the file
-     * and analyze its contents in order to determine the sourcetype
-     */
-    public function get_taskchain_sourcetype($fullpath, $filerecord=null) {
-        if ($pos = strrpos($fullpath, '.')) {
-            $filetype = substr($fullpath, $pos+1);
-            switch ($filetype) {
-                case 'jcl': return 'hp_6_jcloze_xml';
-                case 'jcw': return 'hp_6_jcross_xml';
-                case 'jmt': return 'hp_6_jmatch_xml';
-                case 'jmx': return 'hp_6_jmix_xml';
-                case 'jqz': return 'hp_6_jquiz_xml';
-                case 'rhb': return 'hp_6_rhubarb_xml';
-                case 'sqt': return 'hp_6_sequitur_xml';
+                // get stashed taskchain $filerecord
+                $filerecord = $this->fileman->converter->get_stash('files', $id);
             }
         }
-
-        // cannot detect sourcetype from filename alone
-        // so we must open the file and examine the contents
-        if ($filerecord) {
-            $fs = get_file_storage();
-            $sourcefile = $fs->create_file_from_pathname($filerecord, $fullpath);
-            $sourcetype = mod_taskchain::get_sourcetype($sourcefile);
-            $sourcefile->delete();
-            return $sourcetype;
-        }
-
-        // could not detect sourcetype
-        return '';
     }
 
     /**
@@ -512,5 +480,48 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function get_new_conditionid() {
         $this->conditionid++;
         return $this->conditionid;
+    }
+
+    /*
+     * convert_quizport_to_taskchain
+     *
+     * open moodle.xml and convert all references to the QuizPort module
+     * or QuizPort activities, to refer instead to the TaskChain module
+     */
+    public function convert_quizport_to_taskchain() {
+
+        // these are the substitutions we want to make in moodle.xml
+        $search   = array('<NAME>quizport</NAME>',  'mod/quizport:',  '<TYPE>quizport</TYPE>',  '<NAME>mod_quizport_',  '<NAME>quizport_',  '<ITEMMODULE>quizport</ITEMMODULE>',  '<MODTYPE>quizport</MODTYPE>');
+        $replace  = array('<NAME>taskchain</NAME>', 'mod/taskchain:', '<TYPE>taskchain</TYPE>', '<NAME>mod_taskchain_', '<NAME>taskchain_', '<ITEMMODULE>taskchain</ITEMMODULE>', '<MODTYPE>taskchain</MODTYPE>');
+
+        $tempdir = $this->converter->get_tempdir_path();
+        $moodle_xml = $tempdir.'/moodle.xml';
+        $moodle_tmp = $tempdir.'/moodle.tmp';
+
+        if (file_exists($moodle_xml)) {
+            if (filesize($moodle_xml) < self::SMALL_FILESIZE) {
+                $contents = file_get_contents($moodle_xml);
+                $contents = str_replace($search, $replace, $contents);
+                file_put_contents($moodle_xml, $contents);
+            } else {
+                // xml file is large, maybe entire Moodle 1.9 site,
+                // so we process it one line at a time (slower but safer)
+                if ($file_xml = fopen($moodle_xml, 'r')) {
+                    if ($file_tmp = fopen($moodle_tmp, 'w')) {
+                        while (! feof($file_xml)) {
+                            if ($line = fgets($file_xml)) {
+                                fputs($file_tmp, str_replace($search, $replace, $line));
+                            }
+                        }
+                        fclose($file_tmp);
+                    }
+                    fclose($file_xml);
+                }
+                if ($file_xml && $file_tmp) {
+                    unlink($moodle_xml);
+                    rename($moodle_tmp, $moodle_xml);
+                }
+            }
+        }
     }
 }
