@@ -79,4 +79,12 @@ function xmldb_taskchain_install() {
             }
         }
     }
+
+    // convert "quizport" to "taskchain" and "attforblock" to "attendance"
+    // in course section summaries using courselinks.js.php
+    $update = '{course_sections}';
+    $set    = 'summary = REPLACE(REPLACE(summary, ?, ?), ?, ?)';
+    $where  = $DB->sql_like('summary', '?');
+    $params = array('quizport', 'taskchain', 'attforblock', 'attendance', '%/courselinks.js.php%');
+    $DB->execute("UPDATE $update SET $set WHERE $where", $params);
 }

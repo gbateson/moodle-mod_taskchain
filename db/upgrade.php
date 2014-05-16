@@ -257,6 +257,31 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
+    $newversion = 2014051606;
+    if ($oldversion < $newversion) {
+
+        // select all sections using courselinks.js.php
+        // typically there is just one in any QuizPort/TaskChain course
+        $select  = $DB->sql_like('summary', '?');
+        $params = array('%/courselinks.js.php%');
+        if ($ids = $DB->get_records_select_menu('course_sections', $select, $params, '', 'id,course')) {
+
+            // convert "quizport" to "taskchain"
+            // and "attforblock" to "attendance"
+            $update = '{course_sections}';
+            $set    = 'summary = REPLACE(REPLACE(summary, ?, ?), ?, ?)';
+            list($where, $params) = $DB->get_in_or_equal(array_keys($ids));
+            array_unshift($params, 'quizport', 'taskchain', 'attforblock', 'attendance');
+            $DB->execute("UPDATE $update SET $set WHERE id $where", $params);
+
+            // rebuild caches for any affected courses
+            foreach (array_unique($ids) as $courseid) {
+                rebuild_course_cache($courseid, true);
+            }
+        }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
     if ($empty_cache) {
         $DB->delete_records('taskchain_cache');
     }

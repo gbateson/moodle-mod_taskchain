@@ -728,3 +728,77 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
     width          : auto;
 }
 #page-mod-taskchain-edit-columnlists #fgroup_id_action_buttons_elements input {width: 90px; margin: 6px;}
+
+/*
+    TaskChain grade colors
+    (see mod/taskchain/courselinks.js.php)
+*/
+
+.path-course-view .activity a.taskchaingrade {
+    border-bottom: 2px #666666 dotted;
+    width: 100%;
+}
+
+.path-course-view .activity div.taskchainhighgrade,
+.path-course-view .activity div.taskchainmediumgrade,
+.path-course-view .activity div.taskchainlowgrade,
+.path-course-view .activity div.taskchainnograde {
+    float: right;
+    display: inline;
+    min-width: 2.6em;
+    text-align: right;
+    margin: 6px auto auto 6px; /* top and left 6px */
+    padding: 1px 6px 1px 4px; /* 2px 6px 2px 4px */
+
+    /* for Safari and Chrome */
+    -webkit-border-radius-topleft: 4px;
+    -webkit-border-radius-topright: 4px;
+
+    /* for Firefox */
+    -moz-border-radius-topleft: 4px;
+    -moz-border-radius-topright: 4px;
+
+    /* when Opera Presto 2.3 or later is released */
+    -o-border-radius-topleft: 4px;
+    -o-border-radius-topright: 4px;
+
+    /* future proofing for when border-radius is supported in CSS3 */
+    border-radius-topleft: 4px;
+    border-radius-topright: 4px;
+}
+
+.path-course-view .activity .taskchainhighgrade {
+    background-color: #ccff99; /* gentle green */
+	color: #000;
+}
+.path-course-view .activity .taskchainhighgrade:hover {
+	background-color: #96ff2D; /* darker green */
+	color: #222;
+}
+
+.path-course-view .activity .taskchainmediumgrade {
+    background-color: #ffcc66; /* gentle orange */
+	color: #000;
+}
+.path-course-view .activity .taskchainmediumgrade:hover {
+	background-color: #ffad02; /* darker orange */
+	color: #222;
+}
+
+.path-course-view .activity .taskchainlowgrade {
+	background-color: #ff7373; /* gentle red */
+	color: #000;
+}
+.path-course-view .activity .taskchainlowgrade:hover {
+	background-color: #ff4040; /* darker red */
+	color: #222;
+}
+
+.path-course-view .activity .taskchainnograde {
+	background-color: #ddd; /* grey */
+	color: #000;
+}
+.path-course-view .activity .taskchainnograde:hover {
+	background-color: #ccc; /* darker grey */
+	color: #000;
+}

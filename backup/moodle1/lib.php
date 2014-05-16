@@ -491,8 +491,8 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function convert_quizport_to_taskchain() {
 
         // these are the substitutions we want to make in moodle.xml
-        $search   = array('<NAME>quizport</NAME>',  'mod/quizport:',  '<TYPE>quizport</TYPE>',  '<NAME>mod_quizport_',  '<NAME>quizport_',  '<ITEMMODULE>quizport</ITEMMODULE>',  '<MODTYPE>quizport</MODTYPE>',  '<USEMEDIAFILTER>quizport</USEMEDIAFILTER>');
-        $replace  = array('<NAME>taskchain</NAME>', 'mod/taskchain:', '<TYPE>taskchain</TYPE>', '<NAME>mod_taskchain_', '<NAME>taskchain_', '<ITEMMODULE>taskchain</ITEMMODULE>', '<MODTYPE>taskchain</MODTYPE>', '<USEMEDIAFILTER>taskchain</USEMEDIAFILTER>');
+        $search   = array('<NAME>quizport</NAME>',  'mod/quizport/',  'mod/quizport:',  '<TYPE>quizport</TYPE>',  '<NAME>mod_quizport_',  '<NAME>quizport_',  '<ITEMMODULE>quizport</ITEMMODULE>',  '<MODTYPE>quizport</MODTYPE>',  '<USEMEDIAFILTER>quizport</USEMEDIAFILTER>');
+        $replace  = array('<NAME>taskchain</NAME>', 'mod/taskchain/', 'mod/taskchain:', '<TYPE>taskchain</TYPE>', '<NAME>mod_taskchain_', '<NAME>taskchain_', '<ITEMMODULE>taskchain</ITEMMODULE>', '<MODTYPE>taskchain</MODTYPE>', '<USEMEDIAFILTER>taskchain</USEMEDIAFILTER>');
 
         $tempdir = $this->converter->get_tempdir_path();
         $moodle_xml = $tempdir.'/moodle.xml';
