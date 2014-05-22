@@ -727,28 +727,16 @@ function taskchain_user_outline($course, $user, $mod, $taskchain) {
     global $CFG, $DB;
     require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
-    $conditions = array('taskchainid'=>$taskchain->id, 'userid'=>$user->id);
-    if (! $attempts = $DB->get_records('taskchain_attempts', $conditions, "timestart ASC", 'id,score,timestart')) {
-        return null;
+    $select = 'parenttype = ? AND parentid = ? AND userid = ?';
+    $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $taskchain->id, $user->id);
+    if ($grade = $DB->get_records_select('taskchain_chain_grades', $select, $params, 'timemodified DESC', 'id,grade,timemodified')) {
+        $grade = reset($grade);
+        $grade = (object)array(
+            'time' => $grade->timemodified,
+            'info' => get_string('grade', 'taskchain').': '.$grade->grade
+        );
     }
-
-    $time = 0;
-    $info = null;
-
-    $scores = array();
-    foreach ($attempts as $attempt){
-        if ($time==0) {
-            $time = $attempt->timestart;
-        }
-        $scores[] = mod_taskchain::format_score($attempt);
-    }
-    if (count($scores)) {
-        $info = get_string('score', 'taskchain').': '.implode(', ', $scores);
-    } else {
-        $info = get_string('noactivity', 'taskchain');
-    }
-
-    return (object)array('time'=>$time, 'info'=>$info);
+    return $grade;
 }
 
 /**
@@ -1204,12 +1192,13 @@ function taskchain_cron() {
  * @return array of user ids, empty if there are no participants
  */
 function taskchain_get_participants($taskchainid) {
-    global $DB;
+    global $CFG, $DB;
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
     $select = 'DISTINCT u.id, u.id';
-    $from   = '{user} u, {taskchain_attempts} a';
-    $where  = 'u.id=a.userid AND a.taskchain=?';
-    $params = array($taskchainid);
+    $from   = '{user} u, {taskchain_chain_grades} tcg';
+    $where  = 'u.id = tcg.userid AND tcg.parenttype = ? AND tcg.parentid = ?';
+    $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $taskchainid);
 
     return $DB->get_records_sql("SELECT $select FROM $from WHERE $where", $params);
 }
@@ -1311,9 +1300,9 @@ function taskchain_get_user_grades($taskchain, $userid=0) {
 
     $table = '{taskchain_chain_grades}';
     $fields = "userid AS id, userid, $rawgrade AS rawgrade, timemodified AS datesubmitted";
-    $select = 'parenttype='.mod_taskchain::PARENTTYPE_ACTIVITY." AND parentid=$taskchain->id";
+    $select = 'parenttype = '.mod_taskchain::PARENTTYPE_ACTIVITY." AND parentid = $taskchain->id";
     if ($userid) {
-        $select .= " AND userid=$userid";
+        $select .= " AND userid = $userid";
     }
     return $DB->get_records_sql("SELECT $fields FROM $table WHERE $select GROUP BY userid, grade, timemodified");
 }

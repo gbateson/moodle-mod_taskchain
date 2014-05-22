@@ -269,9 +269,9 @@ function xmldb_taskchain_upgrade($oldversion) {
             // convert "quizport" to "taskchain"
             // and "attforblock" to "attendance"
             $update = '{course_sections}';
-            $set    = 'summary = REPLACE(REPLACE(summary, ?, ?), ?, ?)';
+            $set    = 'summary = REPLACE(REPLACE(REPLACE(summary, ?, ?), ?, ?), ?, ?)';
             list($where, $params) = $DB->get_in_or_equal(array_keys($ids));
-            array_unshift($params, 'quizport', 'taskchain', 'attforblock', 'attendance');
+            array_unshift($params, 'quizport', 'taskchain', 'attforblock', 'attendance', 'id=([0-9]+)', 'id=([0-9]+(&section=[0-9]+)?)');
             $DB->execute("UPDATE $update SET $set WHERE id $where", $params);
 
             // rebuild caches for any affected courses
