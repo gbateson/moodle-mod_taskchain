@@ -32,6 +32,9 @@ require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 // create object to represent this TaskChain activity
 $TC = new mod_taskchain();
 
+$completion = new completion_info($TC->course);
+$completion->set_module_viewed($TC->coursemodule);
+
 if (! $TC->show_entrypage()) {
     // go straight to attempt.php
     redirect($TC->url->attempt());
@@ -43,9 +46,6 @@ if ($TC->action=='deleteselected') {
 
 // Log this request
 mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'view', 'view.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
-
-$completion = new completion_info($TC->course);
-$completion->set_module_viewed($TC->coursemodule);
 
 // Set editing mode
 mod_taskchain::set_user_editing();
