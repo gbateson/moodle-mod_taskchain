@@ -2378,6 +2378,7 @@ function taskchain_get_completion_state($course, $cm, $userid, $type) {
     require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
     $params = array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY,
                     'parentid'   => $cm->instance,
+                    'userid'     => $userid,
                     'status'     => mod_taskchain::STATUS_COMPLETED);
     return $DB->record_exists('taskchain_chain_grades', $params);
 }
