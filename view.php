@@ -42,7 +42,10 @@ if ($TC->action=='deleteselected') {
 }
 
 // Log this request
-add_to_log($TC->course->id, 'taskchain', 'view', 'view.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'view', 'view.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+
+$completion = new completion_info($TC->course);
+$completion->set_module_viewed($TC->coursemodule);
 
 // Set editing mode
 mod_taskchain::set_user_editing();

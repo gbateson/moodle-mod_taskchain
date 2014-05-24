@@ -34,7 +34,7 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/columnlists.php');
 $TC = new mod_taskchain();;
 
 $url = $TC->url->edit('columnlists');
-//add_to_log($TC->course->id, 'taskchain', 'editcolumnlists', $url, $TC->columnlisttype, $TC->columnlistid);
+//mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editcolumnlists', $url, $TC->columnlisttype, $TC->columnlistid);
 
 // Set editing mode
 mod_taskchain::set_user_editing();

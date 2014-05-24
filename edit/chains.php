@@ -39,7 +39,7 @@ $TC = new mod_taskchain();
 // (needed if "showpopup" or "popupoptions" change)
 require_once($CFG->dirroot.'/course/lib.php');
 
-add_to_log($TC->course->id, 'taskchain', 'editchains', 'edit/chains.php?id='.$TC->course->id);
+mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editchains', 'edit/chains.php?id='.$TC->course->id);
 
 // Set editing mode
 mod_taskchain::set_user_editing();

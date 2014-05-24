@@ -37,7 +37,7 @@ if ($TC->action=='deleteselected') {
 }
 
 // Log this request
-add_to_log($TC->course->id, 'taskchain', 'report', 'report.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'report', 'report.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
 $PAGE->set_url($TC->url->report($TC->mode));
 $PAGE->set_title($TC->taskchain->name);

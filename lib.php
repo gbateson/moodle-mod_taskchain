@@ -58,7 +58,7 @@ function taskchain_supports($feature) {
         'FEATURE_BACKUP_MOODLE2'   => true, // default=false
         'FEATURE_COMMENT'          => true,
         'FEATURE_COMPLETION_HAS_RULES' => true,
-        'FEATURE_COMPLETION_TRACKS_VIEWS' => false,
+        'FEATURE_COMPLETION_TRACKS_VIEWS' => true,
         'FEATURE_CONTROLS_GRADE_VISIBILITY' => true,
         'FEATURE_GRADE_HAS_GRADE'  => true, // default=false
         'FEATURE_GRADE_OUTCOMES'   => true,
@@ -2361,4 +2361,23 @@ function taskchain_set_missing_fields($table, &$record, &$formdata, $fieldnames)
     }
     return implode(',', $fields);
     //return 'u.id AS userid, u.username, u.firstname, u.lastname, u.picture, u.imagealt, u.email';
+}
+
+/**
+ * Obtains the automatic completion state for this taskchain based on the condition
+ * in taskchain settings.
+ *
+ * @param object  $course record from "course" table
+ * @param object  $cm     record from "course_modules" table
+ * @param integer $userid id from "user" table
+ * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @return bool True if completed, false if not, $type if conditions not set
+ */
+function taskchain_get_completion_state($course, $cm, $userid, $type) {
+    global $CFG, $DB;
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+    $params = array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY,
+                    'parentid'   => $cm->instance,
+                    'status'     => mod_taskchain::STATUS_COMPLETED);
+    return $DB->record_exists('taskchain_chain_grades', $params);
 }

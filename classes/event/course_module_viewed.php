@@ -88,8 +88,8 @@ class course_module_viewed extends \core\event\content_viewed {
         global $USER;
 
         $taskchain = $this->get_record_snapshot('taskchain', $this->objectid);
-        $course   = $this->get_record_snapshot('course', $this->courseid);
-        $cm       = $this->get_record_snapshot('course_modules', $this->context->instanceid);
+        $course    = $this->get_record_snapshot('course', $this->courseid);
+        $cm        = $this->get_record_snapshot('course_modules', $this->context->instanceid);
         $taskchain = new \taskchain($taskchain, $cm, $course);
         return (object)array('taskchain' => $taskchain, 'user' => $USER);
     }

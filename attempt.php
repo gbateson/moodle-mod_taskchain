@@ -32,7 +32,7 @@ require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 $TC = new mod_taskchain();
 
 // write to log
-add_to_log($TC->course->id, 'taskchain', 'attempt', 'view.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'attempt', 'view.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
 // Set editing mode
 mod_taskchain::set_user_editing();

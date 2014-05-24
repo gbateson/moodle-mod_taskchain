@@ -37,7 +37,7 @@ if (! $course = $DB->get_record('course', array('id' => $id))) {
 
 require_course_login($course);
 
-add_to_log($course->id, 'taskchain', 'index', "index.php?id=$course->id", '');
+mod_taskchain::add_to_log($course->id, 'taskchain', 'index', "index.php?id=$course->id", '');
 
 $PAGE->set_url('/mod/taskchain/index.php', array('id' => $course->id));
 $PAGE->set_title($course->fullname);

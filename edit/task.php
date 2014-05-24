@@ -34,9 +34,9 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/task.php');
 $TC = new mod_taskchain();
 
 if ($TC->task) {
-    add_to_log($TC->course->id, 'taskchain', 'edittask', 'edit/task.php?id='.$TC->task->id, $TC->taskchain->id, $TC->coursemodule->id);
+    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'edittask', 'edit/task.php?id='.$TC->task->id, $TC->taskchain->id, $TC->coursemodule->id);
 } else {
-    add_to_log($TC->course->id, 'taskchain', 'edittask', 'edit/task.php?tc='.$TC->taskchain->id, $TC->taskchain->id, $TC->coursemodule->id);
+    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'edittask', 'edit/task.php?tc='.$TC->taskchain->id, $TC->taskchain->id, $TC->coursemodule->id);
 }
 
 // Set editing mode

@@ -34,7 +34,7 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/tasks.php');
 $TC = new mod_taskchain();
 
 // create object to represent this TaskChain activity
-add_to_log($TC->course->id, 'taskchain', 'edittasks', 'edit/tasks.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'edittasks', 'edit/tasks.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
 // Set editing mode
 mod_taskchain::set_user_editing();

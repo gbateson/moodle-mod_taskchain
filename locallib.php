@@ -2703,4 +2703,28 @@ class mod_taskchain extends taskchain_base {
         // not an array (or Moodle <= 2.1)
         return clean_param($param, $type);
     }
+
+    /**
+     * taskchain_mod_taskchain::add_to_log
+     *
+     * a wrapper method to offer consistent API for adding logs
+     *
+     * @param integer $courseid
+     * @param string  $action
+     * @param string  $url
+     * @param string  $info
+     * @param integer $cm
+     * @param integer $user
+     * @return void, but may update log tabes in DB
+     */
+    static public function add_to_log($courseid, $module, $action, $url='', $info='', $cm=0, $user=0) {
+        if (function_exists('get_log_manager')) {
+            // Moodle >= 2.6
+            $manager = get_log_manager();
+            $manager->legacy_add_to_log($courseid, $module, $action, $url, $info, $cm, $user);
+        } else if (function_exists('add_to_log')) {
+            // Moodle <= 2.6
+            add_to_log($courseid, $module, $action, $url, $info, $cm, $user);
+        }
+    }
 }
