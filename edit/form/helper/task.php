@@ -197,6 +197,24 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     }
 
     /**
+     * prepare title's "delay3" values
+     *
+     * @param array $data (passed by reference)
+     * @todo Finish documenting this function
+     */
+    protected function prepare_field_delay3(&$data) {
+        $field = 'delay3';
+        $name = $this->get_fieldname($field);
+        $name_options = $this->get_fieldname($field.'options');
+        if ($data[$name] < 0) {
+            $data[$name_options] = $data[$name];
+            $data[$name] = 0;
+        } else {
+            $data[$name_options] = mod_taskchain::DELAY3_SPECIFIC;
+        }
+    }
+
+    /**
      * add_field_outputformat
      *
      * @param string name of $field
@@ -387,12 +405,11 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function add_field_delay3($field) {
-        $before = array('options' => taskchain_available::delay3s_list());
-        $this->add_template_timer($field, true, $before);
-
         $name = $this->get_fieldname($field);
-        $this->mform->disabledIf($name.'[number]',   $name, 'ne', mod_taskchain::DELAY3_SPECIFIC);
-        $this->mform->disabledIf($name.'[timeunit]', $name, 'ne', mod_taskchain::DELAY3_SPECIFIC);
+        $name_options = $this->get_fieldname($field.'options');
+        $this->add_template_timer($field, true, array('options' => taskchain_available::delay3s_list()));
+        $this->mform->disabledIf($name.'[number]',   $name_options, 'ne', mod_taskchain::DELAY3_SPECIFIC);
+        $this->mform->disabledIf($name.'[timeunit]', $name_options, 'ne', mod_taskchain::DELAY3_SPECIFIC);
     }
 
     /**
