@@ -48,6 +48,8 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-attempt div.taskchainstopbutton .FuncButton,
 #page-mod-taskchain-attempt div.taskchainstopbutton .FuncButtonUp,
 #page-mod-taskchain-attempt div.taskchainstopbutton .FuncButtonDown {margin-right: 18px;}
+#page-mod-taskchain-attempt input,
+#page-mod-taskchain-attempt textarea {width: auto;}
 
 /** mod taskchain submit **/
 #page-mod-taskchain-submit .region-content {text-align: center;}
@@ -305,7 +307,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
     margin-top    : 12px;
     margin-bottom : 12px;
     text-align    : left;
-    padding-left  : 24px;
+    padding-left  : 2.0em;
 }
 #page-mod-taskchain-edit-tasks fieldset#filtershdr legend {
     display       : none;
@@ -356,8 +358,7 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
     background-color : #eeeebb;
     border-left      : 1px solid #333333;
     border-right     : 1px solid #333333;
-    margin-left      : 24px;
-    width            : 480px;
+    margin-left      : 2.0em;
 }
 
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortfield,
@@ -368,14 +369,14 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasks,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasksafter,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetaskschain,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults {padding-left: 24px; width: 484px;}
+#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults {padding-left: 2.0em; width: 42.0em;} /* 12px 484px */
 
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtercoursename,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filteractivityname,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskname,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskposition,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcefile,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcetype {padding-left: 48px; width: 460px;}
+#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcetype {padding-left: 4.0em; width: 40.0em;} /* 48px 460px */
 
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_reordertasks_sortfield,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_addtasks_start,
