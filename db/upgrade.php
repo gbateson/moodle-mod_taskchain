@@ -251,12 +251,6 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2014060612;
-    if ($oldversion < $newversion) {
-        $empty_cache = true;
-        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
-    }
-
     $newversion = 2014051606;
     if ($oldversion < $newversion) {
 
@@ -279,6 +273,12 @@ function xmldb_taskchain_upgrade($oldversion) {
                 rebuild_course_cache($courseid, true);
             }
         }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
+    $newversion = 2014061314;
+    if ($oldversion < $newversion) {
+        $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 

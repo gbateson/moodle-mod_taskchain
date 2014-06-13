@@ -588,7 +588,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                 // debugging("Could not locate JavaScript function: $name", DEBUG_DEVELOPER);
                 continue;
             }
-            $methodname = "fix_js_{$name}";
+            $methodname = "fix_js_$name";
             if (! method_exists($this, $methodname)) {
                 // debugging("Could not locate method to fix JavaScript function: $name", DEBUG_DEVELOPER);
                 continue;

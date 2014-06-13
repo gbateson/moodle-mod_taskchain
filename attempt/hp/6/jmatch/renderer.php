@@ -160,13 +160,13 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
             ."		var div = document.createElement('div');\n"
             ."		div.setAttribute('id', 'D' + i);\n"
             ."		div.setAttribute('class', 'CardStyle');\n"
-            ."		div.setAttribute('onmousedown', 'beginDrag(event, ' + i + ')');\n"
-            ."		myParentNode.appendChild(div);\n"
+            ."		div = myParentNode.appendChild(div);\n"
+            ."		HP_add_listener(div, 'mousedown', 'beginDrag(event, ' + i + ')');\n"
             ."	} else {\n"
             ."		document.write('".'<div id="'."D' + i + '".'" class="CardStyle" onmousedown="'."beginDrag(event, ' + i + ')".'"'."></div>');\n"
             ."	}\n"
             ."}\n"
-            ."// m = div = myParentNode = null;"
+            ."div = myParentNode = null;"
        ;
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent, 1);
     }
@@ -228,7 +228,7 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
     public function get_js_functionnames()  {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'CheckAnswers,beginDrag';
+        $names .= ($names ? ',' : '').'CardSetHTML,beginDrag,doDrag,endDrag,CheckAnswers';
         return $names;
     }
 
@@ -252,6 +252,7 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      */
     public function fix_js_beginDrag(&$str, $start, $length)  {
         $substr = substr($str, $start, $length);
+        parent::fix_js_beginDrag($substr, 0, $length);
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
                 ."	if (e && e.target && e.target.tagName && e.target.tagName.toUpperCase()=='OBJECT') {\n"
@@ -261,6 +262,17 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
             $substr = substr_replace($substr, $insert, $pos+1, 0);
         }
         $str = substr_replace($str, $substr, $start, $length);
+    }
+
+    /**
+     * get_beginDrag_target
+     * for drag-and-drop JMatch and JMix
+     *
+     * @return string
+     * @todo Finish documenting this function
+     */
+    public function get_beginDrag_target() {
+        return 'DC[CurrDrag]';
     }
 
     /**
