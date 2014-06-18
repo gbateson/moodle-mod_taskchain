@@ -550,16 +550,17 @@ class taskchain_mediafilter {
                 // format the script (helps readability of the html source)
                 $script[0] = $this->format_script($script[0]);
                 //store this javascript so it can be run later
-                $this->js_inline = trim($script[0])."\n".$this->js_inline;
+                $this->js_inline = $this->js_inline."\n".trim($script[0]);
             }
             if ($this->js_inline && $load_flowplayer==0) {
                 $load_flowplayer = 1;
-                $this->js_inline .= ''
+                $this->js_inline = ''
                     .'<script type="text/javascript">'."\n"
                     ."//<![CDATA[\n"
                     ."\t".'M.util.load_flowplayer();'."\n"
                     ."//]]>\n"
                     ."</script>\n"
+                    .$this->js_inline
                 ;
             }
         }
