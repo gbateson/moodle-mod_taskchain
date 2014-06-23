@@ -45,9 +45,10 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_findit_b_renderer extends mod_taskch
     public $js_object_type = 'JClozeFindItB';
 
     /**
-     * init
+     * constructor function
      *
-     * @param xxx $taskchain
+     * @param xxx $page
+     * @param xxx $target
      * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target)  {

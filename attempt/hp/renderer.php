@@ -51,9 +51,6 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
     /** templates folders (relative to Moodle dirroot) */
     protected $templatesfolders = array();
 
-    /** external javascripts required for this format */
-    protected $javascripts = array();
-
     /** type of javascript object to collect task results from browser */
     protected $js_object_type = '';
 
@@ -87,9 +84,10 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
     // basic initialization
 
     /**
-     * init
+     * constructor function
      *
-     * @param xxx $TC
+     * @param $page
+     * @param $target
      * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target)  {

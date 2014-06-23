@@ -42,9 +42,10 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_sort_renderer extends mod_taskchain_
     public $templatefile = 'djmatch6.ht_';
 
     /**
-     * init
+     * constructor function
      *
-     * @param xxx $taskchain
+     * @param xxx $page
+     * @param xxx $target
      * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target)  {

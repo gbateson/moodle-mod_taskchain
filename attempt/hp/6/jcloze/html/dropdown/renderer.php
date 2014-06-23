@@ -45,9 +45,10 @@ class mod_taskchain_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_taskc
     public $js_object_type = 'JClozeDropDown';
 
     /**
-     * init
+     * constructor function
      *
-     * @param xxx $taskchain
+     * @param xxx $page
+     * @param xxx $target
      * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target)  {

@@ -434,7 +434,6 @@ class taskchain_mediafilter {
      */
     public function fix_link($output, $options, $match)  {
         global $CFG, $PAGE, $TC;
-        static $load_flowplayer = 0;
         static $eolas_fix_applied = 0;
 
         if (is_string($match)) {
@@ -544,24 +543,16 @@ class taskchain_mediafilter {
         $search = '/\s*<script[^>]*>.*?<\/script>\s*/is';
         if (preg_match_all($search, $object, $scripts, PREG_OFFSET_CAPTURE)) {
             foreach (array_reverse($scripts[0]) as $script) {
-                // $script: [0] = matched string, [1] = offset to start of string
+                list($script, $start) = $script;
                 // remove the script from the player
-                $object = substr_replace($object, "\n", $script[1], strlen($script[0]));
+                $object = substr_replace($object, "\n", $start, strlen($script));
                 // format the script (helps readability of the html source)
-                $script[0] = $this->format_script($script[0]);
+                $script = $this->format_script($script);
                 //store this javascript so it can be run later
-                $this->js_inline = $this->js_inline."\n".trim($script[0]);
-            }
-            if ($this->js_inline && $load_flowplayer==0) {
-                $load_flowplayer = 1;
-                $this->js_inline = ''
-                    .'<script type="text/javascript">'."\n"
-                    ."//<![CDATA[\n"
-                    ."\t".'M.util.load_flowplayer();'."\n"
-                    ."//]]>\n"
-                    ."</script>\n"
-                    .$this->js_inline
-                ;
+                if ($this->js_inline) {
+                    $this->js_inline .= "\n";
+                }
+                $this->js_inline .= $script;
             }
         }
 
@@ -716,7 +707,10 @@ class taskchain_mediaplayer {
         global $CFG;
 
         // cache language strings
-        static $str;
+        static $str = null;
+        if (! isset($str)) {
+            $str = new stdClass();
+        }
         if (! isset($str->$filetype)) {
             $str->$filetype = $filetype.'audio'; // get_string($filetype.'audio', 'mediaplugin');
         }

@@ -43,9 +43,10 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmix/xml/v6/plus/rendere
 class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_renderer {
 
     /**
-     * init
+     * constructor function
      *
-     * @param xxx $taskchain
+     * @param xxx $page
+     * @param xxx $target
      * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target)  {

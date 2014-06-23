@@ -306,6 +306,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
     public function postprocessing()  {
         $this->fix_title_icons();
         $this->fix_submissionform();
+        parent::postprocessing();
     }
 
     /**

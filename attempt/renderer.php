@@ -90,6 +90,9 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
     /** boolean flag that indicates whether the cache content is uptodate or not */
     protected $cache_uptodate;
 
+    /** external javascripts required for this attempt */
+    protected $javascripts = array();
+
     /**
      * these $CFG fields must match those in the "taskchain_cache" table
      * "wwwroot" is not stored explicitly because it is included in the md5key
@@ -139,14 +142,18 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
     protected $taskattemptid = 0;
 
     /**
-     * init
+     * constructor function
      *
-     * @param mod_taskchain $TC object to represent the current tackchain activity
+     * @param xxx $page
+     * @param xxx $target
      * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target)  {
 
         parent::__construct($page, $target);
+
+        // add js event API
+        array_push($this->javascripts, 'mod/taskchain/attempt/event.js');
 
         // set the frame name, if any
         $this->framename = optional_param('framename', '', PARAM_ALPHA);
@@ -388,6 +395,9 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         // that are not to be included in the cached data, e.g. $this->fix_title_icons()
         // If you want to fix $this->headcontent and $this->bodycontent before caching,
         // add your own "set_bodycontent()" method
+        foreach ($this->javascripts as $script) {
+            $this->page->requires->js('/'.$script, true);
+        }
     }
 
     /**
@@ -509,6 +519,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         $this->bodycontent .= ''
             .'<script type="text/javascript">'."\n"
             .'//<![CDATA['."\n"
+            ."function taskchain_fix_targets() {\n"
             ."	var obj = document.getElementsByTagName('a');\n"
             ."	if (obj) {\n"
             ."		var i_max = obj.length;\n"
@@ -529,6 +540,8 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             ."		}\n"
             ."		var obj = null;\n"
             ."	}\n"
+            ."}\n"
+            ."HP_add_listener(window, 'load', taskchain_fix_targets);\n"
             .'//]]>'."\n"
             .'</script>'."\n"
         ;
@@ -1226,7 +1239,12 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         }
         $onload_oneline = preg_replace('/\s+/s', ' ', $onload);
         $onload_oneline = preg_replace("/[\\']/", '\\\\$0', $onload_oneline);
-        $str .= "HP_add_listener(window, 'load', '$onload_oneline');\n";
+        $onload_oneline = preg_replace('/^(\w+)\(\)$/', '$1', $onload_oneline);
+        if (preg_match('/^(\w+)$/', $onload_oneline)) {
+            $str .= "HP_add_listener(window, 'load', $onload_oneline);\n";
+        } else {
+            $str .= "HP_add_listener(window, 'load', '$onload_oneline');\n";
+        }
         if ($script_tags) {
             $str .= "//]]>\n"."</script>\n";
         }
@@ -1257,6 +1275,17 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         $mediafilter->fix('bodycontent', $this);
 
         if ($mediafilter->js_inline) {
+
+            if (strpos($mediafilter->js_inline, 'add_audio_player_xxx')) {
+                $mediafilter->js_inline .= "\n"
+                    .'<script type="text/javascript">'."\n"
+                    ."//<![CDATA[\n"
+                    ."\t".'M.util.load_flowplayer();'."\n"
+                    ."//]]>\n"
+                    ."</script>\n"
+                ;
+            }
+
             // remove the internal </script><script ... > joins from the inline javascripts (js_inline)
             $search = '/(?:\s*\/\/\]\]>)?'.'\s*<\/script>\s*<script type="text\/javascript">'.'(?:\s*\/\/<!\[CDATA\[[ \t]*)?/is';
             $mediafilter->js_inline = preg_replace($search, '', $mediafilter->js_inline);
@@ -1333,8 +1362,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 //."\n"
                 .$deferred_js // load deferred scripts, if any
                 .$this->fix_mediafilter_onload_extra()
-                .'} // end function '.$onload."\n"
-                ."\n"
+                .'}'."\n"
                 .$this->fix_onload($onload)
                 .'$3'
             ;

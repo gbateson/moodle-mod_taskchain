@@ -43,9 +43,10 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/renderer.php');
 class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_renderer {
 
     /**
-     * init
+     * constructor function
      *
-     * @param xxx $taskchain
+     * @param xxx $page
+     * @param xxx $target
      * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target)  {
@@ -879,6 +880,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 ."	if (! window.pg){\n"
                 ."		window.pg = new PageDim();\n"
                 ."	}\n"
+                ."	M.util.load_flowplayer();\n"
                 ."	var FDiv = document.getElementById('FeedbackDiv');\n"
                 ."	if (FDiv){\n"
                 ."		var w = getOffset(FDiv, 'Width') || FDiv.style.width || getClassAttribute(FDiv.className, 'width');\n"
@@ -1487,15 +1489,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * after headcontent and bodycontent have been setup and
      * before content is sent to browser, we add title edit icon,
      * insert submission form, adjust navigation butons (if any)
-     * and add external javascripts (to the top of the page)
      */
     public function postprocessing()  {
         $this->fix_title_icons();
         $this->fix_submissionform();
         $this->fix_navigation_buttons();
-        foreach ($this->javascripts as $script) {
-            $this->page->requires->js('/'.$script, true);
-        }
+        parent::postprocessing();
     }
 
     /**

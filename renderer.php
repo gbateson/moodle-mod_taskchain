@@ -46,6 +46,13 @@ class mod_taskchain_renderer extends plugin_renderer_base {
     var $nonumber = '-';
     var $notext = '&nbsp;';
 
+    /**
+     * constructor function
+     *
+     * @param $page
+     * @param $target
+     * @todo Finish documenting this function
+     */
     function __construct(moodle_page $page, $target) {
         global $TC;
 

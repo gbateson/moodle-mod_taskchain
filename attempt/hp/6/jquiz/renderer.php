@@ -56,9 +56,10 @@ class mod_taskchain_attempt_hp_6_jquiz_renderer extends mod_taskchain_attempt_hp
     );
 
     /**
-     * init
+     * constructor function
      *
-     * @param xxx $taskchain
+     * @param xxx $page
+     * @param xxx $target
      * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target)  {
