@@ -796,6 +796,7 @@ $string['outputformat_hp_6_jmix_xml_v6_plus_keypress'] = 'JMix (v6+ with key pre
 $string['outputformat_hp_6_jquiz_xml_v6'] = 'JQuiz (v6) from xml';
 $string['outputformat_hp_6_jquiz_xml_v6_autoadvance'] = 'JQuiz (v6) from xml (Auto-advance)';
 $string['outputformat_hp_6_jquiz_xml_v6_exam'] = 'JQuiz (v6) from xml (Exam)';
+$string['outputformat_hp_6_jquiz_xml_v6_intro'] = 'JQuiz (v6) from xml (Intro)';
 $string['outputformat_hp_6_rhubarb_html'] = 'Rhubarb (v6) from html';
 $string['outputformat_hp_6_rhubarb_xml'] = 'Rhubarb (v6) from xml';
 $string['outputformat_hp_6_sequitur_html'] = 'Sequitur (v6) from html';
