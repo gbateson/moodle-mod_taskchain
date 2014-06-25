@@ -376,7 +376,7 @@ class taskchain_mediafilter {
         if ($player=='movie' || $player=='object') {
             $options_array['movie'] = $absoluteurl;
             $options_array['skipmediaurl'] = true;
-        } else if ($player=='center' || $player=='hide') {
+        } else if ($player=='center' || $player=='hide' || $player=='iconlink') {
             $options_array[$player] = true;
             $player = '';
         } else if ($player) {
@@ -509,6 +509,30 @@ class taskchain_mediafilter {
             }
         } else {
             $object = $this->mediaplugin_filter($TC->taskchain, $link, $options);
+        }
+
+        // center content if required
+        if (array_key_exists('iconlink', $options)) {
+            if ($options['iconlink'] && preg_match('/href="([^"]*)"/', $link, $matches)) {
+
+                // create audio icon
+                $img = $PAGE->theme->pix_url('f/audio', 'core')->out();
+                $style = 'border-style: none; border-left: 4px solid transparent;';
+                $img = html_writer::empty_tag('img', array('src' => $img, 'title' => 'audio', 'style' => $style));
+
+                // append link to audio
+                $onclick = "this.target='iconlink'; ".
+                           "var w = Math.min(600, screen.width); ".
+                           "var h = Math.min(60, screen.height); ".
+                           "var l = (screen.width - w) / 2; ".
+                           "var t = (screen.height - h) / 2; ".
+                           "var newwin=window.open('".$matches[1]."', 'iconlink', 'menubar=0,location=0,scrollbars,resizable,width='+w+',height='+h+',top='+t+',left='+l);".
+                           "if (newwin) newwin.focus(); ".
+                           "newwin = null; ".
+                           "return false;";
+                $object .= html_writer::tag('a', $img, array('onclick' => $onclick));
+            }
+            unset($options['iconlink'], $matches, $onclick, $img, $style);
         }
 
         // center content if required

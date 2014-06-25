@@ -41,6 +41,7 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/renderer.php');
  * @subpackage taskchain
  */
 class mod_taskchain_attempt_hp_6_jquiz_renderer extends mod_taskchain_attempt_hp_6_renderer {
+
     public $icon = 'pix/f/jqz.gif';
     public $js_object_type = 'JQuiz';
 

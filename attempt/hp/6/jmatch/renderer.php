@@ -41,6 +41,13 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/renderer.php');
  * @subpackage taskchain
  */
 class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_hp_6_renderer {
+
+    /**
+     * delay fix for audio loader until tiles have
+     * been created, shuffled and possibly deleted
+     */
+    protected $fix_audio_immediately = false;
+
     public $icon = 'pix/f/jmt.gif';
     public $js_object_type = 'JMatch';
 

@@ -45,8 +45,8 @@ $plugin->cron      = 0; // 60
 $plugin->component = 'mod_taskchain';
 $plugin->maturity  = MATURITY_STABLE; // ALPHA=50, BETA=100, RC=150, STABLE=200
 $plugin->requires  = 2010112400; // Moodle 2.0
-$plugin->release   = '2014.06.23 (18)';
-$plugin->version   = 2014062318;
+$plugin->release   = '2014.06.25 (20)';
+$plugin->version   = 2014062520;
 
 // setup $module for Moodle <= 2.4
 if (isset($saveplugin)) {

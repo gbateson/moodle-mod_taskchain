@@ -94,6 +94,13 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
     protected $javascripts = array();
 
     /**
+     * normally we fix the audio players immediately they have been created,
+     * but it may be necessary to defer till page elements have been created,
+     * and possibly shuffled/removed
+     */
+    protected $fix_audio_immediately = true;
+
+    /**
      * these $CFG fields must match those in the "taskchain_cache" table
      * "wwwroot" is not stored explicitly because it is included in the md5key
      */
@@ -1276,14 +1283,16 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
         if ($mediafilter->js_inline) {
 
-            if (strpos($mediafilter->js_inline, 'add_audio_player_xxx')) {
-                $mediafilter->js_inline .= "\n"
-                    .'<script type="text/javascript">'."\n"
-                    ."//<![CDATA[\n"
-                    ."\t".'M.util.load_flowplayer();'."\n"
-                    ."//]]>\n"
-                    ."</script>\n"
-                ;
+            if (strpos($mediafilter->js_inline, 'add_audio_player')) {
+                if ($this->fix_audio_immediately) {
+                    $mediafilter->js_inline .= ''
+                        .'<script type="text/javascript">'."\n"
+                        ."//<![CDATA[\n"
+                        .$this->fix_audio_loader()
+                        ."//]]>\n"
+                        .'</script>'."\n"
+                    ;
+                }
             }
 
             // remove the internal </script><script ... > joins from the inline javascripts (js_inline)
@@ -1376,6 +1385,27 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             // append the external javascripts to the head content
             $this->headcontent .= $mediafilter->js_external;
         }
+    }
+
+    /**
+     * fix_audio_loader
+     *
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function fix_audio_loader()  {
+        return ''
+            ."	if (window.M && M.util && M.util.audio_players) {\n"
+            ."		var i_max = (M.util.audio_players.length - 1);\n"
+            ."		for (var i=i_max; i>=0; i--) {\n"
+            ."			var id = M.util.audio_players[i].id;\n"
+            ."			if (document.getElementById(id)==null) {\n"
+            ."				M.util.audio_players.splice(i, 1);\n"
+            ."			}\n"
+            ."		}\n"
+            ."		M.util.load_flowplayer();\n"
+            ."	}\n"
+        ;
     }
 
     /**
