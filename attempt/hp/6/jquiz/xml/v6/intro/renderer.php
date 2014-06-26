@@ -61,7 +61,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
         // remove current text from each answer button
         // and replace it with the text from the answer
         $search = '/(<li id="Q_\d+_\d+">)(<button[^>]*>)(.*?)(<\/button>)(.*?)(<\/li>)/';
-        $replace = '\\1\\2\\5\\4\\6';
+        $replace = '$1$2$5$4$6';
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent);
         parent::fix_bodycontent();
     }
@@ -88,7 +88,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
 
         // accept all answers as "correct" answers, so that Finished gets set to true
         $search = "/(I\[\d\]\[3\]\[\d\] = new Array\('.*',\d,)0(\d\);)/";
-        $replace = '\\1,1,\\2';
+        $replace = '$1,1,$2';
         //$this->headcontent = preg_replace($search, $replace, $this->headcontent);
 
         parent::fix_headcontent();
@@ -184,7 +184,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
         parent::fix_js_CheckFinished($substr, 0, $length);
 
         $search = '/setTimeout'.'[^;]*'.';/';
-        $replace = "setTimeout('HP_send_results('+TaskEvent+',0)', SubmissionTimeout)";
+        $replace = "setTimeout('HP_send_results('+TaskEvent+')', SubmissionTimeout)";
         $substr = preg_replace($search, $replace, $substr, 1);
 
         $str = substr_replace($str, $substr, $start, $length);
