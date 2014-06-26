@@ -3264,7 +3264,16 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     public function taskchain_keypad_char_value($char)  {
 
         // ordinal value of char
-        $ord = ord(mod_taskchain::textlib('entities_to_utf8', $char));
+        $char = mod_taskchain::textlib('entities_to_utf8', $char);
+        if (class_exists('core_text')) {
+            // Moodle >= 2.6
+            $ord = mod_taskchain::textlib('utf8ord', $char);
+        } else {
+            // Moodle <= 2.5
+            $ord = mod_taskchain::textlib('convert', $char, 'UTF-8', 'UCS-4BE');
+            $ord = unpack('N', $ord);
+            $ord = reset($ord); // get first char
+        }
 
         // lowercase letters (plain or accented)
         if (($ord>=97 && $ord<=122) || ($ord>=224 && $ord<=255)) {
