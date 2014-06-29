@@ -364,10 +364,16 @@ class taskchain_source {
         }
 
         $file_record = array(
-            'contextid'=>$mainfile->get_contextid(), 'component'=>$component, 'filearea'=>$filearea,
-            'itemid'=>$mainfile->get_itemid(), 'filepath'=>$mainfile->get_filepath(),
-            'filename'=>'', 'source'=>'', 'sortorder'=>0, // may be filled in later
-            'author'=>$mainfile->get_author(), 'license'=>$mainfile->get_license()
+            'contextid' => $mainfile->get_contextid(),
+            'component' => $component,
+            'filearea'  => $filearea,
+            'itemid'    => $mainfile->get_itemid(),
+            'filepath'  => $mainfile->get_filepath(),
+            'filename'  => '',
+            'source'    => '',
+            'sortorder' => 0, // may be filled in later
+            'author'    => $mainfile->get_author(),
+            'license'   => $mainfile->get_license()
         );
 
         // get repository type

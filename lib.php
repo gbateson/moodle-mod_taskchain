@@ -1458,8 +1458,8 @@ function taskchain_get_file_areas($course, $cm, $context) {
     return array(
         'sourcefile' => get_string('sourcefile', 'taskchain'),
         'configfile' => get_string('configfile', 'taskchain'),
-        'entry' => get_string('entrytext', 'taskchain'),
-        'exit' => get_string('exittext', 'taskchain')
+        'entry'      => get_string('entrytext',  'taskchain'),
+        'exit'       => get_string('exittext',   'taskchain')
     );
 }
 

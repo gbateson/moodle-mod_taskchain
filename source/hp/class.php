@@ -314,6 +314,7 @@ class taskchain_source_hp extends taskchain_source {
      * @todo Finish documenting this function
      */
     public function xml_locate_file($context, $component, $filearea, $nexttaskurl, $filetypes=null) {
+
         if (preg_match('/^https?:\/\//', $nexttaskurl)) {
             return $nexttaskurl;
         }
