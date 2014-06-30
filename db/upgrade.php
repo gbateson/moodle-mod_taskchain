@@ -276,8 +276,50 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2014062823;
+    $newversion = 2014063024;
     if ($oldversion < $newversion) {
+
+        // get required script libraries
+        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+
+        // set up SQL query
+        $select = 'tt.*, t.id AS taskchainid';
+        $from   = '{taskchain_tasks} tt '.
+                  'JOIN {taskchain_chains} tc ON tt.chainid = tc.id '.
+                  'JOIN {taskchain} t ON tc.parentid = t.id AND tc.parenttype = ?';
+        $where  = 'tt.sourcetype = ?';
+        $orderby = 'tt.chainid, tt.sortorder';
+        $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, 'html_xhtml');
+
+        // get tasks
+        if ($tasks = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $orderby", $params)) {
+            global $TC;
+            $TC = null;
+            $classes = mod_taskchain::get_classes('taskchainsource');
+            foreach ($tasks as $taskid => $task) {
+                if ($TC===null || $TC->taskchain->id != $task->taskchainid) {
+                    $TC = $DB->get_record('taskchain', array('id' => $task->taskchainid));
+                    $TC = new mod_taskchain($TC);
+                }
+                unset($task->taskchainid);
+                $task = new taskchain_task($task, array('TC' => $TC));
+                $file = $task->get_file('source');
+                $oldtype = $task->get_sourcetype();
+                foreach ($classes as $class) {
+                    $object = new $class($file);
+                    if (method_exists($object, 'is_taskfile') && ($newtype = $object->is_taskfile())) {
+                        if ($newtype==$oldtype) {
+                            // do nothing
+                        } else {
+                            $DB->set_field('taskchain_tasks', 'sourcetype', $newtype, array('id' => $taskid));
+                        }
+                        break;
+                    }
+                }
+            }
+            unset($TC, $classes, $class, $tasks, $task, $taskid, $file, $type);
+        }
+
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }

@@ -1446,11 +1446,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         // set "x" and "y" for mouse or touch device
         $search = '/(\s*)'.preg_quote($target, '/').'/s';
         $replace = '$1'.'if (Ev.changedTouches) {'.
-                   '$1'."\t".'var x = Ev.changedTouches[0].clientX;'.
-                   '$1'."\t".'var y = Ev.changedTouches[0].clientY'.
+                   '$1'.'	var x = Ev.changedTouches[0].clientX;'.
+                   '$1'.'	var y = Ev.changedTouches[0].clientY'.
                    '$1'.'} else {'.
-                   '$1'."\t".'var x = Ev.clientX;'.
-                   '$1'."\t".'var y = Ev.clientY;'.
+                   '$1'.'	var x = Ev.clientX;'.
+                   '$1'.'	var y = Ev.clientY;'.
                    '$1'.'}'.
                    '$0';
         return preg_replace($search, $replace, $str, 1);
