@@ -574,8 +574,6 @@ class taskchain_source {
      * @return string : $class name if $file is the required type; otherwise ""
      */
     static public function is($methodname, $file, &$data) {
-        $result = false;
-
         $classes = mod_taskchain::get_classes('taskchainsource');
         foreach ($classes as $class) {
 
@@ -613,16 +611,13 @@ class taskchain_source {
                 }
 
                 if (is_object($result) || is_array($result)) {
-                    // expected $result - do nothing
+                    return $result;
                 } else {
-                    // print "$methodname() in $class should be modified to return an object or array<br />";
-                    $result = $object;
+                    return $object;
                 }
-
-                break; // no need to check any more $classes
             }
         }
-        return $result;
+        return false;
     }
 
     /*

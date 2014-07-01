@@ -60,10 +60,10 @@ class taskchain_source_hp_6_jmatch_html_sort extends taskchain_source_hp_6_jmatc
             return false;
         }
 
-        if (strpos($this->filecontents, 'JMatch_Sort v')) {
+        if (strpos($this->filecontents, '<!-- JMatch_Sort v')) {
             if (strpos($this->filecontents, 'var hauteurUserDefined1')) {
                 if (strpos($this->filecontents, 'var largeurUserDefined2')) {
-                    // jmatch-sort v6
+                    // jmatch-sort
                     return true;
                 }
             }

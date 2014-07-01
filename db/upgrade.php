@@ -106,11 +106,11 @@ function xmldb_taskchain_upgrade($oldversion) {
                     $rs = $DB->get_recordset_sql("SHOW COLUMNS FROM {$CFG->prefix}$table WHERE type LIKE '%unsigned%'");
                     foreach ($rs as $column) {
                         // copied from as "lib/db/upgradelib.php"
-                        $type = preg_replace('/\s*unsigned/i', 'signed', $column->type);
+                        $oldtype = preg_replace('/\s*unsigned/i', 'signed', $column->type);
                         $notnull = ($column->null === 'NO') ? 'NOT NULL' : 'NULL';
                         $default = (is_null($column->default) || $column->default === '') ? '' : "DEFAULT '$column->default'";
                         $autoinc = (stripos($column->extra, 'auto_increment') === false)  ? '' : 'AUTO_INCREMENT';
-                        $sql = "ALTER TABLE `{$prefix}$table` MODIFY COLUMN `$column->field` $type $notnull $default $autoinc";
+                        $sql = "ALTER TABLE `{$prefix}$table` MODIFY COLUMN `$column->field` $oldtype $notnull $default $autoinc";
                         $DB->change_database_structure($sql);
                     }
                 }
@@ -276,11 +276,12 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2014063024;
+    $newversion = 2014063025;
     if ($oldversion < $newversion) {
 
         // get required script libraries
         require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+        require_once($CFG->dirroot.'/mod/taskchain/source/class.php');
 
         // set up SQL query
         $select = 'tt.*, t.id AS taskchainid';
@@ -295,31 +296,33 @@ function xmldb_taskchain_upgrade($oldversion) {
         if ($tasks = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $orderby", $params)) {
             global $TC;
             $TC = null;
-            $classes = mod_taskchain::get_classes('taskchainsource');
-            foreach ($tasks as $taskid => $task) {
-                if ($TC===null || $TC->taskchain->id != $task->taskchainid) {
+            $data = new stdClass();
+            foreach ($tasks as $task) {
+                if ($TC && $TC->taskchain->id==$task->taskchainid) {
+                    // do nothing
+                } else {
                     $TC = $DB->get_record('taskchain', array('id' => $task->taskchainid));
                     $TC = new mod_taskchain($TC);
                 }
                 unset($task->taskchainid);
                 $task = new taskchain_task($task, array('TC' => $TC));
                 $file = $task->get_file('source');
-                $oldtype = $task->get_sourcetype();
-                foreach ($classes as $class) {
-                    $object = new $class($file);
-                    if (method_exists($object, 'is_taskfile') && ($newtype = $object->is_taskfile())) {
-                        if ($newtype==$oldtype) {
-                            // do nothing
-                        } else {
-                            $DB->set_field('taskchain_tasks', 'sourcetype', $newtype, array('id' => $taskid));
-                        }
-                        break;
+                if ($object = taskchain_source::is('is_taskfile', $file, $data)) {
+                    $type = $object->get_type();
+                    if ($type=='' || $type==$task->get_sourcetype()) {
+                        // do nothing
+                    } else {
+                        $DB->set_field('taskchain_tasks', 'sourcetype', $type, array('id' => $task->id));
                     }
                 }
             }
-            unset($TC, $classes, $class, $tasks, $task, $taskid, $file, $type);
+            unset($TC, $data, $tasks, $task, $file, $type);
         }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
 
+    $newversion = 2014070126;
+    if ($oldversion < $newversion) {
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
