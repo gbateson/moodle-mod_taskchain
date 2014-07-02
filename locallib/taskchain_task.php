@@ -458,10 +458,10 @@ class taskchain_task extends taskchain_base {
      * @return string (255) the current usemediafilter $value
      */
     public function get_usemediafilter() {
-        if ($this->usemediafilter==1) {
-            return 'moodle';
-        } else {
-            return $this->usemediafilter;
+        switch ($this->usemediafilter) {
+            case '0': return '';
+            case '1': return 'moodle';
+            default : return $this->usemediafilter;
         }
     }
 

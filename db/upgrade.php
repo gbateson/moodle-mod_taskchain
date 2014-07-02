@@ -321,8 +321,10 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2014070227;
+    $newversion = 2014070228;
     if ($oldversion < $newversion) {
+        $DB->set_field('taskchain_tasks', 'usemediafilter', '', array('usemediafilter' => '0'));
+        $DB->set_field('taskchain_tasks', 'usemediafilter', 'moodle', array('usemediafilter' => '1'));
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }

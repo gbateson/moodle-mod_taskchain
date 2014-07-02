@@ -102,8 +102,8 @@ class taskchain_cache extends taskchain_base {
     /** db field: useglossary (integer, default=0) */
     private $useglossary         = 0;
 
-    /** db field: usemediafilter (string (255), default='0') */
-    private $usemediafilter      = '0';
+    /** db field: usemediafilter (string (255), default='') */
+    private $usemediafilter      = '';
 
     /** db field: studentfeedback (integer, default=0) */
     private $studentfeedback     = 0;

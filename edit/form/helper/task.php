@@ -356,7 +356,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function add_field_usemediafilter($field) {
-        $this->add_template_yesno($field);
+        $name = $this->get_fieldname($field);
+        $label = $this->get_fieldlabel($field);
+        $this->mform->addElement('select', $name, $label, taskchain_available::mediafilters_list());
+        $this->mform->setDefault($name, $this->get_defaultvalue($field));
+        $this->mform->setType($name, PARAM_SAFEDIR); // [a-zA-Z0-9_-]
+        $this->add_helpbutton($name, $field, 'taskchain');
     }
 
     /**

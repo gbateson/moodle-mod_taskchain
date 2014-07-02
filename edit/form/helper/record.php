@@ -1155,7 +1155,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function format_fieldvalue_usemediafilter($field, $value) {
-        return $this->format_templatevalue_yesno($field, $value);
+        return $this->format_templatevalue_list($field, $value, 'mediafilter');
     }
 
     /**
