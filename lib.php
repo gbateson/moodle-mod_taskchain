@@ -153,7 +153,7 @@ function taskchain_process_formdata(stdclass &$data, $mform) {
     $mform->data_postprocessing($data);
 
     // set default name for a TaskChain activity
-    $defaultname = get_string('modulename', 'taskchain');
+    $defaultname = get_string('modulename', 'mod_taskchain');
 
     $update_gradebook = false;
     $time = time();
@@ -175,7 +175,7 @@ function taskchain_process_formdata(stdclass &$data, $mform) {
                 $parent->timecreated = $time;
             } else {
                 if (! $parent = $DB->get_record($parenttable, array('id'=>$data->instance, 'course'=>$data->course))) {
-                    return get_string('error_getrecord', 'taskchain', $parenttable);
+                    return get_string('error_getrecord', 'mod_taskchain', $parenttable);
                 }
                 if ($parent->name != $data->name) {
                     $update_gradebook = true;
@@ -202,14 +202,14 @@ function taskchain_process_formdata(stdclass &$data, $mform) {
             break;
 
         default:
-            return get_string('error_invalidparenttype', 'taskchain', $parenttype);
+            return get_string('error_invalidparenttype', 'mod_taskchain', $parenttype);
 
     } // end switch
 
     if (empty($data->instance)) {
         // add parent
         if (! $parent->id = $DB->insert_record($parenttable, $parent)) {
-            return get_string('error_insertrecord', 'taskchain', $parenttable);
+            return get_string('error_insertrecord', 'mod_taskchain', $parenttable);
         }
         // force creation of new chain
         $chain = false;
@@ -217,7 +217,7 @@ function taskchain_process_formdata(stdclass &$data, $mform) {
         // update parent
         $parent->id = $data->instance;
         if (! $DB->update_record($parenttable, $parent)) {
-            return get_string('error_updaterecord', 'taskchain', $parenttable);
+            return get_string('error_updaterecord', 'mod_taskchain', $parenttable);
         }
         // get associated chain record
         $chain = $DB->get_record('taskchain_chains', array('parenttype'=>$parenttype, 'parentid'=>$parent->id));
@@ -260,7 +260,7 @@ function taskchain_process_formdata(stdclass &$data, $mform) {
     if (empty($chain->id)) {
         // add new chain
         if (! $chain->id = $DB->insert_record('taskchain_chains', $chain)) {
-            return get_string('error_insertrecord', 'taskchain', 'taskchain_chains');
+            return get_string('error_insertrecord', 'mod_taskchain', 'taskchain_chains');
         }
     } else {
         // set default name if necessary
@@ -270,7 +270,7 @@ function taskchain_process_formdata(stdclass &$data, $mform) {
 
         // update existing chain record
         if (! $DB->update_record('taskchain_chains', $chain)) {
-            return get_string('error_updaterecord', 'taskchain', 'taskchain_chains');
+            return get_string('error_updaterecord', 'mod_taskchain', 'taskchain_chains');
         }
     }
 
@@ -293,21 +293,21 @@ function taskchain_process_formdata(stdclass &$data, $mform) {
 
         if ($parent->name != $data->name) {
             if (! $DB->set_field($parenttable, 'name', $data->name, array('id'=>$chain->id))) {
-                return get_string('error_updaterecord', 'taskchain', $parenttable);
+                return get_string('error_updaterecord', 'mod_taskchain', $parenttable);
             }
             $parent->name = $data->name;
         }
 
         if ($chain->entrytext != $data->entrytext) {
             if (! $DB->set_field($chaintable, 'entrytext', $data->entrytext, array('id'=>$chain->id))) {
-                return get_string('error_updaterecord', 'taskchain', $chaintable);
+                return get_string('error_updaterecord', 'mod_taskchain', $chaintable);
             }
             $chain->entrytext = $data->entrytext;
         }
 
         if ($chain->exittext != $data->exittext) {
             if (! $DB->set_field($chaintable, 'exittext', $data->exittext, array('id'=>$chain->id))) {
-                return get_string('error_updaterecord', 'taskchain', $chaintable);
+                return get_string('error_updaterecord', 'mod_taskchain', $chaintable);
             }
             $chain->exittext = $data->exittext;
         }
@@ -437,7 +437,7 @@ function taskchain_add_tasks(&$data, &$mform, &$chain, $aftertaskid=0) {
         }
     }
     if ($taskname=='') {
-        $taskname = get_string('task', 'taskchain');
+        $taskname = get_string('task', 'mod_taskchain');
     }
     $taskname = clean_param($taskname, $PARAM);
 
@@ -456,7 +456,7 @@ function taskchain_add_tasks(&$data, &$mform, &$chain, $aftertaskid=0) {
         switch ($tasknamessource) {
             case mod_taskchain::TEXTSOURCE_FILE:
                 if (! $task->name = $source->get_name()) {
-                    $task->name = get_string('task', 'taskchain')." ($sortorder)";
+                    $task->name = get_string('task', 'mod_taskchain')." ($sortorder)";
                 }
                 $is_clean_name = false;
                 break;
@@ -733,7 +733,7 @@ function taskchain_user_outline($course, $user, $mod, $taskchain) {
         $grade = reset($grade);
         $grade = (object)array(
             'time' => $grade->timemodified,
-            'info' => get_string('grade', 'taskchain').': '.$grade->grade
+            'info' => get_string('grade', 'mod_taskchain').': '.$grade->grade
         );
     }
     return $grade;
@@ -753,7 +753,7 @@ function taskchain_user_outline($course, $user, $mod, $taskchain) {
 function taskchain_user_complete($course, $user, $mod, $taskchain) {
     $report = taskchain_user_outline($course, $user, $mod, $taskchain);
     if (empty($report)) {
-        echo get_string("noactivity", 'taskchain');
+        echo get_string("noactivity", 'mod_taskchain');
     } else {
         $date = userdate($report->time, get_string('strftimerecentfull'));
         echo $report->info.' '.get_string('mostrecently').': '.$date;
@@ -859,11 +859,11 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
 
         $dateformat   = get_string('strftimerecent', 'langconfig'); // strftimerecentfull
         $strusers     = get_string('users');
-        $stradded     = get_string('added',    'taskchain');
-        $strupdated   = get_string('updated',  'taskchain');
-        $strviews     = get_string('views',    'taskchain');
-        $strattempts  = get_string('attempts', 'taskchain');
-        $strsubmits   = get_string('submits',  'taskchain');
+        $stradded     = get_string('added',    'mod_taskchain');
+        $strupdated   = get_string('updated',  'mod_taskchain');
+        $strviews     = get_string('views',    'mod_taskchain');
+        $strattempts  = get_string('attempts', 'mod_taskchain');
+        $strsubmits   = get_string('submits',  'mod_taskchain');
 
         $print_headline = true;
         ksort($stats);
@@ -897,7 +897,7 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
             if (count($li)) {
                 if ($print_headline) {
                     $print_headline = false;
-                    echo $OUTPUT->heading(get_string('modulenameplural', 'taskchain').':', 3);
+                    echo $OUTPUT->heading(get_string('modulenameplural', 'mod_taskchain').':', 3);
                 }
 
                 $url = new moodle_url('/mod/taskchain/view.php', array('id'=>$stat->cmid));
@@ -1324,7 +1324,7 @@ function taskchain_update_grades($taskchain=null, $userid=0, $nullifnone=true) {
         // update/create grades for all taskchains
 
         // set up sql strings
-        $strupdating = get_string('updatinggrades', 'taskchain');
+        $strupdating = get_string('updatinggrades', 'mod_taskchain');
         $select = 't.*, tc.gradelimit, tc.gradeweighting, cm.idnumber AS cmidnumber';
         $from   = '{taskchain} t, {taskchain_chains} tc, {course_modules} cm, {modules} m';
         $where  = 't.id = tc.parentid AND tc.parenttype='.mod_taskchain::PARENTTYPE_ACTIVITY.' AND t.id = cm.instance AND cm.module = m.id AND m.name = ?';
@@ -1456,10 +1456,10 @@ function taskchain_grade_item_delete($taskchain) {
  */
 function taskchain_get_file_areas($course, $cm, $context) {
     return array(
-        'sourcefile' => get_string('sourcefile', 'taskchain'),
-        'configfile' => get_string('configfile', 'taskchain'),
-        'entry'      => get_string('entrytext',  'taskchain'),
-        'exit'       => get_string('exittext',   'taskchain')
+        'sourcefile' => get_string('sourcefile', 'mod_taskchain'),
+        'configfile' => get_string('configfile', 'mod_taskchain'),
+        'entry'      => get_string('entrytext',  'mod_taskchain'),
+        'exit'       => get_string('exittext',   'mod_taskchain')
     );
 }
 
@@ -1840,7 +1840,7 @@ function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $c
 
     if (isset($TC->can)) {
         if ($TC->can->preview()) {
-            $label = get_string('preview', 'taskchain');
+            $label = get_string('preview', 'mod_taskchain');
             $params = array('tab'=>'preview', 'cnumber'=>-1);
             $params = $TC->merge_params($params, null, 'coursemoduleid');
             $url   = new moodle_url('/mod/taskchain/attempt.php', $params);
@@ -1853,7 +1853,7 @@ function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $c
             $type = navigation_node::TYPE_SETTING;
             $icon = new pix_icon('i/report', '');
             foreach ($TC->get_report_modes() as $name => $submodes) {
-                $text = get_string($name, 'taskchain');
+                $text = get_string($name, 'mod_taskchain');
                 if (method_exists('navigation_node', 'create')) {
                     $node = navigation_node::create($text); // Moodle >= 2.2
                 } else {
@@ -1907,12 +1907,12 @@ function taskchain_extend_settings_navigation(settings_navigation $settingsnav, 
 
         $params = $TC->merge_params(array('columnlisttype' => 'chains'), null, 'coursemoduleid');
         $action = new moodle_url('/mod/taskchain/edit/chains.php', $params);
-        $text   = get_string('editchains', 'taskchain');
+        $text   = get_string('editchains', 'mod_taskchain');
         $nodes[] = new navigation_node(array('text'=>$text, 'action'=>$action, 'key'=>'editchains', 'type'=>$type, 'icon'=>$icon));
 
         $params = $TC->merge_params(array('columnlisttype' => 'tasks'), null, 'coursemoduleid');
         $action = new moodle_url('/mod/taskchain/edit/tasks.php', $params);
-        $text   = get_string('edittasks', 'taskchain');
+        $text   = get_string('edittasks', 'mod_taskchain');
         $nodes[] = new navigation_node(array('text'=>$text, 'action'=>$action, 'key'=>'edittasks', 'type'=>$type, 'icon'=>$icon));
     }
 
@@ -1981,8 +1981,8 @@ function taskchain_extend_settings_navigation(settings_navigation $settingsnav, 
  * @todo Finish documenting this function
  */
 function taskchain_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'taskchainheader', get_string('modulenameplural', 'taskchain'));
-    $mform->addElement('checkbox', 'reset_taskchain_deleteallattempts', get_string('deleteallattempts', 'taskchain'));
+    $mform->addElement('header', 'taskchainheader', get_string('modulenameplural', 'mod_taskchain'));
+    $mform->addElement('checkbox', 'reset_taskchain_deleteallattempts', get_string('deleteallattempts', 'mod_taskchain'));
 }
 
 /**
@@ -2045,8 +2045,8 @@ function taskchain_reset_userdata($data) {
     }
 
     return array(array(
-        'component' => get_string('modulenameplural', 'taskchain'),
-        'item' => get_string('deleteallattempts', 'taskchain'),
+        'component' => get_string('modulenameplural', 'mod_taskchain'),
+        'item' => get_string('deleteallattempts', 'mod_taskchain'),
         'error' => false
     ));
 }
@@ -2163,8 +2163,8 @@ function taskchain_update_events(&$taskchain, &$chain, &$eventids, $delete) {
         // set $maxduration (secs) from $maxeventlength (days)
         $maxduration = $maxeventlength * DAYSECS;
 
-        $stropens = get_string('activityopens', 'taskchain');
-        $strcloses = get_string('activitycloses', 'taskchain');
+        $stropens = get_string('activityopens', 'mod_taskchain');
+        $strcloses = get_string('activitycloses', 'mod_taskchain');
     }
 
     // array to hold events for this taskchain

@@ -49,7 +49,7 @@ class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_keypress_renderer extends mod_
      * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
-        parent::$this->fix_bodycontent_DragAndDrop();
+        parent::fix_bodycontent_DragAndDrop();
 
         $search = 'onclick="location.reload()"';
         $replace = 'onclick="taskchain_jmix_restart()"';

@@ -72,14 +72,14 @@ switch ($TC->action) {
             if (array_key_exists($id, $lists)) {
                 // delete a single columnlist
                 unset_user_preference('taskchain_'.$type.'_columnlist_'.$id);
-                $text = get_string('columnlist', 'taskchain', $lists[$id]);
+                $text = get_string('columnlist', 'mod_taskchain', $lists[$id]);
             }
         } else {
             // delete all user defined column lists
             foreach ($lists as $id => $name) {
                 unset_user_preference('taskchain_'.$type.'_columnlist_'.$id);
                 if ($text=='') {
-                    $text = get_string('lists'.$type, 'taskchain');
+                    $text = get_string('lists'.$type, 'mod_taskchain');
                 }
             }
         }
@@ -89,7 +89,7 @@ switch ($TC->action) {
 
     case 'delete' :
         $type = $TC->get_columnlisttype();
-        $text = get_string('confirmdelete'.$type.'columnlist', 'taskchain');
+        $text = get_string('confirmdelete'.$type.'columnlist', 'mod_taskchain');
         $params = array('inpopup'        => $TC->inpopup,
                         'chainid'        => $TC->get_chainid(),
                         'columnlistid'   => $TC->get_columnlistid(),
@@ -99,7 +99,7 @@ switch ($TC->action) {
 
     case 'deleteall' :
         $type = $TC->get_columnlisttype();
-        $text = get_string('confirmdelete'.$type.'columnlists', 'taskchain');
+        $text = get_string('confirmdelete'.$type.'columnlists', 'mod_taskchain');
         $params = array('inpopup'        => $TC->inpopup,
                         'chainid'        => $TC->get_chainid(),
                         'columnlistid'   => '00', // i.e. all
@@ -140,7 +140,7 @@ switch ($TC->action) {
         }
 
         if (empty($newdata->columnlistname)) {
-            $newdata->columnlistname = get_string('columnlist', 'taskchain', $newdata->columnlistid);
+            $newdata->columnlistname = get_string('columnlist', 'mod_taskchain', $newdata->columnlistid);
         }
 
         $name = 'taskchain_'.$newdata->columnlisttype.'_columnlist_'.$newdata->columnlistid;

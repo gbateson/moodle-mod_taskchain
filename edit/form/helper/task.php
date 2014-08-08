@@ -248,7 +248,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function add_field_title($field) {
         $name = $this->get_fieldname($field);
-        $label = get_string($field, 'taskchain');
+        $label = get_string($field, 'mod_taskchain');
 
         $field_source  = $field.'source';
         $field_prepend = $field.'prependchainname';
@@ -261,8 +261,8 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         $elements = array();
         $elements[] = $this->mform->createElement('select',   $name_source,  '', taskchain_available::titles_list());
-        $elements[] = $this->mform->createElement('checkbox', $name_prepend, '', get_string($field_prepend, 'taskchain'));
-        $elements[] = $this->mform->createElement('checkbox', $name_append,  '', get_string($field_append,  'taskchain'));
+        $elements[] = $this->mform->createElement('checkbox', $name_prepend, '', get_string($field_prepend, 'mod_taskchain'));
+        $elements[] = $this->mform->createElement('checkbox', $name_append,  '', get_string($field_append,  'mod_taskchain'));
 
         $this->mform->addGroup($elements, $name_elements, $label, html_writer::empty_tag('br'), false);
         $this->add_helpbutton($name_elements, $field, 'taskchain');
@@ -510,7 +510,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
             }
             $elements[] = &$this->mform->createElement('static', '', '', html_writer::tag('span', $allnone));
 
-            $this->mform->addGroup($elements, $groupname, get_string('review'.$timename, 'taskchain'), null, false);
+            $this->mform->addGroup($elements, $groupname, get_string('review'.$timename, 'mod_taskchain'), null, false);
             if ($timename=='afterclose') {
                 $this->mform->disabledIf('afterclose_elements', 'timeclose[off]', 'checked');
             }
@@ -547,7 +547,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function get_sectionlabel_conditions() {
-        return get_string('conditions', 'taskchain');
+        return get_string('conditions', 'mod_taskchain');
     }
 
     /**
@@ -767,10 +767,10 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     protected function format_fieldvalue_title($field, $value) {
         $title = $this->format_templatevalue_list($field, ($value & mod_taskchain::TITLE_SOURCE));
         if ($value & mod_taskchain::TITLE_CHAINNAME) {
-            $title = get_string('taskchainname', 'taskchain').': '.$title;
+            $title = get_string('taskchainname', 'mod_taskchain').': '.$title;
         }
         if ($value & mod_taskchain::TITLE_SORTORDER) {
-            $title = $title.' ('.get_string('sortorder', 'taskchain').')';
+            $title = $title.' ('.get_string('sortorder', 'mod_taskchain').')';
         }
         return $title;
     }
@@ -872,11 +872,11 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
             $stritems = array();
             foreach ($items as $itemname => $itemvalue) {
                 if ($value & $timevalue & $itemvalue) {
-                    $stritems[] = get_string($itemname.'short', 'taskchain');
+                    $stritems[] = get_string($itemname.'short', 'mod_taskchain');
                 }
             }
             if ($stritems = implode(', ', $stritems)) {
-                $stritems = get_string($timename, 'taskchain').': '.$stritems;
+                $stritems = get_string($timename, 'mod_taskchain').': '.$stritems;
                 $strtimes[] = html_writer::tag('span', $stritems, array('class' => 'reviewoptionsitems'));
             }
         }

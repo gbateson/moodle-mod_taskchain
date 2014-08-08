@@ -177,7 +177,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function get_sectionlabel_tasks() {
-        return get_string('tasks', 'taskchain');
+        return get_string('tasks', 'mod_taskchain');
     }
 
     /**
@@ -197,7 +197,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function get_sectionlabel_reviewoptions() {
-        return get_string('reviewoptions', 'taskchain');
+        return get_string('reviewoptions', 'mod_taskchain');
     }
 
     /////////////////////////////////////////////////////////
@@ -251,7 +251,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function get_fieldlabel_attemptlimit() {
-        return get_string('attemptsallowed', 'taskchain');
+        return get_string('attemptsallowed', 'mod_taskchain');
     }
 
     /**
@@ -261,7 +261,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function get_fieldlabel_password() {
-        return get_string('requirepassword', 'taskchain');
+        return get_string('requirepassword', 'mod_taskchain');
     }
 
     /**
@@ -271,7 +271,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function get_fieldlabel_subnet() {
-        return get_string('requiresubnet', 'taskchain');
+        return get_string('requiresubnet', 'mod_taskchain');
     }
 
     /**
@@ -295,7 +295,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function get_defaultvalue_name() {
-        return get_string($this->recordtype, 'taskchain');
+        return get_string($this->recordtype, 'mod_taskchain');
     }
 
     /**
@@ -588,7 +588,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $elements = array();
 
         if ($summary) {
-            $elements[] = $this->mform->createElement('static', '', '', get_string($field.'summary', 'taskchain'));
+            $elements[] = $this->mform->createElement('static', '', '', get_string($field.'summary', 'mod_taskchain'));
             $elements[] = $this->mform->createElement('static', '', '', html_writer::empty_tag('br'));
         }
 
@@ -1200,7 +1200,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      */
     protected function format_fieldvalue_timelimit($field, $value) {
         if ($value==mod_taskchain::TIME_TEMPLATE) { // =-1
-            return get_string('timelimittemplate', 'taskchain');
+            return get_string('timelimittemplate', 'mod_taskchain');
         } else {
             return $this->format_templatevalue_timer($field, $value);
         }
@@ -1274,7 +1274,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                 }
             }
             if (count($li)) {
-                $or = '</ul><p class="taskchainconditionsor">'.get_string('or', 'taskchain').'</p><ul>';
+                $or = '</ul><p class="taskchainconditionsor">'.get_string('or', 'mod_taskchain').'</p><ul>';
                 $str = '<ul>'.implode($or, $li).'</ul>';
             }
             unset($li);
@@ -1283,9 +1283,9 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         if ($str) {
             if ($return_intro) {
                 if ($conditiontype==mod_taskchain::CONDITIONTYPE_PRE) {
-                    $intro = get_string('preconditions_help', 'taskchain');
+                    $intro = get_string('preconditions_help', 'mod_taskchain');
                 } else {
-                    $intro = get_string('postconditions_help', 'taskchain');
+                    $intro = get_string('postconditions_help', 'mod_taskchain');
                 }
                 $str = '<p class="taskchainconditionsintro">'.$intro.'</p>'.$str;
             }
@@ -1340,11 +1340,11 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                 switch ($condition->conditiontaskid) {
 
                     case mod_taskchain::CONDITIONTASKID_SAME:
-                        $str .= get_string('sametask', 'taskchain');
+                        $str .= get_string('sametask', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_PREVIOUS:
-                        $str .= get_string('previoustask', 'taskchain');
+                        $str .= get_string('previoustask', 'mod_taskchain');
                         break;
 
                     default:
@@ -1376,67 +1376,67 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                 switch ($condition->nexttaskid) {
 
                     case mod_taskchain::CONDITIONTASKID_SAME:
-                        $str .= get_string('sametask', 'taskchain');
+                        $str .= get_string('sametask', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_NEXT1:
-                        $str .= get_string('next1task', 'taskchain');
+                        $str .= get_string('next1task', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_NEXT2:
-                        $str .= get_string('next2task', 'taskchain');
+                        $str .= get_string('next2task', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_NEXT3:
-                        $str .= get_string('next3task', 'taskchain');
+                        $str .= get_string('next3task', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_NEXT4:
-                        $str .= get_string('next4task', 'taskchain');
+                        $str .= get_string('next4task', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_NEXT5:
-                        $str .= get_string('next5task', 'taskchain');
+                        $str .= get_string('next5task', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_PREVIOUS:
-                        $str .= get_string('previoustask', 'taskchain');
+                        $str .= get_string('previoustask', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_UNSEEN: // no attempts
-                        $str .= get_string('unseentask', 'taskchain');
+                        $str .= get_string('unseentask', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_UNANSWERED: // no responses
-                        $str .= get_string('unansweredtask', 'taskchain');
+                        $str .= get_string('unansweredtask', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_INCORRECT: // score < 100%
-                        $str .= get_string('incorrecttask', 'taskchain');
+                        $str .= get_string('incorrecttask', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_RANDOM:
-                        $str .= get_string('randomtask', 'taskchain');
+                        $str .= get_string('randomtask', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_MENUNEXT:
-                        $str .= get_string('menuofnexttasks', 'taskchain');
+                        $str .= get_string('menuofnexttasks', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_MENUNEXTONE:
-                        $str .= get_string('menuofnexttasksone', 'taskchain');
+                        $str .= get_string('menuofnexttasksone', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_MENUALL:
-                       $str .= get_string('menuofalltasks', 'taskchain');
+                       $str .= get_string('menuofalltasks', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_MENUALLONE:
-                       $str .= get_string('menuofalltasksone', 'taskchain');
+                       $str .= get_string('menuofalltasksone', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_ENDOFCHAIN:
-                        $str .= get_string('endofchain', 'taskchain');
+                        $str .= get_string('endofchain', 'mod_taskchain');
                         break;
 
                     default: // nexttaskid > 0
@@ -1479,12 +1479,12 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             $str = (object)array(
                 'min' => '&gt;=',
                 'max' => '&lt;=',
-                'anyattempts'         => get_string('anyattempts',         'taskchain'),
-                'recentattempts'      => get_string('recentattempts',      'taskchain'),
-                'consecutiveattempts' => get_string('consecutiveattempts', 'taskchain'),
-                'conditionscore'      => get_string('score',               'taskchain'),
-                'attemptduration'     => get_string('duration',            'taskchain'),
-                'attemptdelay'        => get_string('delay',               'taskchain')
+                'anyattempts'         => get_string('anyattempts',         'mod_taskchain'),
+                'recentattempts'      => get_string('recentattempts',      'mod_taskchain'),
+                'consecutiveattempts' => get_string('consecutiveattempts', 'mod_taskchain'),
+                'conditionscore'      => get_string('score',               'mod_taskchain'),
+                'attemptduration'     => get_string('duration',            'mod_taskchain'),
+                'attemptdelay'        => get_string('delay',               'mod_taskchain')
             );
         }
 
@@ -1499,10 +1499,10 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             }
             if ($condition->attemptcount<0) {
                 // minimum number of attempts
-                $details['attemptcount'] = get_string('ormore', 'taskchain', abs($condition->attemptcount)).' x '.$type;
+                $details['attemptcount'] = get_string('ormore', 'mod_taskchain', abs($condition->attemptcount)).' x '.$type;
             } else {
                 // maximum number of attempts
-                $details['attemptcount'] = get_string('orless', 'taskchain', $condition->attemptcount).' x '.$type;
+                $details['attemptcount'] = get_string('orless', 'mod_taskchain', $condition->attemptcount).' x '.$type;
             }
         }
 

@@ -160,9 +160,9 @@ class mod_taskchain_attempt_review {
                 // user can review task attempt after task closes
                 $reviewoptions = ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE);
             } else if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT) {
-                return get_string('noreviewbeforeclose', 'taskchain', userdate($TC->timeclose));
+                return get_string('noreviewbeforeclose', 'mod_taskchain', userdate($TC->timeclose));
             } else {
-                return get_string('noreview', 'taskchain');
+                return get_string('noreview', 'mod_taskchain');
             }
         } else {
             // task is still open
@@ -170,9 +170,9 @@ class mod_taskchain_attempt_review {
                 // user can review task attempt while task is open
                 $reviewoptions = ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT);
             } else if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
-                return get_string('noreviewafterclose', 'taskchain');
+                return get_string('noreviewafterclose', 'mod_taskchain');
             } else {
-                return get_string('noreview', 'taskchain');
+                return get_string('noreview', 'mod_taskchain');
             }
         }
 
@@ -244,7 +244,7 @@ class mod_taskchain_attempt_review {
         if (empty($questions) || empty($responses)) {
             $row = new html_table_row();
 
-            $cell = new html_table_cell(get_string('noresponses', 'taskchain'), array('class'=>'noresponses'));
+            $cell = new html_table_cell(get_string('noresponses', 'mod_taskchain'), array('class'=>'noresponses'));
             $cell->colspan = $question_colspan;
 
             $row->cells[] = $cell;
@@ -328,7 +328,7 @@ class mod_taskchain_attempt_review {
         switch ($field) {
             case 'score'     : return get_string('score', 'quiz');
             case 'timestart' : return get_string('time', 'quiz');
-            default          : return get_string($field, 'taskchain');
+            default          : return get_string($field, 'mod_taskchain');
         }
     }
 
@@ -399,7 +399,7 @@ class mod_taskchain_attempt_review {
         $row = new html_table_row();
 
         // heading
-        $cell = new html_table_cell(get_string($field, 'taskchain'), array('class'=>'responsefield'));
+        $cell = new html_table_cell(get_string($field, 'mod_taskchain'), array('class'=>'responsefield'));
         $row->cells[] = $cell;
 
         // data
@@ -420,7 +420,7 @@ class mod_taskchain_attempt_review {
      */
     static function add_num_field(&$row, $field, $value)  {
         // heading
-        $cell = new html_table_cell(get_string($field, 'taskchain'), array('class'=>'responsefield'));
+        $cell = new html_table_cell(get_string($field, 'mod_taskchain'), array('class'=>'responsefield'));
         $row->cells[] = $cell;
 
         // data

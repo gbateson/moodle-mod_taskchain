@@ -197,7 +197,7 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @todo Finish documenting this function
      */
     public function fix_js_CheckFinished(&$str, $start, $length)  {
-        parent::$this->fix_js_CheckAnswers($str, $start, $length);
+        parent::fix_js_CheckAnswers($str, $start, $length);
     }
 
     /**
@@ -207,7 +207,7 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @todo Finish documenting this function
      */
     public function get_stop_function_intercept()  {
-        // intercept is not required in the giveup function of JQuiz
+        // intercept is not required in the giveup function of Rhubarb
         // because the checks are intercepted by CheckFinished (see above)
         return '';
     }

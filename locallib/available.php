@@ -51,12 +51,12 @@ class taskchain_available extends taskchain_base {
      */
     static public function addtypes_list() {
         return array(
-            self::ADDTYPE_AUTO         => get_string('addtypeauto', 'taskchain'),
-            self::ADDTYPE_TASKFILE     => get_string('addtypetaskfile', 'taskchain'),
-            self::ADDTYPE_TASKCHAIN    => get_string('addtypetaskchain', 'taskchain'),
-            self::ADDTYPE_CHAINFILE    => get_string('addtypechainfile', 'taskchain'),
-            self::ADDTYPE_CHAINFOLDER  => get_string('addtypechainfolder', 'taskchain'),
-            self::ADDTYPE_CHAINFOLDERS => get_string('addtypechainfolders', 'taskchain')
+            self::ADDTYPE_AUTO         => get_string('addtypeauto', 'mod_taskchain'),
+            self::ADDTYPE_TASKFILE     => get_string('addtypetaskfile', 'mod_taskchain'),
+            self::ADDTYPE_TASKCHAIN    => get_string('addtypetaskchain', 'mod_taskchain'),
+            self::ADDTYPE_CHAINFILE    => get_string('addtypechainfile', 'mod_taskchain'),
+            self::ADDTYPE_CHAINFOLDER  => get_string('addtypechainfolder', 'mod_taskchain'),
+            self::ADDTYPE_CHAINFOLDERS => get_string('addtypechainfolders', 'mod_taskchain')
         );
     }
 
@@ -81,12 +81,12 @@ class taskchain_available extends taskchain_base {
      */
     static public function attemptgrademethods_list($type='grade') {
         return array (
-            self::GRADEMETHOD_TOTAL   => get_string('totaltaskscores', 'taskchain'),
-            self::GRADEMETHOD_HIGHEST => get_string('highesttaskscore', 'taskchain'),
-            self::GRADEMETHOD_LAST    => get_string('lasttaskattempted', 'taskchain'),
-            self::GRADEMETHOD_LASTCOMPLETED => get_string('lasttaskcompleted', 'taskchain'),
-            self::GRADEMETHOD_LASTTIMEDOUT  => get_string('lasttasktimedout', 'taskchain'),
-            self::GRADEMETHOD_LASTABANDONED => get_string('lasttaskabandoned', 'taskchain')
+            self::GRADEMETHOD_TOTAL   => get_string('totaltaskscores', 'mod_taskchain'),
+            self::GRADEMETHOD_HIGHEST => get_string('highesttaskscore', 'mod_taskchain'),
+            self::GRADEMETHOD_LAST    => get_string('lasttaskattempted', 'mod_taskchain'),
+            self::GRADEMETHOD_LASTCOMPLETED => get_string('lasttaskcompleted', 'mod_taskchain'),
+            self::GRADEMETHOD_LASTTIMEDOUT  => get_string('lasttasktimedout', 'mod_taskchain'),
+            self::GRADEMETHOD_LASTABANDONED => get_string('lasttaskabandoned', 'mod_taskchain')
         );
     }
 
@@ -97,7 +97,7 @@ class taskchain_available extends taskchain_base {
      */
     static public function attemptlimits_list() {
         $options = array(
-            0 => get_string('attemptsunlimited', 'taskchain'),
+            0 => get_string('attemptsunlimited', 'mod_taskchain'),
         );
         for ($i=1; $i<=10; $i++) {
             $options[$i] = "$i";
@@ -112,9 +112,9 @@ class taskchain_available extends taskchain_base {
      */
     static public function attempttypes_list() {
         return array(
-            self::ATTEMPTTYPE_ANY => get_string('anyattempts', 'taskchain'),
-            self::ATTEMPTTYPE_RECENT => get_string('recentattempts', 'taskchain'),
-            self::ATTEMPTTYPE_CONSECUTIVE => get_string('consecutiveattempts', 'taskchain'),
+            self::ATTEMPTTYPE_ANY => get_string('anyattempts', 'mod_taskchain'),
+            self::ATTEMPTTYPE_RECENT => get_string('recentattempts', 'mod_taskchain'),
+            self::ATTEMPTTYPE_CONSECUTIVE => get_string('consecutiveattempts', 'mod_taskchain'),
         );
     }
 
@@ -126,12 +126,12 @@ class taskchain_available extends taskchain_base {
      */
     static public function cms_list($type) {
         return array(
-            self::ACTIVITY_COURSE_ANY  => get_string($type.'cmcourse', 'taskchain'),
-            self::ACTIVITY_SECTION_ANY => get_string($type.'cmsection', 'taskchain'),
-            self::ACTIVITY_COURSE_GRADED  => get_string($type.'gradedcourse', 'taskchain'),
-            self::ACTIVITY_SECTION_GRADED => get_string($type.'gradedsection', 'taskchain'),
-            self::ACTIVITY_COURSE_TASKCHAIN  => get_string($type.'taskchaincourse', 'taskchain'),
-            self::ACTIVITY_SECTION_TASKCHAIN => get_string($type.'taskchainsection', 'taskchain')
+            self::ACTIVITY_COURSE_ANY  => get_string($type.'cmcourse', 'mod_taskchain'),
+            self::ACTIVITY_SECTION_ANY => get_string($type.'cmsection', 'mod_taskchain'),
+            self::ACTIVITY_COURSE_GRADED  => get_string($type.'gradedcourse', 'mod_taskchain'),
+            self::ACTIVITY_SECTION_GRADED => get_string($type.'gradedsection', 'mod_taskchain'),
+            self::ACTIVITY_COURSE_TASKCHAIN  => get_string($type.'taskchaincourse', 'mod_taskchain'),
+            self::ACTIVITY_SECTION_TASKCHAIN => get_string($type.'taskchainsection', 'mod_taskchain')
         );
     }
 
@@ -142,10 +142,10 @@ class taskchain_available extends taskchain_base {
      */
     static public function delay3s_list() {
         return array(
-            self::DELAY3_SPECIFIC => get_string('delay3specific', 'taskchain'),
-            self::DELAY3_TEMPLATE => get_string('delay3template', 'taskchain'),
-            self::DELAY3_AFTEROK  => get_string('delay3afterok', 'taskchain'),
-            self::DELAY3_DISABLE  => get_string('delay3disable', 'taskchain'),
+            self::DELAY3_SPECIFIC => get_string('delay3specific', 'mod_taskchain'),
+            self::DELAY3_TEMPLATE => get_string('delay3template', 'mod_taskchain'),
+            self::DELAY3_AFTEROK  => get_string('delay3afterok', 'mod_taskchain'),
+            self::DELAY3_DISABLE  => get_string('delay3disable', 'mod_taskchain'),
         );
     }
 
@@ -159,12 +159,12 @@ class taskchain_available extends taskchain_base {
         global $CFG;
         $list = array (
             self::FEEDBACK_NONE            => get_string('none'),
-            self::FEEDBACK_WEBPAGE         => get_string('feedbackwebpage',  'taskchain'),
-            self::FEEDBACK_FORMMAIL        => get_string('feedbackformmail', 'taskchain'),
-            self::FEEDBACK_MOODLEFORUM     => get_string('feedbackmoodleforum', 'taskchain')
+            self::FEEDBACK_WEBPAGE         => get_string('feedbackwebpage',  'mod_taskchain'),
+            self::FEEDBACK_FORMMAIL        => get_string('feedbackformmail', 'mod_taskchain'),
+            self::FEEDBACK_MOODLEFORUM     => get_string('feedbackmoodleforum', 'mod_taskchain')
         );
         if ($CFG->messaging) {
-            $list[self::FEEDBACK_MOODLEMESSAGING] = get_string('feedbackmoodlemessaging', 'taskchain');
+            $list[self::FEEDBACK_MOODLEMESSAGING] = get_string('feedbackmoodlemessaging', 'mod_taskchain');
         }
         return $list;
     }
@@ -179,7 +179,7 @@ class taskchain_available extends taskchain_base {
         for ($i=100; $i>=1; $i--) {
             $options[$i] = $i;
         }
-        $options[0] = get_string('no'.$type, 'taskchain');
+        $options[0] = get_string('no'.$type, 'mod_taskchain');
         return $options;
     }
 
@@ -191,10 +191,10 @@ class taskchain_available extends taskchain_base {
      */
     static public function grademethods_list($type='grade') {
         return array (
-            self::GRADEMETHOD_HIGHEST => get_string('highest'.$type, 'taskchain'),
-            self::GRADEMETHOD_AVERAGE => get_string('average'.$type, 'taskchain'),
-            self::GRADEMETHOD_FIRST   => get_string('firstattempt', 'taskchain'),
-            self::GRADEMETHOD_LAST    => get_string('lastattempt', 'taskchain')
+            self::GRADEMETHOD_HIGHEST => get_string('highest'.$type, 'mod_taskchain'),
+            self::GRADEMETHOD_AVERAGE => get_string('average'.$type, 'mod_taskchain'),
+            self::GRADEMETHOD_FIRST   => get_string('firstattempt', 'mod_taskchain'),
+            self::GRADEMETHOD_LAST    => get_string('lastattempt', 'mod_taskchain')
         );
     }
 
@@ -208,7 +208,7 @@ class taskchain_available extends taskchain_base {
         for ($i=100; $i>=1; $i--) {
             $options[$i] = $i;
         }
-        $options[0] = get_string('weightingnone', 'taskchain');
+        $options[0] = get_string('weightingnone', 'mod_taskchain');
         return $options;
     }
 
@@ -243,7 +243,7 @@ class taskchain_available extends taskchain_base {
         // define element type for list of mediafilters (select, radio, checkbox)
         $options = array('' => get_string('none'));
         foreach ($plugins as $plugin) {
-            $options[$plugin] = get_string('mediafilter_'.$plugin, 'taskchain');
+            $options[$plugin] = get_string('mediafilter_'.$plugin, 'mod_taskchain');
         }
         return $options;
     }
@@ -255,10 +255,10 @@ class taskchain_available extends taskchain_base {
      */
     static public function namesources_list() {
         return array (
-            self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'taskchain'),
-            self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'taskchain'),
-            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'taskchain'),
-            self::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'taskchain')
+            self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'mod_taskchain'),
+            self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'mod_taskchain'),
+            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'mod_taskchain'),
+            self::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'mod_taskchain')
         );
     }
 
@@ -269,12 +269,12 @@ class taskchain_available extends taskchain_base {
      */
     static public function navigations_list() {
         return array (
-            self::NAVIGATION_MOODLE   => get_string('navigation_moodle', 'taskchain'),
-            self::NAVIGATION_TOPBAR   => get_string('navigation_topbar', 'taskchain'),
-            self::NAVIGATION_FRAME    => get_string('navigation_frame', 'taskchain'),
-            self::NAVIGATION_EMBED    => get_string('navigation_embed', 'taskchain'),
-            self::NAVIGATION_ORIGINAL => get_string('navigation_original', 'taskchain'),
-            self::NAVIGATION_NONE     => get_string('navigation_none', 'taskchain')
+            self::NAVIGATION_MOODLE   => get_string('navigation_moodle', 'mod_taskchain'),
+            self::NAVIGATION_TOPBAR   => get_string('navigation_topbar', 'mod_taskchain'),
+            self::NAVIGATION_FRAME    => get_string('navigation_frame', 'mod_taskchain'),
+            self::NAVIGATION_EMBED    => get_string('navigation_embed', 'mod_taskchain'),
+            self::NAVIGATION_ORIGINAL => get_string('navigation_original', 'mod_taskchain'),
+            self::NAVIGATION_NONE     => get_string('navigation_none', 'mod_taskchain')
         );
     }
 
@@ -287,22 +287,22 @@ class taskchain_available extends taskchain_base {
         global $TC;
 
         $list = array(
-            self::CONDITIONTASKID_SAME        => get_string('sametask', 'taskchain'),
-            self::CONDITIONTASKID_PREVIOUS    => get_string('previoustask', 'taskchain'),
-            self::CONDITIONTASKID_NEXT1       => get_string('next1task', 'taskchain'),
-            self::CONDITIONTASKID_NEXT2       => get_string('next2task', 'taskchain'),
-            self::CONDITIONTASKID_NEXT3       => get_string('next3task', 'taskchain'),
-            self::CONDITIONTASKID_NEXT4       => get_string('next4task', 'taskchain'),
-            self::CONDITIONTASKID_NEXT5       => get_string('next5task', 'taskchain'),
-            self::CONDITIONTASKID_UNSEEN      => get_string('unseentask', 'taskchain'),
-            self::CONDITIONTASKID_UNANSWERED  => get_string('unansweredtask', 'taskchain'),
-            self::CONDITIONTASKID_INCORRECT   => get_string('incorrecttask', 'taskchain'),
-            self::CONDITIONTASKID_RANDOM      => get_string('randomtask', 'taskchain'),
-            self::CONDITIONTASKID_MENUNEXT    => get_string('menuofnexttasks', 'taskchain'),
-            self::CONDITIONTASKID_MENUNEXTONE => get_string('menuofnexttasksone', 'taskchain'),
-            self::CONDITIONTASKID_MENUALL     => get_string('menuofalltasks', 'taskchain'),
-            self::CONDITIONTASKID_MENUALLONE  => get_string('menuofalltasksone', 'taskchain'),
-            self::CONDITIONTASKID_ENDOFCHAIN  => get_string('endofchain', 'taskchain')
+            self::CONDITIONTASKID_SAME        => get_string('sametask', 'mod_taskchain'),
+            self::CONDITIONTASKID_PREVIOUS    => get_string('previoustask', 'mod_taskchain'),
+            self::CONDITIONTASKID_NEXT1       => get_string('next1task', 'mod_taskchain'),
+            self::CONDITIONTASKID_NEXT2       => get_string('next2task', 'mod_taskchain'),
+            self::CONDITIONTASKID_NEXT3       => get_string('next3task', 'mod_taskchain'),
+            self::CONDITIONTASKID_NEXT4       => get_string('next4task', 'mod_taskchain'),
+            self::CONDITIONTASKID_NEXT5       => get_string('next5task', 'mod_taskchain'),
+            self::CONDITIONTASKID_UNSEEN      => get_string('unseentask', 'mod_taskchain'),
+            self::CONDITIONTASKID_UNANSWERED  => get_string('unansweredtask', 'mod_taskchain'),
+            self::CONDITIONTASKID_INCORRECT   => get_string('incorrecttask', 'mod_taskchain'),
+            self::CONDITIONTASKID_RANDOM      => get_string('randomtask', 'mod_taskchain'),
+            self::CONDITIONTASKID_MENUNEXT    => get_string('menuofnexttasks', 'mod_taskchain'),
+            self::CONDITIONTASKID_MENUNEXTONE => get_string('menuofnexttasksone', 'mod_taskchain'),
+            self::CONDITIONTASKID_MENUALL     => get_string('menuofalltasks', 'mod_taskchain'),
+            self::CONDITIONTASKID_MENUALLONE  => get_string('menuofalltasksone', 'mod_taskchain'),
+            self::CONDITIONTASKID_ENDOFCHAIN  => get_string('endofchain', 'mod_taskchain')
         );
         if ($tasks = $TC->get_tasks()) {
             foreach ($tasks as $task) {
@@ -333,16 +333,16 @@ class taskchain_available extends taskchain_base {
                     // strip prefix, "mod_taskchain_attempt_", and suffix, "_renderer"
                     $outputformat = substr($class, 22, -9);
                     if ($strman->string_exists('outputformat_'.$outputformat, 'taskchain')) {
-                        $outputformats[$outputformat] = $strman->get_string('outputformat_'.$outputformat, 'taskchain');
+                        $outputformats[$outputformat] = $strman->get_string('outputformat_'.$outputformat, 'mod_taskchain');
                     } else {
-                        $outputformats[$outputformat] = $strman->get_string('outputformat_best', 'taskchain');
+                        $outputformats[$outputformat] = $strman->get_string('outputformat_best', 'mod_taskchain');
                     }
                 }
             }
             asort($outputformats);
         }
 
-        $best = array('0' => get_string('outputformat_best', 'taskchain'));
+        $best = array('0' => get_string('outputformat_best', 'mod_taskchain'));
 
         switch (count($outputformats)) {
             case 0  : return $best; // shouldn't happen !!
@@ -358,9 +358,9 @@ class taskchain_available extends taskchain_base {
      */
     static public function stopbuttontypes_list() {
         return array(
-            'taskchain_giveup' => get_string('giveup',             'taskchain'),
-            'specific'         => get_string('stopbuttonspecific', 'taskchain'),
-            'langpack'         => get_string('stopbuttonlangpack', 'taskchain')
+            'taskchain_giveup' => get_string('giveup',             'mod_taskchain'),
+            'specific'         => get_string('stopbuttonspecific', 'mod_taskchain'),
+            'langpack'         => get_string('stopbuttonlangpack', 'mod_taskchain')
         );
     }
 
@@ -397,10 +397,10 @@ class taskchain_available extends taskchain_base {
      */
     static public function statuses_list() {
         return array (
-            self::STATUS_INPROGRESS => get_string('inprogress', 'taskchain'),
-            self::STATUS_TIMEDOUT   => get_string('timedout', 'taskchain'),
-            self::STATUS_ABANDONED  => get_string('abandoned', 'taskchain'),
-            self::STATUS_COMPLETED  => get_string('completed', 'taskchain')
+            self::STATUS_INPROGRESS => get_string('inprogress', 'mod_taskchain'),
+            self::STATUS_TIMEDOUT   => get_string('timedout', 'mod_taskchain'),
+            self::STATUS_ABANDONED  => get_string('abandoned', 'mod_taskchain'),
+            self::STATUS_COMPLETED  => get_string('completed', 'mod_taskchain')
         );
     }
 
@@ -438,10 +438,10 @@ class taskchain_available extends taskchain_base {
      */
     static public function titles_list() {
         return array (
-            self::TEXTSOURCE_SPECIFIC => get_string('taskchainname', 'taskchain'),
-            self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'taskchain'),
-            self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'taskchain'),
-            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'taskchain')
+            self::TEXTSOURCE_SPECIFIC => get_string('taskchainname', 'mod_taskchain'),
+            self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'mod_taskchain'),
+            self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'mod_taskchain'),
+            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'mod_taskchain')
         );
     }
 }

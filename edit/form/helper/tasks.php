@@ -83,7 +83,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
             }
         }
         if ($showfield) {
-            $this->mform->addElement('radio', $name, '', get_string($action, 'taskchain'), $action);
+            $this->mform->addElement('radio', $name, '', get_string($action, 'mod_taskchain'), $action);
         }
     }
 
@@ -131,8 +131,8 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         $name  = $this->get_fieldname($field);
         $label = ''; // $this->get_fieldname($field);
 
-        $this->mform->addElement('radio', $name, '', get_string('selectedtasks', 'taskchain'), 'selectedtasks');
-        $this->mform->addElement('radio', $name, '', get_string('filteredtasks', 'taskchain'), 'filteredtasks');
+        $this->mform->addElement('radio', $name, '', get_string('selectedtasks', 'mod_taskchain'), 'selectedtasks');
+        $this->mform->addElement('radio', $name, '', get_string('filteredtasks', 'mod_taskchain'), 'filteredtasks');
         $this->mform->setType($name, PARAM_ALPHA);
         $this->mform->setDefault($name, 'selectedtasks');
         $this->mform->disabledIf($name, 'action', 'ne', $field);
@@ -141,13 +141,13 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
             self::FILTER_CONTAINS       => get_string('contains',       'filters'),
             self::FILTER_NOT_CONTAINS   => get_string('doesnotcontain', 'filters'),
             self::FILTER_EQUALS         => get_string('isequalto',      'filters'),
-            self::FILTER_NOT_EQUALS     => get_string('notisequalto',   'taskchain'),
+            self::FILTER_NOT_EQUALS     => get_string('notisequalto',   'mod_taskchain'),
             self::FILTER_STARTSWITH     => get_string('startswith',     'filters'),
-            self::FILTER_NOT_STARTSWITH => get_string('notstartswith',  'taskchain'),
+            self::FILTER_NOT_STARTSWITH => get_string('notstartswith',  'mod_taskchain'),
             self::FILTER_ENDSWITH       => get_string('endswith',       'filters'),
-            self::FILTER_NOT_ENDSWITH   => get_string('notendswith',    'taskchain'),
+            self::FILTER_NOT_ENDSWITH   => get_string('notendswith',    'mod_taskchain'),
             self::FILTER_EMPTY          => get_string('isempty',        'filters'),
-            self::FILTER_NOT_EMPTY      => get_string('notisempty',     'taskchain')
+            self::FILTER_NOT_EMPTY      => get_string('notisempty',     'mod_taskchain')
         );
         $filters = array(
             'coursename', 'activityname', 'taskname', 'taskposition', 'sourcefile', 'sourcetype'
@@ -186,8 +186,8 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                 $filterlabel = $this->get_fieldlabel($filter);
                 $name_filter = $this->get_fieldname($field.'_'.$filtername);
                 $list = array(self::FILTER_POSITION_ANY   => get_string('any'),
-                              self::FILTER_POSITION_START => get_string('startofchain', 'taskchain'),
-                              self::FILTER_POSITION_END   => get_string('endofchain',   'taskchain'));
+                              self::FILTER_POSITION_START => get_string('startofchain', 'mod_taskchain'),
+                              self::FILTER_POSITION_END   => get_string('endofchain',   'mod_taskchain'));
                 $this->mform->addElement('select', $name_filter, $filterlabel, $list);
                 $this->mform->setDefault($name_filter, self::FILTER_POSITION_ANY);
                 $this->mform->setType($name_filter, PARAM_INT);
@@ -255,7 +255,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
 
         if (count($list)) {
             $name = $this->get_fieldname($field);
-            $label = ''; // get_string('task', 'taskchain');
+            $label = ''; // get_string('task', 'mod_taskchain');
             $this->mform->addElement('select', $name, $label, $list);
             $this->mform->setType($name, PARAM_INT);
         }
@@ -290,7 +290,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         // add "startofchain" if required
         if ($count >= $min_record_count) {
             $added = true;
-            $text = get_string('startofchain', 'taskchain');
+            $text = get_string('startofchain', 'mod_taskchain');
             $this->mform->addElement('radio', $name, '', $text, 'start');
         }
 
@@ -299,7 +299,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
             $added = true;
             $elements = array();
 
-            $text = get_string('aftertaskid',  'taskchain');
+            $text = get_string('aftertaskid',  'mod_taskchain');
             $elements[] = $this->mform->createElement('radio', $name, '', $text, 'after');
 
             $name_taskid = $this->get_fieldname($field.'_taskid');
@@ -317,7 +317,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         // add "endofchain", if required
         if ($count >= $min_record_count && $count==1) {
             $added = true;
-            $text = get_string('endofchain', 'taskchain');
+            $text = get_string('endofchain', 'mod_taskchain');
             $this->mform->addElement('radio', $name, '', $text, 'end');
             $defaultvalue = 'end';
         }
@@ -351,7 +351,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
             $added = true;
             $elements = array();
 
-            $text = get_string('chain', 'taskchain');
+            $text = get_string('chain', 'mod_taskchain');
             $elements[] = $this->mform->createElement('radio', $name, '', $text, 'mytaskchain');
 
             $name_taskchainid = $this->get_fieldname($field.'_taskchainid');
@@ -663,10 +663,10 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                     }
                 }
                 if (! $ok) {
-                    $TC->print_error(get_string('error_getrecord', 'taskchain', "taskchain (id=$taskchainid)"));
+                    $TC->print_error(get_string('error_getrecord', 'mod_taskchain', "taskchain (id=$taskchainid)"));
                 }
                 if (! $chainid = $DB->get_field('taskchain_chains', 'id', array('parenttype'=>TASKCHAIN_PARENTTYPE_ACTIVITY, 'parentid'=>$taskchainid))) {
-                    $TC->print_error(get_string('error_getrecord', 'taskchain', "taskchain_chains (parentid=$taskchainid)"));
+                    $TC->print_error(get_string('error_getrecord', 'mod_taskchain', "taskchain_chains (parentid=$taskchainid)"));
                 }
                 $tables = ''
                     ."{taskchain_chains} qu,"

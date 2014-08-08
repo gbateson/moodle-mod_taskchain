@@ -566,8 +566,8 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         $direction = get_string('thisdirection', 'langconfig');
 
         $title = format_text($this->TC->task->name);
-        $title_top = get_string('navigation_frame', 'taskchain');
-        $title_main = get_string('modulename', 'taskchain');
+        $title_top = get_string('navigation_frame', 'mod_taskchain');
+        $title_main = get_string('modulename', 'mod_taskchain');
 
         $src_top = $this->TC->url->attempt('top');
         $src_main = $this->TC->url->attempt('main');

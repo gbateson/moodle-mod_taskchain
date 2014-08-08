@@ -195,7 +195,7 @@ class taskchain_report_table extends table_sql {
         echo ' &nbsp; ';
 
         // add button to delete attempts
-        $confirm = addslashes_js(get_string('confirmdeleteattempts', 'taskchain'));
+        $confirm = addslashes_js(get_string('confirmdeleteattempts', 'mod_taskchain'));
         $onclick = ''
             ."if(confirm('$confirm') && this.form && this.form.elements['confirmed']) {"
                 ."this.form.elements['confirmed'].value = '1';"
@@ -204,7 +204,7 @@ class taskchain_report_table extends table_sql {
                 ."return false;"
             ."}"
         ;
-        echo html_writer::empty_tag('input', array('type'=>'submit', 'onclick'=>"$onclick", 'name'=>'delete', 'value'=>get_string('deleteattempts', 'taskchain')));
+        echo html_writer::empty_tag('input', array('type'=>'submit', 'onclick'=>"$onclick", 'name'=>'delete', 'value'=>get_string('deleteattempts', 'mod_taskchain')));
         echo html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'confirmed', 'value'=>'0'))."\n";
         echo html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'action', 'value'=>'deleteselected'))."\n";
 
@@ -360,7 +360,7 @@ class taskchain_report_table extends table_sql {
      * @return xxx
      */
     function header_taskscoretaskname()  {
-        return get_string('taskname', 'taskchain');
+        return get_string('taskname', 'mod_taskchain');
     }
 
     /**
@@ -485,7 +485,7 @@ class taskchain_report_table extends table_sql {
      * @return xxx
      */
     function header_cnumber()  {
-        return get_string('cnumber', 'taskchain');
+        return get_string('cnumber', 'mod_taskchain');
     }
 
     /**
@@ -494,7 +494,7 @@ class taskchain_report_table extends table_sql {
      * @return xxx
      */
     function header_tnumber()  {
-        return get_string('tnumber', 'taskchain');
+        return get_string('tnumber', 'mod_taskchain');
     }
 
     /**
@@ -507,7 +507,7 @@ class taskchain_report_table extends table_sql {
      * @return xxx
      */
     function header_grade($gradetype, $recordtype, $grademethod='', $gradeweighting='')  {
-        $grade = get_string($gradetype, 'taskchain');
+        $grade = get_string($gradetype, 'mod_taskchain');
 
         if (isset($this->TC->$recordtype)) {
             if ($grademethod=='') {
@@ -535,7 +535,7 @@ class taskchain_report_table extends table_sql {
      * @return xxx
      */
     function header_penalties()  {
-        return get_string('penalties', 'taskchain');
+        return get_string('penalties', 'mod_taskchain');
     }
 
     /**
@@ -544,7 +544,7 @@ class taskchain_report_table extends table_sql {
      * @return xxx
      */
     function header_status()  {
-        return get_string('status', 'taskchain');
+        return get_string('status', 'mod_taskchain');
     }
 
     /**
@@ -553,7 +553,7 @@ class taskchain_report_table extends table_sql {
      * @return xxx
      */
     function header_duration()  {
-        return get_string('duration', 'taskchain');
+        return get_string('duration', 'mod_taskchain');
     }
 
     /**
@@ -591,7 +591,7 @@ class taskchain_report_table extends table_sql {
     function header_other($column)  {
         if (substr($column, 0, 2)=='q_') {
             $a = intval(substr($column, 2)) + 1;
-            return get_string('questionshort', 'taskchain', $a);
+            return get_string('questionshort', 'mod_taskchain', $a);
         } else {
             return $column;
         }
@@ -839,7 +839,7 @@ class taskchain_report_table extends table_sql {
         }
 
         if ($column=='responsefield') {
-            return get_string($row->$column, 'taskchain');
+            return get_string($row->$column, 'mod_taskchain');
         }
 
         // format columns Q-1 .. Q-99

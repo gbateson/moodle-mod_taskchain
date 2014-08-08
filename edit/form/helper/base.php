@@ -285,7 +285,7 @@ abstract class taskchain_form_helper_base {
         $a = (object)array('class'    => get_class($this),
                            'property' => $property,
                            'method'   => $method.'()');
-        $hint = get_string($hint, 'taskchain', $a);
+        $hint = get_string($hint, 'mod_taskchain', $a);
         throw new coding_exception($hint); // $debuginfo
     }
 
@@ -1139,7 +1139,7 @@ abstract class taskchain_form_helper_base {
         if (method_exists($this, $method)) {
             return $this->$method();
         } else {
-            return get_string($section.'hdr', 'taskchain');
+            return get_string($section.'hdr', 'mod_taskchain');
         }
     }
 
@@ -1189,7 +1189,7 @@ abstract class taskchain_form_helper_base {
         if (method_exists($this, $method)) {
             return $this->$method();
         } else {
-            return get_string($field, 'taskchain');
+            return get_string($field, 'mod_taskchain');
         }
     }
 

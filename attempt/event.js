@@ -89,7 +89,7 @@ function HP_add_listener(obj, evt, fnc, useCapture) {
 		HP_add_listener(obj, evt, old_fnc, useCapture);
 	}
 
-    // remove event listener
+    // add event listener
 	if (obj.addEventListener) {
 		obj.addEventListener(evt, fnc, (useCapture ? true : false));
 	} else if (obj.attachEvent) {
@@ -120,9 +120,7 @@ function HP_add_listener(obj, evt, fnc, useCapture) {
 function HP_remove_listener(obj, evt, fnc, useCapture) {
 
     // convert fnc to Function, if necessary
-	if (typeof(fnc)=='string') {
-		fnc = new Function('event', fnc);
-	}
+	fnc = HP_fix_function(fnc);
 
     // convert mouse <=> touch events
 	evt = HP_fix_event(evt);

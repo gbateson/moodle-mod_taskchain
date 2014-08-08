@@ -91,7 +91,7 @@ class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
                 $newtext = preg_replace_callback($search, $callback, $newtext, -1, $count);
             } else {
                 // filtering of this file type is disabled
-                $replace = '$1<br />'.get_string('error_disabledfilter', 'taskchain', $adminsetting);
+                $replace = '$1<br />'.get_string('error_disabledfilter', 'mod_taskchain', $adminsetting);
                 $newtext = preg_replace($search, $replace, $newtext, -1, $count);
             }
 

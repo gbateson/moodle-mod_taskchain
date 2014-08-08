@@ -269,7 +269,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
         if (method_exists($this, $method)) {
             $label = $this->$method();
         } else {
-            $label = get_string($section.'hdr', 'taskchain');
+            $label = get_string($section.'hdr', 'mod_taskchain');
         }
 
         $uselinks = false;
@@ -296,7 +296,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function get_sectionlabel_conditions() {
-        return get_string('conditions', 'taskchain');
+        return get_string('conditions', 'mod_taskchain');
     }
 
     /**
@@ -307,7 +307,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      */
     protected function get_fieldvalue_columnlistsheading() {
         $type = $this->TC->get_columnlisttype();
-        return get_string('columnlists'.$type, 'taskchain');
+        return get_string('columnlists'.$type, 'mod_taskchain');
     }
 
     /////////////////////////////////////////////////////////

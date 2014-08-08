@@ -149,17 +149,17 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
         // add column headings, if required
         if ($counttaskscores) {
-            $table->head = array(get_string('task', 'taskchain'),
-                                 get_string('status', 'taskchain'),
-                                 get_string('duration', 'taskchain'),
-                                 get_string('lastaccess', 'taskchain'));
+            $table->head = array(get_string('task', 'mod_taskchain'),
+                                 get_string('status', 'mod_taskchain'),
+                                 get_string('duration', 'mod_taskchain'),
+                                 get_string('lastaccess', 'mod_taskchain'));
         }
         $table->align = array('left', 'center', 'center', 'left');
         $table->size  = array('', '', '', '');
 
         if ($score_column) {
             // insert score column
-            array_splice($table->head,  1, 0, get_string('score', 'taskchain'));
+            array_splice($table->head,  1, 0, get_string('score', 'mod_taskchain'));
             array_splice($table->align, 1, 0, 'center');
             array_splice($table->size,  1, 0, '');
         }
@@ -179,7 +179,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
         }
 
         // print rows of tasks and their scores
-        $tasklinktitle = get_string('starttaskattempt', 'taskchain');
+        $tasklinktitle = get_string('starttaskattempt', 'mod_taskchain');
         foreach ($showtaskids as $taskid) {
 
             // shortcuts to task and taskscore
@@ -242,7 +242,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 //resume button
                 if ($resume_column) {
                     if ($task->allowresume && $taskscore && $taskscore->status==taskchain::STATUS_INPROGRESS) {
-                        $cell = get_string('resume', 'taskchain');
+                        $cell = get_string('resume', 'mod_taskchain');
                     } else {
                         $cell = $this->notext;
                     }
@@ -255,7 +255,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
         }
 
         if (empty($table->data)) {
-            $output .= get_string('notasksforyou', 'taskchain');
+            $output .= get_string('notasksforyou', 'mod_taskchain');
         } else {
             if (count($linktaskids)==1) {
                 $output .= $this->whatnext('clicklinktocontinue');
@@ -771,14 +771,14 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
             if ($this->TC->chain->timeopen) {
                 $table->data[] = new html_table_row(array(
-                    new html_table_cell(get_string('timeopen', 'taskchain').':'),
+                    new html_table_cell(get_string('timeopen', 'mod_taskchain').':'),
                     new html_table_cell(userdate($this->TC->chain->timeopen, $dateformat))
                 ));
             }
 
             if ($this->TC->chain->timeclose) {
                 $table->data[] = new html_table_row(array(
-                    new html_table_cell(get_string('timeclose', 'taskchain').':'),
+                    new html_table_cell(get_string('timeclose', 'mod_taskchain').':'),
                     new html_table_cell(userdate($this->TC->chain->timeclose, $dateformat))
                 ));
             }
@@ -789,21 +789,21 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
             if ($this->TC->chain->attemptlimit > 1) {
                 $table->data[] = new html_table_row(array(
-                    new html_table_cell(get_string('attemptsallowed', 'taskchain').':'),
+                    new html_table_cell(get_string('attemptsallowed', 'mod_taskchain').':'),
                     new html_table_cell($this->TC->chain->attemptlimit)
                 ));
             }
 
             if ($this->TC->chain->timelimit > 0) {
                 $table->data[] = new html_table_row(array(
-                    new html_table_cell(get_string('timelimit', 'taskchain').':'),
+                    new html_table_cell(get_string('timelimit', 'mod_taskchain').':'),
                     new html_table_cell(format_time($this->TC->chain->timelimit))
                 ));
             }
 
             if ($this->TC->chain->gradeweighting && $this->TC->chain->attemptlimit != 1) {
                 $table->data[] = new html_table_row(array(
-                    new html_table_cell(get_string('grademethod', 'taskchain').':'),
+                    new html_table_cell(get_string('grademethod', 'mod_taskchain').':'),
                     new html_table_cell($this->TC->format_grademethod())
                 ));
             }
@@ -939,7 +939,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             // show summary of attempts so far
 
             $dateformat = get_string('strftimerecentfull');
-            $strresume = get_string('resume', 'taskchain');
+            $strresume = get_string('resume', 'mod_taskchain');
 
             // cache showselectcolumn switch
             if ($this->TC->can->deleteattempts()) {
@@ -969,16 +969,16 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             $table = new html_table();
             $table->attributes['class'] = 'generaltable taskchainattemptssummary';
 
-            $table->head  = array(get_string($number, 'taskchain'),
-                                  get_string('status', 'taskchain'),
-                                  get_string('duration', 'taskchain'),
-                                  get_string('lastaccess', 'taskchain'));
+            $table->head  = array(get_string($number, 'mod_taskchain'),
+                                  get_string('status', 'mod_taskchain'),
+                                  get_string('duration', 'mod_taskchain'),
+                                  get_string('lastaccess', 'mod_taskchain'));
             $table->align = array('center', 'center', 'left', 'left');
             $table->size  = array('', '', '', '');
 
             if ($this->TC->$type->$gradelimit && $this->TC->$type->$gradeweighting) {
                 // insert grade column
-                array_splice($table->head, 1, 0, array(get_string($grade, 'taskchain')));
+                array_splice($table->head, 1, 0, array(get_string($grade, 'mod_taskchain')));
                 array_splice($table->align, 1, 0, array('center'));
                 array_splice($table->size, 1, 0, array(''));
             }
@@ -1066,11 +1066,11 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                             ."}"
                         ."}"
                         ."if(!x){"
-                            ."alert('".get_string('checksomeboxes', 'taskchain')."');"
+                            ."alert('".get_string('checksomeboxes', 'mod_taskchain')."');"
                         ."}"
                     ."}"
                     ."if(x){"
-                        ."x=confirm('".get_string('confirmdeleteattempts', 'taskchain')."');"
+                        ."x=confirm('".get_string('confirmdeleteattempts', 'mod_taskchain')."');"
                     ."}"
                     ."if(this.elements['confirmed']){"
                         ."this.elements['confirmed'].value=(x?1:0);"
@@ -1145,7 +1145,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                                 $options['all'] .= " ($total)";
                             }
                         } else {
-                            $options[$type.':'.implode(',', $ids)] = get_string($type, 'taskchain')." ($total)";
+                            $options[$type.':'.implode(',', $ids)] = get_string($type, 'mod_taskchain')." ($total)";
                         }
                     }
                 }
@@ -1155,13 +1155,13 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 $table->attributes['class'] = 'generaltable taskchaindeleteattempts';
 
                 $table->data[] = new html_table_row(array(
-                    get_string('selectattempts', 'taskchain').':',
+                    get_string('selectattempts', 'mod_taskchain').':',
                     html_writer::select($options, 'selectattempts', '', '', array('onchange' => 'return taskchain_set_checked_attempts(this)'))
                 ));
 
                 $table->data[] = new html_table_row(array(
                     $this->notext,
-                    html_writer::empty_tag('input', array('type'=>'submit', 'value'=>get_string('deleteattempts', 'taskchain')))
+                    html_writer::empty_tag('input', array('type'=>'submit', 'value'=>get_string('deleteattempts', 'mod_taskchain')))
                 ));
 
                 $output .= html_writer::table($table)."\n";
@@ -1215,7 +1215,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             $output .= '<div style="text-align:center">';
             $params = array('cnumber' => $cnumber, 'tnumber' => $tnumber, 'tab' => $tab);
             $url = $this->format_url('attempt.php', 'coursemoduleid', $params);
-            $output .= $this->single_button($url, get_string($button_string, 'taskchain'), 'get');
+            $output .= $this->single_button($url, get_string($button_string, 'mod_taskchain'), 'get');
             $output .= '</div>';
         } else {
             //print_heading(get_string('nomoreattempts', 'task'));
@@ -1238,12 +1238,12 @@ class mod_taskchain_renderer extends plugin_renderer_base {
         $buttontext = '';
 
         if ($this->TC->can->preview()) {
-            $buttontext = get_string('previewtasknow', 'taskchain');
+            $buttontext = get_string('previewtasknow', 'mod_taskchain');
         } else if ($this->TC->can->start()) {
             if ($this->TC->count_distinct_clickreportids()) {
-                $buttontext = get_string('reattempttask', 'taskchain');
+                $buttontext = get_string('reattempttask', 'mod_taskchain');
             } else {
-                $buttontext = get_string('attempttasknow', 'taskchain');
+                $buttontext = get_string('attempttasknow', 'mod_taskchain');
             }
         }
 
@@ -1273,18 +1273,18 @@ class mod_taskchain_renderer extends plugin_renderer_base {
     public function whatnext($str='') {
         switch ($str) {
             case '':
-                $whatnext = get_string('exit_whatnext_default', 'taskchain');
+                $whatnext = get_string('exit_whatnext_default', 'mod_taskchain');
                 break;
 
             case 'exit_whatnext':
                 switch (mt_rand(0,1)) { // random 0 or 1. You can add more if you like
-                    case 0: $whatnext = get_string('exit_whatnext_0', 'taskchain'); break;
-                    case 1: $whatnext = get_string('exit_whatnext_1', 'taskchain'); break;
+                    case 0: $whatnext = get_string('exit_whatnext_0', 'mod_taskchain'); break;
+                    case 1: $whatnext = get_string('exit_whatnext_1', 'mod_taskchain'); break;
                 }
                 break;
 
             default:
-                $whatnext = get_string($str, 'taskchain');
+                $whatnext = get_string($str, 'mod_taskchain');
         }
 
         return html_writer::tag('h3', $whatnext, array('class'=>'taskchainwhatnext'));
@@ -1309,28 +1309,28 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
         if ($this->TC->chain->gradeweighting==0) {
             if ($exitoptions & mod_taskchain::EXITOPTIONS_ATTEMPTSCORE || $exitoptions & mod_taskchain::EXITOPTIONS_TASKCHAINGRADE) {
-                $text = get_string('exit_nograde', 'taskchain');
+                $text = get_string('exit_nograde', 'mod_taskchain');
                 $feedback[] = html_writer::tag('li', $text);
             }
         } else if ($this->TC->get_gradeitem() && $this->TC->get_chainattempt()) {
             if ($exitoptions & mod_taskchain::EXITOPTIONS_ENCOURAGEMENT) {
                 switch (true) {
                     case $this->TC->chainattempt->grade >= 90:
-                        $text = get_string('exit_excellent', 'taskchain');
+                        $text = get_string('exit_excellent', 'mod_taskchain');
                         break;
                     case $this->TC->chainattempt->grade >= 60:
-                        $text = get_string('exit_welldone', 'taskchain');
+                        $text = get_string('exit_welldone', 'mod_taskchain');
                         break;
                     case $this->TC->chainattempt->grade > 0:
-                        $text = get_string('exit_goodtry', 'taskchain');
+                        $text = get_string('exit_goodtry', 'mod_taskchain');
                         break;
                     default:
-                        $text = get_string('exit_areyouok', 'taskchain');
+                        $text = get_string('exit_areyouok', 'mod_taskchain');
                 }
                 $feedback[] = html_writer::tag('li', $text, array('class' => 'taskchainexitencouragement'));
             }
             if ($exitoptions & mod_taskchain::EXITOPTIONS_ATTEMPTSCORE) {
-                $text = get_string('exit_attemptscore', 'taskchain', $this->TC->chainattempt->grade.$percentsign);
+                $text = get_string('exit_attemptscore', 'mod_taskchain', $this->TC->chainattempt->grade.$percentsign);
                 $feedback[] = html_writer::tag('li', $text);
             }
             if ($exitoptions & mod_taskchain::EXITOPTIONS_TASKCHAINGRADE) {
@@ -1338,11 +1338,11 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                     case mod_taskchain::GRADEMETHOD_HIGHEST:
                         if ($this->TC->chainattempt->grade < $this->TC->gradeitem->percent) {
                             // current attempt is less than the highest so far
-                            $text = get_string('exit_taskchaingrade_highest', 'taskchain', $this->TC->gradeitem->percent.$percentsign);
+                            $text = get_string('exit_taskchaingrade_highest', 'mod_taskchain', $this->TC->gradeitem->percent.$percentsign);
                             $feedback[] = html_writer::tag('li', $text);
                         } else if ($this->TC->chainattempt->grade==0) {
                             // zero score is best so far
-                            $text = get_string('exit_taskchaingrade_highest_zero', 'taskchain', $this->TC->chainattempt->grade.$percentsign);
+                            $text = get_string('exit_taskchaingrade_highest_zero', 'mod_taskchain', $this->TC->chainattempt->grade.$percentsign);
                             $feedback[] = html_writer::tag('li', $text);
                         } else if ($this->TC->get_chainattempts()) {
                             // current attempt is highest so far
@@ -1359,10 +1359,10 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                                 // do nothing (no previous attempt)
                             } else if ($maxgrade==$this->TC->chainattempt->grade) {
                                 // attempt grade equals previous best
-                                $text = get_string('exit_taskchaingrade_highest_equal', 'taskchain');
+                                $text = get_string('exit_taskchaingrade_highest_equal', 'mod_taskchain');
                                 $feedback[] = html_writer::tag('li', $text);
                             } else {
-                                $text = get_string('exit_taskchaingrade_highest_previous', 'taskchain', $maxgrade.$percentsign);
+                                $text = get_string('exit_taskchaingrade_highest_previous', 'mod_taskchain', $maxgrade.$percentsign);
                                 $feedback[] = html_writer::tag('li', $text);
                             }
                         } else {
@@ -1370,14 +1370,14 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                         }
                         break;
                     case mod_taskchain::GRADEMETHOD_AVERAGE:
-                        $text = get_string('exit_taskchaingrade_average', 'taskchain', $this->TC->gradeitem->percent.$percentsign);
+                        $text = get_string('exit_taskchaingrade_average', 'mod_taskchain', $this->TC->gradeitem->percent.$percentsign);
                         $feedback[] = html_writer::tag('li', $text);
                         break;
                     // case mod_taskchain::GRADEMETHOD_TOTAL:
                     // case mod_taskchain::GRADEMETHOD_FIRST:
                     // case mod_taskchain::GRADEMETHOD_LAST:
                     default:
-                        $text = get_string('exit_taskchaingrade', 'taskchain', $this->TC->gradeitem->percent.$percentsign);
+                        $text = get_string('exit_taskchaingrade', 'mod_taskchain', $this->TC->gradeitem->percent.$percentsign);
                         $feedback[] = html_writer::tag('li', $text);
                         break;
                 }
@@ -1414,7 +1414,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             if ($cm) {
                 $url = $this->TC->url->view($cm);
                 $table->data[] = new html_table_row(array(
-                    new html_table_cell(html_writer::link($url, get_string('exit_next', 'taskchain'))),
+                    new html_table_cell(html_writer::link($url, get_string('exit_next', 'mod_taskchain'))),
                     new html_table_cell(html_writer::link($url, format_string(urldecode($cm->name))))
                 ));
             }
@@ -1424,7 +1424,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             // retry this taskchain, if allowed
             if ($this->TC->chain->attemptlimit==0 || empty($this->TC->chainattempts) || $this->TC->chain->attemptlimit < count($this->TC->chainattempts)) {
                 $table->data[] = new html_table_row(array(
-                    new html_table_cell(html_writer::link($this->TC->url->view(), get_string('exit_retry', 'taskchain'))),
+                    new html_table_cell(html_writer::link($this->TC->url->view(), get_string('exit_retry', 'mod_taskchain'))),
                     new html_table_cell(html_writer::link($this->TC->url->view(), format_string($this->TC->taskchain->name))),
                 ));
             }
@@ -1432,15 +1432,15 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
         if ($this->TC->chain->exitoptions & mod_taskchain::EXITOPTIONS_INDEX) {
             $table->data[] = new html_table_row(array(
-                new html_table_cell(html_writer::link($this->TC->url->index(), get_string('exit_index', 'taskchain'))),
-                new html_table_cell(html_writer::link($this->TC->url->index(), get_string('exit_index_text', 'taskchain')))
+                new html_table_cell(html_writer::link($this->TC->url->index(), get_string('exit_index', 'mod_taskchain'))),
+                new html_table_cell(html_writer::link($this->TC->url->index(), get_string('exit_index_text', 'mod_taskchain')))
             ));
         }
 
         if ($this->TC->chain->exitoptions & mod_taskchain::EXITOPTIONS_COURSE) {
             $table->data[] = new html_table_row(array(
-                new html_table_cell(html_writer::link($this->TC->url->course(), get_string('exit_course', 'taskchain'))),
-                new html_table_cell(html_writer::link($this->TC->url->course(), get_string('exit_course_text', 'taskchain')))
+                new html_table_cell(html_writer::link($this->TC->url->course(), get_string('exit_course', 'mod_taskchain'))),
+                new html_table_cell(html_writer::link($this->TC->url->course(), get_string('exit_course_text', 'mod_taskchain')))
             ));
         }
 
@@ -1448,8 +1448,8 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             if ($this->TC->course->showgrades && $this->TC->chain->gradeweighting) {
                 $url = new moodle_url($this->TC->url->grades());
                 $table->data[] = new html_table_row(array(
-                    new html_table_cell(html_writer::link($url, get_string('exit_grades', 'taskchain'))),
-                    new html_table_cell(html_writer::link($url, get_string('exit_grades_text', 'taskchain')))
+                    new html_table_cell(html_writer::link($url, get_string('exit_grades', 'mod_taskchain'))),
+                    new html_table_cell(html_writer::link($url, get_string('exit_grades_text', 'mod_taskchain')))
                 ));
             }
         }

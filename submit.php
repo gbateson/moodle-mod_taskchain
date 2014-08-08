@@ -170,13 +170,13 @@ if ($TC->can->attempt() || $TC->can->preview()) {
 } else {
     if (isguestuser()) {
         // off guests a choice of logging in or going back.
-        $message = html_writer::tag('p', get_string('guestsno', 'taskchain'));
+        $message = html_writer::tag('p', get_string('guestsno', 'mod_taskchain'));
         $message .= html_writer::tag('p', get_string('liketologin'));
         echo $output->confirm($message, get_login_url(), get_referer(false));
     } else {
         // user is not enrolled in this course in a good enough role,
         // show a link to course enrolment page.
-        $message = html_writer::tag('p', get_string('youneedtoenrol', 'taskchain'));
+        $message = html_writer::tag('p', get_string('youneedtoenrol', 'mod_taskchain'));
         $message .= html_writer::tag('p', $output->continue_button($TC->url->course()));
         echo $output->box($message, 'generalbox', 'notice');
     }

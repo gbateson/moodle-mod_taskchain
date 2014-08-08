@@ -42,7 +42,7 @@ mod_taskchain::add_to_log($course->id, 'taskchain', 'index', "index.php?id=$cour
 $PAGE->set_url('/mod/taskchain/index.php', array('id' => $course->id));
 $PAGE->set_title($course->fullname);
 $PAGE->set_heading($course->shortname);
-$PAGE->navbar->add(get_string('modulenameplural', 'taskchain'));
+$PAGE->navbar->add(get_string('modulenameplural', 'mod_taskchain'));
 
 /// Output starts here
 
@@ -51,7 +51,7 @@ echo $OUTPUT->header();
 /// Get all the appropriate data
 
 if (! $taskchains = get_all_instances_in_course('taskchain', $course)) {
-    echo $OUTPUT->heading(get_string('notaskchains', 'taskchain'), 2);
+    echo $OUTPUT->heading(get_string('notaskchains', 'mod_taskchain'), 2);
     echo $OUTPUT->continue_button(new moodle_url('/course/view.php', array('id' => $course->id)));
     echo $OUTPUT->footer();
     die();
@@ -109,9 +109,9 @@ if ($usesections) {
 
 $strsectionname = get_string('sectionname', 'format_'.$course->format);
 $strname        = get_string('name');
-$strhighest     = get_string('highestgrade', 'taskchain');
-$straverage     = get_string('averagegrade', 'taskchain');
-$strattempts    = get_string('attempts', 'taskchain');
+$strhighest     = get_string('highestgrade', 'mod_taskchain');
+$straverage     = get_string('averagegrade', 'mod_taskchain');
+$strattempts    = get_string('attempts', 'mod_taskchain');
 
 $table = new html_table();
 
@@ -157,7 +157,7 @@ foreach ($taskchains as $taskchain) {
         $text = html_writer::tag('a', $aggregates[$taskchain->id]->averagescore, $params);
         $row->cells[] = new html_table_cell($text);
 
-        $text = get_string('viewreports', 'taskchain', $aggregates[$taskchain->id]->usercount);
+        $text = get_string('viewreports', 'mod_taskchain', $aggregates[$taskchain->id]->usercount);
         $text = html_writer::tag('a', $text, $params);
         $row->cells[] = new html_table_cell($text);
     }
@@ -165,7 +165,7 @@ foreach ($taskchains as $taskchain) {
     $table->data[] = $row;
 }
 
-echo $OUTPUT->heading(get_string('modulenameplural', 'taskchain'), 2);
+echo $OUTPUT->heading(get_string('modulenameplural', 'mod_taskchain'), 2);
 echo html_writer::table($table);
 
 /// Finish the page

@@ -107,17 +107,17 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $formclassfile = $CFG->dirroot.'/mod/taskchain/edit/form/helper/'.$this->recordstype.'.php';
 
             if (! file_exists($formclassfile)) {
-                throw new moodle_exception(get_string('error_formhelperfilenotfound', 'taskchain', $formclassfile));
+                throw new moodle_exception(get_string('error_formhelperfilenotfound', 'mod_taskchain', $formclassfile));
             }
 
             // get class definition for child $records
             require_once($formclassfile);
 
             if (! class_exists($objectclass)) {
-                throw new moodle_exception(get_string('error_recordclassnotfound', 'taskchain', $objectclass));
+                throw new moodle_exception(get_string('error_recordclassnotfound', 'mod_taskchain', $objectclass));
             }
             if (! class_exists($formclass)) {
-                throw new moodle_exception(get_string('error_formhelperclassnotfound', 'taskchain', $formclass));
+                throw new moodle_exception(get_string('error_formhelperclassnotfound', 'mod_taskchain', $formclass));
             }
 
             foreach (array_keys($records) as $id) {
@@ -311,7 +311,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
                     $this->$method($action, $name);
                 } else {
                     // by default we add this action as a radio button
-                    $this->mform->addElement('radio', $name, '', get_string($action, 'taskchain'), $action);
+                    $this->mform->addElement('radio', $name, '', get_string($action, 'mod_taskchain'), $action);
                 }
 
                 $method = 'add_action_'.$action.'_details';

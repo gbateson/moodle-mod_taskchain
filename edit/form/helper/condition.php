@@ -118,8 +118,8 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      * get_minmax_options
      */
     function get_minmax_options() {
-        return array(mod_taskchain::MIN => get_string('minimum', 'taskchain'),
-                     mod_taskchain::MAX => get_string('maximum', 'taskchain'));
+        return array(mod_taskchain::MIN => get_string('minimum', 'mod_taskchain'),
+                     mod_taskchain::MAX => get_string('maximum', 'mod_taskchain'));
     }
 
 
@@ -212,10 +212,10 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             default: return ''; // shouldn't happen !!
         }
         switch ($this->TC->action) {
-            case 'add': return get_string('addinganew', 'moodle', mod_taskchain::textlib('strtolower', get_string($type, 'taskchain')));
-            case 'edit': return get_string('updatinga', 'moodle', mod_taskchain::textlib('strtolower', get_string($type, 'taskchain')));
-            case 'delete': return get_string('delete'.$type, 'taskchain');
-            case 'deleteall': return get_string('deleteall'.$type.'s', 'taskchain');
+            case 'add': return get_string('addinganew', 'moodle', mod_taskchain::textlib('strtolower', get_string($type, 'mod_taskchain')));
+            case 'edit': return get_string('updatinga', 'moodle', mod_taskchain::textlib('strtolower', get_string($type, 'mod_taskchain')));
+            case 'delete': return get_string('delete'.$type, 'mod_taskchain');
+            case 'deleteall': return get_string('deleteall'.$type.'s', 'mod_taskchain');
             return ''; // shouldn't happen !!
         }
     }
@@ -228,8 +228,8 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      */
     protected function get_sectionlabel_condition() {
         switch ($this->get_conditiontype()) {
-            case mod_taskchain::CONDITIONTYPE_PRE: return get_string('precondition', 'taskchain');
-            case mod_taskchain::CONDITIONTYPE_POST: return get_string('postcondition', 'taskchain');
+            case mod_taskchain::CONDITIONTYPE_PRE: return get_string('precondition', 'mod_taskchain');
+            case mod_taskchain::CONDITIONTYPE_POST: return get_string('postcondition', 'mod_taskchain');
             default: return get_string('general', 'form'); // shouldn't happen !!
         }
     }
@@ -247,7 +247,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
 
         if ($groups = $this->TC->get_all_groups()) {
             $options = array(
-                '0' => get_string('anygroup', 'taskchain')
+                '0' => get_string('anygroup', 'mod_taskchain')
             );
             foreach($groups as $group) {
                 $options[$group->id] = format_string($group->name);
@@ -305,7 +305,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
         if ($conditiontype==mod_taskchain::CONDITIONTYPE_PRE) {
             // pre-conditions allow teacher to specify the task to which this condition refers
             $options = array(
-                mod_taskchain::CONDITIONTASKID_PREVIOUS => get_string('previoustask', 'taskchain')
+                mod_taskchain::CONDITIONTASKID_PREVIOUS => get_string('previoustask', 'mod_taskchain')
             );
             if ($tasks = $this->TC->get_tasks()) {
                 // a specific TaskChain task from this chain

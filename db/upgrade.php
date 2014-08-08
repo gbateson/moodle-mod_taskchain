@@ -225,7 +225,7 @@ function xmldb_taskchain_upgrade($oldversion) {
         $params = array(mod_taskchain::PARENTTYPE_ACTIVITY,
                         'html_xhtml',
                         'html_xerte',
-                        get_string('task', 'taskchain').' (%)');
+                        get_string('task', 'mod_taskchain').' (%)');
 
         // get tasks
         if ($tasks = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $orderby", $params)) {
@@ -325,6 +325,11 @@ function xmldb_taskchain_upgrade($oldversion) {
     if ($oldversion < $newversion) {
         $DB->set_field('taskchain_tasks', 'usemediafilter', '', array('usemediafilter' => '0'));
         $DB->set_field('taskchain_tasks', 'usemediafilter', 'moodle', array('usemediafilter' => '1'));
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
+    $newversion = 2014080931;
+    if ($oldversion < $newversion) {
         $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }

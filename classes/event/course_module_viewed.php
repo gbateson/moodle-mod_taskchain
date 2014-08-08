@@ -67,7 +67,7 @@ class course_module_viewed extends \core\event\content_viewed {
      * @return string
      */
     public static function get_name() {
-        return get_string('taskchainviewed', 'taskchain');
+        return get_string('taskchainviewed', 'mod_taskchain');
     }
 
     /**

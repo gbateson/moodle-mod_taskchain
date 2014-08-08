@@ -374,7 +374,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      */
     protected function add_field_showdescription() {
         if (defined('FEATURE_SHOW_DESCRIPTION')) { // Moodle >= 2.2
-            $this->mform->addElement('checkbox', 'showdescription', get_string('showdescription', 'taskchain'));
+            $this->mform->addElement('checkbox', 'showdescription', get_string('showdescription', 'mod_taskchain'));
             $this->add_helpbutton('showdescription', 'showdescription', 'taskchain');
         } else {
             $this->mform->addElement('hidden', 'showdescription', 0);
@@ -487,16 +487,16 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     protected function add_field_showpopup($field) {
         // Same window or new window (=popup) ?
         $options = array(
-            0 => get_string('windowsame', 'taskchain'),
-            1 => get_string('windownew', 'taskchain')
+            0 => get_string('windowsame', 'mod_taskchain'),
+            1 => get_string('windownew', 'mod_taskchain')
         );
-        $this->mform->addElement('select', 'showpopup', get_string('window', 'taskchain'), $options);
+        $this->mform->addElement('select', 'showpopup', get_string('window', 'mod_taskchain'), $options);
         $this->add_helpbutton('showpopup', 'window', 'taskchain');
 
         // New window options
         $elements = array();
         foreach (mod_taskchain::window_options('moodle') as $option) {
-            $elements[] = $this->mform->createElement('checkbox', $option, '', get_string('window'.$option, 'taskchain'));
+            $elements[] = $this->mform->createElement('checkbox', $option, '', get_string('window'.$option, 'mod_taskchain'));
         }
         $name = 'window_moodle_elements';
         $this->mform->addGroup($elements, $name, '', html_writer::empty_tag('br'), false);
@@ -505,7 +505,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
         $elements = array();
         foreach (mod_taskchain::window_options('yesno') as $option) {
-            $elements[] = $this->mform->createElement('checkbox', $option, '', get_string('window'.$option, 'taskchain'));
+            $elements[] = $this->mform->createElement('checkbox', $option, '', get_string('window'.$option, 'mod_taskchain'));
         }
         $name = 'window_yesno_elements';
         $this->mform->addGroup($elements, $name, '', html_writer::empty_tag('br'), false);
@@ -515,7 +515,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         foreach (mod_taskchain::window_options('numeric') as $option) {
             $elements = array();
             $elements[] = $this->mform->createElement('text', $option, '', array('size'=>'4'));
-            $elements[] = $this->mform->createElement('static', '', '', get_string('window'.$option, 'taskchain'));
+            $elements[] = $this->mform->createElement('static', '', '', get_string('window'.$option, 'mod_taskchain'));
             $name = 'window_'.$option.'_elements';
             $this->mform->addGroup($elements, $name, '', ' ', false);
             // uncommenting the next line seems to disable the sourcefile and configfile fields
@@ -554,13 +554,13 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $optgroups[get_string('yes').': '.$str] = $options;
 
         $options = array();
-        $str = get_string('attempts', 'taskchain');
+        $str = get_string('attempts', 'mod_taskchain');
         for ($i=-1; $i>=-5; $i--) {
             $options[$i] = $str.' >= '.abs($i);
         }
         $optgroups[get_string('yes').': '.$str] = $options;
 
-        $this->mform->addElement('selectgroups', 'allowfreeaccess', get_string('allowfreeaccess', 'taskchain'), $optgroups);
+        $this->mform->addElement('selectgroups', 'allowfreeaccess', get_string('allowfreeaccess', 'mod_taskchain'), $optgroups);
         $this->add_helpbutton('allowfreeaccess', 'allowfreeaccess', 'taskchain');
         $this->mform->setAdvanced('allowfreeaccess');
     }
@@ -652,8 +652,8 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
         if ($this->is_add()) {
             $options = array(
-                mod_taskchain::TEXTSOURCE_FILE => get_string('textsourcefile', 'taskchain'),
-                mod_taskchain::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'taskchain')
+                mod_taskchain::TEXTSOURCE_FILE => get_string('textsourcefile', 'mod_taskchain'),
+                mod_taskchain::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'mod_taskchain')
             );
             $elements = array(
                 $this->mform->createElement('selectyesno', $type_page),
@@ -819,7 +819,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             $this->mform->createElement('select', $type.'grade', '', $options)
         );
 
-        $this->mform->addGroup($elements, $type.'cm_elements', get_string($type.'cm', 'taskchain'), array(' '), false);
+        $this->mform->addGroup($elements, $type.'cm_elements', get_string($type.'cm', 'mod_taskchain'), array(' '), false);
         $this->add_helpbutton($type.'cm_elements', $type.'cm', 'taskchain');
         if ($type=='entry') {
             $defaultcm = mod_taskchain::ACTIVITY_NONE;
@@ -1129,7 +1129,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             foreach ($names as $name => $mask) {
                 if ($value & $mask) {
                     $name = ($name=='title' ? $name : $type.'_'.$name);
-                    $texts[] = get_string($name, 'taskchain');
+                    $texts[] = get_string($name, 'mod_taskchain');
                 }
             }
         }

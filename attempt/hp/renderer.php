@@ -333,16 +333,16 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         // warn user about consequences of navigating away from this page
         switch ($this->can_continue()) {
             case mod_taskchain::CONTINUE_RESUMETASK:
-                $onbeforeunload = get_string('canresumetask', 'taskchain', format_string($this->TC->task->name));
+                $onbeforeunload = get_string('canresumetask', 'mod_taskchain', format_string($this->TC->task->name));
                 break;
             case mod_taskchain::CONTINUE_RESTARTTASK:
-                $onbeforeunload = get_string('canrestarttask', 'taskchain', format_string($this->TC->task->name));
+                $onbeforeunload = get_string('canrestarttask', 'mod_taskchain', format_string($this->TC->task->name));
                 break;
             case mod_taskchain::CONTINUE_RESTARTCHAIN:
-                $onbeforeunload = get_string('canrestartchain', 'taskchain');
+                $onbeforeunload = get_string('canrestartchain', 'mod_taskchain');
                 break;
             case mod_taskchain::CONTINUE_ABANDONCHAIN:
-                $onbeforeunload = get_string('abandonchain', 'taskchain');
+                $onbeforeunload = get_string('abandonchain', 'mod_taskchain');
                 break;
             default:
                 $onbeforeunload = ''; // shouldn't happen !!

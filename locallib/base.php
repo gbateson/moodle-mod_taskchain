@@ -361,7 +361,7 @@ class taskchain_base {
         $a = (object)array('class'    => get_class($this),
                            'property' => $property,
                            'method'   => $method.'()');
-        $hint = get_string($hint, 'taskchain', $a);
+        $hint = get_string($hint, 'mod_taskchain', $a);
         throw new coding_exception($hint); // $debuginfo
     }
 

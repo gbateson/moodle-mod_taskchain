@@ -69,11 +69,11 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_r
         static $str = null;
         if (is_null($str)) {
             $str = (object)array(
-                'correct' => get_string('correct', 'taskchain'),
-                'wrong'   => get_string('wrong', 'taskchain'),
-                'ignored' => get_string('ignored', 'taskchain'),
-                'score'   => get_string('score', 'taskchain'),
-                'hintsclueschecks' => get_string('clues', 'taskchain').','.get_string('hints', 'taskchain').','.get_string('checks', 'taskchain')
+                'correct' => get_string('correct', 'mod_taskchain'),
+                'wrong'   => get_string('wrong', 'mod_taskchain'),
+                'ignored' => get_string('ignored', 'mod_taskchain'),
+                'score'   => get_string('score', 'mod_taskchain'),
+                'hintsclueschecks' => get_string('clues', 'mod_taskchain').','.get_string('hints', 'mod_taskchain').','.get_string('checks', 'mod_taskchain')
             );
         }
 

@@ -73,7 +73,7 @@ switch ($TC->action) {
         $TC->force_tnumber(0);
 
         // set text confirming task deletion
-        $text = get_string('task', 'taskchain');
+        $text = get_string('task', 'mod_taskchain');
         $text = mod_taskchain::textlib('strtolower', $text);
         $text = get_string('deletedactivity', '', $text);
 
@@ -93,7 +93,7 @@ switch ($TC->action) {
     case 'delete' :
 
         // check the user really wants to delete this task
-        $text = get_string('confirmdeletetask', 'taskchain');
+        $text = get_string('confirmdeletetask', 'mod_taskchain');
         $params = $TC->merge_params(null, null, 'taskid');
         echo $output->page_delete($text, 'edit/task.php', $params);
         break;

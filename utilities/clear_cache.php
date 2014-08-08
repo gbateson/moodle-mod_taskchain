@@ -41,7 +41,7 @@ require_capability('moodle/site:config', $context);
 // it is the path below $CFG->wwwroot of this script
 $PAGE->set_url($CFG->wwwroot.$SCRIPT);
 
-$title = get_string('clearcache', 'taskchain');
+$title = get_string('clearcache', 'mod_taskchain');
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
 $PAGE->set_pagelayout('admin');
@@ -59,8 +59,8 @@ $count_tasks = $DB->count_records('taskchain');
 echo $OUTPUT->box_start();
 
 echo '<table style="margin:auto"><tbody>'."\n";
-echo '<tr><th style="text-align:right;">'.get_string('tasks', 'taskchain').':</th><td>'.$count_tasks.'</td></tr>'."\n";
-echo '<tr><th style="text-align:right;">'.get_string('cacherecords', 'taskchain').':</th><td>'.$count_cache.'</td></tr>'."\n";
+echo '<tr><th style="text-align:right;">'.get_string('tasks', 'mod_taskchain').':</th><td>'.$count_tasks.'</td></tr>'."\n";
+echo '<tr><th style="text-align:right;">'.get_string('cacherecords', 'mod_taskchain').':</th><td>'.$count_cache.'</td></tr>'."\n";
 if ($count_cache) {
     echo '<tr><td colspan="2" style="text-align:center;">';
     echo '<form action="'.$CFG->wwwroot.$SCRIPT.'" method="post">';
@@ -70,7 +70,7 @@ if ($count_cache) {
     echo '</fieldset>';
     echo '</td></tr>'."\n";
 } else {
-    echo '<tr><td colspan="2" style="text-align:center;">'.get_string('clearedcache', 'taskchain').'</td></tr>'."\n";
+    echo '<tr><td colspan="2" style="text-align:center;">'.get_string('clearedcache', 'mod_taskchain').'</td></tr>'."\n";
 }
 echo '</tbody></table>'."\n";
 

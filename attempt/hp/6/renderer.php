@@ -1194,9 +1194,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         // Note: "&&" in onclick must be encoded as html-entities for strict XHTML
         return ''
             ."confirm("
-            ."'".$this->TC->task->source->js_value_safe(get_string('confirmstop', 'taskchain'), true)."'"
+            ."'".$this->TC->task->source->js_value_safe(get_string('confirmstop', 'mod_taskchain'), true)."'"
             ."+'\\n\\n'+(window.HP_beforeunload &amp;&amp; HP_beforeunload()?(HP_beforeunload()+'\\n\\n'):'')+"
-            ."'".$this->TC->task->source->js_value_safe(get_string('pressoktocontinue', 'taskchain'), true)."'"
+            ."'".$this->TC->task->source->js_value_safe(get_string('pressoktocontinue', 'mod_taskchain'), true)."'"
             .")"
         ;
     }
@@ -1608,9 +1608,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     $stoptext = $this->TC->task->stoptext;
             }
             if (trim($stoptext)=='') {
-                $stoptext = get_string('giveup', 'taskchain'); // default
+                $stoptext = get_string('giveup', 'mod_taskchain'); // default
             }
-            $confirm = get_string('confirmstop', 'taskchain');
+            $confirm = get_string('confirmstop', 'mod_taskchain');
             //$search = '/<!-- BeginTopNavButtons -->'.'.*?'.'<!-- EndTopNavButtons -->/s';
             $search = '/<(div class="Titles")>/s';
             $replace = '<$1 style="position: relative">'."\n\t"
@@ -2005,10 +2005,10 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         } else {
             // complete remaining feedback fields
             if ($this->TC->task->studentfeedback==mod_taskchain::FEEDBACK_MOODLEFORUM) {
-                $feedback[6] = "'".addslashes_js(get_string('feedbackdiscuss', 'taskchain'))."'";
+                $feedback[6] = "'".addslashes_js(get_string('feedbackdiscuss', 'mod_taskchain'))."'";
             } else {
                 // FEEDBACK_WEBPAGE, FEEDBACK_FORMMAIL, FEEDBACK_MOODLEMESSAGING
-                $feedback[6] = "'".addslashes_js(get_string('feedbacksendmessage', 'taskchain'))."'";
+                $feedback[6] = "'".addslashes_js(get_string('feedbacksendmessage', 'mod_taskchain'))."'";
             }
             $feedback[7] = "'".addslashes_js(get_string('feedback'))."'";
             $feedback[8] = "'".addslashes_js(get_string('defaultcourseteacher'))."'";

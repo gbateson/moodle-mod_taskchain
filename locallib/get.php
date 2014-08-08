@@ -1423,7 +1423,7 @@ class taskchain_get extends taskchain_base {
         $users = $this->users(true);
 
         if ($users) {
-            $userlist[$str->groups]['users'] = get_string('allusers', 'taskchain').' ('.count($users).')';
+            $userlist[$str->groups]['users'] = get_string('allusers', 'mod_taskchain').' ('.count($users).')';
         } else {
             // no users with attempts, but we want to force the "groups" to the top of the drop down list
             // so we add a dummy option here (to create the option group), and then remove the dummy later

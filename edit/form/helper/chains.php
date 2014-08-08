@@ -56,8 +56,8 @@ class taskchain_form_helper_chains extends taskchain_form_helper_records {
         $name  = $this->get_fieldname($field);
         $label = ''; // $this->get_fieldname($field);
 
-        $this->mform->addElement('radio', $name, '', get_string('selectedchains', 'taskchain'), 'selectedchains');
-        $this->mform->addElement('radio', $name, '', get_string('filteredchains', 'taskchain'), 'filteredchains');
+        $this->mform->addElement('radio', $name, '', get_string('selectedchains', 'mod_taskchain'), 'selectedchains');
+        $this->mform->addElement('radio', $name, '', get_string('filteredchains', 'mod_taskchain'), 'filteredchains');
         $this->mform->setType($name, PARAM_ALPHA);
         $this->mform->setDefault($name, 'selectedchains');
         $this->mform->disabledIf($name, 'action', 'ne', $field);
@@ -66,13 +66,13 @@ class taskchain_form_helper_chains extends taskchain_form_helper_records {
             self::FILTER_CONTAINS       => get_string('contains',       'filters'),
             self::FILTER_NOT_CONTAINS   => get_string('doesnotcontain', 'filters'),
             self::FILTER_EQUALS         => get_string('isequalto',      'filters'),
-            self::FILTER_NOT_EQUALS     => get_string('notisequalto',   'taskchain'),
+            self::FILTER_NOT_EQUALS     => get_string('notisequalto',   'mod_taskchain'),
             self::FILTER_STARTSWITH     => get_string('startswith',     'filters'),
-            self::FILTER_NOT_STARTSWITH => get_string('notstartswith',  'taskchain'),
+            self::FILTER_NOT_STARTSWITH => get_string('notstartswith',  'mod_taskchain'),
             self::FILTER_ENDSWITH       => get_string('endswith',       'filters'),
-            self::FILTER_NOT_ENDSWITH   => get_string('notendswith',    'taskchain'),
+            self::FILTER_NOT_ENDSWITH   => get_string('notendswith',    'mod_taskchain'),
             self::FILTER_EMPTY          => get_string('isempty',        'filters'),
-            self::FILTER_NOT_EMPTY      => get_string('notisempty',     'taskchain')
+            self::FILTER_NOT_EMPTY      => get_string('notisempty',     'mod_taskchain')
         );
         $filters = array(
             'coursename', 'activityname'

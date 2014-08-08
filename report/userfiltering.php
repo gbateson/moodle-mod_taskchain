@@ -70,10 +70,10 @@ class taskchain_user_filtering extends user_filtering {
             case 'status':
                 return new taskchain_filter_status($fieldname, $advanced, $default);
             case 'duration':
-                $label = get_string('duration', 'taskchain');
+                $label = get_string('duration', 'mod_taskchain');
                 return new taskchain_filter_duration($fieldname, $label, $advanced, $default);
             case 'penalties':
-                $label = get_string('penalties', 'taskchain');
+                $label = get_string('penalties', 'mod_taskchain');
                 return new taskchain_filter_number($fieldname, $label, $advanced, $default);
             case 'score':
                 $label = get_string('score', 'quiz');
@@ -294,7 +294,7 @@ class taskchain_filter_status extends user_filter_select {
      * @param mixed $default option
      */
     function __construct($name, $advanced, $default=null) {
-        $label = get_string($name, 'taskchain');
+        $label = get_string($name, 'mod_taskchain');
         $options = taskchain_available::statuses_list();
         parent::__construct($name, $label, $advanced, '', $options, $default);
     }
@@ -366,9 +366,9 @@ class taskchain_filter_number extends user_filter_select {
      */
     function get_operators() {
         return array(0 => get_string('isanyvalue','filters'),
-                     1 => get_string('islessthan', 'taskchain'),
+                     1 => get_string('islessthan', 'mod_taskchain'),
                      2 => get_string('isequalto','filters'),
-                     3 => get_string('isgreaterthan', 'taskchain'));
+                     3 => get_string('isgreaterthan', 'mod_taskchain'));
     }
 
     /**

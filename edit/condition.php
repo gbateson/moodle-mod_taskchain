@@ -83,7 +83,7 @@ switch ($TC->action) {
 
             if ($DB->delete_records_select('taskchain_conditions', $select)) {
                 // success
-                $text = get_string($type, 'taskchain');
+                $text = get_string($type, 'mod_taskchain');
                 $text = mod_taskchain::textlib('strtolower', $text);
                 $text = get_string('deletedactivity', '', $text);
                 echo $output->page_quick($text, 'close');
@@ -98,7 +98,7 @@ switch ($TC->action) {
             case mod_taskchain::CONDITIONTYPE_PRE:  $type = 'precondition'; break;
             case mod_taskchain::CONDITIONTYPE_POST: $type = 'postcondition'; break;
         }
-        $text = get_string('confirmdelete'.$type, 'taskchain');
+        $text = get_string('confirmdelete'.$type, 'mod_taskchain');
         $params = array('id'=>$TC->get_conditionid());
         echo $output->page_delete($text, 'edit/condition.php', $params);
         break;
@@ -109,7 +109,7 @@ switch ($TC->action) {
             case mod_taskchain::CONDITIONTYPE_PRE:  $type = 'preconditions'; break;
             case mod_taskchain::CONDITIONTYPE_POST: $type = 'postconditions'; break;
         }
-        $text = get_string('confirmdeleteall'.$type, 'taskchain');
+        $text = get_string('confirmdeleteall'.$type, 'mod_taskchain');
         $params = array('taskid' => $TC->get_taskid(), 'conditiontype' => $TC->get_conditiontype());
         echo $output->page_delete($text, 'edit/condition.php', $params);
         break;
