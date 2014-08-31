@@ -328,11 +328,11 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $options    = $type.'options';
         $editor     = $type.'editor';
 
-        $data[$page]       = $this->get_originalvalue($page, $this->get_defaultvalue($page));
-        $data[$text]       = $this->get_originalvalue($text, $this->get_defaultvalue($text));
-        $data[$textsource] = $this->get_originalvalue($text, $this->get_defaultvalue($textsource));
-        $data[$format]     = $this->get_originalvalue($format, editors_get_preferred_format());
-        $data[$options]    = $this->get_originalvalue($options, $this->get_defaultvalue($options));
+        $data[$page]       = $this->get_originalvalue($page,       $this->get_defaultvalue($page));
+        $data[$text]       = $this->get_originalvalue($text,       $this->get_defaultvalue($text));
+        $data[$textsource] = $this->get_originalvalue($textsource, $this->get_defaultvalue($textsource));
+        $data[$format]     = $this->get_originalvalue($format,     editors_get_preferred_format());
+        $data[$options]    = $this->get_originalvalue($options,    $this->get_defaultvalue($options));
 
         // prepare boolean switches for page options
         foreach (mod_taskchain::text_page_options($type) as $name => $mask) {
