@@ -710,10 +710,9 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             return false; // this renderer doesn't use a cache
         }
 
-        $taskid = $this->TC->task->id;
-        $md5key = $this->get_cache_md5key();
-        $select = "taskid=$taskid AND md5key='$md5key'";
-        if (! $this->cache = $DB->get_record_select('taskchain_cache', $select)) {
+        $select = 'taskid = ? AND md5key = ?';
+        $params = array($this->TC->task->id, $this->get_cache_md5key());
+        if (! $this->cache = $DB->get_record_select('taskchain_cache', $select, $params)) {
             return false; // no cached content for this task (+ outputformat + currenttheme + wwwroot)
         }
 
@@ -741,7 +740,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 }
                 if (method_exists($this->TC->task->$filearea->file, 'get_repository_id')) {
                     if ($repositoryid != $this->TC->task->$filearea->file->get_repository_id()) {
-                        return false; // file repository has been changed
+                        return false; // file repository id has changed
                     }
                 }
             }

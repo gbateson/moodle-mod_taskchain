@@ -1219,7 +1219,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             $output .= '</div>';
         } else {
             //print_heading(get_string('nomoreattempts', 'task'));
-            $output .= $this->continue_button($CFG->wwwroot . '/course/view.php?id=' . $this->courserecord->id);
+            $output .= $this->continue_button($CFG->wwwroot . '/course/view.php?id=' . $this->TC->course->id);
         }
         return $output;
     }
