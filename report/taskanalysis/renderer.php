@@ -29,7 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/report/renderer.php');
+require_once($CFG->dirroot.'/mod/taskchain/report/taskquestions/renderer.php');
 
 /**
  * mod_taskchain_report_taskanalysis_renderer
@@ -40,7 +40,7 @@ require_once($CFG->dirroot.'/mod/taskchain/report/renderer.php');
  * @package    mod
  * @subpackage taskchain
  */
-class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_renderer {
+class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_taskquestions_renderer {
     public $mode = 'taskanalysis';
 
     public $tablecolumns = array('responsefield');
@@ -48,6 +48,7 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_re
     public $filterfields = array('status'=>0);
 
     public $has_questioncolumns = true;
+    public $has_usercolumns = false;
 
     /**
      * add_responses_to_rawdata
@@ -58,7 +59,7 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_re
     public function add_responses_to_rawdata(&$table) {
         // attach each response to its parent attempt
         // using the "add_response_to_rawdata()" method
-        parent::add_responses_to_rawdata(&$table);
+        parent::add_responses_to_rawdata($table);
 
         // the fields we are interested in, in the order we want them
         $fields = array('correct', 'wrong', 'ignored', 'hints', 'clues', 'checks'); // , 'weighting'
@@ -79,8 +80,9 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_re
         foreach ($table->rawdata as $row) {
 
             // is this a high score? or a low score?
-            $is_hi_score = ($row->score >= $hi_score);
-            $is_lo_score = ($row->score <  $lo_score);
+            $score = 'taskattemptscore';
+            $is_hi_score = ($row->$score >= $hi_score);
+            $is_lo_score = ($row->$score <  $lo_score);
 
             foreach ($question_columns as $id => $column) {
 
@@ -257,8 +259,9 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_re
 
         // get attempt scores
         $scores = array();
+        $score = 'taskattemptscore';
         foreach ($attempts as $attempt) {
-            $scores[] = $attempt->score;
+            $scores[] = $attempt->$score;
         }
 
         // sort and count attempt scores

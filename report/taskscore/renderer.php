@@ -60,51 +60,19 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
         'grade'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'score'=>1
     );
 
-    /**
-     * count_sql
-     *
-     * @param xxx $userid (optional, default=0)
-     * @param xxx $attemptid (optional, default=0)
-     * @return xxx
-     * @todo Finish documenting this function
-     */
-    public function count_sql($userid=0, $attemptid=0) {
-        $select = 'COUNT(1)';
-        $from   = '{taskchain_task_attempts} tc_tsk_att '.
-                  ' JOIN {taskchain_tasks} tc_tsk ON tc_tsk.id = tc_tsk_att.taskid'.
-                  ' JOIN {taskchain_task_scores} tc_tsk_scr ON tc_tsk_scr.taskid = tc_tsk.id';
-        $where  = 'tc_tsk_scr.id = ?';
-        $params = array($this->TC->taskscore->id);
-
-        // restrict to a specific user
-        if ($userid) {
-            $where .= ' AND tc_tsk_att.userid = ?';
-            $params[] = $userid;
-        }
-
-        // restrict to a specific attempt
-        if ($attemptid) {
-            $where = ' AND tc_tsk_att.id = ?';
-            $params[] = $attemptid;
-        }
-
-        return array($select, $from, $where, $params);
-    }
+    /** id param name and table name */
+    public $id_param_name = 'taskscoreid';
+    public $id_param_table = 'taskchain_task_scores';
 
     /**
      * select_sql
      *
      * @param xxx $userid (optional, default=0)
-     * @param xxx $attemptid (optional, default=0)
+     * @param xxx $record (optional, default=null)
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function select_sql($userid=0, $attemptid=0) {
-        // the standard way to get Moodle grades is thus:
-        // $grades = grade_get_grades($this->TC->course->id, 'mod', 'taskchain', $this->TC->id, $userid);
-        // $grade = $grades->items[0]->grades[$USER->id]->grade;
-
-        // sql to select all grades for this TaskChain - what about Moodle grade?
+    public function select_sql($userid=0, $record=null) {
         $select = 'tc_tsk_att.id AS id, '.
                   'tc_tsk_att.taskid AS taskattempttaskid, '.
                   'tc_tsk_att.cnumber AS taskattemptcnumber, '.
@@ -122,30 +90,44 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
                   'tc_tsk_scr.status AS taskscorestatus, '.
                   'tc_tsk_scr.duration AS taskscoreduration, '.
                   'tc_tsk_scr.timemodified AS taskscoretimemodified';
-        $from   = '{taskchain_task_attempts} tc_tsk_att '.
-                  ' JOIN {taskchain_tasks} tc_tsk ON tc_tsk.id = tc_tsk_att.taskid'.
-                  ' JOIN {taskchain_task_scores} tc_tsk_scr ON tc_tsk_scr.taskid = tc_tsk.id';
-        $where  = 'tc_tsk_scr.id = ?';
-        $params = array($this->TC->taskscore->id);
-
-        // add user fields. if required
-        if (in_array('fullname', $this->tablecolumns)) {
-            $select .= ', '.$this->get_userfields('u', null, 'userid');
-            $from   .= ' JOIN {user} u ON tc_tsk_scr.userid=u.id';
-        }
-
-        // restrict sql to a specific user
-        if ($userid) {
-            $where .= ' AND tc_tsk_scr.userid = ?';
-            $params[] = $userid;
-        }
-
-        // restrict sql to a specific attempt
-        if ($attemptid) {
-            $where = ' AND tc_tsk_scr.id = ?';
-            $params[] = $attemptid;
-        }
-
+        $from   = '';
+        $where  = '';
+        $params = array();
+        $this->select_sql_record($select, $from, $where, $params, $userid, $record);
+        $this->select_sql_user($select, $from, 'tc_tsk_scr');
         return array($select, $from, $where, $params);
+    }
+
+    /**
+     * select_sql_record
+     *
+     * @param  string   $select  (passed by reference)
+     * @param  string   $from    (passed by reference)
+     * @param  string   $where   (passed by reference)
+     * @param  array    $params  (passed by reference)
+     * @param  integer  $userid  (optional, default=0)
+     * @param  object   $record  (optional, default=null)
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function select_sql_record(&$select, &$from, &$where, &$params, $userid=0, $record=null) {
+        $from = '{taskchain_task_attempts} tc_tsk_att '.
+                ' JOIN {taskchain_tasks} tc_tsk ON tc_tsk.id = tc_tsk_att.taskid'.
+                ' JOIN {taskchain_task_scores} tc_tsk_scr ON (tc_tsk_scr.taskid = tc_tsk.id AND '.
+                                                             'tc_tsk_scr.userid = tc_tsk_att.userid)';
+
+        // restrict sql to a specific taskscore /user
+        if ($record) {
+            $where  = 'tc_tsk_scr.id = ?';
+            $params = array($record->id);
+        } else {
+            $from  .= ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_tsk.chainid';
+            $where  = 'tc_chn.parenttype = ? AND tc_chn.parentid = ?';
+            $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $this->TC->get_taskchainid());
+            if ($userid) {
+                $where .= ' AND tc_tsk_scr.userid = ?';
+                $params[] = $userid;
+            }
+        }
     }
 }

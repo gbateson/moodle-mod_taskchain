@@ -42,4 +42,40 @@ require_once($CFG->dirroot.'/mod/taskchain/report/chaingrade/renderer.php');
  */
 class mod_taskchain_report_chaingrades_renderer extends mod_taskchain_report_chaingrade_renderer {
     public $has_usercolumns = true;
+
+    /** id param name and table name */
+    public $id_param_name = 'chainid';
+    public $id_param_table = 'taskchain_chains';
+
+    /**
+     * select_sql_record
+     *
+     * @param string   $select  (passed by reference)
+     * @param string   $from    (passed by reference)
+     * @param string   $where   (passed by reference)
+     * @param array    $params  (passed by reference)
+     * @param integer  $userid  (optional, default=0)
+     * @param object   $record  (optional, default=null)
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function select_sql_record(&$select, &$from, &$where, &$params, $userid=0, $record=null) {
+        $from   = '{taskchain_chain_attempts} tc_chn_att '.
+                  ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_chn_att.chainid'.
+                  ' JOIN {taskchain_chain_grades} tc_chn_grd ON (tc_chn.parenttype  = tc_chn_grd.parenttype AND '.
+                                                                'tc_chn.parentid    = tc_chn_grd.parentid AND '.
+                                                                'tc_chn_att.userid  = tc_chn_grd.userid)';
+        // restrict sql to a specific chaingrade /user
+        if ($record) {
+            $where = 'tc_chn.id = ?';
+            $params[] = $record->id;
+        } else {
+            $where  = 'tc_chn_grd.parenttype = ? AND tc_chn_grd.parentid = ?';
+            $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $this->TC->taskchain->id);
+            if ($userid) {
+                $where .= ' AND tc_chn_grd.userid = ?';
+                $params[] = $userid;
+            }
+        }
+    }
 }

@@ -1219,7 +1219,7 @@ class taskchain_report_table extends table_sql {
                 $stringids[$stringid] = true;
             }
         }
-        $strings = taskchain::get_strings(array_keys($stringids));
+        $strings = mod_taskchain::get_strings(array_keys($stringids));
         unset($stringids, $column, $responses, $i, $stringid);
 
         foreach ($this->legend as $column => $responses) {

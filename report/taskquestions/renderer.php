@@ -44,16 +44,79 @@ class mod_taskchain_report_taskquestions_renderer extends mod_taskchain_report_r
     public $mode = 'taskquestions';
 
     public $tablecolumns = array(
-        'picture', 'fullname', 'grade', 'selected', 'attempt',
-        'timemodified', 'status', 'duration', 'penalties', 'score'
+        'taskattempttnumber',  'selected',
+        'taskattemptscore',    'taskattemptstatus',
+        'taskattemptduration', 'taskattempttimemodified'
     );
 
     public $filterfields = array(
         'realname'=>0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
-        'grade'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'penalties'=>1, 'score'=>1
+        'score'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'penalties'=>1, 'score'=>1
     );
 
     public $has_questioncolumns = true;
+
+    /** id param name and table name */
+    public $id_param_name = 'taskid';
+    public $id_param_table = 'taskchain_tasks';
+
+    /**
+     * select_sql
+     *
+     * @param xxx $userid (optional, default=0)
+     * @param xxx $record (optional, default=null)
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function select_sql($userid=0, $record=null) {
+        $select = 'tc_tsk_att.id AS id, '.
+                  'tc_tsk_att.cnumber AS taskattemptcnumber, '.
+                  'tc_tsk_att.tnumber AS taskattempttnumber, '.
+                  'tc_tsk_att.penalties AS taskattemptpenalties, '.
+                  'tc_tsk_att.score AS taskattemptscore, '.
+                  'tc_tsk_att.status AS taskattemptstatus, '.
+                  'tc_tsk_att.duration AS taskattemptduration, '.
+                  'tc_tsk_att.timestart AS taskattempttimemodified, '.
+                  'tc_tsk.name AS taskscoretaskname';
+        $from   = '';
+        $where  = '';
+        $params = array();
+        $this->select_sql_record($select, $from, $where, $params, $userid, $record);
+        $this->select_sql_user($select, $from, 'tc_tsk_att');
+
+        return array($select, $from, $where, $params);
+    }
+
+    /**
+     * select_sql_record
+     *
+     * @param  string   $select  (passed by reference)
+     * @param  string   $from    (passed by reference)
+     * @param  string   $where   (passed by reference)
+     * @param  array    $params  (passed by reference)
+     * @param  integer  $userid  (optional, default=0)
+     * @param  object   $record  (optional, default=null)
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function select_sql_record(&$select, &$from, &$where, &$params, $userid=0, $record=null) {
+        $from = '{taskchain_task_attempts} tc_tsk_att '.
+                'JOIN {taskchain_tasks} tc_tsk ON tc_tsk_att.taskid = tc_tsk.id';
+
+        // restrict sql to a specific task / user
+        if ($record) {
+            $where  = 'tc_tsk.id = ?';
+            $params = array($record->id);
+        } else {
+            $from  .= ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_tsk.chainid';
+            $where  = 'tc_chn.parenttype = ? AND tc_chn.parentid = ?';
+            $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $this->TC->get_taskchainid());
+            if ($userid) {
+                $where .= ' AND tc_tsk_att.userid = ?';
+                $params[] = $userid;
+            }
+        }
+    }
 
     /**
      * add_response_to_rawdata

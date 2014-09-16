@@ -58,48 +58,19 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
         'grade'=>1, 'timemodified'=>1, 'status'=>0, 'duration'=>1, // 'score'=>1
     );
 
-    /**
-     * count_sql
-     *
-     * @param xxx $userid (optional, default=0)
-     * @param xxx $gradeid (optional, default=0)
-     * @return xxx
-     * @todo Finish documenting this function
-     */
-    public function count_sql($userid=0, $gradeid=0) {
-        $select = 'COUNT(1)';
-        $from   = '{taskchain_chain_attempts} tc_chn_att '.
-                  ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_chn_att.chainid'.
-                  ' JOIN {taskchain_chain_grades} tc_chn_grd ON (tc_chn.parenttype = tc_chn_grd.parenttype '.
-                                                              'AND tc_chn.parentid = tc_chn_grd.parentid '.
-                                                              'AND tc_chn_att.userid = tc_chn_grd.userid)';
-        $where  = 'tc_chn.parenttype = ? AND tc_chn.parentid = ?';
-        $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $this->TC->taskchain->id);
-
-        // restrict to a specific user
-        if ($userid) {
-            $where .= ' AND tc_chn_att.userid = ?';
-            $params[] = $userid;
-        }
-
-        // restrict to a specific gradeid
-        if ($gradeid) {
-            $where = ' AND tc_chn_grd.id = ?';
-            $params[] = $gradeid;
-        }
-
-        return array($select, $from, $where, $params);
-    }
+    /** id param name and table name */
+    public $id_param_name = 'chaingradeid';
+    public $id_param_table = 'taskchain_chain_grades';
 
     /**
      * select_sql
      *
      * @param xxx $userid (optional, default=0)
-     * @param xxx $gradeid (optional, default=0)
+     * @param xxx $record (optional, default=null)
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function select_sql($userid=0, $gradeid=0) {
+    public function select_sql($userid=0, $record=null) {
         // the standard way to get Moodle grades is thus:
         // $grades = grade_get_grades($this->TC->course->id, 'mod', 'taskchain', $this->TC->id, $userid);
         // $grade = $grades->items[0]->grades[$USER->id]->grade;
@@ -117,37 +88,48 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
                   'tc_chn_grd.status AS chaingradestatus, '.
                   'tc_chn_grd.duration AS chaingradeduration, '.
                   'tc_chn_grd.timemodified AS chaingradetimemodified';
+        $from   = '';
+        $where  = '';
+        $params = array();
+
+        // restrict to a specific chaingrade / user
+        $this->select_sql_record($select, $from, $where, $params, $userid, $record);
+
+        // add sql to select user fields
+        $this->select_sql_user($select, $from, 'tc_chn_grd');
+
+        return array($select, $from, $where, $params);
+    }
+
+    /**
+     * select_sql_record
+     *
+     * @param string   $select  (passed by reference)
+     * @param string   $from    (passed by reference)
+     * @param string   $where   (passed by reference)
+     * @param array    $params  (passed by reference)
+     * @param integer  $userid  (optional, default=0)
+     * @param object   $record  (optional, default=null)
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function select_sql_record(&$select, &$from, &$where, &$params, $userid=0, $record=null) {
         $from   = '{taskchain_chain_attempts} tc_chn_att '.
                   ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_chn_att.chainid'.
-                  ' JOIN {taskchain_chain_grades} tc_chn_grd ON (tc_chn.parenttype = tc_chn_grd.parenttype '.
-                                                              'AND tc_chn.parentid = tc_chn_grd.parentid '.
-                                                              'AND tc_chn_att.userid = tc_chn_grd.userid)';
-        if ($this->TC->get_chaingrade()) {
-            $where  = 'tc_chn_grd.id = ?';
-            $params = array($this->TC->chaingrade->id);
+                  ' JOIN {taskchain_chain_grades} tc_chn_grd ON (tc_chn.parenttype  = tc_chn_grd.parenttype AND '.
+                                                                'tc_chn.parentid    = tc_chn_grd.parentid AND '.
+                                                                'tc_chn_att.userid  = tc_chn_grd.userid)';
+        // restrict sql to a specific chaingrade /user
+        if ($record) {
+            $where = 'tc_chn_grd.id = ?';
+            $params[] = $record->id;
         } else {
             $where  = 'tc_chn_grd.parenttype = ? AND tc_chn_grd.parentid = ?';
             $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $this->TC->taskchain->id);
+            if ($userid) {
+                $where .= ' AND tc_chn_grd.userid = ?';
+                $params[] = $userid;
+            }
         }
-
-        // add user fields. if required
-        if (in_array('fullname', $this->tablecolumns)) {
-            $select .= ', '.$this->get_userfields('u', null, 'userid');
-            $from   .= ' JOIN {user} u ON tc_chn_att.userid=u.id';
-        }
-
-        // restrict sql to a specific user
-        if ($userid) {
-            $where .= ' AND tc_chn_att.userid = ?';
-            $params[] = $userid;
-        }
-
-        // restrict to a specific gradeid
-        if ($gradeid) {
-            $where = ' AND tc_chn_grd.id = ?';
-            $params[] = $gradeid;
-        }
-
-        return array($select, $from, $where, $params);
     }
 }

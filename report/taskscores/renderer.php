@@ -29,7 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/report/renderer.php');
+require_once($CFG->dirroot.'/mod/taskchain/report/taskscore/renderer.php');
 
 /**
  * mod_taskchain_report_taskscores_renderer
@@ -40,16 +40,43 @@ require_once($CFG->dirroot.'/mod/taskchain/report/renderer.php');
  * @package    mod
  * @subpackage taskchain
  */
-class mod_taskchain_report_taskscores_renderer extends mod_taskchain_report_renderer {
+class mod_taskchain_report_taskscores_renderer extends mod_taskchain_report_taskscore_renderer {
     public $mode = 'taskscores';
 
-    public $tablecolumns = array(
-        'picture', 'fullname', 'grade', 'selected', 'attempt',
-        'timemodified', 'status', 'duration', 'score'
-    );
+    /** id param name and table name */
+    public $id_param_name = 'taskid';
+    public $id_param_table = 'taskchain_tasks';
 
-    public $filterfields = array(
-        'realname'=>0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
-        'grade'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'score'=>1
-    );
+    /**
+     * select_sql_record
+     *
+     * @param  string   $select  (passed by reference)
+     * @param  string   $from    (passed by reference)
+     * @param  string   $where   (passed by reference)
+     * @param  array    $params  (passed by reference)
+     * @param  integer  $userid  (optional, default=0)
+     * @param  object   $record  (optional, default=null)
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function select_sql_record(&$select, &$from, &$where, &$params, $userid=0, $record=null) {
+        $from = '{taskchain_task_attempts} tc_tsk_att '.
+                ' JOIN {taskchain_tasks} tc_tsk ON tc_tsk.id = tc_tsk_att.taskid'.
+                ' JOIN {taskchain_task_scores} tc_tsk_scr ON (tc_tsk_scr.taskid = tc_tsk.id AND '.
+                                                             'tc_tsk_scr.userid = tc_tsk_att.userid)';
+
+        // restrict sql to a specific taskscore /user
+        if ($record) {
+            $where  = 'tc_tsk.id = ?';
+            $params = array($record->id);
+        } else {
+            $from  .= ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_tsk.chainid';
+            $where  = 'tc_chn.parenttype = ? AND tc_chn.parentid = ?';
+            $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $this->TC->get_taskchainid());
+            if ($userid) {
+                $where .= ' AND tc_tsk_scr.userid = ?';
+                $params[] = $userid;
+            }
+        }
+    }
 }

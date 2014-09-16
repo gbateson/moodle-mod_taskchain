@@ -57,11 +57,11 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
 
     protected $TC = null;
 
-    public $mode = '';
-
     protected $userfilter = '';
 
     protected $attemptfilter = '';
+
+    public $mode = '';
 
     public $questions = array();
 
@@ -69,6 +69,10 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
 
     /** does this table have user columns, "picture" and "fullname", or not? */
     public $has_usercolumns = false;
+
+    /** id param name and table name */
+    public $id_param_name = '';
+    public $id_param_table = '';
 
     /**
      * init
@@ -84,7 +88,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         $this->TC = &$TC;
 
         // add user columns, if required
-        if ($this->has_usercolumns || true) {
+        if ($this->has_usercolumns) {
             array_unshift($this->tablecolumns, 'picture', 'fullname');
             //array_unshift($this->filterfields, 'fullname');
         }
@@ -122,12 +126,19 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
     public function reportcontent()  {
         global $DB, $USER;
 
-        // check capabilities
+        // get userid and recordid
+        $userid = $this->get_report_userid();
+        $record = $this->get_report_record();
         if ($this->TC->can_reviewallattempts()) {
-            $userid = 0; // all users
+            // do nothing
         } else if ($this->TC->can_reviewmyattempts()) {
-            // current user can only review their own attempts
+            // student users can only see their own data
             $userid = $USER->id;
+            if ($record && $record->userid==$userid) {
+                // do nothing
+            } else {
+                $record = null; // shoudn't happen !!
+            }
         } else {
             // has_capability('mod/taskchain:review', $this->TC->context))
             // should already have been checked in "mod/taskchain/report.php"
@@ -177,11 +188,11 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         $table->setup_report_table($tablecolumns, $this->suppresscolumns, $baseurl);
 
         // setup sql to COUNT records
-        list($select, $from, $where, $params) = $this->count_sql($userid);
+        list($select, $from, $where, $params) = $this->count_sql($userid, $record);
         $table->set_count_sql("SELECT $select FROM $from WHERE $where", $params);
 
         // setup sql to SELECT records
-        list($select, $from, $where, $params) = $this->select_sql($userid);
+        list($select, $from, $where, $params) = $this->select_sql($userid, $record);
         $table->set_sql($select, $from, $where, $params);
 
         // extract attempt records
@@ -204,6 +215,72 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
     }
 
     /**
+     * get_report_userid
+     *
+     * @return integer
+     * @todo Finish documenting this function
+     */
+    public function get_report_userid() {
+        return optional_param('userid', 0, PARAM_INT);
+    }
+
+    /**
+     * get_report_record
+     *
+     * @uses   $DB
+     * @return integer
+     * @todo   Finish documenting this function
+     */
+    public function get_report_record() {
+        global $DB;
+        if ($name = $this->id_param_name) {
+            if ($id  = optional_param($name, 0, PARAM_INT)) {
+                if ($table = $this->id_param_table) {
+                    if ($record = $DB->get_record($table, array('id' => $id))) {
+                        return $record;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * select_sql_user
+     *
+     * @param xxx $userid (optional, default=0)
+     * @param xxx $gradeid (optional, default=0)
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function select_sql_user(&$select, &$from, $tablealias) {
+        if (in_array('fullname', $this->tablecolumns)) {
+            $select .= ', '.$this->get_userfields('u', null, 'userid');
+            $from   .= ' JOIN {user} u ON '.$tablealias.'.userid = u.id';
+        }
+    }
+
+    /**
+     * count_sql
+     *
+     * @param xxx $userid (optional, default=0)
+     * @param xxx $record (optional, default=null)
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function count_sql($userid=0, $record=null) {
+        $select = 'COUNT(1)';
+        $from   = '';
+        $where  = '';
+        $params = array();
+
+        // restrict to a specific chaingrade / user
+        $this->select_sql_record($select, $from, $where, $params, $userid, $record);
+
+        return array($select, $from, $where, $params);
+    }
+
+    /**
      * display_filters
      *
      * @param xxx $baseurl
@@ -220,22 +297,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
             $user_filtering->display_add();
             $user_filtering->display_active();
         }
-    }
-
-    /**
-     * count_sql
-     *
-     * @param xxx $userid (optional, default=0)
-     * @param xxx $attemptid (optional, default=0)
-     * @return xxx
-     * @todo Finish documenting this function
-     */
-    public function count_sql($userid=0, $attemptid=0) {
-        $select  = '';
-        $from    = '';
-        $where   = '';
-        $params  = array();
-        return array($select, $from, $where, $params);
     }
 
     /**
