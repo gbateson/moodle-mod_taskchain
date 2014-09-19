@@ -28,13 +28,16 @@
 // prevent direct access to this script
 defined('MOODLE_INTERNAL') || die();
 
-$plugin = new stdClass();
+if (floatval($GLOBALS['CFG']->release) <= 2.6) {
+    $plugin = new stdClass();
+}
+
 $plugin->cron      = 0; // 60
 $plugin->component = 'mod_taskchain';
 $plugin->maturity  = MATURITY_STABLE; // ALPHA=50, BETA=100, RC=150, STABLE=200
 $plugin->requires  = 2010112400; // Moodle 2.0
-$plugin->release   = '2014.09.19 (35)';
-$plugin->version   = 2014091935;
+$plugin->release   = '2014.09.19 (36)';
+$plugin->version   = 2014091936;
 
 if (floatval($GLOBALS['CFG']->release) <= 2.6) {
     $module = clone($plugin);
