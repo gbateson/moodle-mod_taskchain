@@ -36,6 +36,6 @@ $plugin->requires  = 2010112400; // Moodle 2.0
 $plugin->release   = '2014.09.19 (35)';
 $plugin->version   = 2014091935;
 
-if (floatval($CFG->release) <= 2.6) {
+if (floatval($GLOBALS['CFG']->release) <= 2.6) {
     $module = clone($plugin);
 }
