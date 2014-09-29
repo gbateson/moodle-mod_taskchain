@@ -181,6 +181,7 @@ class mod_taskchain extends taskchain_base {
             switch ($pageid) {
                 case 'course-mod':
                     $coursemoduleid = optional_param('delete', $coursemoduleid, PARAM_INT);
+                    $coursemoduleid = optional_param('duplicate', $coursemoduleid, PARAM_INT);
                     break;
                 case 'course-modedit':
                     $coursemoduleid = optional_param('update', $coursemoduleid, PARAM_INT);
@@ -195,6 +196,7 @@ class mod_taskchain extends taskchain_base {
                 case 'mod-taskchain-report':
                 case 'mod-taskchain-view':
                 case 'mod-taskchain-attempt':
+                case 'course-rest':
                     $coursemoduleid = optional_param('id', $coursemoduleid, PARAM_INT);
                     break;
                 case 'mod-taskchain-edit-task':
