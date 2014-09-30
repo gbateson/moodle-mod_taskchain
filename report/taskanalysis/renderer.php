@@ -48,7 +48,6 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
     public $filterfields = array('status'=>0);
 
     public $has_questioncolumns = true;
-    public $has_usercolumns = false;
 
     /**
      * add_responses_to_rawdata

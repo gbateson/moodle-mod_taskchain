@@ -125,7 +125,6 @@ class taskchain_report_table extends table_sql {
 
         // attributes in the table tag
         $this->set_attribute('id', 'attempts');
-        $this->set_attribute('align', 'center');
         $this->set_attribute('class', $this->output->mode);
 
         parent::setup();

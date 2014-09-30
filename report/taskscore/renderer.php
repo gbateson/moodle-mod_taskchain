@@ -43,10 +43,9 @@ require_once($CFG->dirroot.'/mod/taskchain/report/renderer.php');
 class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_renderer {
     public $mode = 'taskscore';
 
+    protected $headerfields = array('user', 'chaingrade', 'chainattempt', 'task', 'taskscore');
+
     public $tablecolumns = array(
-        'taskscorecnumber',     'taskscoretaskname',
-        'taskscorescore',       'taskscorestatus',
-        'taskscoreduration',    'taskscoretimemodified',
         'taskattempttnumber',    'selected',
         'taskattemptpenalties',
         'taskattemptscore',     'taskattemptstatus',

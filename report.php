@@ -42,7 +42,7 @@ mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'report', 'report.php?id
 $PAGE->set_url($TC->url->report($TC->mode));
 $PAGE->set_title($TC->taskchain->name);
 $PAGE->set_heading($TC->course->shortname);
-$PAGE->navbar->add(get_string('report'));
+$PAGE->navbar->add(get_string('report'), $TC->url->report('chaingrades', array('id' => $TC->coursemodule->id)));
 
 $text = '';
 if ($TC->get_chaingrade()) {

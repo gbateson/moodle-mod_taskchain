@@ -54,6 +54,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
     protected $suppressprefix = '';
 
     protected $filterfields = array();
+    protected $headerfields = array();
 
     protected $TC = null;
 
@@ -89,8 +90,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
 
         // add user columns, if required
         if ($this->has_usercolumns) {
-            array_unshift($this->tablecolumns, 'picture', 'fullname');
-            //array_unshift($this->filterfields, 'fullname');
+            array_unshift($this->tablecolumns, 'fullname'); // 'picture'
         }
 
         // add question numbers to $tablecolumns
@@ -111,8 +111,68 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
     public function render_report($TC)  {
         $this->init($TC);
         echo $this->header();
+        echo $this->reportheader();
         echo $this->reportcontent();
         echo $this->footer();
+    }
+
+    /**
+     * reportheader
+     *
+     * @uses $DB
+     * @return string containing HTML table
+     * @todo Finish documenting this function
+     */
+    public function reportheader()  {
+        global $DB;
+        $table = '';
+        if ($this->TC->chaingrade) {
+            $params = array('id'=> 'reportheader'.$this->mode, 'class' => 'reportheader');
+            $table .= html_writer::start_tag('table', $params);
+            foreach ($this->headerfields as $field) {
+                if ($field=='user') {
+                    $text = get_string('user');
+                    $data = fullname($DB->get_record('user', array('id' => $this->TC->chaingrade->userid)));
+                } else {
+                    $text = get_string($field, 'mod_taskchain');
+                    $data = $this->reportheaderdata($field);
+                }
+                $table .= html_writer::start_tag('tr');
+                $table .= html_writer::tag('th', $text, array('class' => 'headertext'));
+                $table .= html_writer::tag('td', $data, array('class' => 'headerdata'));
+                $table .= html_writer::end_tag('tr');
+            }
+            $table .= html_writer::end_tag('table');
+        }
+        return $table;
+    }
+
+    /**
+     * reportheaderdata
+     *
+     * @param string $type
+     * @return string
+     * @todo Finish documenting this function
+     */
+    public function reportheaderdata($type)  {
+        $data = array();
+        if (property_exists($this->TC, $type)) {
+            $record = &$this->TC->$type;
+            switch ($type) {
+                case 'taskattempt' : $data[] = '('.$record->tnumber.')';
+                case 'taskscore'   : $data[] = $record->score.'%'; break;
+                case 'task'        : $data[] = $record->name; break;
+                case 'chainattempt': $data[] = '('.$record->cnumber.')';
+                case 'chaingrade'  : $data[] = $record->grade.'%'; break;
+            }
+            if (property_exists($record, 'status')) {
+                $data[] = '('.mod_taskchain::format_status($record->status).')';
+                $data[] = userdate($record->timemodified, get_string('strftimerecentfull'));
+                $data[]= '('.mod_taskchain::format_time($record->duration).')';
+            }
+            unset($record);
+        }
+        return implode(' ', $data);
     }
 
     /**

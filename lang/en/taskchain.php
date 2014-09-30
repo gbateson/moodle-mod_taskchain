@@ -1133,3 +1133,8 @@ $string['youneedtoenrol'] = 'You need to enrol in this course before you can att
 $string['zeroduration'] = 'No duration';
 $string['zerograde'] = 'Zero grade';
 $string['zeroscore'] = 'Zero score';
+
+$string['chaingrade'] = 'Chain grade';
+$string['chainattempt'] = 'Chain attempt';
+$string['taskscore'] = 'Task score';
+$string['taskattempt'] = 'Task attempt';

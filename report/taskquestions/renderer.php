@@ -48,6 +48,7 @@ class mod_taskchain_report_taskquestions_renderer extends mod_taskchain_report_r
         'taskattemptscore',    'taskattemptstatus',
         'taskattemptduration', 'taskattempttimemodified'
     );
+    public $has_usercolumns = true;
 
     public $filterfields = array(
         'realname'=>0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,

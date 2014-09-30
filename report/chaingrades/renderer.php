@@ -41,6 +41,17 @@ require_once($CFG->dirroot.'/mod/taskchain/report/chaingrade/renderer.php');
  * @subpackage taskchain
  */
 class mod_taskchain_report_chaingrades_renderer extends mod_taskchain_report_chaingrade_renderer {
+    public $mode = 'chaingrades';
+
+    protected $headerfields = array();
+
+    public $tablecolumns = array(
+        'chaingradegrade',      'chaingradestatus',
+        'chaingradeduration',   'chaingradetimemodified',
+        'chainattemptcnumber',   'selected',
+        'chainattemptgrade',    'chainattemptstatus',
+        'chainattemptduration', 'chainattempttimemodified'
+    );
     public $has_usercolumns = true;
 
     /** id param name and table name */

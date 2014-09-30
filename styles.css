@@ -68,10 +68,13 @@ body.path-course-view div.taskchainrecentactivity ul {font-size: 0.8em; margin: 
 /** mod taskchain report **/
 #page-mod-taskchain-report table.flexible tr.emptyrow { display: none; }
 /* ================= */
-#page-mod-taskchain-report div#commands  {text-align: center;}
-#page-mod-taskchain-report table#attempts {clear: both; margin-left: auto; margin-right: auto;}
+#page-mod-taskchain-report table.reportheader th {text-align: right;}
+#page-mod-taskchain-report table.reportheader th:after {content: ":";}
+#page-mod-taskchain-report table.reportheader td {text-align: left;}
+/* ================= */
+#page-mod-taskchain-report table#attempts {clear: both;}
 #page-mod-taskchain-report table#attempts.analysis td.c0 {font-weight: bold;}
-#page-mod-taskchain-report table#attempts.analysis td.c0:after {content: ":"}
+#page-mod-taskchain-report table#attempts.analysis td.c0:after {content: ":";}
 /* ================= */
 #page-mod-taskchain-report div#page,
 #page-mod-taskchain-report div#page div#page-content,

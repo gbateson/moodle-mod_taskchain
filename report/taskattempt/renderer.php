@@ -49,6 +49,7 @@ class mod_taskchain_report_taskattempt_renderer extends mod_taskchain_report_ren
         'taskattemptscore',    'taskattemptstatus',
         'taskattemptduration', 'taskattempttimemodified'
     );
+    public $has_usercolumns = true;
 
     public $filterfields = array(
         'grade'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'score'=>1
