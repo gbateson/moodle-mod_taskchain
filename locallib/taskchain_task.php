@@ -957,7 +957,8 @@ class taskchain_task extends taskchain_base {
         }
 
         // file not found - shouldn't happen !!
-        throw new moodle_exception($type.'filenotfound', 'taskchain', '', $this->$typefile);
+        return null;
+        //  throw new moodle_exception($type.'filenotfound', 'taskchain', '', $this->$typefile);
     }
 }
 

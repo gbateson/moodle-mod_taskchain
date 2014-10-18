@@ -632,11 +632,11 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             } else if (is_string($popup)) {
                 $popup = array('name' => $popup);
             }
-            $name  = (isset($popup['name']) ? $popup['name'] : get_string('popupwindowname'));
-            $width  = (isset($popup['width']) ? $popup['width'] : 650);
-            $height = (isset($popup['height']) ? $popup['height'] : 400);
+            // Note: Moodle >= 2.7 styles treat width <= 767px as a tablet
+            $name = (isset($popup['name']) ? $popup['name'] : get_string('popupwindowname'));
+            $width = (isset($popup['width']) ? $popup['width'] : 780);
+            $height = (isset($popup['height']) ? $popup['height'] : 520);
             $options = "menubar=0,location=0,scrollbars,resizable,width=$width,height=$height";
-
 
             $simple_js = true;
             if ($simple_js) {

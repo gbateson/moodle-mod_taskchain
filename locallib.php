@@ -707,14 +707,14 @@ class mod_taskchain extends taskchain_base {
     static public function get_version_info($info)  {
         global $CFG;
 
-        static $module = null;
-        if (is_null($module)) {
-            $module = new stdClass();
+        static $plugin = null;
+        if (is_null($plugin)) {
+            $plugin = new stdClass();
             require($CFG->dirroot.'/mod/taskchain/version.php');
         }
 
-        if (isset($module->$info)) {
-            return $module->$info;
+        if (isset($plugin->$info)) {
+            return $plugin->$info;
         } else {
             return "no $info found";
         }

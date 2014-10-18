@@ -123,11 +123,45 @@ class mod_taskchain_edit_task_form extends moodleform {
     }
 
     /**
-     * return form for a single field
+     * update_singlefield
      *
-     * @return string
+     * @param array $data (passed by reference)
+     * @return void may modify $this->record
+     * @todo Finish documenting this function
      */
-    public function field_form($field) {
-        return $this->form_helper->field_form($field);
+    public function update_singlefield(&$data) {
+        $this->form_helper->update_singlefield($data);
+    }
+
+    /**
+     * display_singlefield
+     *
+     * @todo Finish documenting this function
+     */
+    public function display_singlefield() {
+        $this->form_helper->display_singlefield();
+    }
+
+    /**
+     * display the edit form for a single task record
+     *
+     * when displaying the form for just one field in a task record,
+     * as we do using ajax on the "edit tasks" page,
+     * then we strip the <form ...> ... </form> tags
+     *
+     * @return void, but will send html output to browser
+     */
+    public function display() {
+        if ($this->form_helper->is_singlefield()) {
+            ob_start();
+            parent::display();
+            $output = ob_get_contents();
+            ob_end_clean();
+            $search = '/^\s*<form[^>]*>\s*(.*?)\s*<\/form>\s*$/s';
+            $replace = '$1';
+            echo preg_replace($search, $replace, $output);
+        } else {
+            parent::display();
+        }
     }
 }

@@ -319,6 +319,42 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
+     * Detects if we are updating a single field (via ajax)
+     *
+     * @return bool True if we are updating a single field, false otherwise
+     */
+    public function is_singlefield() {
+        return ($this->singlefield ? true : false);
+    }
+
+    /**
+     * update_singlefield
+     *
+     * @param array $data (passed by reference)
+     * @return void may modify $this->record
+     * @todo Finish documenting this function
+     */
+    public function update_singlefield(&$data) {
+        if ($field = $this->singlefield) {
+            $this->record->$field = $data->$field;
+            $this->update_record();
+        }
+    }
+
+    /**
+     * display_singlefield
+     *
+     * @todo Finish documenting this function
+     */
+    public function display_singlefield() {
+        if ($field = $this->singlefield) {
+            $value = $this->get_fieldvalue($field);
+            $value = $this->format_fieldvalue($field, $value);
+            echo $value;
+        }
+    }
+
+    /**
      * return a field value from the original record
      * this function is useful to see if a value has changed
      *
@@ -465,7 +501,7 @@ abstract class taskchain_form_helper_base {
             foreach (get_object_vars($stdclass) as $name => $value) {
                 $method = 'set_'.$name;
                 if (method_exists($this->TC->$type, $method)) {
-                    $this->TC->$type->$method($name, $value);
+                    $this->TC->$type->$method($value);
                 } else {
                     $this->TC->$type->$name = $value;
                 }
@@ -1568,7 +1604,7 @@ abstract class taskchain_form_helper_base {
     protected function fix_section(&$data, $section, $fields) {
         $method = 'fix_section_'.$section;
         if (method_exists($this, $method)) {
-            $this->$method($data, $fields);
+            $this->$method($data, $section, $fields);
         } else {
             foreach ($fields as $field) {
                 $this->fix_field($data, $field);
@@ -1792,6 +1828,29 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
+     * ajax_edit_onclick
+     *
+     * @param string  $field name of field
+     * @param boolean $addformid (optional, default=false)
+     * @todo Finish documenting this function
+     */
+    protected function ajax_edit_onclick($field, $addformid=false) {
+        $id = $this->get_fieldvalue('id');
+        $type = $this->recordtype;
+        $params = array('id'      => $id,
+                         'type'    => $type,
+                         'field'   => $field,
+                         'sesskey' => sesskey());
+        $helper = new moodle_url('/mod/taskchain/edit/form/helper.js.php', $params);
+
+        $params = array($helper, $field.'['.$id.']');
+        if ($addformid) {
+            $params[] = $field.'['.$id.']';
+        }
+        return 'TC.request("'.implode('", "', $params).'"); return false;';
+    }
+
+    /**
      * format_fieldvalue
      *
      * @param string $field name of field
@@ -1800,13 +1859,13 @@ abstract class taskchain_form_helper_base {
     protected function format_fieldvalue($field, $value) {
         global $CFG, $OUTPUT, $PAGE;
 
-        static $ajax = null;
-        if ($ajax===null) {
+        static $edit = null;
+        if ($edit===null) {
             if (defined('AJAX_SCRIPT') && AJAX_SCRIPT) {
-                $ajax = false;
+                $edit = (isset($_POST) && count($_POST));
             } else {
                 $filepath = '/mod/taskchain/edit/form/helper.js';
-                if ($ajax = file_exists($CFG->dirroot.$filepath)) {
+                if ($edit = file_exists($CFG->dirroot.$filepath)) {
                     $PAGE->requires->js($filepath);
                 }
             }
@@ -1817,7 +1876,7 @@ abstract class taskchain_form_helper_base {
             $value = $this->$method($field, $value);
         }
 
-        if ($ajax) {
+        if ($edit) {
             $name  = $this->get_fieldname($field);
             $label = $this->get_fieldlabel($field);
             $types = $this->recordtype.'s';
@@ -1835,13 +1894,9 @@ abstract class taskchain_form_helper_base {
                 $icon = 't/edit';
             }
 
-            $params  = array('id'     => $this->get_fieldvalue('id'),
-                            'type'    => $this->recordtype,
-                            'field'   => $field,
-                            'sesskey' => sesskey());
-            $helper  = new moodle_url('/mod/taskchain/edit/form/helper.js.php', $params);
-            $onclick = 'TC_request("'.$helper.'", "'.$name.'"); return false;';
-            $params  = array('id' => $name, 'title' => $label, 'onclick' => $onclick);
+            $onclick = $this->ajax_edit_onclick($field);
+            $params  = array('title' => $label, 'onclick' => $onclick);
+
             $icon    = $OUTPUT->pix_icon($icon, get_string('edit'));
             $value  .= ($value=='' ? '' : ' ').html_writer::link($href, $icon, $params);
         }
@@ -2081,7 +2136,7 @@ abstract class taskchain_form_helper_base {
             $this->$method($field);
         } else {
             $name  = $this->get_fieldname($field);
-            $value = $this->get_fieldvalue($field, true);
+            $value = $this->get_fieldvalue($field);
             $value = $this->format_fieldvalue($field, $value);
             $this->mform->addElement('static', $name, '', $value);
         }
@@ -2271,16 +2326,6 @@ abstract class taskchain_form_helper_base {
 
 
     /**
-     * return form for a single field
-     *
-     * @return string
-     */
-    public function field_form($field) {
-        print_object($this->mform);
-        die;
-    }
-
-    /**
      * add_action_buttons
      *
      * @param bool $cancel whether to show cancel button, default true
@@ -2293,9 +2338,14 @@ abstract class taskchain_form_helper_base {
         if ($submit===null) {
             $submit = ($this->singlefield ? get_string('save', 'admin') : get_string('savechanges'));
         }
+        if ($this->singlefield) {
+            $params = array('onclick' => $this->ajax_edit_onclick($this->singlefield, true));
+        } else {
+            $params = null;
+        }
         if ($cancel) {
             $elements = array(
-                $this->mform->createElement('submit', 'submitbutton', $submit),
+                $this->mform->createElement('submit', 'submitbutton', $submit, $params),
                 $this->mform->createElement('cancel', 'cancelbutton', $cancel)
             );
             $name = 'actionbuttons';
@@ -2303,7 +2353,7 @@ abstract class taskchain_form_helper_base {
             $this->mform->closeHeaderBefore($name);
         } else {
             $name = 'submitbutton';
-            $this->mform->addElement('submit', $name, $submit);
+            $this->mform->addElement('submit', $name, $submit, $params);
             $this->mform->closeHeaderBefore($name);
         }
     }
@@ -2316,7 +2366,7 @@ abstract class taskchain_form_helper_base {
      * @param string $component
      */
     public function add_helpbutton($fieldname, $stringname, $component) {
-        if ($this->singlefield==false) {
+        if ($this->singlefield=='') {
             $this->mform->addHelpButton($fieldname, $stringname, $component);
         }
     }

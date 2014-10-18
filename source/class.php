@@ -312,6 +312,9 @@ class taskchain_source {
 
         $sources = array();
         foreach ($files as $file) {
+            if ($mainfile->get_source()==$file->get_source()) {
+                continue; // this is the $mainfile
+            }
             if ($result = self::is('is_taskfile', $file, $data)) {
                 $sources[] = $result;
             }
