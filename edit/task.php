@@ -118,12 +118,12 @@ switch ($TC->action) {
         require_once($CFG->dirroot.'/mod/taskchain/source/class.php');
 
         $sources = taskchain_source::get_sources_from_taskfile($newdata, $TC->coursemodule->context, 'mod_taskchain', 'sourcefile');
-        $source = reset($sources);
+        if ($source = reset($sources)) {
+            $newdata->sourcefile     = $source->get_file();
+            $newdata->sourcelocation = $source->get_location($TC->course->id);
+            $newdata->sourcetype     = $source->get_type();
+        }
         unset($sources);
-
-        $newdata->sourcefile     = $source->get_file();
-        $newdata->sourcelocation = $source->get_location($TC->course->id);
-        $newdata->sourcetype     = $source->get_type();
         unset($source);
 
         // make sure outputformat is valid for this source file

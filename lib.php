@@ -57,7 +57,7 @@ function taskchain_supports($feature) {
         'FEATURE_ADVANCED_GRADING' => true, // default=false
         'FEATURE_BACKUP_MOODLE2'   => true, // default=false
         'FEATURE_COMMENT'          => true,
-        'FEATURE_COMPLETION_HAS_RULES' => true,
+        'FEATURE_COMPLETION_HAS_RULES' => false,
         'FEATURE_COMPLETION_TRACKS_VIEWS' => true,
         'FEATURE_CONTROLS_GRADE_VISIBILITY' => true,
         'FEATURE_GRADE_HAS_GRADE'  => true, // default=false
@@ -952,7 +952,7 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
  *     $activity->timestamp : the time that the content was recorded in the database
  */
 function taskchain_get_recent_mod_activity(&$activities, &$index, $date, $courseid, $coursemoduleid=0, $userid=0, $groupid=0) {
-    global $CFG, $DB, $OUTPUT;
+    global $CFG, $DB, $OUTPUT, $USER;
     require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
     // CONTRIB-4025 don't allow students to see each other's scores
@@ -1252,7 +1252,8 @@ function taskchain_get_extra_capabilities() {
  * @return none, (but $taskchain object may be modified)
  */
 function taskchain_add_grade_settings(&$taskchain) {
-    global $DB;
+    global $CFG, $DB;
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
     // cache the taskchain chain record to save multiple fetches of same settings from DB
     static $chain = false;
@@ -1281,7 +1282,8 @@ function taskchain_add_grade_settings(&$taskchain) {
  * @return array array of grades, false if none
  */
 function taskchain_get_user_grades($taskchain, $userid=0) {
-    global $DB;
+    global $CFG, $DB;
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
     taskchain_add_grade_settings($taskchain);
 
@@ -1316,7 +1318,8 @@ function taskchain_get_user_grades($taskchain, $userid=0) {
  * @return void
  */
 function taskchain_update_grades($taskchain=null, $userid=0, $nullifnone=true) {
-    global $DB;
+    global $CFG, $DB;
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
     taskchain_add_grade_settings($taskchain);
 
