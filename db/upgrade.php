@@ -328,12 +328,6 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2014091433;
-    if ($oldversion < $newversion) {
-        $empty_cache = true;
-        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
-    }
-
     $newversion = 2014111140;
     if ($oldversion < $newversion) {
         // fix all taskchains with view completion
@@ -367,6 +361,12 @@ function xmldb_taskchain_upgrade($oldversion) {
                 }
             }
         }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
+    $newversion = 2014211141;
+    if ($oldversion < $newversion) {
+        $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
