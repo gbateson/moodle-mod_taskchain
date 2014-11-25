@@ -310,9 +310,12 @@ class taskchain_source {
             return false;
         }
 
+        // TODO: we need a way to find out if we are updating
+        $is_update = (false);
+
         $sources = array();
         foreach ($files as $file) {
-            if ($mainfile->get_source()==$file->get_source()) {
+            if ($is_update && $mainfile->get_source()==$file->get_source()) {
                 continue; // this is the $mainfile
             }
             if ($result = self::is('is_taskfile', $file, $data)) {

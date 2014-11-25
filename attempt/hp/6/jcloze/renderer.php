@@ -614,10 +614,51 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
             $substr = substr_replace($substr, $insert, $pos+1, 0);
         }
 
-        // shift feedback box right of mouse instead of left,
-        // to prevent flickering when feedback contains image
-        if ($pos = strpos($substr, "-10+'px'")) {
-            $substr = substr_replace($substr, '+5', $pos, 3);
+        //$substr = str_replace('C.IE', 'C.ie', $substr);
+        $substr = $this->fix_js_if_then_else($substr);
+        $substr = $this->fix_js_clientXY($substr, 'Pos.X', 'Evt');
+
+        // remove the following lines
+        $search = array('/var Pos = .*;/',
+                        '/Pos\\.(X|Y) = .*;/',
+                        '/var VertPos = .*;/',
+                        '/FDiv.style.(top|left) = .*;/',
+                        '/FDiv.style.(top|left) = .*;/',
+                        '/if \\(parseInt\\(FDiv\\.style\\.left\\) < 5\\)\\{/',
+                        "/document.getElementById\\('FeedbackOKButton'\\)\\.style\\.display = .*;/"
+        );
+        $substr = preg_replace($search, '', $substr);
+
+        // improve readability and robustness of code to update feedback element
+        $search = "document.getElementById('FeedbackContent').innerHTML = '<p>' + I[id][2] + '</p>';";
+        if ($pos = strpos($substr, $search)) {
+            $insert = "var FContent = document.getElementById('FeedbackContent');\n".
+                      "\tif (FContent) {\n".
+                      "\t\tFContent.innerHTML = '<p>' + I[id][2] + '</p>';\n".
+                      "\t}\n".
+                      "\tvar FButton = document.getElementById('FeedbackOKButton');\n".
+                      "\tif (FButton) {\n".
+                      "\t\tFButton.style.display = 'none';\n".
+                      "\t}\n";
+            $substr = substr_replace($substr, $insert, $pos, strlen($search));
+        }
+
+        // we must position the feedback AFTER making it visible
+        // also use setOffset(), instead of FDiv.style.left/top
+        $search = "FDiv.style.display = 'block';";
+        if ($pos = strpos($substr, $search)) {
+            $insert = "\n".
+                      "\tx += 10;\n". // slight to the right
+                      "\ty -= 10;\n". // slightly above
+                      "\tx = Math.min(x, getOffset(FDiv.offsetParent, 'Right'));\n".
+                      "\ty = Math.min(y, getOffset(FDiv.offsetParent, 'Bottom'));\n".
+                      "\tx -= getOffset(FDiv, 'Width');\n".
+                      "\ty -= getOffset(FDiv, 'Height');\n".
+                      "\tx = Math.max(x, getOffset(FDiv.offsetParent, 'Left'));\n".
+                      "\ty = Math.max(y, getOffset(FDiv.offsetParent, 'Top'));\n".
+                      "\tsetOffset(FDiv, 'Left', x);\n".
+                      "\tsetOffset(FDiv, 'Top',  y);\n";
+            $substr = substr_replace($substr, $insert, $pos + strlen($search), 0);
         }
 
         $str = substr_replace($str, $substr, $start, $length);
