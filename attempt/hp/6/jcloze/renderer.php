@@ -630,9 +630,9 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
         $substr = preg_replace($search, '', $substr);
 
         // improve readability and robustness of code to update feedback element
-        $search = "document.getElementById('FeedbackContent').innerHTML = '<p>' + I[id][2] + '</p>';";
+        $search = "\tdocument.getElementById('FeedbackContent').innerHTML = '<p>' + I[id][2] + '</p>';";
         if ($pos = strpos($substr, $search)) {
-            $insert = "var FContent = document.getElementById('FeedbackContent');\n".
+            $insert = "\tvar FContent = document.getElementById('FeedbackContent');\n".
                       "\tif (FContent) {\n".
                       "\t\tFContent.innerHTML = '<p>' + I[id][2] + '</p>';\n".
                       "\t}\n".
@@ -648,16 +648,15 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
         $search = "FDiv.style.display = 'block';";
         if ($pos = strpos($substr, $search)) {
             $insert = "\n".
-                      "\tx += 10;\n". // slight to the right
-                      "\ty -= 10;\n". // slightly above
-                      "\tx = Math.min(x, getOffset(FDiv.offsetParent, 'Right'));\n".
-                      "\ty = Math.min(y, getOffset(FDiv.offsetParent, 'Bottom'));\n".
-                      "\tx -= getOffset(FDiv, 'Width');\n".
-                      "\ty -= getOffset(FDiv, 'Height');\n".
-                      "\tx = Math.max(x, getOffset(FDiv.offsetParent, 'Left'));\n".
-                      "\ty = Math.max(y, getOffset(FDiv.offsetParent, 'Top'));\n".
+                      "\tx = Math.min(x + 10, getOffset(FDiv.offsetParent, 'Right'));\n".
+                      "\ty = Math.min(y - 10, getOffset(FDiv.offsetParent, 'Bottom'));\n".
+                      "\tx = Math.max(x - getOffset(FDiv, 'Width'), getOffset(FDiv.offsetParent, 'Left'));\n".
+                      "\ty = Math.max(y - getOffset(FDiv, 'Height'), getOffset(FDiv.offsetParent, 'Top'));\n".
                       "\tsetOffset(FDiv, 'Left', x);\n".
-                      "\tsetOffset(FDiv, 'Top',  y);\n";
+                      "\tsetOffset(FDiv, 'Top',  y);\n".
+                      "\tFContent = null;\n".
+                      "\tFButton = null;\n".
+                      "\tFDiv = null;\n";
             $substr = substr_replace($substr, $insert, $pos + strlen($search), 0);
         }
 
