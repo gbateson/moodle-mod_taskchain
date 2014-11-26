@@ -421,13 +421,17 @@ class taskchain_source {
         switch ($type) {
             case 'filesystem':
                 $path       = dirname($mainfile->get_reference());
-                $encodepath = false;
+                $encodepath = 0;
                 break;
             case 'user':
+                $params     = file_storage::unpack_reference($mainfile->get_reference(), true);
+                $path       = $params['filepath'];
+                $encodepath = 1;
+                break;
             case 'coursefiles':
                 $params     = file_storage::unpack_reference($mainfile->get_reference(), true);
                 $path       = $params['filepath'];
-                $encodepath = true;
+                $encodepath = 2;
                 break;
             default:
                 echo 'unknown repository type in get_sources_from_chainfolder_external(): '.$type;
@@ -443,7 +447,12 @@ class taskchain_source {
                 case isset($listing['list'][0]['path']):   $param = 'path';   break; // dir
                 default: return false; // shouldn't happen !!
             }
-            $params = file_storage::unpack_reference($listing['list'][0][$param], true);
+            $params = $listing['list'][0][$param];
+            switch ($encodepath) {
+                case 1: $params = json_decode(base64_decode($params), true);     break;
+                case 2: $params = file_storage::unpack_reference($params, true); break;
+                default: return false; // shouldn't happen !!
+            }
         }
 
         // get file storage
@@ -458,8 +467,9 @@ class taskchain_source {
         $search = '/'.preg_quote($search, '/').'/';
         $replace = $mainfile->get_filepath();
 
-        if ($encodepath) {
-            $path = file_storage::pack_reference($params);
+        switch ($encodepath) {
+            case 1: $path = base64_encode(json_encode($params));   break;
+            case 2: $path = file_storage::pack_reference($params); break;
         }
 
         $listing = $repository->get_listing($path);
@@ -470,7 +480,10 @@ class taskchain_source {
             }
 
             if ($encodepath) {
-                $file['source'] = file_storage::unpack_reference($file['source']);
+                switch ($encodepath) {
+                    case 1: $file['source'] = json_decode(base64_decode($file['source']), true); break;
+                    case 2: $file['source'] = file_storage::unpack_reference($file['source']);   break;
+                }
                 $file['source'] = trim($file['source']['filepath'], '/').'/'.$file['source']['filename'];
             }
 
