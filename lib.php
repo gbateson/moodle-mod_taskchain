@@ -392,21 +392,13 @@ function taskchain_add_tasks(&$data, &$mform, &$chain, $aftertaskid=0) {
     }
     $sortorder++;
 
-    //$source = new taskchain_source($data->sourcefile, $data->sourcelocation, true, $data->addtype);
-    //$config = new taskchain_source($data->configfile, $data->configlocation);
-
     if (! isset($data->addtype)) {
         throw new moodle_exception('$data->addtype is not set');
     }
 
     $context = $mform->get_context();
     $sources = taskchain_source::get_sources($data, $context, 'mod_taskchain', 'sourcefile', $data->addtype);
-    //$config  = taskchain_source::get_config($data, $context, 'mod_taskchain', 'sourcefile');
-    $config = (object)array(
-        'url' => '',
-        'filepath' => '',
-        'location' => '',
-    );
+    $config  = taskchain_source::get_config($data, $context, 'mod_taskchain', 'configfile');
 
     // set default task name and, if necessary, chain text fields
     $taskname = '';

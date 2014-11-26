@@ -126,6 +126,12 @@ switch ($TC->action) {
         unset($sources);
         unset($source);
 
+        if ($config = taskchain_source::get_config($newdata, $TC->coursemodule->context, 'mod_taskchain', 'configfile')) {
+            $newdata->configfile = $config->filepath;
+            $newdata->configlocation = $config->location;
+        }
+        unset($config);
+
         // make sure outputformat is valid for this source file
         $list = taskchain_available::outputformats_list($newdata->sourcetype);
         if (isset($newdata->outputformat) && array_key_exists($newdata->outputformat, $list)) {

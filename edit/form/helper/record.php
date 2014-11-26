@@ -117,10 +117,10 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         // set current source file as the "main file" in this filearea
         if ($contextid) {
 
-            if (isset($data['sourcefile'])) {
-                $sourcefile = $data['sourcefile'];
+            if (isset($data[$filearea])) {
+                $datafile = $data[$filearea];
             } else {
-                $sourcefile = '';
+                $datafile = '';
             }
 
             $fs = get_file_storage();
@@ -130,7 +130,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                 if ($file->is_directory()) {
                     continue;
                 }
-                if ($sourcefile && $sourcefile==$file->get_filepath().$file->get_filename()) {
+                if ($datafile && $datafile==$file->get_filepath().$file->get_filename()) {
                     $sortorder = 1; // main file
                 } else {
                     $sortorder = 0;
@@ -905,13 +905,11 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
 
             // set main file, if necessary
             $mainfile = taskchain_pluginfile_mainfile($this->context, $component, $filearea);
-            if ($mainfile) {
-                if ($mainfile->get_sortorder()==0) {
-                    if (method_exists($mainfile, 'set_sortorder')) {
-                        $mainfile->set_sortorder(1);
-                    } else {
-                        $mainfile->sortorder = 1;
-                    }
+            if ($mainfile && $mainfile->get_sortorder()==0) {
+                if (method_exists($mainfile, 'set_sortorder')) {
+                    $mainfile->set_sortorder(1);
+                } else {
+                    $mainfile->sortorder = 1;
                 }
             }
 

@@ -218,6 +218,28 @@ class taskchain_source {
     }
 
     /*
+     * This function will return the main file found the specified $component's $filearea
+     *
+     * @param stdclass $data recently submitted via form (passed by reference)
+     * @param stdclass $context a Moodle context record
+     * @param string $component typically 'mod_taskchain'
+     * @param string $filearea typically 'configfile'
+     * @return stdclass $config
+     */
+    static public function get_config(&$data, $context, $component, $filearea) {
+        $config = (object)array(
+            'url' => '',
+            'filepath' => '',
+            'location' => '',
+        );
+        if ($mainfile = taskchain_pluginfile_mainfile($context, $component, $filearea)) {
+            $config->filepath = $mainfile->get_filepath().$mainfile->get_filename();
+            $config->location = 0; // LOCATION_COURSEFILES
+        }
+        return $config;
+    }
+
+    /*
      * This function will collect a list of sources associated with this TaskChain
      *
      * The filearea for this TaskChain will be searched for ...
@@ -225,6 +247,7 @@ class taskchain_source {
      *    a chain file, a list of task files listed in the file is returned
      *    the head of a task chain, a list of all tasks in the chain is returned
      *
+     * @param stdclass $data recently submitted via form (passed by reference)
      * @param stdclass $context a Moodle context record
      * @param string $component typically 'mod_taskchain'
      * @param string $filearea typically 'sourcefile'
