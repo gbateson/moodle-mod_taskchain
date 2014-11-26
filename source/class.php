@@ -421,17 +421,13 @@ class taskchain_source {
         switch ($type) {
             case 'filesystem':
                 $path       = dirname($mainfile->get_reference());
-                $encodepath = 0;
+                $encodepath = false;
                 break;
             case 'user':
-                $params     = file_storage::unpack_reference($mainfile->get_reference(), true);
-                $path       = $params['filepath'];
-                $encodepath = 1;
-                break;
             case 'coursefiles':
                 $params     = file_storage::unpack_reference($mainfile->get_reference(), true);
                 $path       = $params['filepath'];
-                $encodepath = 2;
+                $encodepath = true;
                 break;
             default:
                 echo 'unknown repository type in get_sources_from_chainfolder_external(): '.$type;
@@ -448,10 +444,13 @@ class taskchain_source {
                 default: return false; // shouldn't happen !!
             }
             $params = $listing['list'][0][$param];
-            switch ($encodepath) {
-                case 1: $params = json_decode(base64_decode($params), true);     break;
-                case 2: $params = file_storage::unpack_reference($params, true); break;
-                default: return false; // shouldn't happen !!
+            switch ($type) {
+                case 'user':
+                    $params = json_decode(base64_decode($params), true);
+                    break;
+                case 'coursefiles':
+                    $params = file_storage::unpack_reference($params, true);
+                    break;
             }
         }
 
@@ -467,9 +466,16 @@ class taskchain_source {
         $search = '/'.preg_quote($search, '/').'/';
         $replace = $mainfile->get_filepath();
 
-        switch ($encodepath) {
-            case 1: $path = base64_encode(json_encode($params));   break;
-            case 2: $path = file_storage::pack_reference($params); break;
+        // encode $params, if necessary
+        if ($encodepath) {
+            switch ($type) {
+                case 'user':
+                    $path = base64_encode(json_encode($params));
+                    break;
+                case 'coursefiles':
+                    $path = file_storage::pack_reference($params);
+                    break;
+            }
         }
 
         $listing = $repository->get_listing($path);
@@ -479,10 +485,15 @@ class taskchain_source {
                 continue; // a directory
             }
 
+            // decode $file['source'], if necessary
             if ($encodepath) {
-                switch ($encodepath) {
-                    case 1: $file['source'] = json_decode(base64_decode($file['source']), true); break;
-                    case 2: $file['source'] = file_storage::unpack_reference($file['source']);   break;
+                switch ($type) {
+                    case 'user':
+                        $file['source'] = json_decode(base64_decode($file['source']), true);
+                        break;
+                    case 'coursefiles':
+                        $file['source'] = file_storage::unpack_reference($file['source']);
+                        break;
                 }
                 $file['source'] = trim($file['source']['filepath'], '/').'/'.$file['source']['filename'];
             }

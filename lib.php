@@ -1613,7 +1613,6 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
     // set paths (within repository) to required file
     // how we do this depends on the repository $typename
     // "filesystem" path is in plain text, others are encoded
-
     $mainreference = $mainfile->get_reference();
     switch ($type) {
         case 'filesystem':
@@ -1691,7 +1690,15 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
             case isset($listing['list'][0]['path']):   $param = 'path';   break; // dir
             default: return false; // shouldn't happen !!
         }
-        $params = file_storage::unpack_reference($listing['list'][0][$param], true);
+        $params = $listing['list'][0][$param];
+        switch ($type) {
+            case 'user':
+                $params = json_decode(base64_decode($params), true);
+                break;
+            case 'coursefiles':
+                $params = file_storage::unpack_reference($params, true);
+                break;
+        }
     }
 
     foreach ($paths as $path => $source) {
@@ -1699,7 +1706,14 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
         if ($encodepath) {
             $params['filepath'] = '/'.$path.($path=='' ? '' : '/');
             $params['filename'] = '.'; // "." signifies a directory
-            $path = file_storage::pack_reference($params);
+            switch ($type) {
+                case 'user':
+                    $path = base64_encode(json_encode($params));
+                    break;
+                case 'coursefiles':
+                    $path = file_storage::pack_reference($params);
+                    break;
+            }
         }
 
         // reset $repository->root_path (filesystem repository only)
@@ -1718,7 +1732,14 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
             }
 
             if ($encodepath) {
-                $file[$param] = file_storage::unpack_reference($file[$param]);
+                switch ($type) {
+                    case 'user':
+                        $file[$param] = json_decode(base64_decode($file[$param]), true);
+                        break;
+                    case 'coursefiles':
+                        $file[$param] = file_storage::unpack_reference($file[$param]);
+                        break;
+                }
                 $file[$param] = trim($file[$param]['filepath'], '/').'/'.$file[$param]['filename'];
             }
 
