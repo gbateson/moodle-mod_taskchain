@@ -1557,7 +1557,7 @@ function mod_taskchain_pluginfile($course, $cm, $context, $filearea, $args, $for
  *
  * if the main file is a link from an external repository
  * look for the target file in the main file's repository
- * Note: this functionality only exists in Moodle 2.3+
+ * Note: this functionality only exists in Moodle >= 2.3
  *
  * @param stdclass $context
  * @param string $component 'mod_taskchain'
@@ -1703,6 +1703,10 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
 
     foreach ($paths as $path => $source) {
 
+        if (! taskchain_pluginfile_dirpath_exists($path, $repository, $type, $encodepath, $params)) {
+            continue;
+        }
+
         if ($encodepath) {
             $params['filepath'] = '/'.$path.($path=='' ? '' : '/');
             $params['filename'] = '.'; // "." signifies a directory
@@ -1721,8 +1725,7 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
             $repository->root_path = $root_path;
         }
 
-        // Note: we use "@" to suppress warnings in case $path does not exist
-        $listing = @$repository->get_listing($path);
+        $listing = $repository->get_listing($path);
         foreach ($listing['list'] as $file) {
 
             switch (true) {
@@ -1765,6 +1768,50 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
 
     // external file not found (or found but not created)
     return false;
+}
+
+/**
+ * Determine if dir path exists or not in repository
+ *
+ * @param string   $dirpath
+ * @param stdclass $repository
+ * @param string   $type ("user" or "coursefiles")
+ * @param boolean  $encodepath
+ * @param array    $params
+ * @return boolean true if dir path exists in repository, false otherwise
+ */
+function taskchain_pluginfile_dirpath_exists($dirpath, $repository, $type, $encodepath, $params) {
+    $dirs = explode('/', $dirpath);
+    foreach ($dirs as $i => $dir) {
+        $dirpath = implode('/', array_slice($dirs, 0, $i));
+
+        if ($encodepath) {
+            $params['filepath'] = '/'.$dirpath.($dirpath=='' ? '' : '/');
+            $params['filename'] = '.'; // "." signifies a directory
+            switch ($type) {
+                case 'user':
+                    $dirpath = base64_encode(json_encode($params));
+                    break;
+                case 'coursefiles':
+                    $dirpath = file_storage::pack_reference($params);
+                    break;
+            }
+        }
+
+        $exists = false;
+        $listing = $repository->get_listing($dirpath);
+        foreach ($listing['list'] as $file) {
+            if (empty($file['source']) && $file['title']==$dir) {
+                $exists = true;
+                break;
+            }
+        }
+        if (! $exists) {
+            return false;
+        }
+    }
+    // all dirs in path exist - success !!
+    return true;
 }
 
 /**
