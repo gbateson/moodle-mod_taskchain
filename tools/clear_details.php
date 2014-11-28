@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * mod/taskchain/utilities/clear_details.php
+ * mod/taskchain/tools/clear_details.php
  *
  * @package    mod
  * @subpackage taskchain

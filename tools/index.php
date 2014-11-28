@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * mod/taskchain/utilities/index.php
+ * mod/taskchain/tools/index.php
  *
  * @package    mod
  * @subpackage taskchain
@@ -42,7 +42,7 @@ require_capability('moodle/site:config', $context);
 $PAGE->set_url($CFG->wwwroot.$SCRIPT);
 
 // set title
-$title = 'TaskChain Utilities index';
+$title = get_string('toolsindex', 'mod_taskchain');
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
 $PAGE->set_pagelayout('admin');

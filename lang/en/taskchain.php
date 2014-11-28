@@ -1,5 +1,9 @@
 <?php
+
+// ===================
 // essential strings
+// ===================
+//
 $string['modulename'] = 'TaskChain';
 $string['modulename_help'] = 'The TaskChain module allows teachers to distribute interactive learning materials to their students via Moodle and view reports on the students\' responses and results. .
 
@@ -19,7 +23,10 @@ $string['modulenameplural'] = 'TaskChains';
 $string['pluginadministration'] = 'TaskChain administration';
 $string['pluginname'] = 'TaskChain module';
 
+// ===================
 // subplugin strings
+// ===================
+//
 $string['subplugintype_taskchainattempt'] = 'Output format';
 $string['subplugintype_taskchainattempt_plural'] = 'Output formats';
 $string['subplugintype_taskchainreport'] = 'Report';
@@ -27,7 +34,10 @@ $string['subplugintype_taskchainreport_plural'] = 'Reports';
 $string['subplugintype_taskchainsource'] = 'Source file';
 $string['subplugintype_taskchainsource_plural'] = 'Source files';
 
+// ===================
 // roles strings
+// ===================
+//
 $string['taskchain:addinstance'] = 'Add a new TaskChain activity';
 $string['taskchain:attempt'] = 'Attempt a TaskChain activity and submit results';
 $string['taskchain:deleteallattempts'] = 'Delete any user\'s attempts at a TaskChain activity';
@@ -40,7 +50,61 @@ $string['taskchain:reviewallattempts'] = 'View any user\'s attempts at a TaskCha
 $string['taskchain:reviewmyattempts'] = 'View your own attempts at a TaskChain activity';
 $string['taskchain:view'] = 'View the entry page of a TaskChain activity';
 
+// ===================
+// config strings
+// ===================
+//
+$string['configbodystyles'] = 'By default, Moodle theme styles will override TaskChain activity styles. However, for any styles selected here, the TaskChain activity styles, including any styles defined in task source files such as Hot Potatoes files, will be given priority over the Moodle theme styles.';
+$string['configenablecache'] = 'Maintaining a cache of TaskChain tasks can dramatically speed up the delivery of tasks to the students.';
+$string['configenablecron'] = 'Specify the hours in your time zone at which the TaskChain cron script may run';
+$string['configenablemymoodle'] = 'This settings controls whether TaskChains are listed on the MyMoodle page or not';
+$string['configenableobfuscate'] = 'Obfuscating the javascript code to insert media players makes it more difficult to determine the media file name and guess what the file contains.';
+$string['configenableswf'] = 'Allow embedding of SWF files in TaskChain activities. If enabled, this setting overrides filter_mediaplugin_enable_swf.';
+$string['configfile'] = 'Configuration file';
+$string['configfile_help'] = 'If specified, the configuration file will be used when the browser content is generated from the source file.
+
+The exact function of the configuration file depends on the output format, but generally the settings in the configuration will override those in the source file.
+
+By using the same configuration file for several tasks, the tasks can be made to share the same messages, color scheme, layout or behaviors.
+
+For **Hot Potatoes** tasks, the configuration file is a &quot;.cfg&quot; file. For **Qedoc** tasks, this setting is not used.';
+$string['configfilenotfound'] = 'Config file not found: {$a}';
+$string['configframeheight'] = 'When a task is displayed within a frame, this value is the height (in pixels) of the top frame which contains the Moodle navigation bar.';
+$string['configlocation'] = 'Configuration file location';
+$string['configlocation_help'] = 'The location of the configuration file.';
+$string['configlockframe'] = 'If this setting is enabled, then the navigation frame, if used, will be locked so that it is not scrollable, not resizeable and has no border';
+$string['configmaxeventlength'] = 'If a TaskChain has both an open and a close time specified, and the difference between the two times is greater than the number of days specified here, then two separate calendar events will be added to the course calendar. For shorter durations, or when just one time is specified, only one calendar event will be added. If neither time is specified, no calendar event will be added.';
+$string['configstoredetails'] = 'If this setting is enabled, then the raw XML details of attempts at TaskChain tasks will be stored in the taskchain_details table. This allows task attempts to be regraded in the future to reflect changes in the TaskChain task scoring system. However, enabling this option on a busy site will cause the taskchain_details table to grow very quickly.';
+
+// ===================
+// event strings
+// ===================
+//
+$string['event_attempt_started'] = 'attemptstarted';
+$string['event_attempt_started_desc'] = 'attemptstarted description';
+$string['event_attempt_submitted'] = 'attemptsubmitted';
+$string['event_attempt_submitted_desc'] = 'attemptsubmitted description';
+$string['event_chains_edited'] = 'chainsedited';
+$string['event_chains_edited_desc'] = 'chainsedited description';
+$string['event_columnlists_edited'] = 'columnlistsedited';
+$string['event_columnlists_edited_desc'] = 'columnlistsedited description';
+$string['event_condition_edited'] = 'conditionedited';
+$string['event_condition_edited_desc'] = 'conditionedited description';
+$string['event_course_module_instance_list_viewed'] = 'coursemoduleinstancelistviewed';
+$string['event_course_module_instance_list_viewed_desc'] = 'coursemoduleinstancelistviewed description';
+$string['event_course_module_viewed'] = 'coursemoduleviewed';
+$string['event_course_module_viewed_desc'] = 'coursemoduleviewed description';
+$string['event_report_viewed'] = 'reportviewed';
+$string['event_report_viewed_desc'] = 'reportviewed description';
+$string['event_task_edited'] = 'taskedited';
+$string['event_task_edited_desc'] = 'taskedited description';
+$string['event_tasks_edited'] = 'tasksedited';
+$string['event_tasks_edited_desc'] = 'tasksedited description';
+
+// ===================
 // more strings
+// ===================
+//
 $string['abandoned'] = 'Abandoned';
 $string['activitycloses'] = 'TaskChain activity closes';
 $string['activitygrade'] = 'Activity grade';
@@ -261,8 +325,10 @@ $string['canrestartchain'] = 'Your results so far will be saved but if you want 
 $string['canrestarttask'] = 'Your results so far will be saved and you can redo "{$a}" later';
 $string['canresumetask'] = 'Your results so far will be saved and you can resume "{$a}" later.';
 $string['chain'] = 'TaskChain activity';
+$string['chainattempt'] = 'Chain attempt';
 $string['chainattemptnotinprogress'] = 'Chain attempt not in progress';
 $string['chainclosed'] = 'Sorry, this activity closed on {$a}';
+$string['chaingrade'] = 'Chain grade';
 $string['chainname_help'] = 'The name of this TaskChain activity that will be displayed on the course page';
 $string['chainnotavailable'] = 'Sorry this activity is not available to you until {$a}.';
 $string['chainrequirepasswordmessage'] = 'To attempt this activity, you need to know the password.';
@@ -305,27 +371,6 @@ according to sort order.
 The teacher may also select a specific task to which this pre-condition refers.
 To avoid confusion caused by tasks with identical names,
 the task sort numbers are appended to the task names.';
-$string['configbodystyles'] = 'By default, Moodle theme styles will override TaskChain activity styles. However, for any styles selected here, the TaskChain activity styles, including any styles defined in task source files such as Hot Potatoes files, will be given priority over the Moodle theme styles.';
-$string['configenablecache'] = 'Maintaining a cache of TaskChain tasks can dramatically speed up the delivery of tasks to the students.';
-$string['configenablecron'] = 'Specify the hours in your time zone at which the TaskChain cron script may run';
-$string['configenablemymoodle'] = 'This settings controls whether TaskChains are listed on the MyMoodle page or not';
-$string['configenableobfuscate'] = 'Obfuscating the javascript code to insert media players makes it more difficult to determine the media file name and guess what the file contains.';
-$string['configenableswf'] = 'Allow embedding of SWF files in TaskChain activities. If enabled, this setting overrides filter_mediaplugin_enable_swf.';
-$string['configfile'] = 'Configuration file';
-$string['configfile_help'] = 'If specified, the configuration file will be used when the browser content is generated from the source file.
-
-The exact function of the configuration file depends on the output format, but generally the settings in the configuration will override those in the source file.
-
-By using the same configuration file for several tasks, the tasks can be made to share the same messages, color scheme, layout or behaviors.
-
-For **Hot Potatoes** tasks, the configuration file is a &quot;.cfg&quot; file. For **Qedoc** tasks, this setting is not used.';
-$string['configfilenotfound'] = 'Config file not found: {$a}';
-$string['configframeheight'] = 'When a task is displayed within a frame, this value is the height (in pixels) of the top frame which contains the Moodle navigation bar.';
-$string['configlocation'] = 'Configuration file location';
-$string['configlocation_help'] = 'The location of the configuration file.';
-$string['configlockframe'] = 'If this setting is enabled, then the navigation frame, if used, will be locked so that it is not scrollable, not resizeable and has no border';
-$string['configmaxeventlength'] = 'If a TaskChain has both an open and a close time specified, and the difference between the two times is greater than the number of days specified here, then two separate calendar events will be added to the course calendar. For shorter durations, or when just one time is specified, only one calendar event will be added. If neither time is specified, no calendar event will be added.';
-$string['configstoredetails'] = 'If this setting is enabled, then the raw XML details of attempts at TaskChain tasks will be stored in the taskchain_details table. This allows task attempts to be regraded in the future to reflect changes in the TaskChain task scoring system. However, enabling this option on a busy site will cause the taskchain_details table to grow very quickly.';
 $string['confirmdeleteallpostconditions'] = 'Are you sure you want to delete ALL post-conditions?';
 $string['confirmdeleteallpreconditions'] = 'Are you sure you want to delete ALL pre-conditions?';
 $string['confirmdeleteattempts'] = 'Are you sure you want to delete the selected attempts?';
@@ -634,7 +679,8 @@ $string['menuofalltasks'] = 'Menu of all tasks';
 $string['menuofalltasksone'] = 'Menu of all tasks (one link)';
 $string['menuofnexttasks'] = 'Menu of next tasks';
 $string['menuofnexttasksone'] = 'Menu of next tasks (one link)';
-$string['migratingfiles'] = 'Migrating Hot Potatoes task files';
+$string['migratingfiles'] = 'Migrating TaskChain task files';
+$string['migratinglogs'] = 'Migrating TaskChain logs';
 $string['minimum'] = '&gt;=';
 $string['missingsourcetype'] = 'TaskChain record is missing sourcetype';
 $string['mods_help'] = '<img src="http://localhost/24/mod/taskchain/icon.gif" alt="" /> **TaskChain**
@@ -677,7 +723,7 @@ $string['navigation_help'] = 'This setting specifies the navigation used in the 
 : the Moodle navigation bar will be displayed in a separate frame at the top of the task
 
 **Embedded web page**
-: the Moodle navigation bar will be displayed in with the Hot Potatoes task embedded within the window
+: the Moodle navigation bar will be displayed with the task embedded within the window
 
 **Original navigation aids**
 : the task will be displayed with the navigation buttons, if any, defined in the task
@@ -785,9 +831,9 @@ $string['outputformat_hp_6_jmatch_html'] = 'JMatch (v6) from html';
 $string['outputformat_hp_6_jmatch_xml_flashcard'] = 'JMatch (flashcard) from xml';
 $string['outputformat_hp_6_jmatch_xml_jmemori'] = 'JMemori from xml';
 $string['outputformat_hp_6_jmatch_xml_sort'] = 'JMatch Sort from xml';
-$string['outputformat_hp_6_jmatch_xml_v6_plus_duplicates'] = 'JMatch (v6+) from xml (allow duplicates)';
-$string['outputformat_hp_6_jmatch_xml_v6_plus'] = 'JMatch (v6+) from xml';
 $string['outputformat_hp_6_jmatch_xml_v6'] = 'JMatch (v6) from xml';
+$string['outputformat_hp_6_jmatch_xml_v6_plus'] = 'JMatch (v6+) from xml';
+$string['outputformat_hp_6_jmatch_xml_v6_plus_duplicates'] = 'JMatch (v6+) from xml (allow duplicates)';
 $string['outputformat_hp_6_jmix_html'] = 'JQuiz (v6) from html';
 $string['outputformat_hp_6_jmix_xml_v6'] = 'JMix (v6) from xml';
 $string['outputformat_hp_6_jmix_xml_v6_plus'] = 'JMix (v6+) from xml';
@@ -968,6 +1014,7 @@ $string['taskaction_help'] = 'These options specify what action will be taken wh
 
 **Delete tasks**
 : The selected tasks will be deleted from the TaskChain activity.';
+$string['taskattempt'] = 'Task attempt';
 $string['taskattemptnotinprogress'] = 'Task attempt not in progress';
 $string['taskchainname'] = 'TaskChain name';
 $string['taskclosed'] = 'Sorry, this task closed on {$a}';
@@ -1005,6 +1052,7 @@ $string['tasknotavailable'] = 'Sorry this task is not available to you until {$a
 $string['taskposition'] = 'Task position';
 $string['taskrequirepasswordmessage'] = 'To attempt this task, you need to know the password.';
 $string['tasks'] = 'Tasks';
+$string['taskscore'] = 'Task score';
 $string['tasktype'] = 'Task type';
 $string['textsourcefile'] = 'Get from source file';
 $string['textsourcefilename'] = 'Use source file name';
@@ -1051,6 +1099,7 @@ $string['title_help'] = 'This setting specifies the title to be displayed on the
 $string['titleappendsortorder'] = 'Append sort order';
 $string['titleprependchainname'] = 'Prepend chain name';
 $string['tnumber'] = 'Task attempt';
+$string['toolsindex'] = 'TaskChain Tools index';
 $string['totaltaskscores'] = 'Total of task scores';
 $string['unansweredtask'] = 'Unanswered task';
 $string['unseentask'] = 'Unseen task';
@@ -1099,7 +1148,6 @@ The square-bracket notation has the following syntax:
 : *name*
 : *name=value*
 : *name="some value with spaces"*';
-$string['utilitiesindex'] = 'TaskChain Utilities index';
 $string['viewreports'] = 'View reports for {$a} user(s)';
 $string['views'] = 'Views';
 $string['weighting'] = 'Weighting';
@@ -1133,8 +1181,3 @@ $string['youneedtoenrol'] = 'You need to enrol in this course before you can att
 $string['zeroduration'] = 'No duration';
 $string['zerograde'] = 'Zero grade';
 $string['zeroscore'] = 'Zero score';
-
-$string['chaingrade'] = 'Chain grade';
-$string['chainattempt'] = 'Chain attempt';
-$string['taskscore'] = 'Task score';
-$string['taskattempt'] = 'Task attempt';

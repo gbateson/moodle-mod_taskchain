@@ -23,24 +23,26 @@
  */
 
 namespace mod_taskchain\event;
+
+/** prevent direct access to this script */
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * Event for when a taskchain activity is viewed.
  *
  * @package    mod_taskchain
- * @copyright  2013 Adrian Greeve
+ * @copyright  2014 Gordon Bateson
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class course_module_viewed extends \core\event\content_viewed {
+class course_module_viewed extends \core\event\course_module_viewed {
 
     /**
      * Init method.
      */
     protected function init() {
-        $this->data['crud'] = 'r';
-        $this->data['level'] = self::LEVEL_PARTICIPATING;
         $this->data['objecttable'] = 'taskchain';
+        $this->data['crud'] = 'r';
+        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }
 
     /**
@@ -67,7 +69,7 @@ class course_module_viewed extends \core\event\content_viewed {
      * @return string
      */
     public static function get_name() {
-        return get_string('taskchainviewed', 'mod_taskchain');
+        return get_string('event_taskchain_viewed', 'mod_taskchain');
     }
 
     /**
@@ -86,12 +88,10 @@ class course_module_viewed extends \core\event\content_viewed {
      */
     protected function get_legacy_eventdata() {
         global $USER;
-
         $taskchain = $this->get_record_snapshot('taskchain', $this->objectid);
         $course    = $this->get_record_snapshot('course', $this->courseid);
         $cm        = $this->get_record_snapshot('course_modules', $this->context->instanceid);
-        $taskchain = new \taskchain($taskchain, $cm, $course);
-        return (object)array('taskchain' => $taskchain, 'user' => $USER);
+        return (object)array('taskchain' => $taskchain, 'course' => $course, 'cm' => $cm, 'user' => $USER);
     }
 
     /**

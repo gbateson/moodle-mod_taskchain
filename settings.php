@@ -41,7 +41,7 @@ $settings->add(
 
 // enable caching of browser content for each task (default=1)
 $str = get_string('clearcache', 'mod_taskchain');
-$url = new moodle_url('/mod/taskchain/utilities/clear_cache.php', array('sesskey' => sesskey()));
+$url = new moodle_url('/mod/taskchain/tools/clear_cache.php', array('sesskey' => sesskey()));
 $link = html_writer::link($url, $str, array('class' => 'small', 'style'=> 'white-space: nowrap', 'onclick' => "this.target='_blank'"))."\n";
 $settings->add(
     new admin_setting_configcheckbox('taskchain_enablecache', get_string('enablecache', 'mod_taskchain'), get_string('configenablecache', 'mod_taskchain').' '.$link, 1)
@@ -98,7 +98,7 @@ $settings->add(
 
 // store raw xml details of TaskChain task attempts (default=1)
 $str = get_string('cleardetails', 'mod_taskchain');
-$url = new moodle_url('/mod/taskchain/utilities/clear_details.php', array('sesskey' => sesskey()));
+$url = new moodle_url('/mod/taskchain/tools/clear_details.php', array('sesskey' => sesskey()));
 $link = html_writer::link($url, $str, array('class' => 'small', 'style'=> 'white-space: nowrap', 'onclick' => "this.target='_blank'"))."\n";
 $settings->add(
     new admin_setting_configcheckbox('taskchain_storedetails', get_string('storedetails', 'mod_taskchain'), get_string('configstoredetails', 'mod_taskchain').' '.$link, 0)
