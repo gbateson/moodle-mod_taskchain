@@ -48,6 +48,12 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
+    if (defined('STDIN') && defined('CLI_SCRIPT')) {
+        $interactive = false;
+    } else {
+        $interactive = true;
+    }
+
     $newversion = 2011040106;
     if ($result && $oldversion < $newversion) {
         $tables = array(
@@ -402,9 +408,11 @@ function xmldb_taskchain_upgrade($oldversion) {
                 }
 
                 if ($rs) {
-                    $i = 0;
-                    $bar = new progress_bar('taskchainmigratelogs', 500, true);
-                    $strupdating = get_string('migratinglogs', 'mod_taskchain');
+                    if ($interactive) {
+                        $i = 0;
+                        $bar = new progress_bar('taskchainmigratelogs', 500, true);
+                        $strupdating = get_string('migratinglogs', 'mod_taskchain');
+                    }
                     foreach ($rs as $log) {
                         upgrade_set_timeout(); // 3 mins
                         mod_taskchain::add_to_log($log->course,
@@ -415,8 +423,10 @@ function xmldb_taskchain_upgrade($oldversion) {
                                                   $log->cmid,
                                                   $log->userid,
                                                   false); // i.e. skip legacy log
-                        $i++;
-                        $bar->update($i, $count, $strupdating.": ($i/$count)");
+                        if ($interactive) {
+                            $i++;
+                            $bar->update($i, $count, $strupdating.": ($i/$count)");
+                        }
                     }
                     $rs->close();
                 }
