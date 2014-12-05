@@ -43,8 +43,8 @@ class tasks_edited extends \core\event\base {
      */
     protected function init() {
         $this->data['objecttable'] = 'taskchain';
-        $this->data['crud'] = 'r';
-        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
+        $this->data['crud'] = 'u';
+        $this->data['edulevel'] = self::LEVEL_TEACHING;
     }
 
     /**

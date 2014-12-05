@@ -42,7 +42,7 @@ class course_module_instance_list_viewed extends \core\event\base {
      * Init method
      */
     protected function init() {
-        $this->data['objecttable'] = 'taskchain';
+        $this->data['objecttable'] = 'course';
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }

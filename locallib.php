@@ -391,13 +391,13 @@ class mod_taskchain extends taskchain_base {
             }
 
             // get course context
-            $this->course->context = mod_taskchain::context(CONTEXT_COURSE, $this->course->id);
+            $this->course->context = self::context(CONTEXT_COURSE, $this->course->id);
 
             // mimic get_coursemodule_from_id() and get_coursemodule_from_instance()
             if ($this->coursemodule) {
                 $this->coursemodule->name = $this->taskchain->name;
                 $this->coursemodule->modname = $this->module->name;
-                $this->coursemodule->context = mod_taskchain::context(CONTEXT_MODULE, $this->coursemodule->id);
+                $this->coursemodule->context = self::context(CONTEXT_MODULE, $this->coursemodule->id);
                 if ($set_page_context) {
                     $PAGE->set_context($this->coursemodule->context);
                 }
@@ -2468,7 +2468,7 @@ class mod_taskchain extends taskchain_base {
                 foreach ($modinfo->cms as $cmid=>$mod) {
                     if ($mod->modname=='taskchain') {
                         $taskchainid = $mod->instance;
-                        if (in_array($taskchainid, $taskchainids) && $this->can->$capability(false, mod_taskchain::context(CONTEXT_MODULE, $cmid))) {
+                        if (in_array($taskchainid, $taskchainids) && $this->can->$capability(false, self::context(CONTEXT_MODULE, $cmid))) {
                             // user can delete attempts, so save the taskchain id
                             // we don't need to get the full taskchain/coursemodule record
                             $coursemodules[$cmid] = true;
@@ -2707,30 +2707,28 @@ class mod_taskchain extends taskchain_base {
     }
 
     /**
-     * taskchain_mod_taskchain::add_to_log
-     *
+     * add_to_log
      * a wrapper method to offer consistent API for adding logs
      *
      * @param integer $courseid
+     * @param string  $module name e.g. "taskchain"
      * @param string  $action
-     * @param string  $url
-     * @param string  $info
-     * @param integer $cm
-     * @param integer $user
-     * @param integer $legacy_add_to_log (optional, default=true)
-     * @return void, but may update log tabes in DB
+     * @param string  $url (optional, default='')
+     * @param string  $info (optional, default='') often a taskchain id
+     * @param string  $cmid (optional, default=0)
+     * @param integer $userid (optional, default=0)
+     * @param boolean $legacy_add_to_log (optional, default=true) set to false when calling this method in an upgrade
      */
-    static public function add_to_log($courseid, $module, $action, $url='', $info='', $cm=0, $user=0, $legacy_add_to_log=true) {
-        global $PAGE;
+    static function add_to_log($courseid, $module, $action, $url='', $info='', $cmid=0, $userid=0, $legacy_add_to_log=true) {
+        global $DB, $PAGE, $TC;
 
         // detect new event API (Moodle >= 2.6)
         if (function_exists('get_log_manager')) {
 
-            // log action in legacy log
             if ($legacy_add_to_log) {
                 $manager = get_log_manager();
                 if (method_exists($manager, 'legacy_add_to_log')) {
-                    $manager->legacy_add_to_log($courseid, $module, $action, $url, $info, $cm, $user);
+                    $manager->legacy_add_to_log($courseid, $module, $action, $url, $info, $cmid, $userid);
                 }
             }
 
@@ -2751,22 +2749,74 @@ class mod_taskchain extends taskchain_base {
 
             $classname = '\\mod_taskchain\\event\\'.$eventname;
             if (class_exists($classname)) {
-                $params = array('objectid' => $PAGE->cm->instance,
-                                'context'  => $PAGE->context);
-                // use call_user_func() to prevent syntax error in PHP 5.2.x
-                $event = call_user_func(array($classname, 'create'), $params);
-                if (isset($PAGE->course)) {
-                    $event->add_record_snapshot('course', $PAGE->course);
+
+                if ($action=='index' || $action=='editchains') {
+                    // course context
+                    if ($PAGE->course && $PAGE->course->id==$courseid) {
+                        // normal Moodle use
+                        $objectid = $PAGE->course->id;
+                        $context  = $PAGE->context;
+                        $course   = $PAGE->course;
+                    } else if ($courseid) {
+                        // Moodle upgrade
+                        $objectid = $courseid;
+                        $context  = self::context(CONTEXT_COURSE, $courseid);
+                        $course   = $DB->get_record('course', array('id' => $courseid));
+                    } else {
+                        $objectid = 0; // shouldn't happen !!
+                    }
+                    $taskchain = null;
+                } else {
+                    // course module context
+                    if ($PAGE->cm && $PAGE->cm->id==$cmid) {
+                        // normal Moodle use
+                        $objectid  = $PAGE->cm->instance;
+                        $context   = $PAGE->context;
+                        $course    = $PAGE->course;
+                        $taskchain = $PAGE->activityrecord;
+                    } else if ($cmid) {
+                        // Moodle upgrade
+                        $objectid  = $DB->get_field('course_modules', 'instance', array('id' => $cmid));
+                        $context   = self::context(CONTEXT_MODULE, $cmid);
+                        $course    = $DB->get_record('course', array('id' => $courseid));
+                        $taskchain = $DB->get_record('taskchain', array('id' => $objectid));
+                    } else {
+                        $objectid = 0; // shouldn't happen !!
+                    }
                 }
-                if (isset($PAGE->activityrecord)) {
-                    $event->add_record_snapshot($PAGE->cm->modname, $PAGE->activityrecord);
+
+                if ($objectid) {
+                    // use call_user_func() to prevent syntax error in PHP 5.2.x
+                    $params = array('objectid' => $objectid, 'context' => $context);
+                    $event = call_user_func(array($classname, 'create'), $params);
+                    if ($course) {
+                        $event->add_record_snapshot('course', $course);
+                    }
+                    if ($taskchain) {
+                        $event->add_record_snapshot('taskchain', $taskchain);
+
+                    }
+                    if (isset($TC)) {
+                        $objects = array('chain'        => 'taskchain_chains',
+                                         'task'         => 'taskchain_tasks',
+                                         'condition'    => 'taskchain_conditions',
+                                         'chaingrade'   => 'taskchain_chain_grades',
+                                         'chainattempt' => 'taskchain_chain_attempts',
+                                         'taskscore'    => 'taskchain_task_scores',
+                                         'taskattempt'  => 'taskchain_task_attempts');
+                        foreach ($objects as $object => $table) {
+                            if (isset($TC->$object)) {
+                                $event->add_record_snapshot($table, $TC->$object->to_stdclass());
+                            }
+                        }
+                    }
+                    $event->trigger();
                 }
-                $event->trigger();
             }
 
         } else if (function_exists('add_to_log')) {
-            // Moodle <= 2.6
-            add_to_log($courseid, $module, $action, $url, $info, $cm, $user);
+            // Moodle <= 2.5
+            add_to_log($courseid, $module, $action, $url, $info, $cmid, $userid);
         }
     }
 }

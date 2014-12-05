@@ -253,6 +253,7 @@ function xmldb_taskchain_upgrade($oldversion) {
                     $DB->set_field('taskchain_tasks', 'name', $newname, array('id' => $taskid));
                 }
             }
+            $TC = null;
         }
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
