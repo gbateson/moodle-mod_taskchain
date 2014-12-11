@@ -383,6 +383,10 @@ function xmldb_taskchain_upgrade($oldversion) {
 
         if (function_exists('get_log_manager')) {
 
+            if ($loglegacy = get_config('loglegacy', 'logstore_legacy')) {
+                set_config('loglegacy', 0, 'logstore_legacy');
+            }
+
             $legacy_log_tablename = 'log';
             $legacy_log_table = new xmldb_table($legacy_log_tablename);
 
@@ -430,6 +434,11 @@ function xmldb_taskchain_upgrade($oldversion) {
                     }
                     $rs->close();
                 }
+            }
+
+            // reset loglegacy config setting
+            if ($loglegacy) {
+                set_config('loglegacy', $loglegacy, 'logstore_legacy');
             }
         }
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
