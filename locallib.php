@@ -752,13 +752,13 @@ class mod_taskchain extends taskchain_base {
 
         $types = 0;
         if (defined('FILE_INTERNAL')) {
-            $types = $types | FILE_INTERNAL; // Moodle 2.x
+            $types = $types | FILE_INTERNAL; // Moodle >= 2.0
         }
         if (defined('FILE_EXTERNAL')) {
-            $types = $types | FILE_EXTERNAL; // Moodle 2.x
+            $types = $types | FILE_EXTERNAL; // Moodle >= 2.0
         }
         if (defined('FILE_REFERENCE')) {
-            $types = $types | FILE_REFERENCE; // Moodle 2.3 and later
+            $types = $types | FILE_REFERENCE; // Moodle >= 2.3
         }
 
         return array('context'      => $context,
@@ -2717,20 +2717,12 @@ class mod_taskchain extends taskchain_base {
      * @param string  $info (optional, default='') often a taskchain id
      * @param string  $cmid (optional, default=0)
      * @param integer $userid (optional, default=0)
-     * @param boolean $legacy_add_to_log (optional, default=true) set to false when calling this method in an upgrade
      */
-    static function add_to_log($courseid, $module, $action, $url='', $info='', $cmid=0, $userid=0, $legacy_add_to_log=true) {
+    static function add_to_log($courseid, $module, $action, $url='', $info='', $cmid=0, $userid=0) {
         global $DB, $PAGE, $TC;
 
         // detect new event API (Moodle >= 2.6)
         if (function_exists('get_log_manager')) {
-
-            if ($legacy_add_to_log) {
-                $manager = get_log_manager();
-                if (method_exists($manager, 'legacy_add_to_log')) {
-                    $manager->legacy_add_to_log($courseid, $module, $action, $url, $info, $cmid, $userid);
-                }
-            }
 
             // map old $action to new $eventname
             switch ($action) {

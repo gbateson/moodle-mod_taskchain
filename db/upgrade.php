@@ -422,8 +422,7 @@ function xmldb_taskchain_upgrade($oldversion) {
                                                   $log->url,
                                                   $log->info,
                                                   $log->cmid,
-                                                  $log->userid,
-                                                  false); // i.e. skip legacy log
+                                                  $log->userid);
                         if ($interactive) {
                             $i++;
                             $bar->update($i, $count, $strupdating.": ($i/$count)");
@@ -431,6 +430,26 @@ function xmldb_taskchain_upgrade($oldversion) {
                     }
                     $rs->close();
                 }
+            }
+        }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
+    $newversion = 2014121153;
+    if ($oldversion < $newversion) {
+        if (function_exists('get_log_manager')) {
+            if ($dbman->table_exists('log')) {
+                $select = 'module = ? AND action = ?';
+                $DB->set_field_select('log', 'action', 'attempt',    $select, array('taskchain', 'attempt_started'));
+                $DB->set_field_select('log', 'action', 'editchains', $select, array('taskchain', 'chains_edited'));
+                $DB->set_field_select('log', 'action', 'editcolumnlists', $select, array('taskchain', 'columnlists_edited'));
+                $DB->set_field_select('log', 'action', 'editcondition', $select, array('taskchain', 'condition_edited'));
+                $DB->set_field_select('log', 'action', 'edittask',   $select, array('taskchain', 'task_edited'));
+                $DB->set_field_select('log', 'action', 'edittasks',  $select, array('taskchain', 'tasks_edited'));
+                $DB->set_field_select('log', 'action', 'index',      $select, array('taskchain', 'course_module_instance_list_viewed'));
+                $DB->set_field_select('log', 'action', 'report',     $select, array('taskchain', 'report_viewed'));
+                $DB->set_field_select('log', 'action', 'submit',     $select, array('taskchain', 'attempt_submitted'));
+                $DB->set_field_select('log', 'action', 'view',       $select, array('taskchain', 'course_module_viewed'));
             }
         }
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');

@@ -1165,6 +1165,28 @@ function taskchain_print_recent_mod_activity($activity, $courseid, $detail, $mod
     echo html_writer::table($table);
 }
 
+/*
+ * This function defines what log actions will be selected from the Moodle logs for
+ * Administration block -> Course administration -> Reports -> Course participation
+ *
+ * This function is called from: {@link course/report/participation/index.php}
+ * @return array(string) of text strings used to log TaskChain VIEW actions
+ */
+function taskchain_get_view_actions() {
+    return array('view', 'index', 'report', 'review');
+}
+
+/*
+ * This function defines what log actions will be selected from the Moodle logs for
+ * Administration block -> Course administration -> Reports -> Course participation
+ *
+ * This function is called from: {@link course/report/participation/index.php}
+ * @return array(string) of text strings used to log TaskChain POST actions
+ */
+function taskchain_get_post_actions() {
+    return array('submit');
+}
+
 /**
  * Function to be run periodically according to the moodle cron
  * This function searches for things that need to be done, such
