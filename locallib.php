@@ -2736,31 +2736,37 @@ class mod_taskchain extends taskchain_base {
                 case 'report':          $eventname = 'report_viewed';        break;
                 case 'submit':          $eventname = 'attempt_submitted';    break;
                 case 'view':            $eventname = 'course_module_viewed'; break;
-                default: $eventname = $action;
+                case 'index':           // "index" has been replaced by "view all"
+                case 'view all':        $eventname = 'course_module_instance_list_viewed'; break;
+                default: $eventname = preg_replace('/[^a-zA-Z0-9]+/', '_', $action);
             }
 
             $classname = '\\mod_taskchain\\event\\'.$eventname;
             if (class_exists($classname)) {
 
-                if ($action=='index' || $action=='editchains') {
+                $context   = null;
+                $course    = null;
+                $taskchain = null;
+                $params    = null;
+                $objectid  = 0;
+
+                if ($action=='view all' || $action=='index' || $action=='editchains') {
                     // course context
-                    if ($PAGE->course && $PAGE->course->id==$courseid) {
+                    if (isset($PAGE->course) && $PAGE->course->id==$courseid) {
                         // normal Moodle use
-                        $objectid = $PAGE->course->id;
-                        $context  = $PAGE->context;
-                        $course   = $PAGE->course;
+                        $context = $PAGE->context;
+                        $course  = $PAGE->course;
                     } else if ($courseid) {
                         // Moodle upgrade
-                        $objectid = $courseid;
-                        $context  = self::context(CONTEXT_COURSE, $courseid);
-                        $course   = $DB->get_record('course', array('id' => $courseid));
-                    } else {
-                        $objectid = 0; // shouldn't happen !!
+                        $context = mod_taskchain::context(CONTEXT_COURSE, $courseid);
+                        $course  = $DB->get_record('course', array('id' => $courseid));
                     }
-                    $taskchain = null;
+                    if ($context) {
+                        $params = array('context' => $context);
+                    }
                 } else {
                     // course module context
-                    if ($PAGE->cm && $PAGE->cm->id==$cmid) {
+                    if (isset($PAGE->cm) && $PAGE->cm->id==$cmid) {
                         // normal Moodle use
                         $objectid  = $PAGE->cm->instance;
                         $context   = $PAGE->context;
@@ -2769,17 +2775,20 @@ class mod_taskchain extends taskchain_base {
                     } else if ($cmid) {
                         // Moodle upgrade
                         $objectid  = $DB->get_field('course_modules', 'instance', array('id' => $cmid));
-                        $context   = self::context(CONTEXT_MODULE, $cmid);
+                        $context   = mod_taskchain::context(CONTEXT_MODULE, $cmid);
                         $course    = $DB->get_record('course', array('id' => $courseid));
                         $taskchain = $DB->get_record('taskchain', array('id' => $objectid));
-                    } else {
-                        $objectid = 0; // shouldn't happen !!
+                    }
+                    if ($context && $objectid) {
+                        $params = array('context' => $context, 'objectid' => $objectid);
                     }
                 }
 
-                if ($objectid) {
+                if ($params) {
+                    if ($userid) {
+                        $params['relateduserid'] = $userid;
+                    }
                     // use call_user_func() to prevent syntax error in PHP 5.2.x
-                    $params = array('objectid' => $objectid, 'context' => $context);
                     $event = call_user_func(array($classname, 'create'), $params);
                     if ($course) {
                         $event->add_record_snapshot('course', $course);

@@ -51,7 +51,6 @@ class chains_edited extends base {
      * Init method
      */
     protected function init() {
-        $this->data['objecttable'] = 'course';
         $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_TEACHING;
     }
