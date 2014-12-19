@@ -80,26 +80,33 @@ $string['configstoredetails'] = 'If this setting is enabled, then the raw XML de
 // event strings
 // ===================
 //
-$string['event_attempt_started'] = 'attemptstarted';
-$string['event_attempt_started_desc'] = 'attemptstarted description';
-$string['event_attempt_submitted'] = 'attemptsubmitted';
-$string['event_attempt_submitted_desc'] = 'attemptsubmitted description';
-$string['event_chains_edited'] = 'chainsedited';
-$string['event_chains_edited_desc'] = 'chainsedited description';
-$string['event_columnlists_edited'] = 'columnlistsedited';
-$string['event_columnlists_edited_desc'] = 'columnlistsedited description';
-$string['event_condition_edited'] = 'conditionedited';
-$string['event_condition_edited_desc'] = 'conditionedited description';
-$string['event_course_module_instance_list_viewed'] = 'coursemoduleinstancelistviewed';
-$string['event_course_module_instance_list_viewed_desc'] = 'coursemoduleinstancelistviewed description';
-$string['event_course_module_viewed'] = 'coursemoduleviewed';
-$string['event_course_module_viewed_desc'] = 'coursemoduleviewed description';
-$string['event_report_viewed'] = 'reportviewed';
-$string['event_report_viewed_desc'] = 'reportviewed description';
-$string['event_task_edited'] = 'taskedited';
-$string['event_task_edited_desc'] = 'taskedited description';
-$string['event_tasks_edited'] = 'tasksedited';
-$string['event_tasks_edited_desc'] = 'tasksedited description';
+$string['event_attempt_started'] = 'TaskChain attempt started';
+$string['event_attempt_started_description'] = 'The user with id "{$a->userid}" started an attempt at a task on the "taskchain" activity with course module id "{$a->cmid}"';
+$string['event_attempt_started_explanation'] = 'A user has just started an attempt at a TaskChain activity';
+$string['event_attempt_submitted'] = 'TaskChain attempt submitted';
+$string['event_attempt_submitted_description'] = 'The user with id "{$a->userid}" submitted an attempt at a task on the "taskchain" activity with course module id "{$a->cmid}"';
+$string['event_attempt_submitted_explanation'] = 'A user has just submitted an attempt at a TaskChain activity';
+$string['event_base'] = 'HotPot event detected';
+$string['event_base_description'] = 'The user with id "{$a->userid}" initiated an event in the "taskchain" activity with course module id "{$a->cmid}"';
+$string['event_base_explanation'] = 'An event was  detected by the TaskChain module';
+$string['event_chains_edited'] = 'TaskChain chains edited';
+$string['event_chains_edited_description'] = 'The user with id "{$a->userid}" edited all TaskChain chains on the course with id "{$a->courseid}"';
+$string['event_chains_edited_explanation'] = 'A user has just edited all the TaskChain chains on a course';
+$string['event_columnlists_edited'] = 'TaskChain column lists edited';
+$string['event_columnlists_edited_description'] = 'The user with id "{$a->userid}" edited column lists on the "taskchain" activity with course module id "{$a->cmid}"';
+$string['event_columnlists_edited_explanation'] = 'A user has just edited the column lists for a TaskChain activity';
+$string['event_condition_edited'] = 'TaskChain condition edited';
+$string['event_condition_edited_description'] = 'The user with id "{$a->userid}" edited a condition on the "taskchain" activity with course module id "{$a->cmid}"';
+$string['event_condition_edited_explanation'] = 'A user has just edited a condition on a TaskChain activity';
+$string['event_report_viewed'] = 'TaskChain report viewed';
+$string['event_report_viewed_description'] = 'The user with id "{$a->userid}" viewed a report on the "taskchain" activity with course module id "{$a->cmid}"';
+$string['event_report_viewed_explanation'] = 'A user has just viewed a report on attempts at a TaskChain activity';
+$string['event_task_edited'] = 'TaskChain task edited';
+$string['event_task_edited_description'] = 'The user with id "{$a->userid}" edited a task on the "taskchain" activity with course module id "{$a->cmid}"';
+$string['event_task_edited_explanation'] = 'A user has just edited a task on a TaskChain activity';
+$string['event_tasks_edited'] = 'TaskChain tasks edited';
+$string['event_tasks_edited_description'] = 'The user with id "{$a->userid}" edited all tasks on the "taskchain" activity with course module id "{$a->cmid}"';
+$string['event_tasks_edited_explanation'] = 'A user has just edited all tasks on a TaskChain activity';
 
 // ===================
 // more strings
