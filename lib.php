@@ -1187,6 +1187,141 @@ function taskchain_get_post_actions() {
     return array('submit');
 }
 
+/*
+ * For the given list of courses, this function creates an HTML report
+ * of which TaskChain activities have been completed and which have not
+
+ * This function is called from: {@link course/lib.php}
+ *
+ * @param array(object) $courses records from the "course" table
+ * @param array(array(string)) $htmlarray array, indexed by courseid, of arrays, indexed by module name (e,g, "taskchain), of HTML strings
+ *     each HTML string shows a list of the following information about each open TaskChain in the course
+ *         TaskChain name and link to the activity  + open/close dates, if any
+ *             for teachers:
+ *                 how many students have attempted/completed the TaskChain
+ *             for students:
+ *                 which TaskChains have been completed
+ *                 which TaskChains have not been completed yet
+ *                 the time remaining for incomplete TaskChains
+ * @return no return value is required, but $htmlarray may be updated
+ */
+function taskchain_print_overview($courses, &$htmlarray) {
+    global $CFG, $DB, $USER;
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+
+    if (empty($CFG->taskchain_enablemymoodle)) {
+        return; // TaskChains are not shown on MyMoodle on this site
+    }
+
+    if (! isset($courses) || ! is_array($courses) || ! count($courses)) {
+        return; // no courses
+    }
+
+    if (! $instances = get_all_instances_in_courses('taskchain', $courses)) {
+        return; // no taskchains
+    }
+
+    $strtaskchain  = get_string('modulename', 'mod_taskchain');
+    $strtimeopen   = get_string('timeopen',   'mod_taskchain');
+    $strtimeclose  = get_string('timeclose',  'mod_taskchain');
+    $strdateformat = get_string('strftimerecentfull');
+    $strattempted  = get_string('attempted',  'mod_taskchain');
+    $strcompleted  = get_string('completed',  'mod_taskchain');
+    $strnotattemptedyet = get_string('notattemptedyet', 'mod_taskchain');
+
+    $taskchains = array();
+    foreach ($instances as $i => $instance) {
+        $taskchains[$instance->id] = &$instances[$i];
+    }
+
+    // get related chain records - we especially want the time open/close and the grade limit/weighting
+    list($select, $params) = $DB->get_in_or_equal(array_keys($taskchains));
+    $select = 'parentid '.$select.' AND parenttype = ?';
+    $params[] = mod_taskchain::PARENTTYPE_ACTIVITY;
+    $fields = 'id,parentid,parenttype,timeopen,timeclose,gradelimit,gradeweighting';
+    if (! $chains = $DB->get_records_select('taskchain_chains', $select, $params, '', $fields)) {
+        return; // no chains - shouldn't happen !!
+    }
+    foreach ($chains as $id=>$chain) {
+        $taskchains[$chain->parentid]->chain = &$chains[$id];
+    }
+
+    // get all grades for this user - saves getting them individually for students later on
+    $select .= ' AND userid = ?';
+    $params[] = $USER->id;
+    if (! $chaingrades = $DB->get_records_select('taskchain_chain_grades', $select, $params)) {
+        $chaingrades = array();
+    }
+
+    // map taskchains onto grades for this user
+    foreach ($chaingrades as $id=>$chaingrade) {
+        if (! isset($taskchains[$chaingrade->parentid])) {
+            continue; // shouldn't happen !!
+        }
+        $taskchains[$chaingrade->parentid]->chaingrade = &$chaingrades[$id];
+    }
+
+    foreach ($taskchains as $taskchain) {
+        $str = ''
+            .'<div class="taskchain overview">'
+            .'<div class="name">'.$strtaskchain. ': '
+            .'<a '.($taskchain->visible ? '':' class="dimmed"')
+            .'title="'.$strtaskchain.'" href="'.$CFG->wwwroot
+            .'/mod/taskchain/view.php?id='.$taskchain->coursemodule.'">'
+            .format_string($taskchain->name).'</a></div>'
+        ;
+        if ($taskchain->chain->timeopen) {
+            $str .= '<div class="info">'.$strtimeopen.': '.userdate($taskchain->chain->timeopen, $strdateformat).'</div>';
+        }
+        if ($taskchain->chain->timeclose) {
+            $str .= '<div class="info">'.$strtimeclose.': '.userdate($taskchain->chain->timeclose, $strdateformat).'</div>';
+        }
+
+        $modulecontext = mod_taskchain::context(CONTEXT_MODULE, $taskchain->coursemodule);
+        if (has_capability('mod/taskchain:reviewallattempts', $modulecontext)) {
+            // manager: show class grades stats
+            // attempted: 99/99, completed: 99/99
+            if ($students = get_users_by_capability($modulecontext, 'mod/taskchain:attempt', 'u.id,u.id', 'u.id', '', '', 0, '', false)) {
+                $count = count($students);
+                $attempted = 0;
+                $completed = 0;
+                list($select, $params) = $DB->get_in_or_equal(array_keys($students));
+                $select = 'userid '.$select.' AND parentid = ? AND parenttype = ?';
+                array_push($params, $taskchain->id, mod_taskchain::PARENTTYPE_ACTIVITY);
+                if ($chaingrades = $DB->get_records_select('taskchain_chain_grades', $select, $params)) {
+                    $attempted = count($chaingrades);
+                    foreach ($chaingrades as $chaingrade) {
+                        if ($chaingrade->status==mod_taskchain::STATUS_COMPLETED) {
+                            $completed++;
+                        }
+                    }
+                    unset($chaingrades);
+                }
+                unset($students);
+                $str .= '<div class="info">'.$strattempted.': '.$attempted.' / '.$count.', '.$strcompleted.': '.$completed.' / '.$count.'</div>';
+            }
+        } else {
+            // student: show grade and status e.g. 90% (completed)
+            if (empty($taskchain->chaingrade)) {
+                $str .= '<div class="info">'.$strnotattemptedyet.'</div>';
+            } else {
+                $href = new moodle_url('/mod/taskchain/report.php', array('chaingradeid' => $taskchain->chaingrade->id));
+                if ($taskchain->chain->gradelimit && $taskchain->chain->gradeweighting) {
+                    $str .= '<div class="info">'.get_string('grade', 'taskchain').': '.'<a href="'.$href.'">'.$taskchain->chaingrade->grade.'%</a></div>';
+                }
+                $str .= '<div class="info">'.get_string('status', 'taskchain').': '.'<a href="'.$href.'">'.mod_taskchain::format_status($taskchain->chaingrade->status).'</a></div>';
+            }
+        }
+        $str .= "</div>\n";
+
+        if (empty($htmlarray[$taskchain->course]['taskchain'])) {
+            $htmlarray[$taskchain->course]['taskchain'] = $str;
+        } else {
+            $htmlarray[$taskchain->course]['taskchain'] .= $str;
+        }
+    }
+}
+
 /**
  * Function to be run periodically according to the moodle cron
  * This function searches for things that need to be done, such
@@ -2159,7 +2294,7 @@ function taskchain_refresh_events($courseid=0) {
     }
 
     // get previous ids for events for these taskchains
-    list($filter, $params) = $DB->get_in_or_equals(array_keys($taskchains));
+    list($filter, $params) = $DB->get_in_or_equal(array_keys($taskchains));
     if ($eventids = $DB->get_records_select('event', "modulename='taskchain' AND instance $filter", $params, 'id', 'id')) {
         $eventids = array_keys($eventids);
     } else {

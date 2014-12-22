@@ -277,6 +277,7 @@ The minimum duration of attempts which must satisfy the score and count conditio
 
 **<=** (less than or equal to)
 The maximum duration of attempts which must satisfy the score and count conditions.';
+$string['attempted'] = 'Attempted';
 $string['attemptgrade'] = 'Attempt grade';
 $string['attemptgrademethod'] = 'Attempt grading method';
 $string['attemptgrademethod_help'] = 'This setting defines how the grade for a single attempt at this TaskChain activity is calculated.
@@ -809,6 +810,7 @@ $string['nosourcefilesettings'] = 'TaskChain record is missing source file infor
 $string['notaskchains'] = 'No TaskChains found';
 $string['notasksforyou'] = 'Sorry, there are no tasks for you to do right now.';
 $string['notasksinchain'] = 'There are no tasks in this TaskChain chain';
+$string['notattemptedyet'] = 'Not attempted yet';
 $string['notavailable'] = 'Sorry, this activity is not currently available to you.';
 $string['notendswith'] = 'doesn\'t end with';
 $string['notisempty'] = 'isn\'t empty';
