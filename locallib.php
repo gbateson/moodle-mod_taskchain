@@ -1178,11 +1178,18 @@ class mod_taskchain extends taskchain_base {
      */
     static function get_strings($ids)  {
         global $DB;
+
+        // convert $ids to an array, if necessary
+        if (is_string($ids)) {
+            $ids = explode(',', $ids);
+            $ids = array_filter($ids);
+        }
+
         if (empty($ids)) {
             return array();
         } else {
-            list($filter, $params) = $DB->get_in_or_equal($ids);
-            return $DB->get_records_select('taskchain_strings', "id $filter", $params, '', 'id,string');
+            list($select, $params) = $DB->get_in_or_equal($ids);
+            return $DB->get_records_select('taskchain_strings', "id $select", $params, '', 'id,string');
         }
     }
 
