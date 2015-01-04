@@ -618,20 +618,20 @@ class taskchain_report_table extends table_sql {
      * @return xxx
      */
     function col_selected_id($row)  {
-        // $selected[chainid][cnumber][taskid][tnumber][taskattemptid]
+        // $selected[$userid][chainid][cnumber][taskid][tnumber][taskattemptid]
         switch ($this->TC->mode) {
 
             case 'chaingrade':
             case 'chaingrades':
             case 'chainattempt':
             case 'chainattempts':
-                return '['.$row->chainattemptchainid.']['.$row->chainattemptcnumber.']';
+                return '['.$row->userid.']['.$row->chainattemptchainid.']['.$row->chainattemptcnumber.']';
 
             case 'taskscore':
             case 'taskscores':
             case 'taskattempt':
             case 'taskattempts':
-                return '['.$row->taskscorechainid.']['.$row->taskattemptcnumber.']['.$row->taskattempttaskid.']['.$row->taskattempttnumber.']['.$row->id.']';
+                return '['.$row->userid.']['.$row->taskscorechainid.']['.$row->taskattemptcnumber.']['.$row->taskattempttaskid.']['.$row->taskattempttnumber.']['.$row->id.']';
 
             default:
                 return ''; // shouldn't happen !!

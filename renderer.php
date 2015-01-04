@@ -903,7 +903,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
      * @todo Finish documenting this function
      */
     function attemptssummary($type) {
-        global $CFG;
+        global $CFG, $DB;
         $output = '';
 
         // get the attempts for this $type
@@ -937,6 +937,10 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
         if ($this->TC->$attempts) {
             // show summary of attempts so far
+
+            // get chaingrades/taskscores
+            $graderecords = $mode.'s';
+            $this->TC->get->$graderecords();
 
             $dateformat = get_string('strftimerecentfull');
             $strresume = get_string('resume', 'mod_taskchain');
@@ -1000,7 +1004,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 $row = new html_table_row();
 
                 if ($showselectcolumn) {
-                    $id = '['.$attempt->chainid.']['.$attempt->cnumber.']';
+                    $id = '['.$attempt->userid.']['.$attempt->chainid.']['.$attempt->cnumber.']';
                     $row->cells[] = html_writer::checkbox('selected'.$id, 1, false);
 
                     switch ($attempt->status) {
@@ -1021,7 +1025,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 $row->cells[] = $attempt->$number;
                 if ($this->TC->$type->$gradelimit && $this->TC->$type->$gradeweighting) {
                     if ($canreview) {
-                        $params = array('tab'=>'report', $type.'attemptid'=>$attempt->id, 'mode' => $mode);
+                        $params = array('tab' => 'report', 'mode' => $mode, $mode.'id' => $this->TC->$mode->id);
                         $href = $this->format_url('report.php', '', $params);
                         $row->cells[] = '<a href="'.$href.'">'.$attempt->$grade.'%</a>';
                     } else {

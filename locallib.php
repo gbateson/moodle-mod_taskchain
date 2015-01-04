@@ -2108,9 +2108,6 @@ class mod_taskchain extends taskchain_base {
      * delete_selected_attempts
      *
      * @uses $DB
-     * @param array $selected (passed by referece)
-     *              $selected[chainid][cnumber][taskid][tnumber][taskattemptid]
-     * @param integer $status (optional, default=0)
      * @return array $deleted[taskattempts, taskscores, chainattempts, chaingrades, total]
      * @todo Finish documenting this function
      */
@@ -2124,6 +2121,7 @@ class mod_taskchain extends taskchain_base {
         if (! $selected = $this->selected) {
             return false; // no attempts selected
         }
+        // $selected[$userid][chainid][cnumber][taskid][tnumber][taskattemptid]
 
         if (! $userfilter = $this->get_userfilter('')) {
             return false; // no users selected
@@ -2135,7 +2133,7 @@ class mod_taskchain extends taskchain_base {
 
         // we are going to return some totals of how many records were deleted
         $this->deleted = (object)array(
-            'taskattempts'=>0, 'taskscores'=>0, 'chainattempts'=>0, 'chaingrades'=>0, 'total'=>0
+            'taskattempts' => 0, 'taskscores' => 0, 'chainattempts' => 0, 'chaingrades' => 0, 'total' => 0
         );
 
         list($taskchains, $chains, $tasks, $taskattempts) = $this->clean_selected($selected, 'deleteattempts');
@@ -2158,10 +2156,11 @@ class mod_taskchain extends taskchain_base {
 
         // remove all task_attempts by users in $userfilter
         $select = $this->get_selected_sql($selected, $chains, $tasks, $taskattempts);
+
         if ($select) {
-            $select = $userfilter.' AND '. $select;
+            $select = $userfilter.' AND '.$select;
             if ($status) {
-                $select .= " AND status=$status";
+                $select .= " AND status = $status";
             }
             if ($records = $DB->get_records_select('taskchain_task_attempts', $select, null, 'id', 'id')) {
                 $this->delete_records('taskchain_task_attempts', 'taskattempts', 'taskattempt', $records);
@@ -2234,115 +2233,133 @@ class mod_taskchain extends taskchain_base {
      * @todo Finish documenting this function
      */
     public function get_selected_sql(&$selected, &$chains, &$tasks, &$taskattempts) {
-        $chainid_filters = array();
-        foreach ($selected as $chainid => $cnumbers) {
-            if (! $chainid) {
+        $userid_filters = array();
+        foreach ($selected as $userid => $chainids) {
+            if (empty($userid)) {
                 continue;
             }
-            if (empty($chains[$chainid])) {
-                unset($selected[$chainid]);
-                continue; // invalid $chainid - shouldn't happen
-            }
-            $chainid_filter = array();
-            // the chainid filter to select taskids for this chainid will be added later
-            // because it is only required if specific taskids have not been specified
-            $add_chainid_filter = true;
-            if (is_array($cnumbers)) {
-                $cnumber_filters = array();
-                foreach ($cnumbers as $cnumber => $cnumberdetails) {
-                    $cnumber_filter = array();
-                    if ($cnumber) {
-                        $cnumber_filter[] = "cnumber=$cnumber";
+            $userid_filter = array();
+            $userid_filter[] = "userid = $userid";
+            if (is_array($chainids)) {
+                $chainid_filters = array();
+                foreach ($chainids as $chainid => $cnumbers) {
+                    if (empty($chainid)) {
+                        continue;
                     }
-                    if (is_array($cnumberdetails)) {
-                        $taskid_filters = array();
-                        foreach ($cnumberdetails as $taskid => $tnumbers) {
-                            if (! $taskid) {
-                                continue;
+                    $chainid_filter = array();
+                    // the chainid filter to select taskids for this chainid will be added later
+                    // because it is only required if specific taskids have not been specified
+                    $add_chainid_filter = true;
+                    if (is_array($cnumbers)) {
+                        $cnumber_filters = array();
+                        foreach ($cnumbers as $cnumber => $taskids) {
+                            $cnumber_filter = array();
+                            if ($cnumber) {
+                                $cnumber_filter[] = "cnumber = $cnumber";
                             }
-                            if (empty($tasks[$taskid])) {
-                                unset($selected[$chainid][$cnumber][$taskid]);
-                                continue; // invalid $taskid - shouldn't happen
-                            }
-                            $taskid_filter = array();
-                            $taskid_filter[] = "taskid=$taskid";
-                            $add_chainid_filter = false; // not required if we have a taskid
-                            if (is_array($tnumbers)) {
-                                $tnumber_filters = array();
-                                foreach ($tnumbers as $tnumber => $tnumberdetails) {
-                                    $tnumber_filter = array();
-                                    if ($tnumber) {
-                                        $tnumber_filter[] = "tnumber=$tnumber";
+                            if (is_array($taskids)) {
+                                $taskid_filters = array();
+                                foreach ($taskids as $taskid => $tnumbers) {
+                                    if (! $taskid) {
+                                        continue;
                                     }
-                                    if (is_array($tnumberdetails)) {
-                                        $id_filters = array();
-                                        foreach ($tnumberdetails as $taskattemptid => $delete) {
-                                            if (! $taskattemptid) {
-                                                continue;
+                                    $taskid_filter = array();
+                                    $taskid_filter[] = "taskid = $taskid";
+                                    $add_chainid_filter = false; // not required if we have a taskid
+                                    if (is_array($tnumbers)) {
+                                        $tnumber_filters = array();
+                                        foreach ($tnumbers as $tnumber => $taskattemptids) {
+                                            $tnumber_filter = array();
+                                            if ($tnumber) {
+                                                $tnumber_filter[] = "tnumber = $tnumber";
                                             }
-                                            if (empty($taskattempts[$taskattemptid])) {
-                                                unset($selected[$chainid][$cnumber][$taskid][$tnumber][$taskattemptid]);
-                                                continue; // invalid task attempt id - shouldn't happen
-                                            }
-                                            $id_filters[] = "id=$taskattemptid";
-                                        }
-                                       switch (count($id_filters)) {
-                                            case 0: break;
-                                            case 1: $tnumber_filter[] = 'id='.$id_filters[0]; break;
-                                            default: $tnumber_filter[] = 'id IN ('.implode(',', $id_filters).')';
-                                        }
-                                    }
-                                    switch (count($tnumber_filter)) {
-                                        case 0: break;
-                                        case 1: $tnumber_filters[] = $tnumber_filter[0]; break;
-                                        default: $tnumber_filters[] = '('.implode(' AND ', $tnumber_filter).')';
-                                    }
-                                }
-                                switch (count($tnumber_filters)) {
-                                    case 0: break;
-                                    case 1: $taskid_filter[] = $tnumber_filters[0]; break;
-                                    default: $taskid_filter[] = '('.implode(' OR ', $tnumber_filters).')';
-                                }
-                            }
+                                            if (is_array($taskattemptids)) {
+                                                $id_filters = array();
+                                                foreach ($taskattemptids as $taskattemptid => $delete) {
+                                                    if (! $taskattemptid) {
+                                                        continue;
+                                                    }
+                                                    $id_filters[] = "id = $taskattemptid";
+                                                } // end foreach $taskattemptids
 
-                            switch (count($taskid_filter)) {
+                                               switch (count($id_filters)) {
+                                                    case 0: break;
+                                                    case 1: $tnumber_filter[] = 'id = '.$id_filters[0]; break;
+                                                    default: $tnumber_filter[] = 'id IN ('.implode(',', $id_filters).')';
+                                                }
+                                            } // end if is_array($taskattemptids)
+
+                                            switch (count($tnumber_filter)) {
+                                                case 0: break;
+                                                case 1: $tnumber_filters[] = $tnumber_filter[0]; break;
+                                                default: $tnumber_filters[] = '('.implode(' AND ', $tnumber_filter).')';
+                                            }
+                                        } // end foreach $tnumbers
+
+                                        switch (count($tnumber_filters)) {
+                                            case 0: break;
+                                            case 1: $taskid_filter[] = $tnumber_filters[0]; break;
+                                            default: $taskid_filter[] = '('.implode(' OR ', $tnumber_filters).')';
+                                        }
+                                    } // end if is_array($tnumbers)
+
+                                    switch (count($taskid_filter)) {
+                                        case 0: break;
+                                        case 1: $taskid_filters[] = $taskid_filter[0]; break;
+                                        default: $taskid_filters[] = '('.implode(' AND ', $taskid_filter).')';
+                                    }
+                                } // end foreach $taskids
+
+                                switch (count($taskid_filters)) {
+                                    case 0: break;
+                                    case 1: $cnumber_filter[] = $taskid_filters[0];break;
+                                    default: $cnumber_filter[] = '('.implode(' OR ', $taskid_filters).')';
+                                }
+                            } // end if is_array($taskids)
+
+                            switch (count($cnumber_filter)) {
                                 case 0: break;
-                                case 1: $taskid_filters[] = $taskid_filter[0]; break;
-                                default: $taskid_filters[] = '('.implode(' AND ', $taskid_filter).')';
+                                case 1: $cnumber_filters[] = $cnumber_filter[0]; break;
+                                default: $cnumber_filters[] = '('.implode(' AND ', $cnumber_filter).')';
                             }
-                        }
-                        switch (count($taskid_filters)) {
+                        } // end foreach $cnumbers
+
+                        switch (count($cnumber_filters)) {
                             case 0: break;
-                            case 1: $cnumber_filter[] = $taskid_filters[0];break;
-                            default: $cnumber_filter[] = '('.implode(' OR ', $taskid_filters).')';
+                            case 1: $chainid_filter[] = $cnumber_filters[0]; break;
+                            default: $chainid_filter[] = '('.implode(' OR ', $cnumber_filters).')';
                         }
+                    } // end if is_array($cnumbers)
+
+                    if ($add_chainid_filter) {
+                        // prepend filter to select only taskids for this chainid
+                        array_unshift($chainid_filter, "taskid IN (SELECT id FROM {taskchain_tasks} WHERE chainid = $chainid)");
                     }
-                    switch (count($cnumber_filter)) {
+                    switch (count($chainid_filter)) {
                         case 0: break;
-                        case 1: $cnumber_filters[] = $cnumber_filter[0]; break;
-                        default: $cnumber_filters[] = '('.implode(' AND ', $cnumber_filter).')';
+                        case 1: $chainid_filters[] = $chainid_filter[0]; break;
+                        default: $chainid_filters[] = '('.implode(' AND ', $chainid_filter).')';
                     }
+                } // end foreach $chainds
+
+                switch (count($chainid_filters)) {
+                    case 0: break; // nothing to delete
+                    case 1: $userid_filter[] = $chainid_filters[0]; break;
+                    default: $userid_filter[] = '('.implode(' OR ', $chainid_filters).')';
                 }
-                switch (count($cnumber_filters)) {
-                    case 0: break;
-                    case 1: $chainid_filter[] = $cnumber_filters[0]; break;
-                    default: $chainid_filter[] = '('.implode(' OR ', $cnumber_filters).')';
-                }
-            }
-            if ($add_chainid_filter) {
-                // prepend filter to select only taskids for this chainid
-                array_unshift($chainid_filter, "taskid IN (SELECT id FROM {taskchain_tasks} WHERE chainid=$chainid)");
-            }
-            switch (count($chainid_filter)) {
+            } // end if is_array($chainds)
+
+            switch (count($userid_filter)) {
                 case 0: break;
-                case 1: $chainid_filters[] = $chainid_filter[0]; break;
-                default: $chainid_filters[] = '('.implode(' AND ', $chainid_filter).')';
+                case 1: $userid_filters[] = $userid_filter[0]; break;
+                default: $userid_filters[] = '('.implode(' AND ', $userid_filter).')';
             }
-        }
-        switch (count($chainid_filters)) {
+        } // end foreach $userids
+
+        switch (count($userid_filters)) {
             case 0: return ''; // nothing to delete
-            case 1: return $chainid_filters[0];
-            default: return '('.implode(' OR ', $chainid_filters).')';
+            case 1: return $userid_filters[0];
+            default: return '('.implode(' OR ', $userid_filters).')';
         }
     }
 
@@ -2358,131 +2375,67 @@ class mod_taskchain extends taskchain_base {
      */
     public function clean_selected(&$selected, $capability) {
         // we are expecting the "selected" array to be something like this:
-        //     selected[chainid][cnumber][taskid][tnumber][taskattemptid]
+        //     selected[userid][chainid][cnumber][taskid][tnumber][taskattemptid]
         // cnumber and tnumber maybe zero
         // taskattemptid maybe be missing
         global $CFG, $DB;
 
         // arrays to hold ids of records this user wants to delete
-        $coursemodules = array(); // course_modules (Moodle 1.6 only)
-        $taskattemptids = array(); // taskchain_task_attempts
-        $taskids = array(); // taskchain_tasks
-        $chainids = array(); // taskchain_chains
-        $taskchainids = array(); // taskchain
+        $taskchains = array(); // taskchain
+        $chains = array(); // taskchain_chains
+        $tasks = array(); // taskchain_tasks
+        $taskattempts = array(); // taskchain_task_attempts
 
         // get ids of records this user wants to delete (tidy up $selected where necessary)
-        foreach ($selected as $chainid => $cnumbers) {
-            if (! $cnumbers) {
-                unset($selected[$chainid]);
+        foreach ($selected as $userid => $chainids) {
+            if (empty($userid) || empty($chainids)) {
+                unset($selected[$userid]);
                 continue;
             }
-            if (! $chainid) {
-                // you could add ids for all chains in this course here, but it is not necessary
-                unset($selected[$chainid]);
+            if (! is_array($chainids)) {
                 continue;
             }
-            $chainids[] = $chainid;
-            if (is_array($cnumbers)) {
-                foreach ($cnumbers as $cnumber => $cnumberdetails) {
-                    if (! $cnumberdetails) {
-                        unset($selected[$chainid][$cnumber]);
+            foreach ($chainids as $chainid => $cnumbers) {
+                if (empty($chainid) || empty($cnumbers)) {
+                    unset($selected[$userid][$chainid]);
+                    continue;
+                }
+                $chains[$chainid] = true;
+                if (! is_array($cnumbers)) {
+                    continue;
+                }
+                foreach ($cnumbers as $cnumber => $taskids) {
+                    if (empty($cnumber) || empty($taskids)) {
+                        unset($selected[$userid][$chainid][$cnumber]);
                         continue;
                     }
-                    if (is_array($cnumberdetails)) {
-                        foreach ($cnumberdetails as $taskid => $tnumbers) {
-                            if (! $tnumbers) {
-                                unset($selected[$chainid][$cnumber][$taskid]);
-                                continue;
-                            }
-                            if (! $taskid) {
-                                // you could add ids for all tasks in this chain here, but it is not necessary
-                                unset($selected[$chainid][$cnumber][$taskid]);
-                                continue;
-                            }
-                            if (is_array($tnumbers)) {
-                                $taskids[] = $taskid;
-                                foreach ($tnumbers as $tnumber => $tnumberdetails) {
-                                    if (! $tnumberdetails) {
-                                        unset($selected[$chainid][$cnumber][$taskid][$tnumber]);
-                                        continue;
-                                    }
-                                    if (is_array($tnumberdetails)) {
-                                        foreach ($tnumberdetails as $taskattemptid => $delete) {
-                                            if (! $delete) {
-                                                unset($selected[$chainid][$cnumber][$taskid][$tnumber][$taskattemptid]);
-                                                continue;
-                                            }
-                                            $taskattemptids[] = $taskattemptid;
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    if (! is_array($taskids)) {
+                        continue;
                     }
-                }
-            }
-        } // end foreach ($selected)
-
-        // get requested task attempts
-        if (empty($taskattemptids)) {
-            $taskattempts = array();
-        } else {
-            $fields = 'id,taskid';
-            $select = 'id IN ('.implode(',', array_unique($taskattemptids)).')';
-            if (! $taskattempts = $DB->get_records_select('taskchain_task_attempts', $select, null, 'id', $fields)) {
-                $taskattempts = array();
-            }
-            // extract task ids from requested task attempts
-            foreach ($taskattempts as $id=>$taskattempt) {
-                $taskids[] = $taskattempt->taskid;
-            }
-        }
-
-        // get requested tasks
-        if (empty($taskids)) {
-            $tasks = array();
-        } else {
-            $fields = 'id,chainid,timelimit,allowresume,attemptlimit,scoremethod,scoreignore,scorelimit,scoreweighting';
-            $select = 'id IN ('.implode(',', array_unique($taskids)).')';
-            if (! $tasks = $DB->get_records_select('taskchain_tasks', $select, null, 'id', $fields)) {
-                $tasks = array();
-            }
-            // extract chain ids from requested tasks
-            foreach ($tasks as $taskid => $task) {
-                $chainids[] = $task->chainid;
-            }
-        }
-
-        // get requested chains and taskchainids
-        if (empty($chainids)) {
-            $chains = array();
-        } else {
-            $fields = 'id,parenttype,parentid,timelimit,allowresume,attemptlimit,attemptgrademethod,grademethod,gradeignore,gradelimit,gradeweighting';
-            $select = 'id IN ('.implode(',', array_unique($chainids)).') AND parenttype='.self::PARENTTYPE_ACTIVITY;
-            if (! $chains = $DB->get_records_select('taskchain_chains', $select, null, 'id', $fields)) {
-                $chains = array();
-            }
-            // extract taskchain ids from requested chains
-            foreach ($chains as $chainid=>$chain) {
-                $taskchainids[] = $chain->parentid;
-            }
-        }
-
-        // select requested course modules for which this user is allowed to delete attempts at TaskChains
-        if (count($taskchainids)) {
-
-            if ($modinfo = get_fast_modinfo($this->course)) {
-                foreach ($modinfo->cms as $cmid=>$mod) {
-                    if ($mod->modname=='taskchain') {
-                        $taskchainid = $mod->instance;
-                        if (in_array($taskchainid, $taskchainids) && $this->can->$capability(false, self::context(CONTEXT_MODULE, $cmid))) {
-                            // user can delete attempts, so save the taskchain id
-                            // we don't need to get the full taskchain/coursemodule record
-                            $coursemodules[$cmid] = true;
-                            $taskchains[$taskchainid] = (object)array(
-                                // these fields are required by taskchain_grade_item_update() in "mod/taskchain/lib.php"
-                                'id'=>$taskchainid, 'cmidnumber'=>$cmid, 'course'=>$this->course->id, 'name'=>format_string(urldecode($mod->name))
-                            );
+                    foreach ($taskids as $taskid => $tnumbers) {
+                        if (empty($taskid) || empty($tnumbers)) {
+                            unset($selected[$userid][$chainid][$cnumber][$taskid]);
+                            continue;
+                        }
+                        $tasks[$taskid] = true;
+                        if (! is_array($tnumbers)) {
+                            continue;
+                        }
+                        foreach ($tnumbers as $tnumber => $taskattemptids) {
+                            if (empty($tnumber) || empty($taskattemptids)) {
+                                unset($selected[$userid][$chainid][$cnumber][$taskid][$tnumber]);
+                                continue;
+                            }
+                            if (! is_array($taskattemptids)) {
+                                continue;
+                            }
+                            foreach ($taskattemptids as $taskattemptid => $delete) {
+                                if (empty($taskattemptid) || empty($delete)) {
+                                    unset($selected[$userid][$chainid][$cnumber][$taskid][$tnumber][$taskattemptid]);
+                                    continue;
+                                }
+                                $taskattempts[$taskattemptid] = true;
+                            }
                         }
                     }
                 }
@@ -2490,17 +2443,83 @@ class mod_taskchain extends taskchain_base {
         }
 
         // we don't need these anymore
-        unset($coursemodules);
         unset($taskchainids);
         unset($chainids);
         unset($taskids);
         unset($taskattemptids);
 
-        // $coursemodules now holds only records for TaskChain activities for which this user has the required $capability
-        // $taskchains holds the corresponding taskchain records
+        // get requested task attempts
+        if (count($taskattempts)) {
+            $fields = 'id,taskid';
+            list($select, $params) = $DB->get_in_or_equal(array_keys($taskattempts));
+            if ($taskattempts = $DB->get_records_select('taskchain_task_attempts', "id $select", $params, 'id', $fields)) {
+                foreach ($taskattempts as $id => $taskattempt) {
+                    $tasks[$taskattempt->taskid] = true;
+                }
+            } else {
+                $taskattempts = array(); // shouldn't happen !!
+            }
+        }
+
+        // get requested tasks
+        if (count($tasks)) {
+            $fields = 'id,chainid,timelimit,allowresume,attemptlimit,scoremethod,scoreignore,scorelimit,scoreweighting';
+            list($select, $params) = $DB->get_in_or_equal(array_keys($tasks));
+            if ($tasks = $DB->get_records_select('taskchain_tasks', "id $select", $params, 'id', $fields)) {
+                foreach ($tasks as $taskid => $task) {
+                    $chains[$task->chainid] = true;
+                }
+            } else {
+                $tasks = array(); // shouldn't happen !!
+            }
+        }
+
+        // get requested chains and taskchainids
+        if (count($chains)) {
+            $fields = 'id,parenttype,parentid,timelimit,allowresume,attemptlimit,attemptgrademethod,grademethod,gradeignore,gradelimit,gradeweighting';
+            list($select, $params) = $DB->get_in_or_equal(array_keys($chains));
+            $select .= " AND parenttype = ?";
+            $params[] = self::PARENTTYPE_ACTIVITY;
+            if ($chains = $DB->get_records_select('taskchain_chains', "id $select", $params, 'id', $fields)) {
+                foreach ($chains as $chainid => $chain) {
+                    $taskchains[$chain->parentid] = true;
+                }
+            } else {
+                $chains = array(); // shouldn't happen !!
+            }
+        }
+
+        // select requested course modules for which this user is allowed to delete attempts at TaskChains
+        if (count($taskchains)) {
+            if ($modinfo = get_fast_modinfo($this->course)) {
+                foreach ($modinfo->cms as $cmid => $mod) {
+                    if ($mod->modname=='taskchain') {
+                        $taskchainid = $mod->instance;
+                        if (array_key_exists($taskchainid, $taskchains) && $this->can->$capability(false, self::context(CONTEXT_MODULE, $cmid))) {
+                            // user can delete attempts, so save the taskchain id
+                            // we don't need to get the full taskchain/coursemodule record
+                            $taskchains[$taskchainid] = (object)array(
+                                // these fields are required by taskchain_grade_item_update() in "mod/taskchain/lib.php"
+                                'id'         => $mod->instance,
+                                'cmidnumber' => $mod->idnumber,
+                                'course'     => $mod->course,
+                                'name'       => format_string(urldecode($mod->name))
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        // remove taskchains that this user is not allowed to touch
+        foreach ($taskchains as $taskchainid => $taskchain) {
+            if ($taskchain===true) {
+                unset($taskchains[$taskchainid]);
+            }
+        }
 
         // remove chains that this user is not allowed to touch
-        foreach ($chains as $chainid=>$chain) {
+        foreach ($chains as $chainid => $chain) {
             if (empty($taskchains[$chain->parentid])) {
                 unset($chains[$chainid]);
             } else {

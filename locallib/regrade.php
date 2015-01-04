@@ -77,52 +77,44 @@ class taskchain_regrade extends taskchain_base {
      */
     public function selected_tasks(&$selected, &$taskchains, &$chains, &$tasks, &$userfilter) {
         $get_cnumbers = true;
-        if (preg_match_all('/\d+/', $userfilter, $userids)) {
-            foreach ($selected as $chainid => $cnumbers) {
+        foreach ($selected as $userid => $chainids) {
+            foreach ($chainids as $chainid => $cnumbers) {
                 if (is_array($cnumbers)) {
-                    foreach ($cnumbers as $cnumber => $cnumberdetails) {
-                        if (is_array($cnumberdetails)) {
-                            foreach ($cnumberdetails as $taskid => $tnumbers) {
+                    foreach ($cnumbers as $cnumber => $taskids) {
+                        if (is_array($taskids)) {
+                            foreach ($taskids as $taskid => $tnumbers) {
                                 if ($cnumber) {
-                                    foreach ($userids[0] as $userid) {
-                                        $this->attempts('task', $tasks[$taskid], $cnumber, $userid);
-                                    }
+                                    $this->attempts('task', $tasks[$taskid], $cnumber, $userid);
                                 } else {
                                     if ($get_cnumbers) {
                                         $this->TC->get_cnumbers($chains, $tasks, $userfilter);
                                         $get_cnumbers = false;
                                     }
-                                    foreach (array_keys($tasks[$taskid]->userids) as $temp_userid) {
-                                        foreach(array_keys($tasks[$taskid]->userids[$temp_userid]->cnumbers) as $temp_cnumber) {
-                                            $this->attempts('task', $tasks[$taskid], $temp_cnumber, $temp_userid);
-                                        }
+                                    foreach(array_keys($tasks[$taskid]->userids[$userid]->cnumbers) as $cnumber) {
+                                        $this->attempts('task', $tasks[$taskid], $cnumber, $userid);
                                     }
+                                    $cnumber = 0;
                                 }
                             }
                         }
                         if ($cnumber) {
-                            foreach ($userids[0] as $userid) {
-                                $this->chainattempt($chains[$chainid], $cnumber, $userid, $tasks);
-                            }
+                            $this->chainattempt($chains[$chainid], $cnumber, $userid, $tasks);
                         } else {
                             if ($get_cnumbers) {
                                 $this->get_cnumbers($chains, $tasks, $userfilter);
                                 $get_cnumbers = false;
                             }
-                            foreach (array_keys($chains[$chainid]->userids) as $temp_userid) {
-                                foreach(array_keys($chains[$chainid]->userids[$temp_userid]->cnumbers) as $temp_cnumber) {
-                                    $this->chainattempt($chains[$chainid], $temp_cnumber, $temp_userid, $tasks);
-                                }
+                            foreach(array_keys($chains[$chainid]->userids[$userid]->cnumbers) as $cnumber) {
+                                $this->chainattempt($chains[$chainid], $cnumber, $userid, $tasks);
                             }
+                            $cnumber = 0;
                         } // end if $cnumber
                     } // end foreach $cnumber
                 } // end if is_array($cnumbers)
-                foreach($userids[0] as $userid) {
-                    $this->attempts('chain', $chains[$chainid], 0, $userid);
-                    taskchain_update_grades($taskchains[$chains[$chainid]->parentid], $userid);
-                }
-            } // end foreach ($selected)
-        }
+                $this->attempts('chain', $chains[$chainid], 0, $userid);
+                taskchain_update_grades($taskchains[$chains[$chainid]->parentid], $userid);
+            } // end foreach ($chainids)
+        } // end foreach ($selected)
     }
 
     /**
@@ -137,12 +129,13 @@ class taskchain_regrade extends taskchain_base {
      */
     public function get_cnumbers(&$chains, &$tasks, &$userfilter) {
         global $CFG, $DB;
-        $select = "taskid IN (SELECT id FROM {taskchain_tasks} WHERE chainid IN (".implode(',', array_keys($chains)).'))';
+        list($select, $params) = $DB->get_in_or_equal(array_keys($chains));
+        $select = 'taskid IN (SELECT id FROM {taskchain_tasks} WHERE chainid '.$select;
         if ($userfilter) {
             $select .= " AND $userfilter";
         }
-        $fields = 'id,userid,cnumber,taskid,tnumber';
         $sort = 'userid,cnumber,taskid,tnumber';
+        $fields = 'id,userid,cnumber,taskid,tnumber';
         if ($taskattempts = $DB->get_records_select('taskchain_task_attempts', $select, null, $sort, $fields)) {
             foreach ($taskattempts as $id=>$taskattempt) {
                 if (empty($tasks[$taskattempt->taskid])) {
@@ -205,15 +198,15 @@ class taskchain_regrade extends taskchain_base {
 
         // prepare sql
         if ($type=='chain') {
-            $attemptselect = "chainid=$record->id";
-            $gradeselect = "parenttype=$record->parenttype AND parentid=$record->parentid";
+            $attemptselect = "chainid = $record->id";
+            $gradeselect = "parenttype = $record->parenttype AND parentid = $record->parentid";
             $timefield = 'timemodified';
         } else {
             if (is_null($cnumber)) {
                 $cnumber = $this->TC->get_cnumber();
             }
-            $attemptselect = "taskid=$record->id AND cnumber=$cnumber";
-            $gradeselect = "taskid=$record->id AND cnumber=$cnumber";
+            $attemptselect = "taskid = $record->id AND cnumber = $cnumber";
+            $gradeselect = "taskid = $record->id AND cnumber = $cnumber";
             $timefield = 'resumestart';
         }
 
@@ -222,7 +215,7 @@ class taskchain_regrade extends taskchain_base {
         }
 
         if ($gradeignore) {
-            $attemptselect .= " AND NOT ($grade=0 AND status=".self::STATUS_ABANDONED.")";
+            $attemptselect .= " AND NOT ($grade = 0 AND status = ".self::STATUS_ABANDONED.")";
         }
 
         if ($record->$grademethod==self::GRADEMETHOD_AVERAGE || $record->$gradelimit<100) {
@@ -310,7 +303,7 @@ class taskchain_regrade extends taskchain_base {
                 $typegrade = "$type$grade"; // taskscore or chaingrade
 
                 // update/add grade record
-                if ($graderecord = $DB->get_record_select($gradetable, $gradeselect." AND userid=$userid")) {
+                if ($graderecord = $DB->get_record_select($gradetable, $gradeselect." AND userid = $userid")) {
                     $graderecord->$grade = round($aggregate->$grade);
                     $graderecord->status = $status;
                     $graderecord->duration = $aggregate->duration;

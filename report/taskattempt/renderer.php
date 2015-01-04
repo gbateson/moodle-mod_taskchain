@@ -101,6 +101,7 @@ class mod_taskchain_report_taskattempt_renderer extends mod_taskchain_report_ren
 
         // sql to select all grades for this TaskChain
         $select = 'tc_tsk_att.id AS id, '.
+                  'tc_tsk_att.userid AS userid, '.
                   'tc_tsk_att.cnumber AS taskattemptcnumber, '.
                   'tc_tsk_att.tnumber AS taskattempttnumber, '.
                   'tc_tsk_att.penalties AS taskattemptpenalties, '.

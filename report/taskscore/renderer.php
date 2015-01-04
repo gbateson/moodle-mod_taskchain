@@ -73,6 +73,7 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
      */
     public function select_sql($userid=0, $record=null) {
         $select = 'tc_tsk_att.id AS id, '.
+                  'tc_tsk_att.userid AS userid, '.
                   'tc_tsk_att.taskid AS taskattempttaskid, '.
                   'tc_tsk_att.cnumber AS taskattemptcnumber, '.
                   'tc_tsk_att.tnumber AS taskattempttnumber, '.
@@ -92,8 +93,13 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
         $from   = '';
         $where  = '';
         $params = array();
+
+        // restrict to a specific taskscore / user
         $this->select_sql_record($select, $from, $where, $params, $userid, $record);
+
+        // add sql to select user fields
         $this->select_sql_user($select, $from, 'tc_tsk_scr');
+
         return array($select, $from, $where, $params);
     }
 
@@ -112,8 +118,9 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
     public function select_sql_record(&$select, &$from, &$where, &$params, $userid=0, $record=null) {
         $from = '{taskchain_task_attempts} tc_tsk_att '.
                 ' JOIN {taskchain_tasks} tc_tsk ON tc_tsk.id = tc_tsk_att.taskid'.
-                ' JOIN {taskchain_task_scores} tc_tsk_scr ON (tc_tsk_scr.taskid = tc_tsk.id AND '.
-                                                             'tc_tsk_scr.userid = tc_tsk_att.userid)';
+                ' JOIN {taskchain_task_scores} tc_tsk_scr ON (tc_tsk_scr.userid = tc_tsk_att.userid AND '.
+                                                             'tc_tsk_scr.taskid = tc_tsk.id AND '.
+                                                             'tc_tsk_scr.cnumber = tc_tsk_att.cnumber)';
 
         // restrict sql to a specific taskscore /user
         if ($record) {

@@ -92,6 +92,7 @@ class mod_taskchain_report_chainattempt_renderer extends mod_taskchain_report_re
      */
     public function select_sql($userid=0, $record=null) {
         $select = 'tc_tsk_scr.id AS id, '.
+                  'tc_tsk_scr.userid AS userid, '.
                   'tc_tsk.name AS taskscoretaskname, '.
                   'tc_tsk_scr.score AS taskscorescore, '.
                   'tc_tsk_scr.status AS taskscorestatus, '.
