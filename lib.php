@@ -1261,7 +1261,13 @@ function taskchain_print_overview($courses, &$htmlarray) {
         $taskchains[$chaingrade->parentid]->chaingrade = &$chaingrades[$id];
     }
 
+    $now = time();
     foreach ($taskchains as $taskchain) {
+
+        if ($taskchain->chain->timeopen > $now || $taskchain->chain->timeclose < $now) {
+            continue; // skip activities that are not open, or are closed
+        }
+
         $str = ''
             .'<div class="taskchain overview">'
             .'<div class="name">'.$strtaskchain. ': '

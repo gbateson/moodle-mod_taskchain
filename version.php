@@ -36,8 +36,8 @@ $plugin->cron      = 0; // 60
 $plugin->component = 'mod_taskchain';
 $plugin->maturity  = MATURITY_STABLE; // ALPHA=50, BETA=100, RC=150, STABLE=200
 $plugin->requires  = 2010112400; // Moodle 2.0
-$plugin->release   = '2015.01.04 (60)';
-$plugin->version   = 2015010460;
+$plugin->release   = '2015.01.06 (61)';
+$plugin->version   = 2015010661;
 
 if (floatval($GLOBALS['CFG']->release) <= 2.6) {
     $module = clone($plugin);
