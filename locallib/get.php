@@ -1564,11 +1564,10 @@ class taskchain_get extends taskchain_base {
         }
         $sql = ''
             ."SELECT $fields FROM {taskchain_chain_grades} "
-            ."WHERE parenttype=0 AND parentid IN ("
+            ."WHERE parenttype = 0 AND parentid IN ("
                 ."SELECT id FROM {taskchain} "
-                ."WHERE course={$this->TC->course->id}"
+                ."WHERE course = {$this->TC->course->id}"
             .')'
-            .$this->all_groups_sql()
         ;
         if ($returnnames) {
             $sql = ''

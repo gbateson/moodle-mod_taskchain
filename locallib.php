@@ -2129,7 +2129,7 @@ class mod_taskchain extends taskchain_base {
 
         // TODO: get status from filters
         //       and maybe other fields too
-        $status=0;
+        $status = 0;
 
         // we are going to return some totals of how many records were deleted
         $this->deleted = (object)array(
@@ -2542,7 +2542,7 @@ class mod_taskchain extends taskchain_base {
         }
 
         // remove task attempts that this user is not allowed to delete
-        foreach ($taskattempts as $id=>$taskattempt) {
+        foreach ($taskattempts as $id => $taskattempt) {
             if (empty($tasks[$taskattempt->taskid])) {
                 unset($taskattempts[$id]);
             }
