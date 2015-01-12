@@ -50,8 +50,7 @@ class taskchain_get extends taskchain_base {
         global $DB;
 
         // get entry/exit cm id
-        $cm_field = $type.'cm';
-        $cmid = $this->field('chain', $cm_field, self::ACTIVITY_NONE);
+        $cmid = $this->field('chain', $type.'cm', self::ACTIVITY_NONE);
 
         if ($cmid==self::ACTIVITY_NONE) {
             return false;
@@ -62,15 +61,8 @@ class taskchain_get extends taskchain_base {
         }
 
         // check current cm exists
-        $this_cmid = $this->TC->coursemodule->id;
-        if (method_exists($modinfo, 'get_cm')) {
-            if (! $modinfo->get_cm($this_cmid)) {
-                return false; // current cm not found - shouldn't happen !!
-            }
-        } else {
-            if (! isset($modinfo->cms[$this_cmid])) {
-                return false; // current cm not found - shouldn't happen !!
-            }
+        if (! $cm = $modinfo->get_cm($this->TC->coursemodule->id)) {
+            return false; // current cm not found - shouldn't happen !!
         }
 
         // set default search values
@@ -90,7 +82,7 @@ class taskchain_get extends taskchain_base {
                 $modname = 'taskchain';
             }
             if ($cmid==self::ACTIVITY_SECTION_ANY || $cmid==self::ACTIVITY_SECTION_GRADED || $cmid==self::ACTIVITY_SECTION_TASKCHAIN) {
-                $sectionnum = $modinfo->get_cm($this_cmid)->sectionnum;
+                $sectionnum = $cm->sectionnum;
             }
         }
 
@@ -98,7 +90,7 @@ class taskchain_get extends taskchain_base {
         if ($graded) {
 
             // basic SQL to get grade items for graded activities
-            $select = 'gi.id, gi.itemtype, gi.itemmodule, gi.iteminstance, gi.gradetype, cm.id AS cmid';
+            $select = 'cm.id, gi.courseid, gi.itemtype, gi.itemmodule, gi.iteminstance, gi.gradetype';
             $from   = '{grade_items} gi'.
                       ' LEFT JOIN {modules} m ON gi.itemmodule = m.name'.
                       ' LEFT JOIN {course_modules} cm ON m.id = cm.module AND gi.iteminstance = cm.instance';
@@ -112,58 +104,67 @@ class taskchain_get extends taskchain_base {
                 $params[] = $sectionnum;
             }
 
-            $gradedcms = $DB->get_records_sql("SELECT $select FROM $from WHERE $where", $params);
+            $graded_cmids = $DB->get_records_sql("SELECT $select FROM $from WHERE $where", $params);
         }
 
         // get cm ids (reverse order if necessary)
-        $cmids = array_keys($modinfo->cms);
+        $coursemoduleids = array_keys($modinfo->cms);
         if ($type=='entry') {
-            $cmids = array_reverse($cmids);
+            $coursemoduleids = array_reverse($coursemoduleids);
         }
 
         // search for next, previous or specific course module
         $found = false;
-        foreach ($cmids as $cmid) {
-            $cm = $modinfo->get_cm($cmid); // $modinfo->cms[$cmid]
-            if ($id && $cm->id != $id) {
+        foreach ($coursemoduleids as $coursemoduleid) {
+            if ($id && $id != $coursemoduleid) {
                 continue; // wrong activity
             }
-            if ($sectionnum>=0) {
+            if (! $coursemodule = $modinfo->get_cm($coursemoduleid)) {
+                continue; // shouldn't happen !!
+            }
+            if ($sectionnum >= 0) {
                 if ($type=='entry') {
-                    if ($cm->sectionnum>$sectionnum) {
+                    if ($coursemodule->sectionnum > $sectionnum) {
                         continue; // later section
                     }
-                    if ($cm->sectionnum<$sectionnum) {
+                    if ($coursemodule->sectionnum < $sectionnum) {
                         return false; // previous section
                     }
                 } else { // exit (=next)
-                    if ($cm->sectionnum<$sectionnum) {
+                    if ($coursemodule->sectionnum < $sectionnum) {
                         continue; // earlier section
                     }
-                    if ($cm->sectionnum>$sectionnum) {
+                    if ($coursemodule->sectionnum > $sectionnum) {
                         return false; // later section
                     }
                 }
             }
-            if ($graded && empty($gradedcms[$cmid])) {
+            if ($graded && empty($graded_cmids[$coursemoduleid])) {
                 continue; // skip ungraded activity
             }
-            if ($modname && $cm->modname != $modname) {
+            if ($modname && $coursemodule->modname != $modname) {
                 continue; // wrong module
             }
-            if ($cm->modname=='label') {
+            if ($coursemodule->modname=='label') {
                 continue; // skip labels
             }
-            if ($found || $cm->id==$id) {
-                if (coursemodule_visible_for_user($cm)) {
-                    return $cm;
+            if ($found || $coursemoduleid==$id) {
+                if (class_exists('\core_availability\info_module')) {
+                    // Moodle >= 2.7
+                    $is_visible = \core_availability\info_module::is_user_visible($coursemodule);
+                } else {
+                    // Moodle <= 2.6
+                    $is_visible = coursemodule_visible_for_user($coursemodule);
                 }
-                if ($cm->id==$id) {
+                if ($is_visible) {
+                    return $coursemodule;
+                }
+                if ($coursemoduleid==$id) {
                     // required cm is not visible to this user
                     return false;
                 }
             }
-            if ($cm->id==$this_cmid) {
+            if ($coursemoduleid==$cm->id) {
                 $found = true;
             }
         }

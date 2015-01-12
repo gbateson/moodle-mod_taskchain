@@ -77,6 +77,14 @@ $TC->taskchain->gradeweighting = $TC->chain->gradeweighting;
 // update grades for this user
 taskchain_update_grades($TC->taskchain, $USER->id);
 
+// update completion, if necessary
+if ($TC->taskchain->completionmingrade || $TC->taskchain->completionpassed || $TC->taskchain->completioncompleted) {
+    $completion = new completion_info($TC->course);
+    if ($completion->is_enabled($TC->coursemodule)) {
+        $completion->update_state($TC->taskchain, COMPLETION_COMPLETE, $TC->userid);
+    }
+}
+
 // do the stuff the $TC->task->output->redirect() used to do
 
 if ($TC->task->delay3==mod_taskchain::DELAY3_DISABLE || $TC->taskattempt->status==mod_taskchain::STATUS_INPROGRESS || $TC->taskattempt->redirect==0) {
@@ -169,7 +177,7 @@ if ($TC->can->attempt() || $TC->can->preview()) {
     echo $output->exitpage();
 } else {
     if (isguestuser()) {
-        // off guests a choice of logging in or going back.
+        // offer guests a choice of logging in or going back.
         $message = html_writer::tag('p', get_string('guestsno', 'mod_taskchain'));
         $message .= html_writer::tag('p', get_string('liketologin'));
         echo $output->confirm($message, get_login_url(), get_referer(false));

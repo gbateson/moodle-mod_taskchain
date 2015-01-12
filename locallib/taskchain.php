@@ -54,6 +54,15 @@ class taskchain extends taskchain_base {
     /** db field: timemodified (integer, default=0) */
     private $timemodified        = 0;
 
+    /** db field: completionmingrade (decimal, default=0.0) */
+    private $completionmingrade  = 0.0;
+
+    /** db field: completionpassed (integer, default=0) */
+    private $completionpassed    = 0;
+
+    /** db field: completioncompleted (integer, default=0) */
+    private $completioncompleted = 0;
+
     public $gradelimit           = 0;
     public $gradeweighting       = 0;
 
@@ -145,6 +154,60 @@ class taskchain extends taskchain_base {
      */
     public function set_timemodified($value) {
         $this->timemodified = $value;
+    }
+
+    /**
+     * get the "completionmingrade" property
+     *
+     * @return integer the current completionmingrade $value
+     */
+    public function get_completionmingrade() {
+        return $this->completionmingrade;
+    }
+
+    /**
+     * set the "completionmingrade" property
+     *
+     * @param integer the new completionmingrade $value
+     */
+    public function set_completionmingrade($value) {
+        $this->completionmingrade = $value;
+    }
+
+    /**
+     * get the "completionpassed" property
+     *
+     * @return integer the current completionpassed $value
+     */
+    public function get_completionpassed() {
+        return $this->completionpassed;
+    }
+
+    /**
+     * set the "completionpassed" property
+     *
+     * @param integer the new completionpassed $value
+     */
+    public function set_completionpassed($value) {
+        $this->completionpassed = $value;
+    }
+
+    /**
+     * get the "completioncompleted" property
+     *
+     * @return integer the current completioncompleted $value
+     */
+    public function get_completioncompleted() {
+        return $this->completioncompleted;
+    }
+
+    /**
+     * set the "completioncompleted" property
+     *
+     * @param integer the new completioncompleted $value
+     */
+    public function set_completioncompleted($value) {
+        $this->completioncompleted = $value;
     }
 }
 

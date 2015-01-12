@@ -401,6 +401,10 @@ class mod_taskchain extends taskchain_base {
                 if ($set_page_context) {
                     $PAGE->set_context($this->coursemodule->context);
                 }
+                // prevent "Cannot find grade item" error in "lib/completionlib.php"
+                if ($this->chain->gradelimit==0 && $this->chain->gradeweighting==0) {
+                    $this->coursemodule->completiongradeitemnumber = null;
+                }
             } else {
                 if ($set_page_context) {
                     $PAGE->set_context($this->course->context);

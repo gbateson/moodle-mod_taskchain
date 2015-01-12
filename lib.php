@@ -57,7 +57,7 @@ function taskchain_supports($feature) {
         'FEATURE_ADVANCED_GRADING' => true, // default=false
         'FEATURE_BACKUP_MOODLE2'   => true, // default=false
         'FEATURE_COMMENT'          => true,
-        'FEATURE_COMPLETION_HAS_RULES' => false,
+        'FEATURE_COMPLETION_HAS_RULES' => true,
         'FEATURE_COMPLETION_TRACKS_VIEWS' => true,
         'FEATURE_CONTROLS_GRADE_VISIBILITY' => true,
         'FEATURE_GRADE_HAS_GRADE'  => true, // default=false
@@ -2590,21 +2590,77 @@ function taskchain_set_missing_fields($table, &$record, &$formdata, $fieldnames)
 }
 
 /**
- * Obtains the automatic completion state for this taskchain based on the condition
- * in taskchain settings.
+ * Obtains the automatic completion state for this taskchain
+ * based on the conditions in taskchain settings.
  *
- * @param object  $course record from "course" table
- * @param object  $cm     record from "course_modules" table
- * @param integer $userid id from "user" table
- * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
- * @return bool True if completed, false if not, $type if conditions not set
+ * @param  object  $course record from "course" table
+ * @param  object  $cm     record from "course_modules" table
+ * @param  integer $userid id from "user" table
+ * @param  bool    $type   of comparison (or/and; used as return value if there are no conditions)
+ * @return mixed   TRUE if completed, FALSE if not, or $type if no conditions are set
  */
 function taskchain_get_completion_state($course, $cm, $userid, $type) {
     global $CFG, $DB;
-    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
-    $params = array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY,
-                    'parentid'   => $cm->instance,
-                    'userid'     => $userid,
-                    'status'     => mod_taskchain::STATUS_COMPLETED);
-    return $DB->record_exists('taskchain_chain_grades', $params);
+
+    // set default return $state
+    $state = $type;
+
+    // get the taskchain record
+    if ($taskchain = $DB->get_record('taskchain', array('id' => $cm->instance))) {
+
+        // get grade, if necessary
+        $grade = false;
+        if ($taskchain->completionmingrade || $taskchain->completionpassed) {
+            require_once($CFG->dirroot.'/lib/gradelib.php');
+            $params = array('courseid'     => $course->id,
+                            'itemtype'     => 'mod',
+                            'itemmodule'   => 'taskchain',
+                            'iteminstance' => $cm->instance);
+            if ($grade_item = grade_item::fetch($params)) {
+                $grades = grade_grade::fetch_users_grades($grade_item, array($userid), false);
+                if (isset($grades[$userid])) {
+                    $grade = $grades[$userid];
+                }
+                unset($grades);
+            }
+            unset($grade_item);
+        }
+
+        // the TaskChain completion conditions
+        $conditions = array('completionmingrade',
+                            'completionpassed',
+                            'completioncompleted');
+
+        foreach ($conditions as $condition) {
+            if (empty($taskchain->$condition)) {
+                continue;
+            }
+            switch ($condition) {
+                case 'completionmingrade':
+                    $state = ($grade && $grade->finalgrade >= $taskchain->completionmingrade);
+                    break;
+                case 'completionpassed':
+                    $state = ($grade && $grade->is_passed());
+                    break;
+                case 'completionmingrade':
+                    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+                    $params = array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY,
+                                    'parentid'   => $cm->instance,
+                                    'userid'     => $userid,
+                                    'status'     => mod_taskchain::STATUS_COMPLETED);
+                    $state = $DB->record_exists('taskchain_chain_grades', $params);
+                    break;
+
+            }
+            // finish early if possible
+            if ($type==COMPLETION_AND && $state==false) {
+                return false;
+            }
+            if ($type==COMPLETION_OR && $state) {
+                return true;
+            }
+        }
+    }
+
+    return $state;
 }
