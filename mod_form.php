@@ -148,7 +148,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
         $mform->setType($name, PARAM_FLOAT);
         $mform->setDefault($name, 0.00);
         $mform->setType($name.'disabled', PARAM_INT);
-        $mform->setDefault($name.'disabled', 0);
+        $mform->setDefault($name.'disabled', empty($this->current->$name) ? 0 : 1);
         $mform->disabledIf($name, $name.'disabled', 'notchecked');
         $names[] = $name.'group';
         $disablednames[] = $name.'group';
