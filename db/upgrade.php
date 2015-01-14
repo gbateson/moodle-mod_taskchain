@@ -219,7 +219,6 @@ function xmldb_taskchain_upgrade($oldversion) {
 
         // get required script libraries
         require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
-        require_once($CFG->dirroot.'/mod/taskchain/locallib/base.php');
 
         // set up SQL query
         $select = 'tt.*, t.id AS taskchainid';
@@ -379,7 +378,7 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $newversion = 2014112850;
     if ($oldversion < $newversion) {
-        require_once($CFG->dirroot.'/mod/taskchain/lib.php');
+        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
         if (function_exists('get_log_manager')) {
 

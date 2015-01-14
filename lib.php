@@ -1169,6 +1169,10 @@ function taskchain_print_recent_mod_activity($activity, $courseid, $detail, $mod
  * This function defines what log actions will be selected from the Moodle logs for
  * Administration block -> Course administration -> Reports -> Course participation
  *
+ * Note: This is not used by the "standard" logging system in Moodle >= 2.6
+ *       Events with crud = 'r' and edulevel = LEVEL_PARTICIPATING
+ *       will be considered as view actions.
+
  * This function is called from: {@link course/report/participation/index.php}
  * @return array(string) of text strings used to log TaskChain VIEW actions
  */
@@ -1179,6 +1183,10 @@ function taskchain_get_view_actions() {
 /*
  * This function defines what log actions will be selected from the Moodle logs for
  * Administration block -> Course administration -> Reports -> Course participation
+ *
+ * Note: This is not used by the "standard" logging system in Moodle >= 2.6
+ *       Events with crud = ('c' || 'u' || 'd') and edulevel = LEVEL_PARTICIPATING
+ *       will be considered as post actions.
  *
  * This function is called from: {@link course/report/participation/index.php}
  * @return array(string) of text strings used to log TaskChain POST actions

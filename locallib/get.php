@@ -72,7 +72,7 @@ class taskchain_get extends taskchain_base {
         $sectionnum = -1;
 
         // restrict search values
-        if ($cmid>0) {
+        if ($cmid > 0) {
             $id = $cmid;
         } else {
             if ($cmid==self::ACTIVITY_COURSE_GRADED || $cmid==self::ACTIVITY_SECTION_GRADED) {
