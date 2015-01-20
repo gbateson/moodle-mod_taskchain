@@ -1818,10 +1818,16 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      */
     public function filter_text_bodycontent()  {
 
+        // prevent faulty conversion of HTML entities with leading zero in Moodle <= 2.5
+        // specifically, this affects non-breaking spaces (&#0160;) in a JCloze WordList
+        if (mod_taskchain::textlib('entities_to_utf8', '&#0160;')=='p') {
+            $this->bodycontent = preg_replace('/(?<=&#)0+([0-9]+)(?=;)/', '$1', $this->bodycontent);
+        }
+
         // convert entities to utf8
         $this->bodycontent = mod_taskchain::textlib('entities_to_utf8', $this->bodycontent);
 
-        // fix faulty conversion of non-breaking space (&nbsp;) in Moodle <= 2.0
+        // fix faulty conversion of non-breaking space (&nbsp;) in Moodle <= 2.1
         $twobyte = chr(194).chr(160);
         $fourbyte = chr(195).chr(130).$twobyte;
         if (mod_taskchain::textlib('entities_to_utf8', '&nbsp;')==$fourbyte) {
