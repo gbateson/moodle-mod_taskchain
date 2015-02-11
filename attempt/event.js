@@ -43,25 +43,37 @@ function HP_fix_function(fnc) {
  * HP_fix_event
  *
  * @param  string evt : the name of the event (without leading 'on')
- * @return string
+ * @param  object obj : the destination object for evt
+ * @return array evts : names of events which obj can handle
  */
-function HP_fix_event(evt) {
-	if (typeof(document.body.ontouchstart)==='undefined') {
-		switch (evt) {
-			case 'tap'        : return 'click';
-			case 'touchstart' : return 'mousedown';
-			case 'touchmove'  : return 'mousemove';
-			case 'touchend'   : return 'mouseup';
-		}
-	} else {
-		switch (evt) {
-			case 'click'     : return 'tap';
-			case 'mousedown' : return 'touchstart';
-			case 'mousemove' : return 'touchmove';
-			case 'mouseup'   : return 'touchend';
-		}
-	}
-	return evt;
+function HP_fix_event(evt, obj) {
+    var i = 0;
+    var evts = new Array();
+
+    if ('onmousedown' in obj) {
+        switch (evt) {
+            case 'tap'        : evts[i++] = 'click';     break;
+            case 'touchstart' : evts[i++] = 'mousedown'; break;
+            case 'touchmove'  : evts[i++] = 'mousemove'; break;
+            case 'touchend'   : evts[i++] = 'mouseup';   break;
+        }
+    }
+
+    if ('ontouchstart' in obj) {
+        switch (evt) {
+            case 'click'      : evts[i++] = 'tap';        break;
+            case 'mousedown'  : evts[i++] = 'touchstart'; break;
+            case 'mousemove'  : evts[i++] = 'touchmove';  break;
+            case 'mouseup'    : evts[i++] = 'touchend';   break;
+        }
+    }
+
+    var onevent = 'on' + evt;
+    if (onevent in obj) {
+        evts[i++] = evt;
+    }
+
+    return evts;
 }
 
 /**
@@ -75,36 +87,43 @@ function HP_fix_event(evt) {
  */
 function HP_add_listener(obj, evt, fnc, useCapture) {
 
-    // convert fnc to Function, if necessary
-	fnc = HP_fix_function(fnc);
-
-    // convert mouse <=> touch events
-	evt = HP_fix_event(evt);
-
-	// transfer object's old event handler (if any)
-	var onevent = 'on' + evt;
-	if (obj[onevent]) {
-		var old_fnc = obj[onevent];
-		obj[onevent] = null;
-		HP_add_listener(obj, evt, old_fnc, useCapture);
+	if (typeof(fnc)=='string') {
+		fnc = new Function('event', fnc);
 	}
 
-    // add event listener
-	if (obj.addEventListener) {
-		obj.addEventListener(evt, fnc, (useCapture ? true : false));
-	} else if (obj.attachEvent) {
-		obj.attachEvent(onevent, fnc);
-	} else { // old browser NS4, IE5 ...
-		if (! obj.evts) {
-			obj.evts = new Array();
-		}
-		if (obj.evts && ! obj.evts[onevent]) {
-			obj.evts[onevent] = new Array();
-		}
-		if (obj.evts && obj.evts[onevent] && ! obj.evts[onevent]) {
-			obj.evts[onevent][obj.evts[onevent].length] = fnc;
-			obj[onevent] = new Function('HP_handle_event(this, \"'+onevent+'\")');
-		}
+    // convert mouse <=> touch events
+	var evts = HP_fix_event(evt, obj);
+
+    // add event handler(s)
+	var i_max = evts.length;
+	for (var i=0; i<i_max; i++) {
+	    evt = evts[i];
+
+        // transfer object's old event handler (if any)
+        var onevent = 'on' + evt;
+        if (obj[onevent]) {
+            var old_fnc = obj[onevent];
+            obj[onevent] = null;
+            HP_add_listener(obj, evt, old_fnc, useCapture);
+        }
+
+        // add new event handler
+        if (obj.addEventListener) {
+            obj.addEventListener(evt, fnc, (useCapture ? true : false));
+        } else if (obj.attachEvent) {
+            obj.attachEvent(onevent, fnc);
+        } else { // old browser NS4, IE5 ...
+            if (! obj.evts) {
+                obj.evts = new Array();
+            }
+            if (obj.evts && ! obj.evts[onevent]) {
+                obj.evts[onevent] = new Array();
+            }
+            if (obj.evts && obj.evts[onevent] && ! obj.evts[onevent]) {
+                obj.evts[onevent][obj.evts[onevent].length] = fnc;
+                obj[onevent] = new Function('HP_handle_event(this, \"'+onevent+'\")');
+            }
+        }
 	}
 }
 
@@ -123,21 +142,26 @@ function HP_remove_listener(obj, evt, fnc, useCapture) {
 	fnc = HP_fix_function(fnc);
 
     // convert mouse <=> touch events
-	evt = HP_fix_event(evt);
+	var evts = HP_fix_event(evt, obj);
 
-    // remove event listener
-	var onevent = 'on' + evt;
-	if (obj.removeEventListener) {
-		obj.removeEventListener(evt, fnc, (useCapture ? true : false));
-	} else if (obj.attachEvent) {
-		obj.detachEvent(onevent, fnc);
-	} else if (obj.evts && obj.evts[onevent]) {
-		var i_max = obj.evts[onevent].length;
-		for (var i=(i_max - 1); i>=0; i--) {
-			if (obj.evts[onevent][i]==fnc) {
-				obj.evts[onevent].splice(i, 1);
-			}
-		}
+    // remove event handler(s)
+	var i_max = evts.length;
+	for (var i=0; i<i_max; i++) {
+	    evt = evts[i];
+
+        var onevent = 'on' + evt;
+        if (obj.removeEventListener) {
+            obj.removeEventListener(evt, fnc, (useCapture ? true : false));
+        } else if (obj.attachEvent) {
+            obj.detachEvent(onevent, fnc);
+        } else if (obj.evts && obj.evts[onevent]) {
+            var i_max = obj.evts[onevent].length;
+            for (var i=(i_max - 1); i>=0; i--) {
+                if (obj.evts[onevent][i]==fnc) {
+                    obj.evts[onevent].splice(i, 1);
+                }
+            }
+        }
 	}
 }
 
