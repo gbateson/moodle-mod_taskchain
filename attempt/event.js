@@ -87,9 +87,8 @@ function HP_fix_event(evt, obj) {
  */
 function HP_add_listener(obj, evt, fnc, useCapture) {
 
-	if (typeof(fnc)=='string') {
-		fnc = new Function('event', fnc);
-	}
+    // convert fnc to Function, if necessary
+	fnc = HP_fix_function(fnc);
 
     // convert mouse <=> touch events
 	var evts = HP_fix_event(evt, obj);
