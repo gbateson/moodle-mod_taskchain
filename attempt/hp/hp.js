@@ -424,19 +424,19 @@ function hpTaskAttempt() {
     this.getFormElementValue = function (obj) {
         var v = ''; // value
         var t = obj.type;
-		if (t=='text' || t=='textarea' || t=='password' || t=='hidden') {
-			v = obj.value;
+        if (t=='text' || t=='textarea' || t=='password' || t=='hidden') {
+            v = obj.value;
         } else if (t=='radio' || t=='checkbox') {
-			if (obj.checked) {
+            if (obj.checked) {
                 v = obj.value;
             }
         } else if (t=='select-one' || t=='select-multiple') {
-			var i_max = obj.options.length;
-			for (var i=0; i<i_max; i++) {
-				if (obj.options[i].selected) {
-					v += (v=='' ? '' : ',') + obj.options[i].value;
-				}
-			}
+            var i_max = obj.options.length;
+            for (var i=0; i<i_max; i++) {
+                if (obj.options[i].selected) {
+                    v += (v=='' ? '' : ',') + obj.options[i].value;
+                }
+            }
         } else if (t=='button' || t=='reset' || t=='submit') {
             // do nothing
         } else {

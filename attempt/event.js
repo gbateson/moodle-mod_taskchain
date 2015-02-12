@@ -32,11 +32,11 @@
  * @return function
  */
 function HP_fix_function(fnc) {
-	if (typeof(fnc)=='function') {
-		return fnc;
-	} else {
-		return new Function('event', fnc);
-	}
+    if (typeof(fnc)=='function') {
+        return fnc;
+    } else {
+        return new Function('event', fnc);
+    }
 }
 
 /**
@@ -88,15 +88,15 @@ function HP_fix_event(evt, obj) {
 function HP_add_listener(obj, evt, fnc, useCapture) {
 
     // convert fnc to Function, if necessary
-	fnc = HP_fix_function(fnc);
+    fnc = HP_fix_function(fnc);
 
     // convert mouse <=> touch events
-	var evts = HP_fix_event(evt, obj);
+    var evts = HP_fix_event(evt, obj);
 
     // add event handler(s)
-	var i_max = evts.length;
-	for (var i=0; i<i_max; i++) {
-	    evt = evts[i];
+    var i_max = evts.length;
+    for (var i=0; i<i_max; i++) {
+        evt = evts[i];
 
         // transfer object's old event handler (if any)
         var onevent = 'on' + evt;
@@ -123,7 +123,7 @@ function HP_add_listener(obj, evt, fnc, useCapture) {
                 obj[onevent] = new Function('HP_handle_event(this, \"'+onevent+'\")');
             }
         }
-	}
+    }
 }
 
 /**
@@ -138,15 +138,15 @@ function HP_add_listener(obj, evt, fnc, useCapture) {
 function HP_remove_listener(obj, evt, fnc, useCapture) {
 
     // convert fnc to Function, if necessary
-	fnc = HP_fix_function(fnc);
+    fnc = HP_fix_function(fnc);
 
     // convert mouse <=> touch events
-	var evts = HP_fix_event(evt, obj);
+    var evts = HP_fix_event(evt, obj);
 
     // remove event handler(s)
-	var i_max = evts.length;
-	for (var i=0; i<i_max; i++) {
-	    evt = evts[i];
+    var i_max = evts.length;
+    for (var i=0; i<i_max; i++) {
+        evt = evts[i];
 
         var onevent = 'on' + evt;
         if (obj.removeEventListener) {
@@ -161,7 +161,7 @@ function HP_remove_listener(obj, evt, fnc, useCapture) {
                 }
             }
         }
-	}
+    }
 }
 
 /**
@@ -172,12 +172,12 @@ function HP_remove_listener(obj, evt, fnc, useCapture) {
  * @return void, but may execute event handler
  */
 function HP_handle_event(obj, onevent) {
-	if (obj.evts[onevent]) {
-		var i_max = obj.evts[onevent].length
-		for (var i=0; i<i_max; i++) {
-			obj.evts[onevent][i]();
-		}
-	}
+    if (obj.evts[onevent]) {
+        var i_max = obj.evts[onevent].length
+        for (var i=0; i<i_max; i++) {
+            obj.evts[onevent][i]();
+        }
+    }
 }
 
 /**
@@ -187,15 +187,15 @@ function HP_handle_event(obj, onevent) {
  * @return may return false (older browsers)
  */
 function HP_disable_event(evt) {
-	if (evt==null) {
-		evt = window.event;
-	}
-	if (evt.preventDefault) {
-		evt.preventDefault();
-	} else { // IE <= 8
-		evt.returnValue = false;
-	}
-	return false;
+    if (evt==null) {
+        evt = window.event;
+    }
+    if (evt.preventDefault) {
+        evt.preventDefault();
+    } else { // IE <= 8
+        evt.returnValue = false;
+    }
+    return false;
 }
 
 ///////////////////////////////////////////
