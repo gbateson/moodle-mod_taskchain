@@ -2261,19 +2261,66 @@ function taskchain_reset_gradebook($courseid, $type='') {
  * @todo Finish documenting this function
  */
 function taskchain_reset_userdata($data) {
-    global $DB;
+    global $CFG, $DB;
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
     if (empty($data->reset_taskchain_deleteallattempts)) {
         return array();
     }
 
-    if ($taskchains = $DB->get_records('taskchain', array('course' => $data->courseid), 'id', 'id')) {
-        foreach ($taskchains as $taskchain) {
-            if ($attempts = $DB->get_records('taskchain_attempts', array('taskchainid' => $taskchain->id), 'id', 'id')) {
-                $ids = array_keys($attempts);
-                $DB->delete_records_list('taskchain_details',   'attemptid', $ids);
-                $DB->delete_records_list('taskchain_responses', 'attemptid', $ids);
-                $DB->delete_records_list('taskchain_attempts',  'id',        $ids);
+    if (! $taskchains = $DB->get_records('taskchain', array('course' => $data->courseid), 'id', 'id')) {
+        return array();
+    }
+
+    list($select, $params) = $DB->get_in_or_equal(array_keys($taskchains));
+    $select = "parentid $select AND parenttype = ?";
+    $params[] = mod_taskchain::PARENTTYPE_ACTIVITY;
+    if (! $chains = $DB->get_records_select('taskchain_chains', $select, $params, 'id', 'id, parenttype, parentid')) {
+        return array();
+    }
+
+    // since there may be a large number of records in the taskchain_task_attempts table,
+    // we proceed unit by unit to try and limit effect of timeouts and memory overloads
+
+    foreach ($chains as $chain) {
+
+        // $state determines what data is deleted
+        //   0 : delete taskchain_details
+        //   1 : delete taskchain_responses
+        //   2 : delete taskchain_task_attempts
+        //   3 : delete taskchain_task_scores
+        //   4 : delete taskchain_chain_attempts
+        //   5 : delete taskchain_chain_grades
+        for ($state=2; $state<=5; $state++) {
+
+            if ($state<=3) {
+                // get associated $task records
+                if ($taskids = $DB->get_records('taskchain_tasks', array('chainid' => $chain->id), '', 'id')) {
+
+                    // remove task grade/attempts
+                    list($select, $params) = $DB->get_in_or_equal(array_keys($taskids));
+                    if ($state<=2) {
+                        if ($attempts = $DB->get_records_select('taskchain_task_attempts', "taskid $select", $params, 'id', 'id')) {
+                            $ids = array_keys($attempts);
+                            if ($state==0) {
+                                $DB->delete_records_list('taskchain_details',   'attemptid', $ids);
+                                $DB->delete_records_list('taskchain_responses', 'attemptid', $ids);
+                                $DB->delete_records_list('taskchain_task_attempts',    'id', $ids);
+                            }
+                        }
+                    }
+                    if ($state==3) {
+                        $DB->delete_records_select('taskchain_task_scores', "taskid $select", $params);
+                    }
+                }
+            }
+            if ($state==4) {
+                $params = array('chainid'  => $chain->id);
+                $DB->delete_records('taskchain_chain_attempts', $params);
+            }
+            if ($state==5) {
+                $params = array('parentid' => $chain->parentid, 'parenttype' => $chain->parenttype);
+                $DB->delete_records('taskchain_chain_grades', $params);
             }
         }
     }
