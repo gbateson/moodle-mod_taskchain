@@ -126,6 +126,9 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /** fields that are only used when adding a new record */
     protected $addonlyfields = array('namesource', 'tasknamessource', 'addtype', 'entrytextsource', 'exittextsource');
 
+    /** name of chain **/
+    protected $taskchainname = '';
+
     /**
      * constructor method
      *
@@ -162,9 +165,8 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                     $this->record->$field = $value;
                 }
             }
-        } else if (isset($record->parentid)) {
-            // get "name" field for a chain record
-            $this->record->name = $DB->get_field('taskchain', 'name', array('id' => $record->parentid));
+        } else if ($parentid = $this->get_fieldvalue('parentid')) {
+            $this->taskchainname = $DB->get_field('taskchain', 'name', array('id' => $parentid));
         }
     }
 
@@ -204,7 +206,11 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function get_fieldvalue_name() {
-        return $this->TC->taskchain->get_name();
+        if ($this->taskchainname) {
+            return $this->taskchainname;
+        } else {
+            return $this->TC->taskchain->get_name();
+        }
     }
 
     /**

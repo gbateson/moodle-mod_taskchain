@@ -41,6 +41,7 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/records.php');
  * @subpackage taskchain
  */
 class taskchain_form_helper_chains extends taskchain_form_helper_records {
+
     protected $recordtype = 'course';
     protected $recordstype = 'chain';
     protected $actions = array('applydefaults' => true);

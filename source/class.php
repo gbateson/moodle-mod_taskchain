@@ -444,14 +444,7 @@ class taskchain_source {
                 default: return false; // shouldn't happen !!
             }
             $params = $listing['list'][0][$param];
-            switch ($type) {
-                case 'user':
-                    $params = json_decode(base64_decode($params), true);
-                    break;
-                case 'coursefiles':
-                    $params = file_storage::unpack_reference($params, true);
-                    break;
-            }
+            $params = json_decode(base64_decode($params), true);
         }
 
         // get file storage
@@ -468,14 +461,7 @@ class taskchain_source {
 
         // encode $params, if necessary
         if ($encodepath) {
-            switch ($type) {
-                case 'user':
-                    $path = base64_encode(json_encode($params));
-                    break;
-                case 'coursefiles':
-                    $path = file_storage::pack_reference($params);
-                    break;
-            }
+            $path = base64_encode(json_encode($params));
         }
 
         $listing = $repository->get_listing($path);
@@ -487,14 +473,7 @@ class taskchain_source {
 
             // decode $file['source'], if necessary
             if ($encodepath) {
-                switch ($type) {
-                    case 'user':
-                        $file['source'] = json_decode(base64_decode($file['source']), true);
-                        break;
-                    case 'coursefiles':
-                        $file['source'] = file_storage::unpack_reference($file['source']);
-                        break;
-                }
+                $file['source'] = json_decode(base64_decode($file['source']), true);
                 $file['source'] = trim($file['source']['filepath'], '/').'/'.$file['source']['filename'];
             }
 

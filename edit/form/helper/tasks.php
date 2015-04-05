@@ -95,7 +95,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
      */
     protected function add_action_reordertasks_details() {
         $nameprefix = 'reordertasks_';
-        $this->add_field_sortfield('sortfield',               $nameprefix);
+        $this->add_field_sortfield('sortfield', $nameprefix);
         $this->add_field_sortdirection('sortdirection', $nameprefix);
         $this->add_field_sortincrement('sortincrement', $nameprefix);
     }
