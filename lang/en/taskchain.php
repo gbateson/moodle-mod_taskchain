@@ -56,7 +56,6 @@ $string['taskchain:view'] = 'View the entry page of a TaskChain activity';
 //
 $string['configbodystyles'] = 'By default, Moodle theme styles will override TaskChain activity styles. However, for any styles selected here, the TaskChain activity styles, including any styles defined in task source files such as Hot Potatoes files, will be given priority over the Moodle theme styles.';
 $string['configenablecache'] = 'Maintaining a cache of TaskChain tasks can dramatically speed up the delivery of tasks to the students.';
-$string['configenablecron'] = 'Specify the hours in your time zone at which the TaskChain cron script may run';
 $string['configenablemymoodle'] = 'This settings controls whether TaskChains are listed on the MyMoodle page or not';
 $string['configenableobfuscate'] = 'Obfuscating the javascript code to insert media players makes it more difficult to determine the media file name and guess what the file contains.';
 $string['configenableswf'] = 'Allow embedding of SWF files in TaskChain activities. If enabled, this setting overrides filter_mediaplugin_enable_swf.';
@@ -448,7 +447,6 @@ $string['editcolumnlistschain'] = 'Edit columns for TaskChain Chains';
 $string['editcolumnliststask'] = 'Edit columns for TaskChain Tasks';
 $string['edittasks'] = 'Edit tasks';
 $string['enablecache'] = 'Enable TaskChain cache';
-$string['enablecron'] = 'Enable TaskChain cron';
 $string['enablemymoodle'] = 'Show TaskChains on MyMoodle';
 $string['enableobfuscate'] = 'Enable obfuscation of media player code';
 $string['enableswf'] = 'Allow embedding of SWF files in TaskChain activities';
