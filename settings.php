@@ -116,5 +116,5 @@ $setting->set_updatedcallback('taskchain_refresh_events');
 $settings->add($setting);
 
 // dispose of temporary variables used above
-unset($str, $url, $link, $timezone, $options, $i);
+unset($str, $url, $link, $timezone, $datetime, $options, $i);
 
