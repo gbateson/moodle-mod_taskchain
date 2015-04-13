@@ -47,20 +47,19 @@ $settings->add(
     new admin_setting_configcheckbox('taskchain_enablecache', get_string('enablecache', 'mod_taskchain'), get_string('configenablecache', 'mod_taskchain').' '.$link, 1)
 );
 
-/** Prevent direct access to this script */
-defined('MOODLE_INTERNAL') || die();
-
 // restrict cron job to certain hours of the day (default=never)
 if (class_exists('core_date') && method_exists('core_date', 'get_user_timezone')) {
+    // Moodle >= 2.9
     $timezone = core_date::get_user_timezone(99);
     $datetime = new DateTime('now', new DateTimeZone($timezone));
     $timezone = ($datetime->getOffset() - dst_offset_on(time(), $timezone)) / (3600.0);
 } else {
+    // Moodle <= 2.8
     $timezone = get_user_timezone_offset();
 }
 if (abs($timezone) > 13) {
     $timezone = 0;
-} else if ($timezone>0) {
+} else if ($timezone > 0) {
     $timezone = $timezone - 24;
 }
 $options = array();
