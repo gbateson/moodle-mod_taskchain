@@ -258,7 +258,7 @@ class taskchain_require extends taskchain_base {
         }
 
         if ($cnumber==0) {
-            if ($this->TC->tab=='info' && $this->TC->can->preview()) {
+            if (($this->TC->tab=='info' || $this->TC->tab=='preview' || $this->TC->tab=='attempt') && $this->TC->can->preview()) {
                 // teacher can always view the entry page
                 return false;
             }
@@ -688,7 +688,7 @@ class taskchain_require extends taskchain_base {
             if (! $this->TC->inpopup) {
 
                 $target = "taskchain{$this->TC->chain->parentid}";
-                $params = $this->TC->merge_params(array('inpopup'=>'true'), null, 'coursemoduleid');
+                $params = $this->TC->merge_params(array('inpopup'=>1), null, 'coursemoduleid');
                 $popupurl = new moodle_url('/mod/taskchain/view.php', $params);
                 $openpopupurl = substr($popupurl->out(true), strlen($CFG->wwwroot));
 
