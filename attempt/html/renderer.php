@@ -323,9 +323,12 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         // prepare form parameters and attributes
         $params = array(
             'id' => $this->TC->create_attempt('task'),
-            $this->scorefield => '0', 'detail'  => '0', 'status'   => '0',
+            $this->scorefield => '0', 'detail'  => '0', 'status'   => mod_taskchain::STATUS_COMPLETED,
             'starttime'       => '0', 'endtime' => '0', 'redirect' => '1',
         );
+        if ($this->TC->inpopup) {
+            $params['inpopup'] = 1;
+        }
 
         // add scorefield to params, if necessary (usually it is necessary)
         if (! preg_match('/<(input|select)[^>]*name="'.$this->scorefield.'"[^>]*>/is', $this->bodycontent)) {

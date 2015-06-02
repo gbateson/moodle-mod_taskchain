@@ -2083,9 +2083,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
         $params = array(
             'id' => $this->TC->create_attempt('task'),
-            $this->scorefield => '0', 'detail' => '0', 'status' => '0',
-            'starttime' => '0', 'endtime' => '0', 'redirect' => '0',
+            $this->scorefield => '0', 'detail'  => '0', 'status'   => '0',
+            'starttime'       => '0', 'endtime' => '0', 'redirect' => '0',
         );
+        if ($this->TC->inpopup) {
+            $params['inpopup'] = 1;
+        }
         $attributes = array(
             'id' => $this->formid, 'autocomplete' => 'off'
         );

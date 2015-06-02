@@ -1024,7 +1024,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
                 $row->cells[] = $attempt->$number;
                 if ($this->TC->$type->$gradelimit && $this->TC->$type->$gradeweighting) {
-                    if ($canreview) {
+                    if ($canreview && isset($this->TC->$mode)) {
                         $params = array('tab' => 'report', 'mode' => $mode, $mode.'id' => $this->TC->$mode->id);
                         $href = $this->format_url('report.php', '', $params);
                         $row->cells[] = '<a href="'.$href.'">'.$attempt->$grade.'%</a>';
