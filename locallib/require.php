@@ -347,27 +347,27 @@ class taskchain_require extends taskchain_base {
      */
     function delay($type, $delay) {
         $error = false;
-        $require_delay = false;
 
         $record = $this->TC->$type;
-        if ($record->$delay) {
-            if ($this->TC->get_lastattempt($type)) {
-                // attempts and lastattempt have been retrieved from the database
-                $attempts = "{$type}attempts";
-                switch ($delay) {
-                    case 'delay1': $require_delay = (count($this->TC->$attempts)==1); break;
-                    case 'delay2': $require_delay = (count($this->TC->$attempts)>=2); break;
-                }
-            }
-        }
+        if ($record->$delay && $this->TC->get_lastattempt($type)) {
+            // attempts and lastattempt have been retrieved from the database
 
-        if ($require_delay) {
-            $lastattempttime = "last{$type}attempttime";
-            $nextattempttime = $this->TC->$lastattempttime + ($record->$delay);
-            if ($this->TC->time < $nextattempttime) {
-                // $delay has not expired yet
-                $time = html_writer::tag('strong', userdate($nextattempttime));
-                $error = get_string('temporaryblocked', 'mod_taskchain').' '.$time;
+            $attempts = "{$type}attempts";
+            switch ($delay) {
+                case 'delay1': $require_delay = (count($this->TC->$attempts)==1); break;
+                case 'delay2': $require_delay = (count($this->TC->$attempts)>=2); break;
+                default:       $require_delay = false; // shouldn't happen !!
+            }
+
+            if ($require_delay) {
+                $lastattempttime = "get_last{$type}attempttime";
+                $lastattempttime = $this->TC->$lastattempttime();
+                $nextattempttime = $lastattempttime + ($record->$delay);
+                if ($this->TC->time < $nextattempttime) {
+                    // $delay has not expired yet
+                    $time = html_writer::tag('strong', userdate($nextattempttime));
+                    $error = get_string('temporaryblocked', 'quiz').' '.$time;
+                }
             }
         }
 

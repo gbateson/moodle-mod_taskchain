@@ -128,7 +128,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
         $replace = "\n"
             ."	var clues = new Array();\n"
             ."	var li = ListItems[CurrentListItem];\n"
-            ."	if (li.AnsweredCorrectly==false) {\n"
+            ."	if (li && li.AnsweredCorrectly==false) {\n"
             ."\n"
             ."		var gapid = new RegExp('^Gap([0-9]+)\$');\n"
             ."		var ListItemScore = 0;\n"
