@@ -678,9 +678,10 @@ function taskchain_get_coursemodule_info($cm) {
     //$info->iconurl =       '';
 
     if (isset($cm->showdescription) && $cm->showdescription) {
-        // $context = context_module::instance($cm->id);
         $context = mod_taskchain::context(CONTEXT_MODULE, $cm->id); // Moodle 2.0 - 2.1
-        $options = array('noclean'=>true, 'para'=>false, 'filter'=>true, 'context'=>$context, 'overflowdiv'=>true);
+        // Note: "filter" must be set to false, so that filters are run only at display time.
+        // Setting "filter" to true, will cause an infinite loop when recreating the course cache.
+        $options = array('noclean' => true, 'para' => false, 'filter' => false, 'context' => $context, 'overflowdiv' => true);
         $entrytext = file_rewrite_pluginfile_urls($chain->entrytext, 'pluginfile.php', $context->id, 'mod_taskchain', 'entry', null);
         $info->content = trim(format_text($entrytext, $chain->entryformat, $options, null));
     }
