@@ -2638,7 +2638,7 @@ function taskchain_get_completion_state($course, $cm, $userid, $type) {
 
         // get grade, if necessary
         $grade = false;
-        if ($taskchain->completionmingrade || $taskchain->completionpassed) {
+        if ($taskchain->completionmingrade || $taskchain->completionpass) {
             require_once($CFG->dirroot.'/lib/gradelib.php');
             $params = array('courseid'     => $course->id,
                             'itemtype'     => 'mod',
@@ -2656,7 +2656,7 @@ function taskchain_get_completion_state($course, $cm, $userid, $type) {
 
         // the TaskChain completion conditions
         $conditions = array('completionmingrade',
-                            'completionpassed',
+                            'completionpass',
                             'completioncompleted');
 
         foreach ($conditions as $condition) {
@@ -2667,15 +2667,15 @@ function taskchain_get_completion_state($course, $cm, $userid, $type) {
                 case 'completionmingrade':
                     $state = ($grade && $grade->finalgrade >= $taskchain->completionmingrade);
                     break;
-                case 'completionpassed':
+                case 'completionpass':
                     $state = ($grade && $grade->is_passed());
                     break;
-                case 'completionmingrade':
+                case 'completioncompleted':
                     require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
                     $params = array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY,
                                     'parentid'   => $cm->instance,
                                     'userid'     => $userid,
-                                    'status'     => mod_taskchain::STATUS_COMPLETED);
+                                    'status'     => $taskchain->$condition);
                     $state = $DB->record_exists('taskchain_chain_grades', $params);
                     break;
 

@@ -11,9 +11,9 @@
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" NEXT="timecreated" PREVIOUS="course"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="timemodified" PREVIOUS="name"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="completionmingrade" PREVIOUS="timecreated"/>
-        <FIELD NAME="completionmingrade" TYPE="number" LENGTH="6" NOTNULL="true" DEFAULT="0.00" SEQUENCE="false" DECIMALS="2" NEXT="completionpassed" PREVIOUS="timemodified"/>
-        <FIELD NAME="completionpassed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="completioncompleted" PREVIOUS="completionmingrade"/>
-        <FIELD NAME="completioncompleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="completionpassed"/>
+        <FIELD NAME="completionmingrade" TYPE="number" LENGTH="6" NOTNULL="true" DEFAULT="0.00" SEQUENCE="false" DECIMALS="2" NEXT="completionpass" PREVIOUS="timemodified"/>
+        <FIELD NAME="completionpass" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="completioncompleted" PREVIOUS="completionmingrade"/>
+        <FIELD NAME="completioncompleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="completionpass"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for taskchain"/>

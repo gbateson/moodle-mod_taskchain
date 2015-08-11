@@ -57,8 +57,8 @@ class taskchain extends taskchain_base {
     /** db field: completionmingrade (decimal, default=0.0) */
     private $completionmingrade  = 0.0;
 
-    /** db field: completionpassed (integer, default=0) */
-    private $completionpassed    = 0;
+    /** db field: completionpass (integer, default=0) */
+    private $completionpass    = 0;
 
     /** db field: completioncompleted (integer, default=0) */
     private $completioncompleted = 0;
@@ -175,21 +175,21 @@ class taskchain extends taskchain_base {
     }
 
     /**
-     * get the "completionpassed" property
+     * get the "completionpass" property
      *
-     * @return integer the current completionpassed $value
+     * @return integer the current completionpass $value
      */
-    public function get_completionpassed() {
-        return $this->completionpassed;
+    public function get_completionpass() {
+        return $this->completionpass;
     }
 
     /**
-     * set the "completionpassed" property
+     * set the "completionpass" property
      *
-     * @param integer the new completionpassed $value
+     * @param integer the new completionpass $value
      */
-    public function set_completionpassed($value) {
-        $this->completionpassed = $value;
+    public function set_completionpass($value) {
+        $this->completionpass = $value;
     }
 
     /**

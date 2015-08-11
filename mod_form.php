@@ -154,7 +154,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
         $disablednames[] = $name.'group';
 
         // add "grade passed" completion condition
-        $name = 'completionpassed';
+        $name = 'completionpass';
         $label = get_string($name, 'taskchain');
         $mform->addElement('checkbox', $name, '', $label);
         $mform->setType($name, PARAM_INT);
@@ -189,7 +189,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
      * @return bool True if one or more rules is enabled, false if none are.
      */
     public function completion_rule_enabled($data) {
-        if (empty($data['completiongradepassed']) && empty($data['completionstatuscompleted']) && empty($data['completionmingrade'])) {
+        if (empty($data['completiongradepassed']) && empty($data['completioncompletedcompleted']) && empty($data['completionmingrade'])) {
             return false;
         } else {
             return true;

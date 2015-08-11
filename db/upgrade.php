@@ -463,8 +463,8 @@ function xmldb_taskchain_upgrade($oldversion) {
         $table = new xmldb_table('taskchain');
         $fields = array(
             new xmldb_field('completionmingrade',  XMLDB_TYPE_FLOAT, '6,2', null, XMLDB_NOTNULL, null, 0.00, 'timemodified'),
-            new xmldb_field('completionpassed',    XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0,    'completionmingrade'),
-            new xmldb_field('completioncompleted', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0,    'completionpassed')
+            new xmldb_field('completionpass',      XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0,    'completionmingrade'),
+            new xmldb_field('completioncompleted', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0,    'completionpass')
         );
         foreach ($fields as $field) {
             xmldb_taskchain_fix_previous_field($dbman, $table, $field);
@@ -480,6 +480,14 @@ function xmldb_taskchain_upgrade($oldversion) {
     $newversion = 2015060278;
     if ($oldversion < $newversion) {
         $empty_cache = true;
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
+    $newversion = 2015081181;
+    if ($oldversion < $newversion) {
+        $table = new xmldb_table('taskchain');
+        $fields = array('completionpass' => new xmldb_field('completionpassed', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, 'completionmingrade'));
+        xmldb_taskchain_rename_fields($dbman, $table, $fields);
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
@@ -519,5 +527,37 @@ function xmldb_taskchain_fix_previous_field($dbman, $table, &$field) {
     } else {
         // $previous field does not exist, so remove it
         $field->setPrevious(null);
+    }
+}
+
+/**
+ * xmldb_taskchain_rename_fields
+ *
+ * @param xxx $dbman
+ * @param xmldb_table $table
+ * @param array $fields of oldname => xmldb_field
+ * @return void, but may update some items in the database
+ */
+function xmldb_taskchain_rename_fields($dbman, $table, $fields) {
+    foreach ($fields as $newname => $field) {
+        $oldname = $field->getName();
+        $oldexists = $dbman->field_exists($table, $field);
+        $newexists = $dbman->field_exists($table, $newname);
+        if ($oldexists) {
+            if ($newexists) {
+                $dbman->drop_field($table, $field);
+                $oldexists = false;
+            } else {
+                $dbman->rename_field($table, $field, $newname);
+                $newexists = true;
+            }
+        }
+        $field->setName($newname);
+        xmldb_taskchain_fix_previous_field($dbman, $table, $field);
+        if ($newexists) {
+            $dbman->change_field_type($table, $field);
+        } else {
+            $dbman->add_field($table, $field);
+        }
     }
 }
