@@ -48,7 +48,7 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
     public $templatestrings = 'PreloadImageList';
 
     // Glossary autolinking settings
-    public $headcontent_strings = 'Feedback|Correct|Incorrect|GiveHint|YourScoreIs|Guesses|(?:I\[\d+\]\[1\]\[\d+\]\[2\])';
+    public $headcontent_strings = 'Feedback|Correct|Incorrect|GiveHint|YourScoreIs|Guesses|(?:I\[\d+\]\[[12]\])';
     public $headcontent_arrays = '';
 
     /**
@@ -198,11 +198,6 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
     public function fix_js_Show_Solution(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        if ($this->TC->task->delay3==mod_taskchain::TIME_AFTEROK) {
-            $flag = 1; // set form values only
-        } else {
-            $flag = 0; // set form values and send form
-        }
         $substr = str_replace('Finish()', "HP_send_results(HP.EVENT_ABANDONED)", $substr);
 
         $str = substr_replace($str, $substr, $start, $length);

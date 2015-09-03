@@ -904,7 +904,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                 if (isset($data->{$editorfield}['text'])) {
                     // get the text that was sent from the browser
                     $options = mod_taskchain::filearea_options();
-                    $text = file_save_draft_area_files($itemid, $this->context->id, 'mod_hotpot', $type, 0, $options, $data->{$editorfield}['text']);
+                    $text = file_save_draft_area_files($itemid, $this->context->id, 'mod_taskchain', $type, 0, $options, $data->{$editorfield}['text']);
 
                     // remove leading and trailing white space,
                     //  - empty html paragraphs (from IE)

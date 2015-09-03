@@ -44,8 +44,32 @@ class taskchain_source_hp extends taskchain_source {
     public $xml; // an array containing the xml tree for hp xml files
     public $xml_root; // the array key of the root of the xml tree
 
-    public $hbs_software; // taskchain or textoys
-    public $hbs_tasktype; //  jcloze, jcross, jmatch, jmix, jquiz, quandary, rhubarb, sequitur
+    public $hbs_software; // hotpot or textoys
+    public $hbs_quiztype; //  jcloze, jcross, jmatch, jmix, jquiz, quandary, rhubarb, sequitur
+
+    // encode a string for javascript
+    public $javascript_replace_pairs = array(
+        // backslashes and quotes
+        '\\'=>'\\\\', "'"=>"\\'", '"'=>'\\"',
+        // newlines (win = "\r\n", mac="\r", linux/unix="\n")
+        "\r\n"=>'\\n', "\r"=>'\\n', "\n"=>'\\n',
+        // other (closing tag is for XHTML compliance)
+        "\0"=>'\\0', '</'=>'<\\/'
+    );
+
+    // unicode characters can be detected by checking the hex value of a character
+    //  00 - 7F : ascii char (roman alphabet + punctuation)
+    //  80 - BF : byte 2, 3 or 4 of a unicode char
+    //  C0 - DF : 1st byte of 2-byte char
+    //  E0 - EF : 1st byte of 3-byte char
+    //  F0 - FF : 1st byte of 4-byte char
+    // if the string doesn't match any of the above, it might be
+    //  80 - FF : single-byte, non-ascii char
+    public $search_unicode_chars = '/'.'[\xc0-\xdf][\x80-\xbf]'.
+                                   '|'.'[\xe0-\xef][\x80-\xbf]{2}'.
+                                   '|'.'[\xf0-\xff][\x80-\xbf]{3}'.
+                                   '|'.'[\x00-\xff]'.'/';
+
 
     /**
      * is_html
@@ -53,12 +77,8 @@ class taskchain_source_hp extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function is_html() {
-        if (preg_match('/\.html?$/', $this->file->get_filename())) {
-            return true;
-        } else {
-            return false;
-        }
+    function is_html() {
+        return preg_match('/\.html?$/', $this->file->get_filename());
     }
 
     /**
@@ -599,32 +619,18 @@ class taskchain_source_hp extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function js_value_safe($str, $convert_to_unicode=false) {
-        // encode a string for javascript
-        static $replace_pairs = array(
-            // backslashes and quotes
-            '\\'=>'\\\\', "'"=>"\\'", '"'=>'\\"',
-            // newlines (win = "\r\n", mac="\r", linux/unix="\n")
-            "\r\n"=>'\\n', "\r"=>'\\n', "\n"=>'\\n',
-            // other (closing tag is for XHTML compliance)
-            "\0"=>'\\0', '</'=>'<\\/'
-        );
+    function js_value_safe($str, $convert_to_unicode=false) {
+        global $CFG;
 
-        // convert unicode chars to html entities, if required
-        // Note that this will also decode named entities such as &apos; and &quot;
-        // so we have to put "strtr()" AFTER this call to utf8_to_entities()
-        if ($convert_to_unicode) {
-            $str = mod_taskchain::textlib('utf8_to_entities', $str, false, true);
-        }
-
-        $str = strtr($str, $replace_pairs);
-
-        // convert (hex and decimal) html entities to javascript unicode, if required
-        if ($convert_to_unicode) {
-            $search = '/&#x([0-9A-F]+);/i';
+        if ($convert_to_unicode && $CFG->taskchain_enableobfuscate) {
+            // convert ALL chars to Javascript unicode
             $callback = array($this, 'js_unicode_char');
-            $str = preg_replace_callback($search, $callback, $str);
+            $str = preg_replace_callback($this->search_unicode_chars, $callback, $str);
+        } else {
+            // escape backslashes, quotes, etc
+            $str = strtr($str, $this->javascript_replace_pairs);
         }
+
         return $str;
     }
 
@@ -635,8 +641,11 @@ class taskchain_source_hp extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function js_unicode_char($match) {
-        return sprintf('\\u%04s', $match[1]);
+    function js_unicode_char($match) {
+        $num = $match[0]; // the UTF-8 char
+        $num = mod_taskchain::textlib('utf8ord', $num);
+        $num = strtoupper(dechex($num));
+        return sprintf('\\u%04s', $num);
     }
 
     /**

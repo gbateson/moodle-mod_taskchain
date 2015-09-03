@@ -1776,9 +1776,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         $search = '/\\\\u([0-9a-f]{4})/i';
         $str = $this->filter_text_to_utf8($str, $search);
 
-        // convert html entities
-        $search = '/&#x([0-9a-f]+);/i';
-        $str = $this->filter_text_to_utf8($str, $search);
+        // convert dec, hex and named entities to unicode chars
+        $str = mod_taskchain::textlib('entities_to_utf8', $str, true);
 
         // fix relative urls
         $str = $this->fix_relativeurls($str);
