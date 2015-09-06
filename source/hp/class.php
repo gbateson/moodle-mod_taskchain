@@ -65,11 +65,7 @@ class taskchain_source_hp extends taskchain_source {
     //  F0 - FF : 1st byte of 4-byte char
     // if the string doesn't match any of the above, it might be
     //  80 - FF : single-byte, non-ascii char
-    public $search_unicode_chars = '/'.'[\xc0-\xdf][\x80-\xbf]'.
-                                   '|'.'[\xe0-\xef][\x80-\xbf]{2}'.
-                                   '|'.'[\xf0-\xff][\x80-\xbf]{3}'.
-                                   '|'.'[\x00-\xff]'.'/';
-
+    public $search_unicode_chars = '/[\xc0-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xff][\x80-\xbf]{3}|[\x00-\xff]/';
 
     /**
      * is_html
