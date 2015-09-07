@@ -1182,12 +1182,13 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         if ($value < 0) {
             return $this->format_templatevalue_list($field, $value, 'cm', $type);
         }
-        $modinfo = unserialize($this->TC->courserecord->modinfo);
-        if ($modinfo && isset($modinfo->cms[$value])) {
-            $name = $modinfo->cms[$value]->name;
-            return $this->format_longtext($name);
+        if (! $modinfo = get_fast_modinfo($this->TC->course)) {
+            return ''; // no mods - shouldn't happen !!
         }
-        return $value; // shouldn't happen !!
+        if (! $cm = $modinfo->get_cm($value)) {
+            return ''; // invalid $value - shouldn't happen !!
+        }
+        return $this->format_longtext($cm->name);
     }
 
     /**
