@@ -316,6 +316,18 @@ class taskchain_source {
         if (! $mainfile = taskchain_pluginfile_mainfile($context, $component, $filearea)) {
             return false;
         }
+
+        // if the $mainfile was a zip (or tgz) file, unpack it and try again
+        if ($mimetype = self::get_file_packer_mimetype($mainfile)) {
+            $mainfile->extract_to_storage(get_file_packer($mimetype),
+                                          $mainfile->get_contextid(),
+                                          $mainfile->get_component(),
+                                          $mainfile->get_filearea(),
+                                          $mainfile->get_itemid(),
+                                          $mainfile->get_filepath());
+            $mainfile = taskchain_pluginfile_mainfile($context, $component, $filearea);
+        }
+
         if (! $directory = $mainfile->get_parent_directory()) {
             return false;
         }
@@ -355,6 +367,23 @@ class taskchain_source {
         }
     }
 
+    /*
+     * Given a stored file, this function will return either
+     * a mimetype that can be passed to the Moodle file_packer
+     * or, if the $file is not a packed file, an empty string
+     *
+     * @return string
+     */
+    static public function get_file_packer_mimetype($file) {
+        $filetype = $file->get_filename();
+        $filetype = substr($filetype, -4);
+        $filetype = strtolower($filetype);
+        switch ($filetype) {
+            case '.zip': return 'application/zip';
+            case '.tgz': return 'application/x-tgz';
+        }
+        return ''; // not recognized as a packed file
+    }
 
     /**
      * appends taskchain_source objects to $sources for any sources that are found in the external chainfolder
