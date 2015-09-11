@@ -1973,9 +1973,14 @@ function taskchain_pluginfile_mainfile($context, $component, $filearea, $itemid=
     // the main file for this TaskChain activity
     // (file with lowest sortorder in $filearea)
     $mainfile = false;
+    $mainfile_is_empty = true;
+    $mainfile_is_archive = false;
 
     // these file types can't be the mainfile
     $media_filetypes = array('fla', 'flv', 'gif', 'jpeg', 'jpg', 'mp3', 'png', 'swf', 'wav');
+
+    // tgz and zip files will only be used as a last resort
+    $archive_filetypes = array('tgz', 'zip');
 
     $area_files = $fs->get_area_files($context->id, $component, $filearea, $itemid); // , 'sortorder, filename', 0
     foreach ($area_files as $file) {
@@ -1990,14 +1995,31 @@ function taskchain_pluginfile_mainfile($context, $component, $filearea, $itemid=
         if (in_array($filetype, $media_filetypes)) {
             continue; // media file
         }
-        if (empty($mainfile)) { // || $mainfile->get_content()==''
-            $mainfile = $file;
+        if ($file_is_archive = in_array($filetype, $archive_filetypes)) {
+            // only use an archive file if
+            // if it is the first file found
+            $update = $mainfile_is_empty;
+        } else if ($mainfile_is_empty) {
+            // always use a non-archive file
+            // if it is the first file found
+            $update = true;
         } else if ($file->get_sortorder()==0) {
-            // unsorted file - do nothing
+            // always use an unsorted file
+            // if the mainfile is an archive file
+            $update = $mainfile_is_archive;
         } else if ($mainfile->get_sortorder()==0) {
-            $mainfile = $file;
+            // always use a sorted file
+            // if the mainfile is an unsorted file
+            $update = true;
         } else if ($file->get_sortorder() < $mainfile->get_sortorder()) {
+            // always use a sorted file (i.e. sortorder > 0)
+            // if its sortorder is lower than the sortorder of the mainfile
+            $update = true;
+        }
+        if ($update) {
             $mainfile = $file;
+            $mainfile_is_empty = false;
+            $mainfile_is_archive = $file_is_archive;
         }
     }
 

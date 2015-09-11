@@ -317,7 +317,7 @@ class taskchain_source {
             return false;
         }
 
-        // if the $mainfile was a zip (or tgz) file, unpack it and try again
+        // if the $mainfile was a zip or tgz file, unpack it
         if ($mimetype = self::get_file_packer_mimetype($mainfile)) {
             $mainfile->extract_to_storage(get_file_packer($mimetype),
                                           $mainfile->get_contextid(),
@@ -325,7 +325,6 @@ class taskchain_source {
                                           $mainfile->get_filearea(),
                                           $mainfile->get_itemid(),
                                           $mainfile->get_filepath());
-            $mainfile = taskchain_pluginfile_mainfile($context, $component, $filearea);
         }
 
         if (! $directory = $mainfile->get_parent_directory()) {
