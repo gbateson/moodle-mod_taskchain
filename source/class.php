@@ -325,6 +325,7 @@ class taskchain_source {
                                           $mainfile->get_filearea(),
                                           $mainfile->get_itemid(),
                                           $mainfile->get_filepath());
+            $recursive = true;
         }
 
         if (! $directory = $mainfile->get_parent_directory()) {
