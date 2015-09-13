@@ -591,7 +591,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     }
 
     /**
-     *
      * get_fieldlabel_coursename
      *
      * @return string
@@ -1178,7 +1177,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     }
 
     /**
-     *
      * fix_action_applydefaults_extra
      *
      * @param xxx $data     (passed by reference)
@@ -1191,7 +1189,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     }
 
     /**
-     *
      * add_field_sortfield
      *
      * @todo Finish documenting this function
@@ -1205,7 +1202,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     }
 
     /**
-     *
      * add_field_sortfield
      *
      * @todo Finish documenting this function
@@ -1222,7 +1218,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     }
 
     /**
-     *
      * add_field_sortdirection
      *
      * @todo Finish documenting this function
@@ -1239,7 +1234,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     }
 
     /**
-     *
      * add_field_sortincrement
      *
      * @todo Finish documenting this function

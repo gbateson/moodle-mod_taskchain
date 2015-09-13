@@ -47,7 +47,6 @@ class taskchain_form_helper_chains extends taskchain_form_helper_records {
     protected $actions = array('applydefaults' => true);
 
     /**
-     *
      * add_action_applydefaults_details
      *
      * @todo Finish documenting this function

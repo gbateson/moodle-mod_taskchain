@@ -197,7 +197,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     }
 
     /**
-     * prepare title's "delay3" values
+     * prepare task's "delay3" values
      *
      * @param array $data (passed by reference)
      * @todo Finish documenting this function
@@ -212,6 +212,18 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         } else {
             $data[$name_options] = mod_taskchain::DELAY3_SPECIFIC;
         }
+    }
+
+    /**
+     * prepare the "aftertaskid" values
+     *
+     * @param array $data (passed by reference)
+     * @todo Finish documenting this function
+     */
+    protected function prepare_field_aftertaskid(&$data) {
+        $field = 'aftertaskid';
+        $name = $this->get_fieldname($field);
+        $data[$name] = $this->get_fieldvalue_aftertaskid();
     }
 
     /**

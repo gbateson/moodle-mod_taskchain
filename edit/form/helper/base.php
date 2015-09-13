@@ -2311,6 +2311,32 @@ abstract class taskchain_form_helper_base {
         return get_string(empty($value) ? 'no' : 'yes');
     }
 
+    /**
+     * format_longtext
+     *
+     * if activity/task name is longer than $textlength, it will be truncated
+     * to first $headlength chars + " ... " + last $taillength chars
+     *
+     * @param string $text of activity
+     * @param integer $textlength (optional, default=40)
+     * @param integer $headlength (optional, default=16)
+     * @param integer $taillength (optional, default=16)
+     * @param string formatted name, possibly truncated to $textlength chars
+     * @todo Finish documenting this function
+     */
+     protected function format_longtext($text, $textlength=40, $headlength=16, $taillength=16) {
+        $text = format_string($text);
+        $strlen = mod_taskchain::textlib('strlen', $text);
+        if ($strlen > $textlength) {
+            $headlength = min($headlength, $strlen);
+            $taillength = min($taillength, $strlen - $headlength - 3);
+            $head = mod_taskchain::textlib('substr', $text, 0, $headlength);
+            $tail = mod_taskchain::textlib('substr', $text, $strlen - $taillength, $taillength);
+            $text = $head.' ... '.$tail;
+        }
+        return $text;
+     }
+
     /////////////////////////////////////////////////////////
     // get javascript
     /////////////////////////////////////////////////////////

@@ -57,7 +57,6 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
     protected $sortfield = array('sortorder', 'name', 'sourcefile', 'timeopen', 'timeclose', 'scorelimit', 'scoreweighting');
 
     /**
-     *
      * add_action_movetasks
      *
      * @todo Finish documenting this function
@@ -88,7 +87,6 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
     }
 
     /**
-     *
      * add_action_reordertasks_details
      *
      * @todo Finish documenting this function
@@ -101,7 +99,6 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
     }
 
     /**
-     *
      * add_action_addtasks_details
      *
      * @todo Finish documenting this function
@@ -111,7 +108,6 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
     }
 
     /**
-     *
      * add_action_movetasks_details
      *
      * @todo Finish documenting this function
@@ -121,7 +117,6 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
     }
 
     /**
-     *
      * add_action_applydefaults_details
      *
      * @todo Finish documenting this function
@@ -218,51 +213,6 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
     }
 
     /**
-     *
-     * add_field_addtasks_aftertaskid
-     *
-     * @todo Finish documenting this function
-     */
-    protected function add_field_addtasks_aftertaskid($field) {
-        $this->add_template_aftertaskid($field);
-    }
-
-    /**
-     *
-     * add_field_movetasks_aftertaskid
-     *
-     * @todo Finish documenting this function
-     */
-    protected function add_field_movetasks_aftertaskid($field) {
-        $this->add_template_aftertaskid($field);
-    }
-
-    /**
-     *
-     * add_template_aftertaskid
-     *
-     * @todo Finish documenting this function
-     */
-    protected function add_template_aftertaskid($field) {
-        $list = array();
-
-        $records = $this->get_live_records();
-        foreach ($records as $record) {
-            $id = $record->get_fieldvalue('id');
-            $name = $record->get_fieldvalue('name');
-            $list[$id] = format_string($name);
-        }
-
-        if (count($list)) {
-            $name = $this->get_fieldname($field);
-            $label = ''; // get_string('task', 'mod_taskchain');
-            $this->mform->addElement('select', $name, $label, $list);
-            $this->mform->setType($name, PARAM_INT);
-        }
-    }
-
-    /**
-     *
      * add_actiontemplate_tasks
      *
      * @param string  $type
@@ -271,7 +221,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
      * @todo Finish documenting this function
      */
     protected function add_actiontemplate_tasks($type, $min_record_count=0, $min_taskchain_count=0) {
-        $field = $type.'tasks';
+        $field = $type.'tasks'; // "addtasks" or "movetasks"
         $name = $this->get_fieldname($field);
 
         // by default we do not add any fields here
@@ -283,7 +233,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         $list = array();
         foreach ($this->get_live_records() as $recordid => $record) {
             $recordname = $record->get_fieldvalue('name');
-            $list[$recordid] = format_string($recordname);
+            $list[$recordid] = $this->format_longtext($recordname, 70, 32, 32);
         }
         $count = count($list);
 
@@ -322,7 +272,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
             $defaultvalue = 'end';
         }
 
-        // get list of taskchains, if required ("mavetasks" only)
+        // get list of taskchains, if required ("movetasks" only)
         $list = array();
         if ($min_taskchain_count) {
             if ($mycourses = $this->TC->get_mycourses()) {
@@ -340,7 +290,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                             $coursename = format_string($mycourses[$courseid]->shortname);
                             $list[$coursename] = array();
                         }
-                        $list[$coursename][$mytaskchain->id] = format_string($mytaskchain->name);
+                        $list[$coursename][$mytaskchain->id] = $this->format_longtext($mytaskchain->name);
                     }
                 }
             }
@@ -450,7 +400,6 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
     }
 
     /**
-     *
      * fix_action_applydefaults_extra
      *
      * @param xxx $data     (passed by reference)

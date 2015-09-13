@@ -49,11 +49,11 @@ $output = $PAGE->get_renderer('mod_taskchain');
 $mform = new mod_taskchain_edit_tasks_form();
 $newdata = $mform->get_data();
 
-if ($newdata && isset($newdata->action) && $newdata->action=='addtasks' && isset($newdata->addtasks)) {
+if (isset($newdata->action) && $newdata->action=='addtasks' && isset($newdata->addtasks)) {
     switch ($newdata->addtasks) {
         case 'start' : $aftertaskid = -1; break;
         case 'end'   : $aftertaskid = 0; break;
-        case 'after' : $aftertaskid = (empty($data->aftertaskid) ? 0 : $data->aftertaskid); break;
+        case 'after' : $aftertaskid = (empty($newdata->addtasks_taskid) ? 0 : $newdata->addtasks_taskid); break;
         default      : $aftertaskid = 0;
     }
     $params = array('taskattemptid' => 0, 'taskscoreid' => 0, 'taskid' => 0, 'aftertaskid' => $aftertaskid);
