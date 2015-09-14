@@ -618,7 +618,8 @@ class taskchain_source_hp extends taskchain_source {
     function js_value_safe($str, $convert_to_unicode=false) {
         global $CFG;
 
-        if ($convert_to_unicode && $CFG->taskchain_enableobfuscate) {
+        $disableobfuscate = false; // disabled until fixed, check URLs in JMatch RHS
+        if ($disableobfuscate && $convert_to_unicode && $CFG->taskchain_enableobfuscate) {
             // convert ALL chars to Javascript unicode
             $callback = array($this, 'js_unicode_char');
             $str = preg_replace_callback($this->search_unicode_chars, $callback, $str);
