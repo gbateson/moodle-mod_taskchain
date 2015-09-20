@@ -1479,8 +1479,8 @@ class taskchain_get extends taskchain_base {
         // groupings
         if ($g = $this->all_groupings()) {
             foreach ($g as $gid => $grouping) {
-                if ($members = groups_get_grouping_members($gid)) {
-                    $userlist[$str->groups]["grouping$gid"] = get_string('grouping', 'group').': '.format_string($grouping->name).' ('.count($members).')';
+                if ($count = $this->count_grouping_members($gid)) {
+                    $userlist[$str->groups]["grouping$gid"] = get_string('grouping', 'group').': '.format_string($grouping->name).' ('.$count.')';
                 }
             }
         }
@@ -1488,13 +1488,8 @@ class taskchain_get extends taskchain_base {
         // groups
         if ($g = $this->all_groups()) {
             foreach ($g as $gid => $group) {
-                if ($members = groups_get_members($gid)) {
-                    if (isset($group->name)) {
-                        $name = $group->name;
-                    } else { // Moodle 1.8
-                        $name = groups_get_group_name($gid);
-                    }
-                    $userlist[$str->groups]["group$gid"] = get_string('group').': '.format_string($name).' ('.count($members).')';
+                if ($count = $this->count_group_members($gid)) {
+                    $userlist[$str->groups]["group$gid"] = get_string('group').': '.format_string($group->name).' ('.$count.')';
                 }
             }
         }
@@ -1674,6 +1669,82 @@ class taskchain_get extends taskchain_base {
     }
 
     /**
+     * group_userids
+     *
+     * @param integer $groupid
+     * @return array of ids from mdl_user table
+     */
+    public function group_userids($groupid) {
+        if ($members = groups_get_members($groupid, 'u.id,u.username', 'u.id')) {
+            return array_keys($members);
+        } else {
+            return array();
+        }
+    }
+
+    /**
+     * count_group_members
+     *
+     * @param integer $groupid
+     * @return integer number of unique members in this group
+     */
+    public function count_group_members($groupid) {
+        if ($members = groups_get_members($groupid, 'u.id,u.username', 'u.id')) {
+            return count($members);
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * grouping_userids
+     *
+     * @param integer $groupingid
+     * @return array of ids from mdl_user table
+     */
+    public function grouping_userids($groupingid) {
+        global $DB;
+        list($sql, $params) = $this->grouping_members_sql($groupingid, 'u.id, u.username', 'u.id');
+        if ($members = $DB->get_records_sql($sql, $params)) {
+            return array_keys($members);
+        } else {
+            return array();
+        }
+    }
+
+    /**
+     * count_grouping_members
+     *
+     * @param integer $groupingid
+     * @return integer number of unique members in this grouping
+     */
+    public function count_grouping_members($groupingid) {
+        global $DB;
+        list($sql, $params) = $this->grouping_members_sql($groupingid, 'COUNT(*)', '');
+        return $DB->get_field_sql($sql, $params);
+    }
+
+    /**
+     * grouping_members_sql
+     *
+     * Note that the SQL used by groups_get_grouping_members() function, in "lib/grouplib.php",
+     * returns duplicate lines if a user is in more than one group within a grouping
+     *
+     * @param integer $groupingid
+     * @param string  $fields comma-separated list of fields
+     * @param string  $sort   comma-separated list of fields (can be empty)
+     * @return xxx
+     */
+    public function grouping_members_sql($groupingid, $fields, $sort) {
+        $sql = 'SELECT DISTINCT gm.userid '.
+               'FROM {groups_members} gm '.
+               'JOIN {groupings_groups} gg ON gm.groupid = gg.groupid '.
+               'WHERE gg.groupingid = ?';
+        $sql = "SELECT $fields FROM {user} u WHERE u.id IN ($sql)".($sort=='' ? '' : " ORDER BY $sort");
+        return array($sql, array($groupingid));
+    }
+
+    /**
      * userfilter
      *
      * @uses $CFG
@@ -1719,15 +1790,15 @@ class taskchain_get extends taskchain_base {
 
             case 'grouping':
                 // grouping members
-                if ($gid && ($members = groups_get_grouping_members($gid))) {
-                    $userids = array_keys($members);
+                if ($gid) {
+                    $userids = $this->grouping_userids($gid);
                 }
                 break;
 
             case 'group':
                 // group members
-                if ($gid && ($members = groups_get_members($gid))) {
-                    $userids = array_keys($members);
+                if ($gid) {
+                    $userids = $this->group_userids($gid);
                 }
                 break;
 

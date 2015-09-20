@@ -191,24 +191,24 @@ class taskchain_filter_group extends user_filter_select {
         }
 
         foreach ($groupings as $gid => $grouping) {
-            if ($has_groups) {
-                $prefix = $strgrouping.': ';
-            } else {
-                $prefix = '';
-            }
-            if ($members = groups_get_grouping_members($gid)) {
-                $options["grouping$gid"] = $prefix.format_string($grouping->name).' ('.count($members).')';
+            if ($count = $TC->get_count_grouping_members($gid)) {
+                if ($has_groups) {
+                    $prefix = $strgrouping.': ';
+                } else {
+                    $prefix = '';
+                }
+                $options["grouping$gid"] = $prefix.format_string($grouping->name).' ('.$count.')';
             }
         }
 
         foreach ($groups as $gid => $group) {
-            if ($members = groups_get_members($gid)) {
+            if ($count = $TC->get_count_group_members($gid)) {
                 if ($has_groupings) {
                     $prefix = $strgroup.': ';
                 } else {
                     $prefix = '';
                 }
-                $options["group$gid"] = $prefix.format_string($group->name).' ('.count($members).')';
+                $options["group$gid"] = $prefix.format_string($group->name).' ('.$count.')';
             }
         }
 
@@ -246,14 +246,14 @@ class taskchain_filter_group extends user_filter_select {
                 if (substr($value, 5, 3)=='ing') {
                     $gids = groups_get_all_groupings($TC->course->id);
                     $gid = intval(substr($value, 8));
-                    if ($gids && array_key_exists($gid, $gids) && ($members = groups_get_grouping_members($gid))) {
-                        $userids = array_keys($members);
+                    if ($gids && array_key_exists($gid, $gids)) {
+                        $userids = $TC->get_grouping_userids($gid);
                     }
                 } else {
                     $gids = groups_get_all_groups($TC->course->id);
                     $gid = intval(substr($value, 5));
-                    if ($gids && array_key_exists($gid, $gids) && ($members = groups_get_members($gid))) {
-                        $userids = array_keys($members);
+                    if ($gids && array_key_exists($gid, $gids)) {
+                        $userids = $TC->get_group_userids($gid);
                     }
                 }
             }
