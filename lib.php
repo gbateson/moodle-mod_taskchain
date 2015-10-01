@@ -59,7 +59,7 @@ function taskchain_supports($feature) {
         'FEATURE_COMMENT'          => true,
         'FEATURE_COMPLETION_HAS_RULES' => true,
         'FEATURE_COMPLETION_TRACKS_VIEWS' => true,
-        'FEATURE_CONTROLS_GRADE_VISIBILITY' => true,
+        'FEATURE_CONTROLS_GRADE_VISIBILITY' => false,
         'FEATURE_GRADE_HAS_GRADE'  => true, // default=false
         'FEATURE_GRADE_OUTCOMES'   => true,
         'FEATURE_GROUPINGS'        => true, // default=false
