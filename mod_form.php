@@ -140,6 +140,11 @@ class mod_taskchain_mod_form extends moodleform_mod {
         // add "minimum grade" completion condition
         $name = 'completionmingrade';
         $label = get_string($name, 'taskchain');
+        if (empty($this->current->$name)) {
+            $value = 0.0;
+        } else {
+            $value = floatval($this->current->$name);
+        }
         $group = array();
         $group[] = &$mform->createElement('checkbox', $name.'disabled', '', $label);
         $group[] = &$mform->createElement('static', $name.'space', '', ' &nbsp; ');
@@ -148,7 +153,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
         $mform->setType($name, PARAM_FLOAT);
         $mform->setDefault($name, 0.00);
         $mform->setType($name.'disabled', PARAM_INT);
-        $mform->setDefault($name.'disabled', empty($this->current->$name) ? 0 : 1);
+        $mform->setDefault($name.'disabled', empty($value) ? 0 : 1);
         $mform->disabledIf($name, $name.'disabled', 'notchecked');
         $names[] = $name.'group';
         $disablednames[] = $name.'group';
