@@ -97,8 +97,11 @@ class mod_taskchain_attempt_hp_6_jquiz_renderer extends mod_taskchain_attempt_hp
     public function fix_headcontent() {
         if ($pos = strrpos($this->headcontent, '</style>')) {
             $insert = ''
-                .'ol.TaskQuestions{'."\n"
-                .'	margin-bottom:0px;'."\n"
+                .'#'.$this->themecontainer.' ol.QuizQuestions{'."\n"
+                .'	margin-bottom: 0px;'."\n"
+                .'}'."\n"
+                .'#'.$this->themecontainer.' li.QuizQuestion{'."\n"
+                .'	overflow: auto;'."\n"
                 .'}'."\n"
             ;
             $this->headcontent = substr_replace($this->headcontent, $insert, $pos, 0);
@@ -159,7 +162,7 @@ class mod_taskchain_attempt_hp_6_jquiz_renderer extends mod_taskchain_attempt_hp
     public function fix_js_ShowHideQuestions(&$str, $start, $length)  {
         $substr = substr($str, $start, $length);
 
-        // hide/show bottom border of questions (override class="TaskQuestion")
+        // hide/show bottom border of questions (override class="QuizQuestion")
         $n = "\n\t\t\t\t";
         if ($pos = strpos($substr, "QArray[i].style.display = '';")) {
             $substr = substr_replace($substr, 'if ((i+1)<QArray.length){'.$n."\t"."QArray[i].style.borderWidth = '';".$n.'}'.$n, $pos, 0);
@@ -201,7 +204,7 @@ class mod_taskchain_attempt_hp_6_jquiz_renderer extends mod_taskchain_attempt_hp
             $substr = substr_replace($substr, $replace, $pos, strlen($search));
         }
 
-        // hide bottom border of question (override class="TaskQuestion")
+        // hide bottom border of question (override class="QuizQuestion")
         if ($pos = strpos($substr, "Qs.appendChild(QList[i]);")) {
             $substr = substr_replace($substr, "QList[i].style.borderWidth = '0px';"."\n\t\t", $pos, 0);
         }

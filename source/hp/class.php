@@ -67,6 +67,23 @@ class taskchain_source_hp extends taskchain_source {
     //  80 - FF : single-byte, non-ascii char
     public $search_unicode_chars = '/[\xc0-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xff][\x80-\xbf]{3}|[\x00-\xff]/';
 
+    // array used to figure what number to decrement from character order value
+    // according to number of characters used to map unicode to ascii by utf-8
+    static $utf8_decrement = array(
+        1 => 0,
+        2 => 192,
+        3 => 224,
+        4 => 240
+    );
+
+    // the number of bits to shift each utf8 character by
+    static $utf8_shift = array(
+        1 => array(0=>0),
+        2 => array(0=>6,  1=>0),
+        3 => array(0=>12, 1=>6,  2=>0),
+        4 => array(0=>18, 1=>12, 2=>6, 3=>0)
+    );
+
     /**
      * is_html
      *
@@ -246,7 +263,7 @@ class taskchain_source_hp extends taskchain_source {
             $this->title = '';
 
             if (! $this->xml_get_filecontents()) {
-                // could not detect Hot Potatoes task type - shouldn't happen !!
+                // could not detect Hot Potatoes quiz type - shouldn't happen !!
                 return false;
             }
             $this->title = $this->xml_value('data,title');
@@ -271,7 +288,7 @@ class taskchain_source_hp extends taskchain_source {
             $this->entrytext = '';
 
             if (! $this->xml_get_filecontents()) {
-                // could not detect Hot Potatoes task type - shouldn't happen !!
+                // could not detect Hot Potatoes quiz type - shouldn't happen !!
                 return false;
             }
             if ($text = $this->xml_value($this->hbs_software.'-config-file,'.$this->hbs_tasktype.',exercise-subtitle')) {
@@ -382,9 +399,12 @@ class taskchain_source_hp extends taskchain_source {
             }
 
             $this->compact_filecontents();
+            $this->pre_xmlize_filecontents();
+
+            // define root of XML tree
             $this->xml_root = $this->hbs_software.'-'.$this->hbs_tasktype.'-file';
 
-            // sanity check
+            // convert to XML tree using xmlize()
             if (! $this->xml = xmlize($this->filecontents, 0)) {
                 debugging('Could not parse XML file: '.$this->filepath);
             } else if (! array_key_exists($this->xml_root, $this->xml)) {
@@ -427,6 +447,57 @@ class taskchain_source_hp extends taskchain_source {
             }
         }
         return $this->xml ? true : false;
+    }
+
+    /**
+     * pre_xmlize_filecontents
+     */
+    function pre_xmlize_filecontents() {
+        if ($this->filecontents) {
+            // encode all ampersands that are not part of HTML entities
+            // http://stackoverflow.com/questions/310572/regex-in-php-to-match-that-arent-html-entities
+            // Note: we could also use '<![CDATA[&]]>' as the replace string
+            $search = '/&(?!(?:[a-zA-Z]+|#[0-9]+|#x[0-9a-fA-F]+);)/';
+            $this->filecontents = preg_replace($search, '&amp;', $this->filecontents);
+
+            // unicode characters can be detected by checking the hex value of a character
+            //  00 - 7F : ascii char (control chars + roman alphabet + punctuation)
+            //  80 - BF : byte 2, 3 or 4 of a unicode char
+            //  C0 - DF : 1st byte of 2-byte char
+            //  E0 - EF : 1st byte of 3-byte char
+            //  F0 - FF : 1st byte of 4-byte char
+            // if the string doesn't match the above, it might be
+            //  80 - FF : single-byte, non-ascii char
+            $search = '/'.'[\xc0-\xdf][\x80-\xbf]{1}'.'|'.
+                          '[\xe0-\xef][\x80-\xbf]{2}'.'|'.
+                          '[\xf0-\xff][\x80-\xbf]{3}'.'|'.
+                          '[\x80-\xff]'.'/';
+            $callback = array($this, 'utf8_char_to_html_entity');
+            $this->filecontents = preg_replace_callback($search, $callback, $this->filecontents);
+
+            // the following control characters are not allowed in XML
+            // and need to be removed because they will break xmlize()
+            // basically this is the range 00-1F and the delete key 7F
+            // but excluding tab 09, newline 0A and carriage return 0D
+            $search = '/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]/';
+            $this->filecontents = preg_replace($search, '', $this->filecontents);
+        }
+    }
+
+    function utf8_char_to_html_entity($char, $ampersand='&') {
+        // thanks to: http://www.zend.com/codex.php?id=835&single=1
+        if (is_array($char)) {
+            $char = $char[0];
+        }
+        $dec = 0;
+        $len = strlen($char);
+        for ($pos=0; $pos<$len; $pos++) {
+            $ord = ord ($char{$pos});
+            $ord -= ($pos ? 128 : $this->utf8_decrement[$len]);
+            $dec += ($ord << $this->utf8_shift[$len][$pos]);
+        }
+
+        return $ampersand.'#x'.sprintf('%04X', $dec).';';
     }
 
     /**

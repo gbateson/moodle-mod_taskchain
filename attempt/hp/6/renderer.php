@@ -925,10 +925,10 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             // ReadingDiv is used to show different reading for each question
             if ($this->usemoodletheme) {
                 $canvas = "document.getElementById('$this->themecontainer')"; // moodle
+                // $canvas = "document.getElementById('page-mod-taskchain-attempt')"
             } else {
                 $canvas = "document.getElementsByTagName('body')[0]"; // original
             }
-            // None: $canvas = "document.getElementById('page-mod-taskchain-attempt')"
             $id = $this->embed_object_id;
             $onload = $this->embed_object_onload;
             $insert = "\n"
@@ -4441,7 +4441,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      */
     public function expand_QuestionOutput()  {
         // start question list
-        $str = '<ol class="TaskQuestions" id="Questions">'."\n";
+        $str = '<ol class="QuizQuestions" id="Questions">'."\n";
 
         $q = 0;
         $tags = 'data,questions,question-record';
@@ -4479,7 +4479,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             if (strlen($question_text) || strlen($first_answer_text)) {
 
                 // start question
-                $str .= '<li class="TaskQuestion" id="Q_'.$q.'" style="display: none;">';
+                $str .= '<li class="QuizQuestion" id="Q_'.$q.'" style="display: none;">';
                 $str .= '<p class="QuestionText">'.$question_text.'</p>';
 
                 if ($textbox) {
