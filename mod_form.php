@@ -194,7 +194,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
      * @return bool True if one or more rules is enabled, false if none are.
      */
     public function completion_rule_enabled($data) {
-        if (empty($data['completiongradepassed']) && empty($data['completioncompletedcompleted']) && empty($data['completionmingrade'])) {
+        if (empty($data['completionmingrade']) && empty($data['completionpass']) && empty($data['completioncompleted'])) {
             return false;
         } else {
             return true;

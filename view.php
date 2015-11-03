@@ -45,6 +45,7 @@ if (! $TC->show_entrypage()) {
 
 if ($TC->action=='deleteselected') {
     $TC->delete_selected_attempts();
+    $completion->update_state($TC->coursemodule);
 }
 
 // Set editing mode

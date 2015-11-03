@@ -63,32 +63,43 @@ require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_task.php');
  */
 class taskchain_base {
 
-    /**
+    /**#@+
      * internal codes for yes/no fields
+     *
+     * @var integer
      */
     const NO                          = 0;
     const YES                         = 1;
+    /**#@-*/
 
-    /**
+    /**#@+
      * internal codes to indicate whether the parent
      * record of a chain is an TaskChain activity or
      * a TaskChain block
+     *
+     * @var integer
      */
     const PARENTTYPE_ACTIVITY         = 0;
     const PARENTTYPE_BLOCK            = 1;
+    /**#@-*/
 
-    /**
+    /**#@+
      * internal codes to indicate what text is to be used
      * for the name and introduction of a TaskChain instance
+     *
+     * @var integer
      */
     const TEXTSOURCE_FILE             = 0; // was TEXTSOURCE_TASK
     const TEXTSOURCE_FILENAME         = 1;
     const TEXTSOURCE_FILEPATH         = 2;
     const TEXTSOURCE_SPECIFIC         = 3;
+    /**#@-*/
 
-    /**
+    /**#@+
      * database codes to indicate what navigation aids are used
      * when the task apears in the browser
+     *
+     * @var integer
      */
     const NAVIGATION_NONE             = 0; // was 6
     const NAVIGATION_MOODLE           = 1; // was NAVIGATION_BAR
@@ -96,9 +107,12 @@ class taskchain_base {
     const NAVIGATION_EMBED            = 3; // was NAVIGATION_IFRAME
     const NAVIGATION_ORIGINAL         = 4;
     const NAVIGATION_TOPBAR           = 5; // was NAVIGATION_GIVEUP but that was replaced by stopbutton
+    /**#@-*/
 
-    /**
+    /**#@+
      * database codes to indicate the grademethod and attemptgrademethod for a TaskChain instance
+     *
+     * @var integer
      */
     const GRADEMETHOD_TOTAL           = 0;
     const GRADEMETHOD_HIGHEST         = 1;
@@ -108,56 +122,101 @@ class taskchain_base {
     const GRADEMETHOD_LASTCOMPLETED   = 5;
     const GRADEMETHOD_LASTTIMEDOUT    = 6;
     const GRADEMETHOD_LASTABANDONED   = 7;
+    /**#@-*/
 
-    /**
+    /**#@+
      * database codes to indicate the source/config location for a TaskChain instance
+     *
+     * @var integer
      */
     const LOCATION_COURSEFILES        = 0;
     const LOCATION_SITEFILES          = 1;
     const LOCATION_WWW                = 2;
+    /**#@-*/
 
-    /**
+    /**#@+
      * bit-masks used to extract bits from the taskchain "title" setting
+     *
+     * @var integer
      */
     const TITLE_SOURCE                = 0x03; // 1st - 2nd bits
     const TITLE_CHAINNAME             = 0x04; // 3rd bit
     const TITLE_SORTORDER             = 0x08; // 4th bit
+    /**#@-*/
 
-    /**
+    /**#@+
      * database codes for the following time fields
      *  - timelimit : the maximum length of one attempt
      *  - delay3    : the delay after end of task before control returns to Moodle
+     *
+     * @var integer
      */
     const TIME_SPECIFIC               = 0;
     const TIME_TEMPLATE               = -1;
     const TIME_AFTEROK                = -2;
     const TIME_DISABLE                = -3;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const ALLOWRESUME_NO              = 0;
     const ALLOWRESUME_YES             = 1;
     const ALLOWRESUME_FORCE           = 2;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const CONTINUE_RESUMETASK         = 1;
     const CONTINUE_RESTARTTASK        = 2;
     const CONTINUE_RESTARTCHAIN       = 3;
     const CONTINUE_ABANDONCHAIN       = 4;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const STATUS_INPROGRESS           = 1;
     const STATUS_TIMEDOUT             = 2;
     const STATUS_ABANDONED            = 3;
     const STATUS_COMPLETED            = 4;
     const STATUS_PAUSED               = 5;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const FEEDBACK_NONE               = 0;
     const FEEDBACK_WEBPAGE            = 1;
     const FEEDBACK_FORMMAIL           = 2;
     const FEEDBACK_MOODLEFORUM        = 3;
     const FEEDBACK_MOODLEMESSAGING    = 4;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const STOPBUTTON_NONE             = 0;
     const STOPBUTTON_LANGPACK         = 1;
     const STOPBUTTON_SPECIFIC         = 2;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const ACTIVITY_NONE               = 0;
     const ACTIVITY_COURSE_ANY         = -1;
     const ACTIVITY_SECTION_ANY        = -2;
@@ -165,8 +224,9 @@ class taskchain_base {
     const ACTIVITY_SECTION_GRADED     = -4;
     const ACTIVITY_COURSE_TASKCHAIN   = -5;
     const ACTIVITY_SECTION_TASKCHAIN  = -6;
+    /**#@-*/
 
-    /**
+    /**#@+
      * possible values for "addtype" field on the main form.
      * This field is not stored in the database, but specifies
      * what items from the source folder are to be added as tasks
@@ -180,12 +240,24 @@ class taskchain_base {
     const ADDTYPE_CHAINFILE           = 3;
     const ADDTYPE_CHAINFOLDER         = 4;
     const ADDTYPE_CHAINFOLDERS        = 5;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const ENTRYOPTIONS_TITLE          = 0x01;
     const ENTRYOPTIONS_GRADING        = 0x02;
     const ENTRYOPTIONS_DATES          = 0x04;
     const ENTRYOPTIONS_ATTEMPTS       = 0x08;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const EXITOPTIONS_TITLE           = 0x01;
     const EXITOPTIONS_ENCOURAGEMENT   = 0x02;
     const EXITOPTIONS_ATTEMPTSCORE    = 0x04;
@@ -194,16 +266,21 @@ class taskchain_base {
     const EXITOPTIONS_INDEX           = 0x20;
     const EXITOPTIONS_COURSE          = 0x40;
     const EXITOPTIONS_GRADES          = 0x80;
+    /**#@-*/
 
-    /**
+    /**#@+
+     *
      * three sets of 6 bits define the times at which a task may be reviewed
      * e.g. 0x3f = 0011 1111 (i.e. right most 6 bits)
+     *
+     * @var integer
      */
     const REVIEW_DURINGATTEMPT        = 0x0003f; // 1st set of 6 bits : during attempt
     const REVIEW_AFTERATTEMPT         = 0x00fc0; // 2nd set of 6 bits : after attempt (but before task closes)
     const REVIEW_AFTERCLOSE           = 0x3f000; // 3rd set of 6 bits : after the task closes
+    /**#@-*/
 
-    /**
+    /**#@+
      * within each group of 6 bits we determine what should be shown
      * e.g. 0x1041 = 00-0001 0000-01 00-0001 (i.e. 3 sets of 6 bits)
      */
@@ -211,10 +288,22 @@ class taskchain_base {
     const REVIEW_ANSWERS              = 0x2082; // 2*0x1041 : 2nd bit of each 6-bit set : Show correct answers
     const REVIEW_SCORES               = 0x4104; // 3*0x1041 : 3rd bit of each 6-bit set : Show scores
     const REVIEW_FEEDBACK             = 0x8208; // 4*0x1041 : 4th bit of each 6-bit set : Show feedback
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const MIN                         = -1;
     const MAX                         = 1;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const EQUALWEIGHTING              = -1;
 
     const CONDITIONTYPE_PRE           = 1;
@@ -236,45 +325,93 @@ class taskchain_base {
     const CONDITIONTASKID_MENUALL     = -22; // was -12 was -10
     const CONDITIONTASKID_MENUALLONE  = -23; // was -13
     const CONDITIONTASKID_ENDOFCHAIN  = -99;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const ATTEMPTTYPE_ANY             = 0;
     const ATTEMPTTYPE_RECENT          = 1;
     const ATTEMPTTYPE_CONSECUTIVE     = 2;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const COLUMNS_EDITTASKS_ALL       = '';
     const COLUMNS_EDITTASKS_DEFAULT   = '';
     const COLUMNS_EDITTASKS_MINIMUM   = '';
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const COLUMNS_ALL                 = 1;
     const COLUMNS_DEFAULT             = 2;
     const COLUMNS_MINIMUM             = 3;
     const COLUMNS_CUSTOM              = 4;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const ADDTASKS_ATSTART            = -1;
     const ADDTASKS_ATEND              = -2;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const SELECTTASKS_THISTASKCHAIN   = 1;
     const SELECTTASKS_ALLMYTASKCHAINS = 2;
     const SELECTTASKS_ALLMYCOURSES    = 3;
     const SELECTTASKS_WHOLESITE       = 4;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const TASKSACTION_DELETE          = -1;
     const TASKSACTION_DEFAULTS        = -2;
     const TASKSACTION_MOVETOSTART     = -3;
+    /**#@-*/
 
+    /**#@+
+     *
+     *
+     * @var integer
+     */
     const DELAY3_SPECIFIC             = 0;
     const DELAY3_TEMPLATE             = -1;
     const DELAY3_AFTEROK              = -2;
     const DELAY3_DISABLE              = -3;
+    /**#@-*/
 
-    /** unumber/tnumber value to force creation of new attempt */
+    /** @var integer unumber/tnumber value to force creation of new attempt */
     const FORCE_NEW_ATTEMPT           = -1;
 
-    /** values for $CFG->taskchain_bodystyles */
+    /**#@+
+     * values for $CFG->taskchain_bodystyles
+     *
+     * @var integer
+     */
     const BODYSTYLES_BACKGROUND       = 0x01;
     const BODYSTYLES_COLOR            = 0x02;
     const BODYSTYLES_FONT             = 0x04;
     const BODYSTYLES_MARGIN           = 0x08;
+    /**#@-*/
 
     /** reference back to global $TC object */
     public $TC = null;

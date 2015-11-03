@@ -2651,6 +2651,7 @@ function taskchain_set_missing_fields($table, &$record, &$formdata, $fieldnames)
  */
 function taskchain_get_completion_state($course, $cm, $userid, $type) {
     global $CFG, $DB;
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
     // set default return $state
     $state = $type;
@@ -2697,7 +2698,7 @@ function taskchain_get_completion_state($course, $cm, $userid, $type) {
                     $params = array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY,
                                     'parentid'   => $cm->instance,
                                     'userid'     => $userid,
-                                    'status'     => $taskchain->$condition);
+                                    'status'     => mod_taskchain::STATUS_COMPLETED);
                     $state = $DB->record_exists('taskchain_chain_grades', $params);
                     break;
 

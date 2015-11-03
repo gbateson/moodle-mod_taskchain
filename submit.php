@@ -80,9 +80,7 @@ taskchain_update_grades($TC->taskchain, $USER->id);
 // update completion, if necessary
 if ($TC->taskchain->completionmingrade || $TC->taskchain->completionpass || $TC->taskchain->completioncompleted) {
     $completion = new completion_info($TC->course);
-    if ($completion->is_enabled($TC->coursemodule)) {
-        $completion->update_state($TC->coursemodule, COMPLETION_COMPLETE, $TC->userid);
-    }
+    $completion->update_state($TC->coursemodule);
 }
 
 // do the stuff the $TC->task->output->redirect() used to do
