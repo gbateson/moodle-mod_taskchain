@@ -356,7 +356,7 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
 
         $event = $this->get_send_results_event();
         $search = '/(\s*)return;/';
-        $replace = '$1'.'HP_send_results($event);$0';
+        $replace = '$1'."HP_send_results($event);".'$0';
         $substr = preg_replace($search, $replace, $substr);
 
         if ($pos = strrpos($substr, '}')) {
