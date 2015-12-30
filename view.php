@@ -70,9 +70,16 @@ if ($TC->can->attempt() || $TC->can->preview()) {
 } else {
     if (isguestuser()) {
         // off guests a choice of logging in or going back.
+        if (function_exists('get_local_referer')) {
+            // Moodle >= 2.8
+            $referer = get_local_referer(false);
+        } else {
+            // Moodle <= 2.7
+            $referer = get_referer(false);
+        }
         $message = html_writer::tag('p', get_string('guestsno', 'mod_taskchain'));
         $message .= html_writer::tag('p', get_string('liketologin'));
-        echo $output->confirm($message, get_login_url(), function_exists('get_local_referer') ? get_local_referer(false) : get_referer(false));
+        echo $output->confirm($message, get_login_url(), $referer);
     } else {
         // user is not enrolled in this course in a good enough role,
         // show a link to course enrolment page.
