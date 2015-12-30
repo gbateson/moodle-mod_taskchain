@@ -32,7 +32,7 @@ require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 $id = required_param('id', PARAM_INT);   // course
 
 if (! $course = $DB->get_record('course', array('id' => $id))) {
-    error('Course ID is incorrect');
+    print_error('Course ID is incorrect');
 }
 
 require_course_login($course);
