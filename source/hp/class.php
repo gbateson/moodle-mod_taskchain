@@ -689,10 +689,12 @@ class taskchain_source_hp extends taskchain_source {
     function js_value_safe($str, $convert_to_unicode=false) {
         global $CFG;
 
-        $disableobfuscate = false; // disabled until fixed, check URLs in JMatch RHS
-        if ($disableobfuscate && $convert_to_unicode && $CFG->taskchain_enableobfuscate) {
-            // convert ALL chars to Javascript unicode
+        $enableobfuscate = false; // disabled until fixed, check URLs in JMatch RHS
+        if ($enableobfuscate && $convert_to_unicode && $CFG->taskchain_enableobfuscate) {
+            // CONTRIB-6084 unencode HTML entities first,
+            // then convert ALL chars to Javascript unicode
             $callback = array($this, 'js_unicode_char');
+            $str = mod_taskchain::textlib('entities_to_utf8', $str, true);
             $str = preg_replace_callback($this->search_unicode_chars, $callback, $str);
         } else {
             // escape backslashes, quotes, etc
