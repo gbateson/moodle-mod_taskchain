@@ -474,6 +474,13 @@ function modify_taskchain_links() {
                 var obj = links[ii];
                 while (obj = obj.parentNode) {
                     w = Math.max(w, (parseInt(obj.offsetWidth) || 0));
+                    if (window.getComputedStyle) {
+                        var style = getComputedStyle(obj);
+                    } else {
+                        var style = obj.currentStyle // IE
+                    }
+                    indentWidth += (parseInt(style.marginLeft) || 0);
+                    indentWidth += (parseInt(style.paddingLeft) || 0);
                     if (obj.tagName=='LI') {
                         break;
                     }
@@ -492,6 +499,7 @@ function modify_taskchain_links() {
                         w -= indentWidth;
                     }
                     links[ii].style.width = w + 'px';
+                    links[ii].style.maxWidth = '95%';
                 }
             }
         }

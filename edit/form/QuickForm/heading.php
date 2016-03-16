@@ -24,7 +24,7 @@
  * @author    Gordon Bateson <gordonbateson@gmail.com> (based on "warning" by Jamie Pratt)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once("HTML/QuickForm/static.php");
+require_once('HTML/QuickForm/static.php');
 
 /**
  * static heading
@@ -60,8 +60,12 @@ class MoodleQuickForm_heading extends HTML_QuickForm_static{
      * @param string $class heading class (optional, default=null)
      * @param string $cssid heading css id (optional, default=null)
      */
-    function MoodleQuickForm_heading($text=null, $level=null, $class=null, $cssid=null) {
-        parent::HTML_QuickForm_static(null, null, $text); // name=null, label=null
+    function __construct($text=null, $level=null, $class=null, $cssid=null) {
+        if (method_exists('HTML_QuickForm_static', '__construct')) {
+            parent::__construct(null, null, $text); // name=null, label=null
+        } else {
+            parent::HTML_QuickForm_static(null, null, $text); // name=null, label=null
+        }
         $this->_type  = 'heading';
         $this->_level = $level;
         $this->_class = $class;

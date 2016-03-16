@@ -47,8 +47,12 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
     /**
      * Constructor
      */
-    function TaskChain_MoodleQuickForm_Renderer() {
-        parent::MoodleQuickForm_Renderer();
+    function __construct() {
+        if (method_exists('MoodleQuickForm_Renderer', '__construct')) {
+            parent::__construct();
+        } else {
+            parent::MoodleQuickForm_Renderer();
+        }
     }
 
     /**
