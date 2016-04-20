@@ -78,10 +78,8 @@ $TC->taskchain->gradeweighting = $TC->chain->gradeweighting;
 taskchain_update_grades($TC->taskchain, $USER->id);
 
 // update completion, if necessary
-if ($TC->taskchain->completionmingrade || $TC->taskchain->completionpass || $TC->taskchain->completioncompleted) {
-    $completion = new completion_info($TC->course);
-    $completion->update_state($TC->coursemodule);
-}
+$completion = new completion_info($TC->course);
+$TC->update_completion_state($completion);
 
 // do the stuff the $TC->task->output->redirect() used to do
 

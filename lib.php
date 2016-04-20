@@ -2661,7 +2661,7 @@ function taskchain_get_completion_state($course, $cm, $userid, $type) {
 
         // get grade, if necessary
         $grade = false;
-        if ($taskchain->completionmingrade || $taskchain->completionpass) {
+        if ($taskchain->completionmingrade > 0.0 || $taskchain->completionpass) {
             require_once($CFG->dirroot.'/lib/gradelib.php');
             $params = array('courseid'     => $course->id,
                             'itemtype'     => 'mod',

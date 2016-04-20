@@ -2850,4 +2850,18 @@ class mod_taskchain extends taskchain_base {
             add_to_log($courseid, $module, $action, $url, $info, $cmid, $userid);
         }
     }
+
+    /**
+     * update_completion_state
+     *
+     * @param object $completion
+     * @return void, but may update completion status of course_module record for this TaskChain activity
+     */
+    public function update_completion_state($completion) {
+        if ($this->taskchain->completionmingrade > 0.0 || $this->taskchain->completionpass || $this->taskchain->completioncompleted) {
+            if ($completion->is_enabled($this->coursemodule) && ($this->coursemodule->completion==COMPLETION_TRACKING_AUTOMATIC)) {
+                $completion->update_state($this->coursemodule);
+            }
+        }
+    }
 }
