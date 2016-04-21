@@ -61,11 +61,18 @@ class MoodleQuickForm_heading extends HTML_QuickForm_static{
      * @param string $cssid heading css id (optional, default=null)
      */
     function __construct($text=null, $level=null, $class=null, $cssid=null) {
-        if (method_exists('HTML_QuickForm_static', '__construct')) {
-            parent::__construct(null, null, $text); // name=null, label=null
-        } else {
-            parent::HTML_QuickForm_static(null, null, $text); // name=null, label=null
-        }
+        parent::__construct(null, null, $text); // name=null, label=null
+        $this->_type  = 'heading';
+        $this->_level = $level;
+        $this->_class = $class;
+        $this->_cssid = $cssid;
+    }
+
+    /*
+     * Old constructor for Moodle <= 2.9
+     */
+    function MoodleQuickForm_heading($text=null, $level=null, $class=null, $cssid=null) {
+        parent::HTML_QuickForm_static(null, null, $text); // name=null, label=null
         $this->_type  = 'heading';
         $this->_level = $level;
         $this->_class = $class;
