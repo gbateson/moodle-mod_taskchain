@@ -527,15 +527,25 @@ class taskchain_source {
                 $type = ''; // shouldn't happen !!
         }
 
+        // "user" and "coursefiles" repositories
+        // will set this flag to TRUE
+        $encodepath = false;
+
+        // "filesytem" repository on Moodle >= 3.1
+        // will set this string to 'browse'
+        $nodepathmode = 'browse';
+
         switch ($type) {
             case 'filesystem':
-                $path       = dirname($mainfile->get_reference());
-                $encodepath = false;
+                $path = dirname($mainfile->get_reference());
+                if (method_exists($repository, 'build_node_path')) {
+                    $nodepathmode = 'browse';
+                }
                 break;
             case 'user':
             case 'coursefiles':
-                $params     = file_storage::unpack_reference($mainfile->get_reference(), true);
-                $path       = $params['filepath'];
+                $params = file_storage::unpack_reference($mainfile->get_reference(), true);
+                $path   = $params['filepath'];
                 $encodepath = true;
                 break;
             default:
@@ -571,6 +581,14 @@ class taskchain_source {
         // encode $params, if necessary
         if ($encodepath) {
             $path = base64_encode(json_encode($params));
+        }
+
+        // build node path, if necessary
+        if ($nodepathmode) {
+            // for "filesystem" repository on Moodle >= 3.1
+            // the following code mimics the protected method
+            // $repository->build_node_path($nodepathmode, $dirpath)
+            $path = $nodepathmode.':'.base64_encode($path).':';
         }
 
         $listing = $repository->get_listing($path);
