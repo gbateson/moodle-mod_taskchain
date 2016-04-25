@@ -1877,7 +1877,6 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
         $params = json_decode(base64_decode($params), true);
     }
 
-    $paths = array('hp6.2/img' => 'hp6.2/img/a.gif');
     foreach ($paths as $path => $source) {
 
         if (! taskchain_pluginfile_dirpath_exists($path, $repository, $type, $encodepath, $nodepathmode, $params)) {
