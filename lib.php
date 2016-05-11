@@ -2708,7 +2708,9 @@ function taskchain_get_completion_state($course, $cm, $userid, $type) {
                             'completioncompleted');
 
         foreach ($conditions as $condition) {
-            if (empty($taskchain->$condition)) {
+            // decimal (e.g. completionmingrade) fields are returned by MySQL as a string
+            // and since empty('0.0') returns false (!!), so we must use numeric comparison
+            if (empty($taskchain->$condition) || floatval($taskchain->$condition)==0.0) {
                 continue;
             }
             switch ($condition) {
