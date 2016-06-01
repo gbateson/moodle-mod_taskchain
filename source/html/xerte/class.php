@@ -68,7 +68,8 @@ class taskchain_source_html_xerte extends taskchain_source_html {
         }
         // myRLO = new rloObject('800','600','template.rlt');
         // myRLO = new rloObject('800','600','numbers_3.rlo');
-        if (! preg_match("/myRLO = new rloObject\('\d*','\d*','[^']*.rl[ot]'\)/", $this->filecontents)) {
+        // myRLO = new rloObject('800','600','Nottingham.rlt', '', 'template.xml', 'http://localhost/xertetoolkits/', linkId)
+        if (! preg_match("/myRLO = new rloObject\('\d*','\d*','[^']*.rl[ot]'[^)]*\)/", $this->filecontents)) {
             return false;
         }
         return true;

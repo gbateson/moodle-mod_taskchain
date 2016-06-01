@@ -115,14 +115,18 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
         //  - convert MainPreloader.swf to absolute URL
         //  - break up "script" strings to prevent unwanted TaskChain postprocessing
         $search = array(
-            ' style="'."width:' + rloWidth + 'px; height:' + rloHeight + 'px; ".'"',
-            'var FileLocation = getLocation();',
+            'style="'."padding:0px; width:' + rloWidth + 'px; height:' + rloHeight + 'px;".'"', // NEW
+            'style="'."width:' + rloWidth + 'px; height:' + rloHeight + 'px; ".'"',             // OLD
+            'var FileLocation = xmlPath;',       // NEW
+            'var FileLocation = getLocation();', // OLD
             'MainPreloader.swf',
             'script', 'Script', 'SCRIPT',
         );
         $replace = array(
-            ' style="'."width:' + rloWidth + 'px; height:' + rloHeight + 'px; margin:auto;".'"',
-            "var FileLocation = '$baseurl';",
+            'style="'."padding:0px; width:' + rloWidth + 'px; height:' + rloHeight + 'px; margin:auto;".'"', // NEW
+            'style="'."width:' + rloWidth + 'px; height:' + rloHeight + 'px; margin:auto;".'"', // OLD
+            "var FileLocation = '$baseurl';", // NEW
+            "var FileLocation = '$baseurl';", // OLD
             $baseurl.'MainPreloader.swf',
             "scr' + 'ipt", "Scr' + 'ipt", "SCR' + 'IPT",
         );
@@ -131,7 +135,7 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
             // remove "id" to prevent resizing of Flash object
             // there might be another way to do this
             // e.g. using js to stretch canvas area
-            $search[] = ' id="'."rlo' + rloID + '".'"';
+            $search[] = 'id="'."rlo' + rloID + '".'"';
             $replace[] = '';
         }
 
