@@ -1126,6 +1126,12 @@ class taskchain_source {
             $filearea  = $this->file->get_filearea();
             $filepath  = $this->file->get_filepath();
 
+            // transfer subdirectories from $filename to $filepath
+            if ($pos = strrpos($filename, '/')) {
+                $filepath .= substr($filename, 0, $pos + 1);
+                $filename = substr($filename, $pos + 1);
+            }
+
             if ($file = $fs->get_file($contextid, $component, $filearea, 0, $filepath, $filename)) {
                 // file already exists in this filearea
             } else {

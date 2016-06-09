@@ -1689,7 +1689,6 @@ function mod_taskchain_pluginfile($course, $cm, $context, $filearea, $args, $for
     if ($file = taskchain_pluginfile_externalfile($context, 'mod_taskchain', $filearea, $filepath, $filename)) {
         send_stored_file($file, $lifetime, 0);
     }
-die('Oops');
 
     // search course legacy files
     // $coursecontext = context_course::instance($course->id);

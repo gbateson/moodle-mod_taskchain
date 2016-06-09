@@ -63,16 +63,24 @@ class taskchain_source_html_xerte extends taskchain_source_html {
             // empty or non-existant file
             return false;
         }
-        if (! preg_match('/<script[^>]*src\s*=\s*"[^"]*rloObject.js"[^>]*>/', $this->filecontents)) {
-            return false;
+
+        // Xerte Flash format
+        if (preg_match('/<script[^>]*src\s*=\s*"[^"]*rloObject.js"[^>]*>/', $this->filecontents)) {
+            // myRLO = new rloObject('800','600','template.rlt');
+            // myRLO = new rloObject('800','600','numbers_3.rlo');
+            // myRLO = new rloObject('800','600','Nottingham.rlt', '', 'template.xml', 'http://myserver.com/xertetoolkits/', linkId)
+            $search = "/myRLO = new rloObject\('\d*','\d*','[^']*.rl[ot]'[^)]*\)/";
+            return preg_match($search, $this->filecontents);
         }
-        // myRLO = new rloObject('800','600','template.rlt');
-        // myRLO = new rloObject('800','600','numbers_3.rlo');
-        // myRLO = new rloObject('800','600','Nottingham.rlt', '', 'template.xml', 'http://localhost/xertetoolkits/', linkId)
-        if (! preg_match("/myRLO = new rloObject\('\d*','\d*','[^']*.rl[ot]'[^)]*\)/", $this->filecontents)) {
-            return false;
+
+        // Xerte HTML5 offline format
+        if (preg_match('/<script[^>]*src\s*=\s*"[^"]*offlinesupport.js"[^>]*>/', $this->filecontents)) {
+            $search = '/<body[^"]*onload\s*=\s*"XTInitialise\(\);"[^"]*onbeforeunload\s*=\s*"XTTerminate\(\);"[^>]*>/';
+            return preg_match($search, $this->filecontents);
         }
-        return true;
+
+        // not a recognized Xerte file
+        return false;
     }
 
     /**

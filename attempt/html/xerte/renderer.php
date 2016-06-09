@@ -80,12 +80,12 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
         }
 
         if ($pos = strpos($this->TC->task->source->filecontents, '<title>')) {
-            $insert = '<base href="'.$this->TC->task->source->baseurl.'/'.$this->TC->task->source->filepath.'">'."\n";
+            $insert = '<base href="'.$this->TC->task->source->baseurl.$this->TC->task->source->filepath.'">'."\n";
             $this->TC->task->source->filecontents = substr_replace($this->TC->task->source->filecontents, $insert, $pos, 0);
         }
 
         // replace external javascript with modified inline javascript
-        $search = '/<script[^>]*src\s*=\s*"([^"]*)"[^>]*>\s*<\/script>/';
+        $search = '/(?<!<\!-- )<script[^>]*src\s*=\s*"([^"]*)"[^>]*>\s*<\/script>/';
         $callback = array($this, 'preprocessing_xerte_js');
         $this->TC->task->source->filecontents = preg_replace_callback($search, $callback, $this->TC->task->source->filecontents);
 
@@ -100,15 +100,63 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
      * @todo Finish documenting this function
      */
     public function preprocessing_xerte_js($match) {
-        $js = $this->TC->task->source->get_sibling_filecontents($match[1]);
+
+        // clean filename
+        $filename = $match[1];
+        if ($pos = strpos($filename, '?')) {
+            $filename = substr($filename, 0, $pos);
+        }
+
+        // special processing for js files
+        switch ($filename) {
+
+            // HTML5 files
+            case 'offline/js/offlinesupport.js':
+            case 'offline/offline_engine_en-GB.js':
+            case 'offline/offline_template.js':
+            case 'offline/offline_colourChanger.js':
+            case 'offline/offline_menu.js':
+            case 'offline/offline_language.js':
+            case 'offline/hangman.js':
+            case 'common_html5/js/popcorn/popcorn-complete.min.js':
+            case 'common_html5/js/popcorn/plugins/popcorn.textplus.js':
+            case 'common_html5/js/popcorn/plugins/popcorn.subtitleplus.js':
+            case 'common_html5/js/popcorn/plugins/popcorn.xot.js':
+            case 'common_html5/js/popcorn/plugins/popcorn.mediaplus.js':
+            case 'common_html5/js/popcorn/plugins/popcorn.mcq.js':
+            case 'common_html5/js/popcorn/plugins/popcorn.slides.js':
+            case 'common_html5/js/popcorn/plugins/popcorn.sortholder.js':
+            case 'common_html5/js/jquery-1.9.1.min.js':
+            case 'common_html5/js/jquery-ui-1.10.4.min.js':
+            case 'common_html5/js/jquery.ui.touch-punch.min.js':
+            case 'common_html5/js/imageLens.js':
+            case 'common_html5/js/gray-gh-pages/js/jquery.gray.min.js':
+            case 'common_html5/mediaelement/mediaelement-and-player.js':
+            case 'common_html5/js/mediaPlayer.js':
+            case 'common_html5/js/swfobject.js':
+            case 'common_html5/js/xenith.js':
+            case 'common_html5/js/xttracking_noop.js':
+            case 'offline/js/mathjax/MathJax.js':
+                return $match[0];
+
+            // Flash files
+            case 'js/rlohelper.js':
+            case 'js/xttracking_noop.js':
+            case 'rloObject.js':
+                break;
+
+            //default: echo "unknown file: '$filename'";
+        }
 
         // set baseurl
         $baseurl = $this->TC->task->source->baseurl;
         if ($pos = strrpos($this->TC->task->source->filepath, '/')) {
             $baseurl .= substr($this->TC->task->source->filepath, 0, $pos);
-        } else {
         }
         $baseurl .= '/';
+
+        // get javascript from external file
+        $js = $this->TC->task->source->get_sibling_filecontents($match[1]);
 
         // several search-and-replace fixes
         //  - add style to center the Flash Object
