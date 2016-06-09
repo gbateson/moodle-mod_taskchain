@@ -533,7 +533,7 @@ class taskchain_source {
 
         // "filesytem" repository on Moodle >= 3.1
         // will set this string to 'browse'
-        $nodepathmode = 'browse';
+        $nodepathmode = '';
 
         switch ($type) {
             case 'filesystem':
