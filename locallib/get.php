@@ -174,19 +174,19 @@ class taskchain_get extends taskchain_base {
     }
 
     /**
-     * get_gradeitem
+     * get_usergrade
      *
      * @uses $CFG
      * @uses $USER
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function gradeitem() {
+    public function usergrade() {
         global $CFG;
         require_once($CFG->dirroot.'/lib/gradelib.php');
 
-        if (is_null($this->TC->gradeitem)) {
-            $this->TC->gradeitem = false;
+        if (is_null($this->TC->usergrade)) {
+            $this->TC->usergrade = false;
 
             $userid = $this->TC->get_userid();
             $courseid = $this->TC->get_courseid();
@@ -196,19 +196,19 @@ class taskchain_get extends taskchain_base {
                 if (isset($grades->items[0]) && $grades->items[0]->grademax > 0) {
                     // this activity has a grade item
                     if (isset($grades->items[0]->grades[$userid])) {
-                        $this->TC->gradeitem = $grades->items[0]->grades[$userid];
+                        $this->TC->usergrade = $grades->items[0]->grades[$userid];
                         // grade->grade is the adjusted grade, for a true percent
                         // we need to shift and scale according to grademin and grademax
-                        $percent = $this->TC->gradeitem->grade;
+                        $percent = $this->TC->usergrade->grade;
                         if ($grades->items[0]->grademax > 0) {
                             $percent = (($percent - $grades->items[0]->grademin) / $grades->items[0]->grademax);
                         }
-                        $this->TC->gradeitem->percent = round($percent * 100);
+                        $this->TC->usergrade->percent = round($percent * 100);
                     }
                 }
             }
         }
-        return $this->TC->gradeitem;
+        return $this->TC->usergrade;
     }
 
     /**

@@ -713,5 +713,72 @@ class taskchain_chain extends taskchain_base {
     public function set_gradeweighting($value) {
         $this->gradeweighting = $value;
     }
+
+    /**
+     * get the grade pass value for the current grade item
+     *
+     * @return integer the current gradepass $value
+     */
+    public function get_gradepass() {
+        $this->get_gradeitem_field('gradepass');
+    }
+
+    /**
+     * update the grade pass value for the current grade item
+     *
+     * @param integer the new gradepass $value
+     */
+    public function set_gradepass($value) {
+        $this->set_gradeitem_field('gradepass', $value);
+    }
+
+    /**
+     * get the grade category id for the current grade item
+     *
+     * @return integer the current gradecategory $value
+     */
+    public function get_gradecategory() {
+        $this->get_gradeitem_field('categoryid');
+    }
+
+    /**
+     * update the grade category id for the current grade item
+     *
+     * @param integer the new gradecategory $value
+     */
+    public function set_gradecategory($value) {
+        $this->set_gradeitem_field('categoryid', $value);
+    }
+
+    /**
+     * get the value of a grade item field from the Moodle $DB
+     *
+     * @uses $DB
+     * @param string $fieldname
+     * @return mixed $value
+     */
+    protected function get_gradeitem_field($fieldname) {
+        global $DB;
+        $params = array('itemtype' => 'mod',
+                        'itemmodule' => 'taskchain',
+                        'iteminstance' => $this->parentid);
+        return $DB->get_field('grade_items', $fieldname, $params);
+    }
+
+    /**
+     * update a grade item field in the Moodle $DB
+     *
+     * @uses $DB
+     * @param string $fieldname
+     * @param mixed the new grade item $value
+     * @return void, but may update $value in $DB
+     */
+    protected function set_gradeitem_field($fieldname, $value) {
+        global $DB;
+        $params = array('itemtype' => 'mod',
+                        'itemmodule' => 'taskchain',
+                        'iteminstance' => $this->parentid);
+        $DB->set_field('grade_items', $fieldname, $value, $params);
+    }
 }
 

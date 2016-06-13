@@ -70,7 +70,8 @@ class mod_taskchain extends taskchain_base {
     public $taskscore    = null;
     public $taskattempt  = null;
     public $block        = null;
-    public $gradeitem    = null;
+
+    public $usergrade     = null;
 
     public $lastchainattempt = null;
     public $lasttaskattempt  = null;
@@ -1095,7 +1096,8 @@ class mod_taskchain extends taskchain_base {
 
     // - get_report_modes()
     // - get_cm($type)
-    // - get_gradeitem($type)
+
+    // - get_usergrade()
 
     /**
      * get the pageid and pageclass of the current Moodle page

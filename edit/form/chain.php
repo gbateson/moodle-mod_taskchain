@@ -121,4 +121,24 @@ class mod_taskchain_edit_chain_form extends moodleform {
         $this->form_helper->validate_sections($errors, $data, $files);
         return $errors;
     }
+
+    /**
+     * update_singlefield
+     *
+     * @param array $data (passed by reference)
+     * @return void may modify $this->record
+     * @todo Finish documenting this function
+     */
+    public function update_singlefield(&$data) {
+        $this->form_helper->update_singlefield($data);
+    }
+
+    /**
+     * display_singlefield
+     *
+     * @todo Finish documenting this function
+     */
+    public function display_singlefield() {
+        $this->form_helper->display_singlefield();
+    }
 }

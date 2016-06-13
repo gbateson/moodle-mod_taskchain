@@ -887,13 +887,6 @@ $string['questionshort'] = 'Q-{$a}';
 $string['randomtask'] = 'Random task';
 $string['reattempttask'] = 'Re-attempt task';
 $string['recentattempts'] = 'Most recent attempts';
-$string['removegradeitem_help'] = 'Should the grade item for this activity be removed?
-
-**No**
-: the grade item for this activity in the Moodle gradebook will not be removed
-
-**Yes**
-: If the maximum grade for this TaskChain is set to &quot;No grade&quot; or the grade weighting is set to &quot;No weighting&quot;, then the grade item for this activity will be removed from the Moodle gradebook';
 $string['reordertasks'] = 'Reorder tasks';
 $string['requirepassword'] = 'Require password';
 $string['requirepassword_help'] = 'If a password is specified, a student must enter it in order to attempt the quiz.';

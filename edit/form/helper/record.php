@@ -275,6 +275,16 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     }
 
     /**
+     * get_fieldlabel_gradepass
+     *
+     * @param string $field name of field
+     * @todo Finish documenting this function
+     */
+    protected function get_fieldlabel_gradepass() {
+        return get_string('gradepass', 'grades');
+    }
+
+    /**
      * format_fieldlabel_gradecategory
      *
      * @param string $field name of field

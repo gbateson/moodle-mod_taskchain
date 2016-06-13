@@ -1316,7 +1316,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 $text = get_string('exit_nograde', 'mod_taskchain');
                 $feedback[] = html_writer::tag('li', $text);
             }
-        } else if ($this->TC->get_gradeitem() && $this->TC->get_chainattempt()) {
+        } else if ($this->TC->get_usergrade() && $this->TC->get_chainattempt()) {
             if ($exitoptions & mod_taskchain::EXITOPTIONS_ENCOURAGEMENT) {
                 switch (true) {
                     case $this->TC->chainattempt->grade >= 90:
@@ -1340,9 +1340,9 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             if ($exitoptions & mod_taskchain::EXITOPTIONS_TASKCHAINGRADE) {
                 switch ($this->TC->chain->grademethod) {
                     case mod_taskchain::GRADEMETHOD_HIGHEST:
-                        if ($this->TC->chainattempt->grade < $this->TC->gradeitem->percent) {
+                        if ($this->TC->chainattempt->grade < $this->TC->usergrade->percent) {
                             // current attempt is less than the highest so far
-                            $text = get_string('exit_taskchaingrade_highest', 'mod_taskchain', $this->TC->gradeitem->percent.$percentsign);
+                            $text = get_string('exit_taskchaingrade_highest', 'mod_taskchain', $this->TC->usergrade->percent.$percentsign);
                             $feedback[] = html_writer::tag('li', $text);
                         } else if ($this->TC->chainattempt->grade==0) {
                             // zero score is best so far
@@ -1374,14 +1374,14 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                         }
                         break;
                     case mod_taskchain::GRADEMETHOD_AVERAGE:
-                        $text = get_string('exit_taskchaingrade_average', 'mod_taskchain', $this->TC->gradeitem->percent.$percentsign);
+                        $text = get_string('exit_taskchaingrade_average', 'mod_taskchain', $this->TC->usergrade->percent.$percentsign);
                         $feedback[] = html_writer::tag('li', $text);
                         break;
                     // case mod_taskchain::GRADEMETHOD_TOTAL:
                     // case mod_taskchain::GRADEMETHOD_FIRST:
                     // case mod_taskchain::GRADEMETHOD_LAST:
                     default:
-                        $text = get_string('exit_taskchaingrade', 'mod_taskchain', $this->TC->gradeitem->percent.$percentsign);
+                        $text = get_string('exit_taskchaingrade', 'mod_taskchain', $this->TC->usergrade->percent.$percentsign);
                         $feedback[] = html_writer::tag('li', $text);
                         break;
                 }

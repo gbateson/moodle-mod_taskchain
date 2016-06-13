@@ -56,7 +56,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'time'       => array('timeopen', 'timeclose', 'timelimit', 'delay1', 'delay2'),
         'attempts'   => array('attemptlimit', 'allowresume', 'allowfreeaccess'),
         'security'   => array('password', 'subnet'),
-        'assessment' => array('attemptgrademethod', 'grademethod', 'gradeignore', 'gradelimit', 'gradeweighting', 'gradecategory')
+        'assessment' => array('attemptgrademethod', 'grademethod', 'gradeignore', 'gradelimit', 'gradeweighting', 'gradepass', 'gradecategory')
         // Note: "hidden" section will be added by mod_moodleform
     );
 
@@ -120,6 +120,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'gradeignore'        => mod_taskchain::NO,
         'gradelimit'         => 100,
         'gradeweighting'     => 100,
+        'gradepass'          => 0,
         'gradecategory'      => 0
     );
 
@@ -175,14 +176,15 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /////////////////////////////////////////////////////////
 
     /**
-     * get grade item, if any, for this activity from the Moodle gradebook
+     * get grade item field, if any, for this activity from the Moodle gradebook
      *
      * Note: could make this general purpose, if we use $this->_cm->modname for 'itemmodule'
      *
      * @uses $DB
+     * @param string $fieldname
      * @return int the grade category of this activity (or 0 is there is no grade item)
      */
-    public function get_grade_category() {
+    public function get_grade_item_field($fieldname, $default=null) {
         global $DB;
         if ($this->is_update()) {
             if (isset($this->record->instance)) {
@@ -190,19 +192,19 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             } else {
                 $iteminstance = $this->record->id;
             }
-            $params = array('itemtype'=>'mod', 'itemmodule'=>'taskchain', 'iteminstance'=>$iteminstance);
-            if ($categoryid = $DB->get_field('grade_items', 'categoryid', $params)) {
-                return $categoryid;
+            $params = array('itemtype' => 'mod',
+                            'itemmodule' => 'taskchain',
+                            'iteminstance' => $iteminstance);
+            if ($fieldvalue = $DB->get_field('grade_items', $fieldname, $params)) {
+                return $fieldvalue;
             }
         }
-        return 0; // no grade item exists (yet)
+        return $default; // no grade item exists (yet)
     }
 
     /**
      * get_fieldvalue_name
      *
-     * @param string $field name of field
-     * @param mixed $value of field
      * @todo Finish documenting this function
      */
     protected function get_fieldvalue_name() {
@@ -216,16 +218,31 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /**
      * get_fieldvalue_showdescription
      *
-     * @param string $field name of field
-     * @param mixed $value of field
      * @todo Finish documenting this function
      */
     protected function get_fieldvalue_showdescription() {
         if (isset($this->TC->coursemodule->showdescription)) {
             return $this->TC->coursemodule->showdescription;
-        } else {
-            return 0; // Moodle <= 2.1
         }
+        return 0; // Moodle <= 2.1
+    }
+
+    /**
+     * get_fieldvalue_gradecategory
+     *
+     * @todo Finish documenting this function
+     */
+    protected function get_fieldvalue_gradepass() {
+        return $this->get_grade_item_field('gradepass', 0);
+    }
+
+    /**
+     * get_fieldvalue_gradecategory
+     *
+     * @todo Finish documenting this function
+     */
+    protected function get_fieldvalue_gradecategory() {
+        return $this->get_grade_item_field('categoryid', 0);
     }
 
     /**
@@ -305,13 +322,23 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     }
 
     /**
+     * prepare_field_gradepass
+     *
+     * @param object $data (passed by reference) from form
+     * @todo Finish documenting this function
+     */
+    protected function prepare_field_gradepass(&$data) {
+        $data['gradepass'] = $this->get_grade_item_field('gradepass');
+    }
+
+    /**
      * prepare_field_gradecategory
      *
      * @param object $data (passed by reference) from form
      * @todo Finish documenting this function
      */
     protected function prepare_field_gradecategory(&$data) {
-        $data['gradecategory'] = $this->get_grade_category();
+        $data['gradecategory'] = $this->get_grade_item_field('categoryid');
     }
 
     /////////////////////////////////////////////////////////
@@ -520,7 +547,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
         foreach (mod_taskchain::window_options('numeric') as $option) {
             $elements = array();
-            $elements[] = $this->mform->createElement('text', $option, '', array('size'=>'4'));
+            $elements[] = $this->mform->createElement('text', $option, '', array('size' => '4'));
             $elements[] = $this->mform->createElement('static', '', '', get_string('window'.$option, 'mod_taskchain'));
             $name = 'window_'.$option.'_elements';
             $this->mform->addGroup($elements, $name, '', ' ', false);
@@ -619,6 +646,23 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      */
     protected function add_field_gradelimit($field) {
         $this->add_template_limit('grade');
+    }
+
+    /**
+     * add_field_gradepass
+     *
+     * @param string name of $field
+     * @todo Finish documenting this function
+     */
+    protected function add_field_gradepass($field) {
+        $name = $this->get_fieldname($field);
+        $label = $this->get_fieldlabel($field);
+        $this->mform->addElement('text', $name, $label, array('size' => 8));
+        $this->add_helpbutton($name, $name, 'grades');
+        $this->mform->setType($name, PARAM_FLOAT);
+        // this element is not available if gradeweighting==0 or gradelimit==0
+        $this->mform->disabledIf($name, 'gradeweighting', 'eq', 0);
+        $this->mform->disabledIf($name, 'gradelimit', 'eq', 0);
     }
 
     /**
@@ -1385,6 +1429,21 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     }
 
     /**
+     * format_fieldvalue_gradepass
+     *
+     * @param string $field name of field
+     * @param string $value of field
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_gradepass($field, $value) {
+        if ($value) {
+            return round($value, 2);
+        } else {
+            return '';
+        }
+    }
+
+    /**
      * format_fieldvalue_gradecategory
      *
      * @param string $field name of field
@@ -1422,7 +1481,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      */
     public function get_helpicon_entrytext() {
         global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('entrycm', 'taskchain');
+        return ' '.$OUTPUT->help_icon('entrycm', 'mod_taskchain');
     }
 
     /**
@@ -1432,7 +1491,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      */
     public function get_helpicon_entrygrade() {
         global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('entrycm', 'taskchain');
+        return ' '.$OUTPUT->help_icon('entrycm', 'mod_taskchain');
     }
 
     /**
@@ -1442,7 +1501,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      */
     public function get_helpicon_exittext() {
         global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('exitcm', 'taskchain');
+        return ' '.$OUTPUT->help_icon('exitcm', 'mod_taskchain');
     }
 
     /**
@@ -1452,7 +1511,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      */
     public function get_helpicon_exitgrade() {
         global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('exitcm', 'taskchain');
+        return ' '.$OUTPUT->help_icon('exitcm', 'mod_taskchain');
     }
 
     /**
@@ -1462,13 +1521,22 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      */
     public function get_helpicon_exitoptions() {
         global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('exitcm', 'taskchain');
+        return ' '.$OUTPUT->help_icon('exitcm', 'mod_taskchain');
+    }
+
+    /**
+     * get_helpicon_gradepass
+     */
+    public function get_helpicon_gradepass() {
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('gradepass', 'grades');
     }
 
     /**
      * get_helpicon_gradecategory
      */
     public function get_helpicon_gradecategory() {
-        return '';
+        global $OUTPUT;
+        return ' '.$OUTPUT->help_icon('gradecategoryonmodform', 'grades');
     }
 }
