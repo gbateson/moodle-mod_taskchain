@@ -131,15 +131,8 @@ function print_courselinks() {
         // a teacher - or at least someone who can view all users' grades
         $userids = array();
 
-        $preferencename = 'taskchain_navigation_groupid_'.$course->id;
-        if ($groupid = get_user_preferences($preferencename, 0)) {
-            if (! $DB->record_exists('groups', array('id' => $groupid, 'courseid' => $course->id))) {
-                // not a valid groupid
-                unset_user_preference($preferencename);
-                $groupid = 0;
-            }
-        }
-        $groupid = optional_param('groupid', $groupid, PARAM_INT);
+        // get the current group for this course
+        $groupid = groups_get_course_group($course);
 
         // get groupmode: 0=NOGROUPS, 1=VISIBLEGROUPS, 2=SEPARATEGROUPS
         $groupmode = groups_get_course_groupmode($course);
