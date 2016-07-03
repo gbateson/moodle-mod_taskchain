@@ -72,23 +72,6 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $this->prepare_template_filearea($data, 'config');
     }
 
-    /**
-     * prepare_field_timelimit
-     *
-     * @param array $data (passed by reference)
-     * @todo Finish documenting this function
-     */
-    protected function prepare_field_timelimit(&$data) {
-        $name = $this->get_fieldname('timelimit');
-        $namespecific = $this->get_fieldname('timelimitspecific');
-        if ($data[$name]>0) {
-            $data[$namespecific] = $data[$name];
-            $data[$name] = mod_taskchain::TIME_SPECIFIC;
-        } else {
-            $data[$name] = 0;
-        }
-    }
-
     /////////////////////////////////////////////////////////
     // prepare_template ...
     /////////////////////////////////////////////////////////
