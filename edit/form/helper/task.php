@@ -197,20 +197,40 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     }
 
     /**
-     * prepare task's "delay3" values
+     * prepare task's "timelimit" value
+     *
+     * @param array $data (passed by reference)
+     * @todo Finish documenting this function
+     */
+    protected function prepare_field_timelimit(&$data) {
+        $this->prepare_template_timelist($data, 'timelimit');
+    }
+
+    /**
+     * prepare task's "delay3" value
      *
      * @param array $data (passed by reference)
      * @todo Finish documenting this function
      */
     protected function prepare_field_delay3(&$data) {
-        $field = 'delay3';
+        $this->prepare_template_timelist($data, 'delay3');
+    }
+
+    /**
+     * prepare task's time list
+     *
+     * @param array $data (passed by reference)
+     * @param string $field name
+     * @todo Finish documenting this function
+     */
+    protected function prepare_template_timelist(&$data, $field) {
         $name = $this->get_fieldname($field);
         $name_options = $this->get_fieldname($field.'options');
         if ($data[$name] < 0) {
             $data[$name_options] = $data[$name];
             $data[$name] = 0;
         } else {
-            $data[$name_options] = mod_taskchain::DELAY3_SPECIFIC;
+            $data[$name_options] = mod_taskchain::TIME_SPECIFIC;
         }
     }
 
@@ -416,17 +436,38 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     }
 
     /**
+     * add_field_timelimit
+     *
+     * @param string name of $field
+     * @todo Finish documenting this function
+     */
+    protected function add_field_timelimit($field) {
+        $this->add_template_timelist('timelimit');
+    }
+
+    /**
      * add_field_delay3
      *
      * @param string name of $field
      * @todo Finish documenting this function
      */
     protected function add_field_delay3($field) {
+        $this->add_template_timelist('delay3');
+    }
+
+    /**
+     * add_template_time
+     *
+     * @param string name of $field
+     * @todo Finish documenting this function
+     */
+    protected function add_template_timelist($field) {
         $name = $this->get_fieldname($field);
         $name_options = $this->get_fieldname($field.'options');
-        $this->add_template_timer($field, true, array('options' => taskchain_available::delay3s_list()));
-        $this->mform->disabledIf($name.'[number]',   $name_options, 'ne', mod_taskchain::DELAY3_SPECIFIC);
-        $this->mform->disabledIf($name.'[timeunit]', $name_options, 'ne', mod_taskchain::DELAY3_SPECIFIC);
+        $options = call_user_func(array('taskchain_available', $field.'s_list'));
+        $this->add_template_timer($field, true, array('options' => $options));
+        $this->mform->disabledIf($name.'[number]',   $name_options, 'ne', mod_taskchain::TIME_SPECIFIC);
+        $this->mform->disabledIf($name.'[timeunit]', $name_options, 'ne', mod_taskchain::TIME_SPECIFIC);
     }
 
     /**
@@ -681,6 +722,18 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     }
 
     /**
+     * fix_field_timelimit
+     *
+     * @param array $data (passed by reference)
+     * @param string name of $field
+     * @return void may modify $data
+     * @todo Finish documenting this function
+     */
+    protected function fix_field_timelimit(&$data, $field) {
+        $this->fix_template_timelist($data, $field);
+    }
+
+    /**
      * fix_field_delay3
      *
      * @param array $data (passed by reference)
@@ -689,15 +742,27 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function fix_field_delay3(&$data, $field) {
+        $this->fix_template_timelist($data, $field);
+    }
+
+    /**
+     * fix_template_timelist
+     *
+     * @param array $data (passed by reference)
+     * @param string name of $field
+     * @return void may modify $data
+     * @todo Finish documenting this function
+     */
+    protected function fix_template_timelist(&$data, $field) {
         $name = $this->get_fieldname($field);
         $name_options = $this->get_fieldname($field.'options');
         switch ($data->$name_options) {
-            case mod_taskchain::DELAY3_TEMPLATE: // -1
-            case mod_taskchain::DELAY3_AFTEROK:  // -2
-            case mod_taskchain::DELAY3_DISABLE:  // -3
+            case mod_taskchain::TIME_TEMPLATE: // -1
+            case mod_taskchain::TIME_AFTEROK:  // -2
+            case mod_taskchain::TIME_DISABLE:  // -3
                 $data->$name = $data->$name_options;
                 break;
-            case mod_taskchain::DELAY3_SPECIFIC: // =0
+            case mod_taskchain::TIME_SPECIFIC: // =0
             default:
                 $data->$name = max(0, $data->$name);
                 break;
@@ -788,6 +853,17 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     }
 
     /**
+     * format_fieldvalue_timelimit
+     *
+     * @param string $value of field from the record
+     * @return string formatted version of the value
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_timelimit($field, $value) {
+        return $this->format_templatevalue_timelist($field, $value);
+    }
+
+    /**
      * format_fieldvalue_delay3
      *
      * @param string $value of field from the record
@@ -795,6 +871,17 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function format_fieldvalue_delay3($field, $value) {
+        return $this->format_templatevalue_timelist($field, $value);
+    }
+
+    /**
+     * format_templatevalue_timelist
+     *
+     * @param string $value of field from the record
+     * @return string formatted version of the value
+     * @todo Finish documenting this function
+     */
+    protected function format_templatevalue_timelist($field, $value) {
         if ($value < 0) {
             return $this->format_templatevalue_list($field, $value);
         } else {

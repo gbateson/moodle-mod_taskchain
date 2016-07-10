@@ -136,16 +136,29 @@ class taskchain_available extends taskchain_base {
     }
 
     /**
+     * Returns the localized list of timelimit settings for a TaskChain task instance
+     *
+     * @return array
+     */
+    static public function timelimits_list() {
+        return array(
+            self::TIME_SPECIFIC => get_string('timelimitspecific', 'mod_taskchain'),
+            self::TIME_TEMPLATE => get_string('timelimittemplate', 'mod_taskchain'),
+            self::TIME_DISABLE  => get_string('disable')
+        );
+    }
+
+    /**
      * Returns the localized list of delay3 settings for a TaskChain task instance
      *
      * @return array
      */
     static public function delay3s_list() {
         return array(
-            self::DELAY3_SPECIFIC => get_string('delay3specific', 'mod_taskchain'),
-            self::DELAY3_TEMPLATE => get_string('delay3template', 'mod_taskchain'),
-            self::DELAY3_AFTEROK  => get_string('delay3afterok', 'mod_taskchain'),
-            self::DELAY3_DISABLE  => get_string('delay3disable', 'mod_taskchain'),
+            self::TIME_SPECIFIC => get_string('delay3specific', 'mod_taskchain'),
+            self::TIME_TEMPLATE => get_string('delay3template', 'mod_taskchain'),
+            self::TIME_AFTEROK  => get_string('delay3afterok', 'mod_taskchain'),
+            self::TIME_DISABLE  => get_string('delay3disable', 'mod_taskchain')
         );
     }
 

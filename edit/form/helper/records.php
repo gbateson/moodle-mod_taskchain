@@ -287,6 +287,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @todo Finish documenting this function
      */
     public function add_field_action($field) {
+        global $PAGE;
 
         $name = $this->get_fieldname($field);
         $label = ''; // $this->get_fieldlabel($field)
@@ -322,11 +323,28 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
                 $added = true;
             }
         }
-        //
+
         if ($added) {
             $this->mform->setDefault($name, $default);
             $this->mform->setType($name, PARAM_ALPHA);
+        }
 
+        $use_YUI = true;
+        $formid = $this->mform->getAttribute('id');
+
+        if ($added && $use_YUI==true) {
+            $module = $this->get_module_js();
+            $options = array('count' => $count,
+                             'fieldname' => $name,
+                             'actions' => $actions);
+            $M = 'M.mod_taskchain_edit_form_helper_records';
+            $PAGE->requires->js_init_call("$M.define_action_elements",   $options, false, $module);
+            $PAGE->requires->js_init_call("$M.set_action_elements",          null, false, $module);
+            $PAGE->requires->js_init_call("$M.set_fitem_heights_and_widths", null, false, $module);
+            $PAGE->requires->js_init_call("$M.set_bottom_borders",           null, false, $module);
+        }
+
+        if ($added && $use_YUI==false) {
             $js = '';
             $js .= '<script type="text/javascript">'."\n";
             $js .= '//<![CDATA['."\n";
@@ -353,7 +371,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '        i_max = divs.length;'."\n";
             $js .= '    }'."\n";
 
-            $js .= '    for (i=0; i<i_max; i++) {'."\n";
+            $js .= '    for (var i=0; i<i_max; i++) {'."\n";
             $js .= '        if (divs[i].id.match(targetid)) {'."\n";
             $js .= '            if (divs[i].id.match(showid)) {'."\n";
             $js .= '                divs[i].style.display = "";'."\n";
@@ -367,29 +385,35 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '    return true;'."\n";
             $js .= '}'."\n";
 
-            // add onclick event handlers to form actions
-            foreach ($actions as $action => $require_records) {
-                if (empty($require_records) || $count > 0) {
-                    $js .= 'var obj = document.getElementById("id_'.$name.'_'.$action.'");'."\n";
-                    $js .= 'if (obj) {'."\n";
-                    $js .= '    obj.onclick = function() {toggle_actions(this)}'."\n";
-                    $js .= '}'."\n";
-                }
-            }
 
             // initialize the toggle state (i.e. show or hide) of the form actions
-            if ($formid = $this->mform->getAttribute('id')) {
-                $js .= 'var obj = document.getElementById("'.$formid.'")'."\n";
-                $js .= 'if (obj && obj.elements && obj.elements["'.$name.'"]) {'."\n";
-                $js .= '    var i_max = obj.elements["'.$name.'"].length;'."\n";
-                $js .= '    for (i=0; i<i_max; i++) {'."\n";
-                $js .= '        if (obj.elements["'.$name.'"][i].checked) {'."\n";
-                $js .= '            toggle_actions(obj.elements["action"][i]);'."\n";
+            $js .= 'function set_action_elements() {'."\n";
+            if ($formid) {
+                $js .= '    var obj = document.getElementById("'.$formid.'")'."\n";
+                $js .= '    if (obj && obj.elements && obj.elements["'.$name.'"]) {'."\n";
+                $js .= '        var i_max = obj.elements["'.$name.'"].length;'."\n";
+                $js .= '        for (i=0; i<i_max; i++) {'."\n";
+                $js .= '            if (obj.elements["'.$name.'"][i].checked) {'."\n";
+                $js .= '                toggle_actions(obj.elements["'.$name.'"][i]);'."\n";
+                $js .= '            }'."\n";
                 $js .= '        }'."\n";
                 $js .= '    }'."\n";
-                $js .= '}'."\n";
-                $js .= 'obj = null;'."\n";
+                $js .= '    obj = null;'."\n";
             }
+            $js .= '}'."\n";
+
+            // add onclick event handlers to form actions
+            $js .= 'function set_onclick_action_elements() {'."\n";
+            foreach ($actions as $action => $require_records) {
+                if (empty($require_records) || $count > 0) {
+                    $js .= '    var obj = document.getElementById("id_'.$name.'_'.$action.'");'."\n";
+                    $js .= '    if (obj) {'."\n";
+                    $js .= '        obj.onclick = function() {toggle_actions(this)};'."\n";
+                    $js .= '    }'."\n";
+                }
+                $js .= '    obj = null;'."\n";
+            }
+            $js .= '}'."\n";
 
             // set the heights of the "fitem" elements to the full height of their parent nodes
             // and set the width of the FIELDSETs so that they enclose all their child fitem DIVs
@@ -501,8 +525,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '    fieldsets = null;'."\n";
             $js .= '}'."\n";
 
-            $js .= 'set_fitem_heights_and_widths();'."\n";
-
             // force bottom borders of final subactions
             $js .= 'function set_bottom_borders() {'."\n";
             $js .= '    var obj = document.getElementById("actionshdr");'."\n";
@@ -511,7 +533,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             } else {
                 $js .= '    var targetid = new RegExp("^(fitem|fgroup)_id_'.$field.'_('.implode('|', array_keys($actions)).')$");'."\n";
             }
-
             $js .= '    var divs = null;'."\n";
             $js .= '    if (obj) {'."\n";
             $js .= '        divs = obj.getElementsByTagName("DIV");'."\n";
@@ -544,7 +565,12 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $js .= '    obj = null;'."\n";
             $js .= '}'."\n";
 
-            $js .= 'set_bottom_borders();'."\n";
+            $js .= 'window.addEventListener("load", function(e){'."\n";
+            $js .= '    set_action_elements();'."\n";
+            $js .= '    set_onclick_action_elements();'."\n";
+            $js .= '    set_fitem_heights_and_widths();'."\n";
+            $js .= '    set_bottom_borders();'."\n";
+            $js .= '});'."\n";
 
             $js .= '//]]>'."\n";
             $js .= '</script>';
@@ -553,6 +579,17 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $label = '';
             $this->mform->addElement('static', $name, $label, $js);
         }
+    }
+
+    /**
+     * get_module_js
+     *
+     * @return array
+     * @todo Finish documenting this function
+     */
+    protected function get_module_js() {
+        return array('name'     => 'M.mod_taskchain_edit_form_helper_records',
+                     'fullpath' => '/mod/taskchain/edit/form/helper/records.js');
     }
 
     /**

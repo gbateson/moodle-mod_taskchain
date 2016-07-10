@@ -83,7 +83,7 @@ $TC->update_completion_state($completion);
 
 // do the stuff the $TC->task->output->redirect() used to do
 
-if ($TC->task->delay3==mod_taskchain::DELAY3_DISABLE || $TC->taskattempt->status==mod_taskchain::STATUS_INPROGRESS || $TC->taskattempt->redirect==0) {
+if ($TC->task->delay3==mod_taskchain::TIME_DISABLE || $TC->taskattempt->status==mod_taskchain::STATUS_INPROGRESS || $TC->taskattempt->redirect==0) {
     // we need some check here to see if the user is trying to navigate away
     // from the page in which case we should just die and not send the header
     header("HTTP/1.0 204 No Response");

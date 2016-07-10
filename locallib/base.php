@@ -388,17 +388,6 @@ class taskchain_base {
     const TASKSACTION_MOVETOSTART     = -3;
     /**#@-*/
 
-    /**#@+
-     *
-     *
-     * @var integer
-     */
-    const DELAY3_SPECIFIC             = 0;
-    const DELAY3_TEMPLATE             = -1;
-    const DELAY3_AFTEROK              = -2;
-    const DELAY3_DISABLE              = -3;
-    /**#@-*/
-
     /** @var integer unumber/tnumber value to force creation of new attempt */
     const FORCE_NEW_ATTEMPT           = -1;
 
