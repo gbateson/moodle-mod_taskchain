@@ -282,7 +282,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     }
 
     /**
-     * add_section_actions
+     * add_field_action
      *
      * @todo Finish documenting this function
      */
@@ -334,9 +334,10 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
         if ($added && $use_YUI==true) {
             $module = $this->get_module_js();
-            $options = array('count' => $count,
+            $options = array('fieldsetid' => "actionshdr",
                              'fieldname' => $name,
-                             'actions' => $actions);
+                             'actions' => $actions,
+                             'count' => $count);
             $M = 'M.mod_taskchain_edit_form_helper_records';
             $PAGE->requires->js_init_call("$M.define_action_elements",   $options, false, $module);
             $PAGE->requires->js_init_call("$M.set_action_elements",          null, false, $module);
@@ -603,6 +604,16 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     }
 
     /**
+     * get_fieldname_action
+     *
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    protected function get_fieldname_action() {
+        return 'recordsaction';
+    }
+
+    /**
      * get_fieldlabel_action
      *
      * @return xxx
@@ -618,10 +629,11 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @todo Finish documenting this function
      */
     public function fix_field_action(&$data) {
-        if (empty($data->action)) {
+        $name = $this->get_fieldname('action');
+        if (empty($data->$name)) {
             return;
         }
-        $method = 'fix_action_'.$data->action;
+        $method = 'fix_action_'.$data->$name;
         if (method_exists($this, $method)) {
             $this->$method($data);
         }
