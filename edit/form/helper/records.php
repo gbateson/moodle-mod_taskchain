@@ -289,296 +289,59 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     public function add_field_action($field) {
         global $PAGE;
 
+        // Note: field name must not be "action"
+        // as this name is already used by the
+        // navigation block in Moodle >= 3.0
         $name = $this->get_fieldname($field);
-        $label = ''; // $this->get_fieldlabel($field)
 
         $count = count($this->get_live_records());
-        $added = false;
-
         if ($count > 0) {
             $default = 'applydefaults';
         } else {
             $default = 'add'.$this->recordstype.'s'; // e.g. "addtasks"
         }
 
-        $actions = $this->get_actions();
-        foreach ($actions as $action => $require_records) {
+        $actions = array();
+        foreach ($this->get_actions() as $action => $require_records) {
 
-            // add this $action, if required
-            if (empty($require_records) || $count > 0) {
+            // skip this action if it requires records but there aren't any
+            if ($require_records && $count==0) {
+                continue;
+            }
 
-                $method = 'add_action_'.$action;
-                if (method_exists($this, $method)) {
-                    $this->$method($action, $name);
-                } else {
-                    // by default we add this action as a radio button
-                    $this->mform->addElement('radio', $name, '', get_string($action, 'mod_taskchain'), $action);
-                }
+            // cache this action
+            $actions[] = $action;
 
-                $method = 'add_action_'.$action.'_details';
-                if (method_exists($this, $method)) {
-                    $this->$method();
-                }
+            // add this $action to the form
+            $method = 'add_action_'.$action;
+            if (method_exists($this, $method)) {
+                $this->$method($action, $name);
+            } else {
+                // by default we add this action as a radio button
+                $label = get_string($action, 'mod_taskchain');
+                $this->mform->addElement('radio', $name, '', $label, $action);
+            }
 
-                $added = true;
+            // add $action details, if required
+            $method = 'add_action_'.$action.'_details';
+            if (method_exists($this, $method)) {
+                $this->$method();
             }
         }
 
-        if ($added) {
+        if (count($actions)) {
             $this->mform->setDefault($name, $default);
             $this->mform->setType($name, PARAM_ALPHA);
-        }
 
-        $use_YUI = true;
-        $formid = $this->mform->getAttribute('id');
-
-        if ($added && $use_YUI==true) {
+            // add javascript to format actions
             $module = $this->get_module_js();
             $options = array('fieldsetid' => "actionshdr",
                              'fieldname' => $name,
-                             'actions' => $actions,
-                             'count' => $count);
+                             'actions' => $actions);
             $M = 'M.mod_taskchain_edit_form_helper_records';
-            $PAGE->requires->js_init_call("$M.define_action_elements",   $options, false, $module);
-            $PAGE->requires->js_init_call("$M.set_action_elements",          null, false, $module);
+            $PAGE->requires->js_init_call("$M.setup_action_elements",    $options, false, $module);
             $PAGE->requires->js_init_call("$M.set_fitem_heights_and_widths", null, false, $module);
             $PAGE->requires->js_init_call("$M.set_bottom_borders",           null, false, $module);
-        }
-
-        if ($added && $use_YUI==false) {
-            $js = '';
-            $js .= '<script type="text/javascript">'."\n";
-            $js .= '//<![CDATA['."\n";
-            $js .= 'function toggle_actions(obj) {'."\n";
-
-            $js .= '    var targetid = "";'."\n";
-            $js .= '    var showid = "";'."\n";
-            $js .= '    if (obj && obj.id && obj.name) {'."\n";
-            $js .= '        targetid = new RegExp("^(fitem|fgroup)_id_('.implode('|', array_keys($actions)).')");'."\n";
-            $js .= '        showid = new RegExp("^(fitem|fgroup)_id_" + obj.id.substr(4 + obj.name.length));'."\n";
-            $js .= '    }'."\n";
-
-            $js .= '    var divs = null;'."\n";
-            $js .= '    if (targetid && showid) {'."\n";
-            $js .= '        var fieldset = document.getElementById("actionshdr");'."\n";
-            $js .= '        if (fieldset) {'."\n";
-            $js .= '            divs = fieldset.getElementsByTagName("DIV");'."\n";
-            $js .= '        }'."\n";
-            $js .= '        fieldset = null;'."\n";
-            $js .= '    }'."\n";
-
-            $js .= '    var i_max = 0;'."\n";
-            $js .= '    if (divs) {'."\n";
-            $js .= '        i_max = divs.length;'."\n";
-            $js .= '    }'."\n";
-
-            $js .= '    for (var i=0; i<i_max; i++) {'."\n";
-            $js .= '        if (divs[i].id.match(targetid)) {'."\n";
-            $js .= '            if (divs[i].id.match(showid)) {'."\n";
-            $js .= '                divs[i].style.display = "";'."\n";
-            $js .= '            } else {'."\n";
-            $js .= '                divs[i].style.display = "none";'."\n";
-            $js .= '            }'."\n";
-            $js .= '        }'."\n";
-            $js .= '    }'."\n";
-
-            $js .= '    divs = null;'."\n";
-            $js .= '    return true;'."\n";
-            $js .= '}'."\n";
-
-
-            // initialize the toggle state (i.e. show or hide) of the form actions
-            $js .= 'function set_action_elements() {'."\n";
-            if ($formid) {
-                $js .= '    var obj = document.getElementById("'.$formid.'")'."\n";
-                $js .= '    if (obj && obj.elements && obj.elements["'.$name.'"]) {'."\n";
-                $js .= '        var i_max = obj.elements["'.$name.'"].length;'."\n";
-                $js .= '        for (i=0; i<i_max; i++) {'."\n";
-                $js .= '            if (obj.elements["'.$name.'"][i].checked) {'."\n";
-                $js .= '                toggle_actions(obj.elements["'.$name.'"][i]);'."\n";
-                $js .= '            }'."\n";
-                $js .= '        }'."\n";
-                $js .= '    }'."\n";
-                $js .= '    obj = null;'."\n";
-            }
-            $js .= '}'."\n";
-
-            // add onclick event handlers to form actions
-            $js .= 'function set_onclick_action_elements() {'."\n";
-            foreach ($actions as $action => $require_records) {
-                if (empty($require_records) || $count > 0) {
-                    $js .= '    var obj = document.getElementById("id_'.$name.'_'.$action.'");'."\n";
-                    $js .= '    if (obj) {'."\n";
-                    $js .= '        obj.onclick = function() {toggle_actions(this)};'."\n";
-                    $js .= '    }'."\n";
-                }
-                $js .= '    obj = null;'."\n";
-            }
-            $js .= '}'."\n";
-
-            // set the heights of the "fitem" elements to the full height of their parent nodes
-            // and set the width of the FIELDSETs so that they enclose all their child fitem DIVs
-            $js .= 'function set_fitem_heights_and_widths() {'."\n";
-            $js .= '    var fieldsets = document.getElementsByTagName("FIELDSET")'."\n";
-            $js .= '    if (fieldsets) {'."\n";
-
-            $js .= '        var hdrFieldsetId = new RegExp("^labels|defaults|selects|(record[0-9]+)$");'."\n";
-            $js .= '        var fcontainerClass = new RegExp("\\\\b"+"fcontainer"+"\\\\b");'."\n";
-            $js .= '        var felementClass = new RegExp("\\\\b"+"felement"+"\\\\b");'."\n";
-            $js .= '        var fitemClass = new RegExp("\\\\b"+"fitem"+"\\\\b");'."\n";
-            $js .= '        var fitemId = new RegExp("^(?:fgroup|fitem)_id_(?:(?:defaultfield|selectfield)_)?([a-z]+).*$");'."\n";
-            $js .= '        var maxWidths = new Array();'."\n";
-
-            $js .= '        var f_max = fieldsets.length;'."\n";
-            $js .= '        for (var f=0; f<f_max; f++) {'."\n";
-            $js .= '            if (fieldsets[f].id.match(hdrFieldsetId)) {'."\n";
-
-            $js .= '                var divs = fieldsets[f].getElementsByTagName("DIV");'."\n";
-            $js .= '                if (divs) {'."\n";
-
-            $js .= '                    var maxRight = 0;'."\n";
-            $js .= '                    var maxHeight = 0;'."\n";
-
-            $js .= '                    var d_max = divs.length;'."\n";
-            $js .= '                    for (var d=0; d<d_max; d++) {'."\n";
-            $js .= '                        if (divs[d].className && divs[d].className.match(fitemClass)) {'."\n";
-
-            $js .= '                            if (divs[d].offsetLeft && divs[d].offsetWidth) {'."\n";
-            $js .= '                                maxRight = Math.max(maxRight, divs[d].offsetLeft + divs[d].offsetWidth);'."\n";
-            $js .= '                            }'."\n";
-
-            $js .= '                            if (divs[d].parentNode && divs[d].parentNode.className && divs[d].parentNode.className.match(fcontainerClass)) {'."\n";
-            $js .= '                                if (divs[d].style.width) {'."\n";
-            $js .= '                                    divs[d].style.width = null;'."\n";
-            $js .= '                                }'."\n";
-            $js .= '                            }'."\n";
-            $js .= '                            var col = divs[d].id.replace(fitemId, "$1");'."\n";
-
-            $js .= '                            var c_max = divs[d].childNodes.length;'."\n";
-            $js .= '                            for (var c=0; c<c_max; c++) {'."\n";
-
-            $js .= '                                var child = divs[d].childNodes[c];'."\n";
-            $js .= '                                if (child.className && child.className.match(felementClass)) {'."\n";
-            $js .= '                                    if (child.offsetHeight) {'."\n";
-            $js .= '                                        maxHeight = Math.max(maxHeight, child.offsetHeight);'."\n";
-            $js .= '                                    }'."\n";
-            $js .= '                                    if (child.offsetWidth) {'."\n";
-            $js .= '                                        if (maxWidths[col]==null) {'."\n";
-            $js .= '                                            maxWidths[col] = 0;'."\n";
-            $js .= '                                        }'."\n";
-            $js .= '                                        maxWidths[col] = Math.max(maxWidths[col], child.offsetWidth);'."\n";
-            $js .= '                                    }'."\n";
-            $js .= '                                }'."\n";
-            $js .= '                                var child = null;'."\n";
-
-            $js .= '                            }'."\n";
-            $js .= '                        }'."\n";
-            $js .= '                    }'."\n";
-
-            $js .= '                    for (var d=0; d<d_max; d++) {'."\n";
-            $js .= '                        if (divs[d].parentNode && divs[d].parentNode.className && divs[d].parentNode.className.match(fcontainerClass)) {'."\n";
-            $js .= '                            if (divs[d].className && divs[d].className.match(fitemClass)) {'."\n";
-            $js .= '                                divs[d].style.height = maxHeight + "px";'."\n";
-            $js .= '                            }'."\n";
-            $js .= '                        }'."\n";
-            $js .= '                    }'."\n";
-
-            $js .= '                    if (maxRight) {'."\n";
-            $js .= '                        fieldsets[f].style.width = (maxRight - fieldsets[f].offsetLeft) + "px";'."\n";
-            $js .= '                    }'."\n";
-
-            $js .= '                 }'."\n";
-            $js .= '                 divs = null;'."\n";
-            $js .= '            }'."\n";
-            $js .= '        }'."\n";
-
-            $js .= '        for (var f=0; f<f_max; f++) {'."\n";
-            $js .= '            if (fieldsets[f].id.match(hdrFieldsetId)) {'."\n";
-
-            $js .= '                var divs = fieldsets[f].getElementsByTagName("DIV");'."\n";
-            $js .= '                if (divs) {'."\n";
-
-            $js .= '                    var d_max = divs.length;'."\n";
-            $js .= '                    for (var d=0; d<d_max; d++) {'."\n";
-            $js .= '                        if (divs[d].parentNode && divs[d].parentNode.className && divs[d].parentNode.className.match(fcontainerClass)) {'."\n";
-            $js .= '                            var col = divs[d].id.replace(fitemId, "$1");'."\n";
-            $js .= '                            if (col) {'."\n";
-            $js .= '                                if (maxWidths[col] && maxWidths[col] != divs[d].offsetWidth) {'."\n";
-            $js .= '                                    divs[d].style.width = maxWidths[col] + "px";'."\n";
-            $js .= '                                }'."\n";
-            $js .= '                            }'."\n";
-            $js .= '                        }'."\n";
-            $js .= '                    }'."\n";
-
-            $js .= '                 }'."\n";
-            $js .= '                 divs = null;'."\n";
-            $js .= '            }'."\n";
-            $js .= '        }'."\n";
-
-
-            $js .= '        hdrFieldsetId = null;'."\n";
-            $js .= '        fcontainerClass = null;'."\n";
-            $js .= '        felementClass = null;'."\n";
-            $js .= '        fitemClass = null;'."\n";
-            $js .= '        fitemId = null;'."\n";
-
-            $js .= '    }'."\n";
-            $js .= '    fieldsets = null;'."\n";
-            $js .= '}'."\n";
-
-            // force bottom borders of final subactions
-            $js .= 'function set_bottom_borders() {'."\n";
-            $js .= '    var obj = document.getElementById("actionshdr");'."\n";
-            if ($count==0) {
-                $js .= '    var targetid = new RegExp("^(fitem|fgroup)_id_'.$field.'js$");'."\n";
-            } else {
-                $js .= '    var targetid = new RegExp("^(fitem|fgroup)_id_'.$field.'_('.implode('|', array_keys($actions)).')$");'."\n";
-            }
-            $js .= '    var divs = null;'."\n";
-            $js .= '    if (obj) {'."\n";
-            $js .= '        divs = obj.getElementsByTagName("DIV");'."\n";
-            $js .= '    }'."\n";
-
-            $js .= '    var d_max = 0;'."\n";
-            $js .= '    if (divs) {'."\n";
-            $js .= '        d_max = divs.length;'."\n";
-            $js .= '    }'."\n";
-
-            $js .= '    for (var d=0; d<d_max; d++) {'."\n";
-            $js .= '        var node = null;'."\n";
-            $js .= '        if (divs[d].id.match(targetid)) {'."\n";
-            $js .= '            node = divs[d].previousSibling;'."\n";
-            $js .= '            while (node && node.nodeType==3) {'."\n";
-            $js .= '               node = node.previousSibling;'."\n";
-            $js .= '            }'."\n";
-            $js .= '        }'."\n";
-            $js .= '        if (node) {'."\n";
-            $js .= '            node.style.borderBottomColor = "#333333";'."\n";
-            $js .= '            node.style.borderBottomStyle = "solid";'."\n";
-            $js .= '            node.style.borderBottomWidth = "1px";'."\n";
-            $js .= '            node.style.paddingBottomWidth = "6px";'."\n";
-            $js .= '        }'."\n";
-            $js .= '        node = null;'."\n";
-            $js .= '    }'."\n";
-
-            $js .= '    targetid = null;'."\n";
-            $js .= '    divs = null;'."\n";
-            $js .= '    obj = null;'."\n";
-            $js .= '}'."\n";
-
-            $js .= 'window.addEventListener("load", function(e){'."\n";
-            $js .= '    set_action_elements();'."\n";
-            $js .= '    set_onclick_action_elements();'."\n";
-            $js .= '    set_fitem_heights_and_widths();'."\n";
-            $js .= '    set_bottom_borders();'."\n";
-            $js .= '});'."\n";
-
-            $js .= '//]]>'."\n";
-            $js .= '</script>';
-
-            $name = $this->get_fieldname($field.'js');
-            $label = '';
-            $this->mform->addElement('static', $name, $label, $js);
         }
     }
 
