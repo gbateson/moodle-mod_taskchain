@@ -254,4 +254,24 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
     public function get_stop_function_name()  {
         return 'CheckAnswers';
     }
+
+    /**
+     * return JS-safe version of expand_EnterCaption()
+     *
+     * @return xxx
+     */
+    function expand_EnterCaption()  {
+        $caption = parent::expand_EnterCaption();
+        return $this->TC->task->source->js_value_safe($caption, true);
+    }
+
+    /**
+     * return JS-safe version of expand_HintCaption()
+     *
+     * @return xxx
+     */
+    function expand_HintCaption()  {
+        $caption = parent::expand_HintCaption();
+        return $this->TC->task->source->js_value_safe($caption, true);
+    }
 }
