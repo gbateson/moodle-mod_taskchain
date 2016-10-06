@@ -835,6 +835,17 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     }
 
     /**
+     * format_fieldvalue_navigation
+     *
+     * @param string $value of field from the record
+     * @return string formatted version of the value
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_navigation($field, $value) {
+        return $this->format_templatevalue_list($field, $value);
+    }
+
+    /**
      * format_fieldvalue_title
      *
      * @param string $field name of field
@@ -850,6 +861,72 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
             $title = $title.' ('.get_string('sortorder', 'mod_taskchain').')';
         }
         return $title;
+    }
+
+    /**
+     * format_fieldvalue_stopbutton
+     *
+     * @param string $value of field from the record
+     * @return string formatted version of the value
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_stopbutton($field, $value) {
+        return $this->format_templatevalue_yesno($field, $value);
+    }
+
+    /**
+     * format_fieldvalue_allowpaste
+     *
+     * @param string $value of field from the record
+     * @return string formatted version of the value
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_allowpaste($field, $value) {
+        return $this->format_templatevalue_yesno($field, $value);
+    }
+
+    /**
+     * format_fieldvalue_usefilters
+     *
+     * @param string $value of field from the record
+     * @return string formatted version of the value
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_usefilters($field, $value) {
+        return $this->format_templatevalue_yesno($field, $value);
+    }
+
+    /**
+     * format_fieldvalue_useglossary
+     *
+     * @param string $value of field from the record
+     * @return string formatted version of the value
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_useglossary($field, $value) {
+        return $this->format_templatevalue_yesno($field, $value);
+    }
+
+    /**
+     * format_fieldvalue_usemediafilter
+     *
+     * @param string $value of field from the record
+     * @return string formatted version of the value
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_usemediafilter($field, $value) {
+        return $this->format_templatevalue_list($field, $value, 'mediafilter');
+    }
+
+    /**
+     * format_fieldvalue_studentfeedback
+     *
+     * @param string $value of field from the record
+     * @return string formatted version of the value
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_studentfeedback($field, $value) {
+        return $this->format_templatevalue_list($field, $value, 'feedback');
     }
 
     /**
