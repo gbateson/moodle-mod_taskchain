@@ -186,6 +186,8 @@ $string['allowresume_help'] = 'This setting specifies whether or not students ca
 : If there is a previous attempt that is still in progress, students will be forced to resume that attempt. Otherwise, they can start a new attempt.';
 $string['allowreview'] = 'Allow review';
 $string['allowreview_help'] = 'If enabled, students may review their task attempts after the task is closed.';
+$string['allpostconditions'] = 'All post-conditions';
+$string['allpreconditions'] = 'All pre-conditions';
 $string['answers'] = 'Answers';
 $string['answersshort'] = 'A';
 $string['anyattempts'] = 'Any attempts';

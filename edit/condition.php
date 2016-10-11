@@ -78,7 +78,7 @@ switch ($TC->action) {
             } else {
                 // delete all pre/post conditions
                 $select = 'taskid='.$TC->get_taskid().' AND conditiontype='.$TC->get_conditiontype();
-                $type   = 'all'.$text.'s';
+                $type   = 'all'.$type.'s';
             }
 
             if ($DB->delete_records_select('taskchain_conditions', $select)) {
