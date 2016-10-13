@@ -43,9 +43,15 @@ if (! $TC->show_entrypage()) {
     redirect($TC->url->attempt());
 }
 
-if ($TC->action=='deleteselected') {
-    $TC->delete_selected_attempts();
-    $TC->update_completion_state($completion);
+switch ($TC->action) {
+    case 'deleteselected':
+        $TC->delete_selected_attempts();
+        $TC->update_completion_state($completion);
+        break;
+    case 'manualcompletion':
+        $TC->update_chainattempt_status();
+        $TC->update_completion_state($completion);
+        break;
 }
 
 // Set editing mode
@@ -69,7 +75,7 @@ if ($TC->can->attempt() || $TC->can->preview()) {
     echo $output->entrypage();
 } else {
     if (isguestuser()) {
-        // off guests a choice of logging in or going back.
+        // offer guests a choice of logging in or going back.
         if (function_exists('get_local_referer')) {
             // Moodle >= 2.8
             $referer = get_local_referer(false);

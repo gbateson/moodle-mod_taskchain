@@ -117,6 +117,9 @@ class taskchain_chain extends taskchain_base {
     /** db field: allowfreeaccess (integer, default=0) */
     private $allowfreeaccess     = 0;
 
+    /** db field: manualcompletion (integer, default=0) */
+    private $manualcompletion    = 0;
+
     /** db field: attemptlimit (integer, default=0) */
     private $attemptlimit        = 0;
 
@@ -604,6 +607,24 @@ class taskchain_chain extends taskchain_base {
      */
     public function set_allowfreeaccess($value) {
         $this->allowfreeaccess = $value;
+    }
+
+    /**
+     * get the "manualcompletion" property
+     *
+     * @return integer the current manualcompletion $value
+     */
+    public function get_manualcompletion() {
+        return $this->manualcompletion;
+    }
+
+    /**
+     * set the "manualcompletion" property
+     *
+     * @param integer the new manualcompletion $value
+     */
+    public function set_manualcompletion($value) {
+        $this->manualcompletion = $value;
     }
 
     /**

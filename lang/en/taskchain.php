@@ -361,6 +361,9 @@ $string['columnlistsingle'] = 'Column list ($a)';
 $string['columnliststask'] = 'All task column lists';
 $string['columnliststasks'] = 'Column lists for editing tasks';
 $string['completed'] = 'Completed';
+$string['completedalltasks_title'] = 'Congratulations!<br />You have completed all the tasks in this activity.';
+$string['completedalltasks_redo'] = 'If you want to redo one of the tasks in this activity, click the name of the task in the list below.';
+$string['completedalltasks_close'] = 'If you want to finish and close this attempt, click the button below.<br />Note that you will not be able to redo tasks in this attempt after it has been closed.';
 $string['completioncompleted'] = 'Require completed status';
 $string['completionmingrade'] = 'Require minimum grade';
 $string['completionpass'] = 'Require passing grade';
@@ -627,6 +630,7 @@ $string['filename'] = 'File name';
 $string['filetype'] = 'File type';
 $string['filteredchains'] = 'TaskChains matching the following filters:';
 $string['filteredtasks'] = 'Tasks matching the following filters:';
+$string['finishandclose'] = 'Finish and close this attempt';
 $string['firstattempt'] = 'First attempt';
 $string['fix_boms'] = 'Fix BOMs';
 $string['fix_installxml'] = 'Fix db/install.xml';
@@ -688,6 +692,14 @@ $string['lasttasktimedout'] = 'Score of last timed out task';
 $string['lockframe'] = 'Lock frame';
 $string['maxeventlength'] = 'Maximum number of days for a single calendar event';
 $string['maximum'] = '&lt;=';
+$string['manualcompletion_help'] = 'This setting determines the action to be taken when all tasks are complete but the post-conditions on the final task do _NOT_ specify what to do next.
+
+**No**
+: After all tasks have been completed, the chain attempt will automatically be marked as completed and students will not be able to redo tasks.
+
+**Yes**
+: After completing all tasks, students will be able to redo tasks and must manually click a button to finish a chain attempt.';
+$string['manualcompletion'] = 'Manual completion';
 $string['mediafilter_moodle'] = 'Moodle\'s standard media filters';
 $string['mediafilter_taskchain'] = 'TaskChain media filter';
 $string['menuofalltasks'] = 'Menu of all tasks';
@@ -873,6 +885,7 @@ $string['outputformat_html_xhtml'] = 'Standard HTML file';
 $string['outputformat_qedoc'] = 'Qedoc file';
 $string['passworderror'] = 'The password entered was incorrect';
 $string['penalties'] = 'Penalties';
+$string['pending'] = 'Pending completion';
 $string['percent'] = 'Percent';
 $string['postcondition'] = 'Post-condition';
 $string['postconditions'] = 'Post-conditions';
@@ -889,6 +902,7 @@ $string['questionshort'] = 'Q-{$a}';
 $string['randomtask'] = 'Random task';
 $string['reattempttask'] = 'Re-attempt task';
 $string['recentattempts'] = 'Most recent attempts';
+$string['redo'] = 'Redo';
 $string['reordertasks'] = 'Reorder tasks';
 $string['requirepassword'] = 'Require password';
 $string['requirepassword_help'] = 'If a password is specified, a student must enter it in order to attempt the quiz.';

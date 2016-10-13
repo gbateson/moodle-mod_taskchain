@@ -375,7 +375,6 @@ class mod_taskchain extends taskchain_base {
                 $pos = strrpos($field, '_');
                 $table = substr($field, 0, $pos);
                 $field = substr($field, $pos + 1);
-                $set_field = 'set_'.$field;
                 switch ($table) {
                     case 'tc_tsk_att': $this->taskattempt->$field = $value;  break;
                     case 'tc_tsk_scr': $this->taskscore->$field = $value;    break;
@@ -1463,7 +1462,7 @@ class mod_taskchain extends taskchain_base {
         $unsettask = false;
         $unsetchain = false;
         switch (true) {
-            case isset($all_params['taskattemptid']) && $all_params['taskattemptid'] > 0:
+            case isset($all_params['taskattemptid']) && $all_params['taskattemptid']>0:
                 $unset[] = 'taskscoreid';
                 $unset[] = 'tnumber';
             case isset($all_params['taskscoreid']) && $all_params['taskscoreid']>0:
@@ -2865,5 +2864,30 @@ class mod_taskchain extends taskchain_base {
                 $completion->update_state($this->coursemodule);
             }
         }
+    }
+
+    /**
+     * update_chainattempt_status
+     *
+     * @param object $completion
+     * @return void, but may update completion status of course_module record for this TaskChain activity
+     */
+    public function update_chainattempt_status() {
+        global $DB;
+        if ($chainattempt = $this->get_chainattempt()) {
+            if ($chainattempt->status==mod_taskchain::STATUS_PENDING) {
+                $chainattempt->status = mod_taskchain::STATUS_COMPLETED;
+                $DB->update_record('taskchain_chain_attempts', $chainattempt->to_stdclass());
+                if ($chaingrade = $this->get_chaingrade()) {
+                    if ($chaingrade->status==mod_taskchain::STATUS_PENDING) {
+                        $chaingrade->status = mod_taskchain::STATUS_COMPLETED;
+                        $DB->update_record('taskchain_chain_grades', $chaingrade->to_stdclass());
+                    }
+                }
+                $this->chainattempt = null;
+                return true;
+            }
+        }
+        return false; // shouldn't happen !!
     }
 }

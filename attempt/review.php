@@ -99,7 +99,7 @@ class mod_taskchain_attempt_review {
         // we can do something like the following ...
 
         if (self::provide_review() && $TC->task->reviewoptions) {
-            if ($attempt = $TC->get_attempt()) {
+            if ($attempt = $TC->get->attempt('task')) {
                 if ($TC->task->reviewoptions & mod_taskchain::REVIEW_DURINGATTEMPT) {
                     // during attempt
                     if ($TC->taskattempt->status==mod_taskchain::STATUS_INPROGRESS) {

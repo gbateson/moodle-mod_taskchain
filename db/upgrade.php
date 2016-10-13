@@ -491,6 +491,19 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
+    $newversion = 2016101230;
+    if ($oldversion < $newversion) {
+        $table = new xmldb_table('taskchain_chains');
+        $field = new xmldb_field('manualcompletion', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'allowfreeaccess');
+        xmldb_taskchain_fix_previous_field($dbman, $table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->change_field_type($table, $field);
+        } else {
+            $dbman->add_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
     if ($empty_cache) {
         $DB->delete_records('taskchain_cache');
     }

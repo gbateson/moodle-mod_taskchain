@@ -415,7 +415,7 @@ class taskchain_require extends taskchain_base {
     function newattempt($type) {
         // create_chain_attempt will get/create taskchain_chain_grades record
         // create_task_attempt will get/create taskchain_task_scores record
-        if ($this->TC->create_attempt($type)) {
+        if ($this->TC->create->attempt($type)) {
             return false;
         } else {
             return true;
@@ -528,10 +528,12 @@ class taskchain_require extends taskchain_base {
             }
             $attempt = &$this->TC->$attempt;
         }
-        if ($attempt->status > self::STATUS_INPROGRESS) { // allow status==0
-            return get_string($type.'attemptnotinprogress', 'mod_taskchain')." ($attempt->status)";
+        $status = $attempt->status;
+        if ($status==self::STATUS_TIMEDOUT || $status==self::STATUS_ABANDONED || $status==self::STATUS_COMPLETED) {
+            $status = $this->TC->format_status($status);
+            return get_string($type.'attemptnotinprogress', 'mod_taskchain')." ($status)";
         }
-        return false;
+        return false; // allow 0, STATUS_INPROGRESS, STATUS_PENDING
     }
 
     /**

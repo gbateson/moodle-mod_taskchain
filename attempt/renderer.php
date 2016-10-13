@@ -569,8 +569,8 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         $title_top = get_string('navigation_frame', 'mod_taskchain');
         $title_main = get_string('modulename', 'mod_taskchain');
 
-        $src_top = $this->TC->url->attempt('top');
-        $src_main = $this->TC->url->attempt('main');
+        $src_top = $this->TC->url->attempt_frame('top');
+        $src_main = $this->TC->url->attempt_frame('main');
 
         if (empty($CFG->taskchain_lockframe)) {
             $lock_frameset = '';
@@ -636,7 +636,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         $width = '100%';
         $height = '100%';
         $onload_function = $this->embed_object_onload;
-        $src = $this->TC->url->attempt('main');
+        $src = $this->TC->url->attempt_frame('main');
 
         // print the html element to hold the embedded html page
         // Note: the iframe in IE needs a "name" attribute for the resizing to work

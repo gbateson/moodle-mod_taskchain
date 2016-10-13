@@ -54,7 +54,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'exitpage'   => array('exitpage', 'exittext', 'exitoptions', 'exitcm', 'exitgrade'),
         'display'    => array('showpopup'),
         'time'       => array('timeopen', 'timeclose', 'timelimit', 'delay1', 'delay2'),
-        'attempts'   => array('attemptlimit', 'allowresume', 'allowfreeaccess'),
+        'attempts'   => array('attemptlimit', 'allowresume', 'allowfreeaccess', 'manualcompletion'),
         'security'   => array('password', 'subnet'),
         'assessment' => array('attemptgrademethod', 'grademethod', 'gradeignore', 'gradelimit', 'gradeweighting', 'gradepass', 'gradecategory')
         // Note: "hidden" section will be added by mod_moodleform
@@ -113,6 +113,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'attemptlimit'       => 0, // = unlimited
         'allowresume'        => mod_taskchain::YES,
         'allowfreeaccess'    => mod_taskchain::NO,
+        'manualcompletion'   => mod_taskchain::NO,
         'password'           => '',
         'subnet'             => '',
         'attemptgrademethod' => mod_taskchain::GRADEMETHOD_TOTAL,

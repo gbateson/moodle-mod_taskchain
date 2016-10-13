@@ -2165,7 +2165,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     public function fix_submissionform()  {
 
         $params = array(
-            'id' => $this->TC->create_attempt('task'),
+            'id' => $this->TC->create->attempt('task'),
             $this->scorefield => '0', 'detail'  => '0', 'status'   => '0',
             'starttime'       => '0', 'endtime' => '0', 'redirect' => '0',
         );

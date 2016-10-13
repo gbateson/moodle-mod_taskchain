@@ -254,15 +254,35 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             $table->data[] = $row;
         }
 
+        $completedalltasks = false;
+        if ($this->TC->get_chainattempt()) {
+            $status = $this->TC->chainattempt->status;
+            if ($status==mod_taskchain::STATUS_PENDING || $status==mod_taskchain::STATUS_COMPLETED) {
+                $completedalltasks = true;
+            }
+        }
+
         if (empty($table->data)) {
             $output .= get_string('notasksforyou', 'mod_taskchain');
         } else {
             if (count($linktaskids)==1) {
                 $output .= $this->whatnext('clicklinktocontinue');
+            } else if ($completedalltasks) {
+                $output .= $this->whatnext('completedalltasks_title');
+                $output .= html_writer::tag('p', get_string('completedalltasks_redo', 'mod_taskchain'));
             } else {
-                $output .= $this->whatnext('');
+                $output .= $this->whatnext(); // Please choose one of the following
             }
             $output .= html_writer::table($table);
+        }
+
+        if ($completedalltasks) {
+            $output .= html_writer::tag('p', get_string('completedalltasks_close', 'mod_taskchain'));
+            $params = array('chainattemptid' => $this->TC->get_chainattemptid(),
+                            'action'  => 'manualcompletion',
+                            'sesskey' => sesskey());
+            $label = get_string('finishandclose', 'mod_taskchain');
+            $output .= $this->single_button($this->TC->url->view(null, $params), $label);
         }
 
         $output = $this->box($output, 'generalbox centeredboxtable');
@@ -918,9 +938,10 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             'inprogress' => array(),
             'timedout'   => array(),
             'abandoned'  => array(),
+            'pending'    => array(),
             'completed'  => array(),
             'zeroduration' => array(),
-            'zeroscore' => array()
+            'zeroscore'  => array()
         );
 
         if ($type=='chain') {
@@ -943,7 +964,8 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             $this->TC->get->$graderecords();
 
             $dateformat = get_string('strftimerecentfull');
-            $strresume = get_string('resume', 'mod_taskchain');
+            $strresume  = get_string('resume', 'mod_taskchain');
+            $strredo    = get_string('redo',   'mod_taskchain');
 
             // cache showselectcolumn switch
             if ($this->TC->can->deleteattempts()) {
@@ -1009,9 +1031,10 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
                     switch ($attempt->status) {
                         case mod_taskchain::STATUS_INPROGRESS: $attemptids['inprogress'][] = $id; break;
-                        case mod_taskchain::STATUS_TIMEDOUT: $attemptids['timedout'][] = $id; break;
-                        case mod_taskchain::STATUS_ABANDONED: $attemptids['abandoned'][] = $id; break;
-                        case mod_taskchain::STATUS_COMPLETED: $attemptids['completed'][] = $id; break;
+                        case mod_taskchain::STATUS_TIMEDOUT:   $attemptids['timedout'][]   = $id; break;
+                        case mod_taskchain::STATUS_ABANDONED:  $attemptids['abandoned'][]  = $id; break;
+                        case mod_taskchain::STATUS_PENDING:    $attemptids['pending'][]    = $id; break;
+                        case mod_taskchain::STATUS_COMPLETED:  $attemptids['completed'][]  = $id; break;
                     }
                     if ($attempt->$grade==0) {
                         $attemptids['zero'.$grade][] = $id;
@@ -1038,17 +1061,11 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
                 if ($canresume) {
                     $cell = '&nbsp;';
-                    if ($attempt->status==mod_taskchain::STATUS_INPROGRESS) {
-                        if ($this->TC->$type->timelimit && $attempt->duration > $this->TC->$type->timelimit) {
-                            // do nothing, this attempt has timed out
-                        } else {
-                            $params = array('tab'=>$resumetab, $type.'attemptid'=>$attempt->id);
-                            $cell = ''
-                                .'<a class="resumeattempt" href="'.$this->format_url('attempt.php', 'coursemoduleid', $params).'">'
-                                .$strresume
-                                //.'<img src="'.$CFG->pixpath.'/t/preview.gif" class="iconsmall" alt="'.$strresume.'" />'
-                                .'</a>'
-                            ;
+                    if ($attempt->status==mod_taskchain::STATUS_INPROGRESS || $attempt->status==mod_taskchain::STATUS_PENDING) {
+                        if ($this->TC->$type->timelimit==0 || $attempt->duration < $this->TC->$type->timelimit) {
+                            $params = array('tab' => $resumetab, $type.'attemptid' => $attempt->id);
+                            $params = array('class' => 'resumeattempt', 'href' => $this->format_url('attempt.php', 'coursemoduleid', $params));
+                            $cell = html_writer::tag('a', $this->pix_icon('t/preview', $strresume).' '.$strresume, $params);
                         }
                     }
                     $row->cells[] = $cell;

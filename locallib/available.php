@@ -268,7 +268,7 @@ class taskchain_available extends taskchain_base {
      */
     static public function namesources_list() {
         return array (
-            self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'mod_taskchain'),
+            self::TEXTSOURCE_FILE     => get_string('textsourcefile',     'mod_taskchain'),
             self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'mod_taskchain'),
             self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'mod_taskchain'),
             self::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'mod_taskchain')
@@ -282,12 +282,12 @@ class taskchain_available extends taskchain_base {
      */
     static public function navigations_list() {
         return array (
-            self::NAVIGATION_MOODLE   => get_string('navigation_moodle', 'mod_taskchain'),
-            self::NAVIGATION_TOPBAR   => get_string('navigation_topbar', 'mod_taskchain'),
-            self::NAVIGATION_FRAME    => get_string('navigation_frame', 'mod_taskchain'),
-            self::NAVIGATION_EMBED    => get_string('navigation_embed', 'mod_taskchain'),
+            self::NAVIGATION_MOODLE   => get_string('navigation_moodle',   'mod_taskchain'),
+            self::NAVIGATION_TOPBAR   => get_string('navigation_topbar',   'mod_taskchain'),
+            self::NAVIGATION_FRAME    => get_string('navigation_frame',    'mod_taskchain'),
+            self::NAVIGATION_EMBED    => get_string('navigation_embed',    'mod_taskchain'),
             self::NAVIGATION_ORIGINAL => get_string('navigation_original', 'mod_taskchain'),
-            self::NAVIGATION_NONE     => get_string('navigation_none', 'mod_taskchain')
+            self::NAVIGATION_NONE     => get_string('navigation_none',     'mod_taskchain')
         );
     }
 
@@ -300,22 +300,22 @@ class taskchain_available extends taskchain_base {
         global $TC;
 
         $list = array(
-            self::CONDITIONTASKID_SAME        => get_string('sametask', 'mod_taskchain'),
-            self::CONDITIONTASKID_PREVIOUS    => get_string('previoustask', 'mod_taskchain'),
-            self::CONDITIONTASKID_NEXT1       => get_string('next1task', 'mod_taskchain'),
-            self::CONDITIONTASKID_NEXT2       => get_string('next2task', 'mod_taskchain'),
-            self::CONDITIONTASKID_NEXT3       => get_string('next3task', 'mod_taskchain'),
-            self::CONDITIONTASKID_NEXT4       => get_string('next4task', 'mod_taskchain'),
-            self::CONDITIONTASKID_NEXT5       => get_string('next5task', 'mod_taskchain'),
-            self::CONDITIONTASKID_UNSEEN      => get_string('unseentask', 'mod_taskchain'),
+            self::CONDITIONTASKID_SAME        => get_string('sametask',       'mod_taskchain'),
+            self::CONDITIONTASKID_PREVIOUS    => get_string('previoustask',   'mod_taskchain'),
+            self::CONDITIONTASKID_NEXT1       => get_string('next1task',      'mod_taskchain'),
+            self::CONDITIONTASKID_NEXT2       => get_string('next2task',      'mod_taskchain'),
+            self::CONDITIONTASKID_NEXT3       => get_string('next3task',      'mod_taskchain'),
+            self::CONDITIONTASKID_NEXT4       => get_string('next4task',      'mod_taskchain'),
+            self::CONDITIONTASKID_NEXT5       => get_string('next5task',      'mod_taskchain'),
+            self::CONDITIONTASKID_UNSEEN      => get_string('unseentask',     'mod_taskchain'),
             self::CONDITIONTASKID_UNANSWERED  => get_string('unansweredtask', 'mod_taskchain'),
-            self::CONDITIONTASKID_INCORRECT   => get_string('incorrecttask', 'mod_taskchain'),
-            self::CONDITIONTASKID_RANDOM      => get_string('randomtask', 'mod_taskchain'),
-            self::CONDITIONTASKID_MENUNEXT    => get_string('menuofnexttasks', 'mod_taskchain'),
+            self::CONDITIONTASKID_INCORRECT   => get_string('incorrecttask',  'mod_taskchain'),
+            self::CONDITIONTASKID_RANDOM      => get_string('randomtask',     'mod_taskchain'),
+            self::CONDITIONTASKID_MENUNEXT    => get_string('menuofnexttasks',    'mod_taskchain'),
             self::CONDITIONTASKID_MENUNEXTONE => get_string('menuofnexttasksone', 'mod_taskchain'),
-            self::CONDITIONTASKID_MENUALL     => get_string('menuofalltasks', 'mod_taskchain'),
-            self::CONDITIONTASKID_MENUALLONE  => get_string('menuofalltasksone', 'mod_taskchain'),
-            self::CONDITIONTASKID_ENDOFCHAIN  => get_string('endofchain', 'mod_taskchain')
+            self::CONDITIONTASKID_MENUALL     => get_string('menuofalltasks',     'mod_taskchain'),
+            self::CONDITIONTASKID_MENUALLONE  => get_string('menuofalltasksone',  'mod_taskchain'),
+            self::CONDITIONTASKID_ENDOFCHAIN  => get_string('endofchain',         'mod_taskchain')
         );
         if ($tasks = $TC->get_tasks()) {
             foreach ($tasks as $task) {
@@ -411,9 +411,10 @@ class taskchain_available extends taskchain_base {
     static public function statuses_list() {
         return array (
             self::STATUS_INPROGRESS => get_string('inprogress', 'mod_taskchain'),
-            self::STATUS_TIMEDOUT   => get_string('timedout', 'mod_taskchain'),
-            self::STATUS_ABANDONED  => get_string('abandoned', 'mod_taskchain'),
-            self::STATUS_COMPLETED  => get_string('completed', 'mod_taskchain')
+            self::STATUS_TIMEDOUT   => get_string('timedout',   'mod_taskchain'),
+            self::STATUS_ABANDONED  => get_string('abandoned',  'mod_taskchain'),
+            self::STATUS_COMPLETED  => get_string('completed',  'mod_taskchain'),
+            self::STATUS_PENDING    => get_string('pending',    'mod_taskchain')
         );
     }
 
@@ -451,8 +452,8 @@ class taskchain_available extends taskchain_base {
      */
     static public function titles_list() {
         return array (
-            self::TEXTSOURCE_SPECIFIC => get_string('taskchainname', 'mod_taskchain'),
-            self::TEXTSOURCE_FILE     => get_string('textsourcefile', 'mod_taskchain'),
+            self::TEXTSOURCE_SPECIFIC => get_string('taskchainname',      'mod_taskchain'),
+            self::TEXTSOURCE_FILE     => get_string('textsourcefile',     'mod_taskchain'),
             self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'mod_taskchain'),
             self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'mod_taskchain')
         );

@@ -493,7 +493,6 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function add_field_attemptlimit($field) {
-        $field = 'attemptlimit';
         $name  = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
         $list  = $field.'s_list';
@@ -515,6 +514,15 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $this->mform->addElement('select', $name, $label, taskchain_available::$list());
         $this->add_helpbutton($name, $field, 'taskchain');
         $this->mform->setAdvanced($name);
+    }
+
+    /**
+     * add_field_manualcompletion
+     *
+     * @todo Finish documenting this function
+     */
+    protected function add_field_manualcompletion($field) {
+        $this->add_template_yesno($field, true);
     }
 
     /**
@@ -1162,6 +1170,17 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      */
     protected function format_fieldvalue_allowresume($field, $value) {
         return $this->format_templatevalue_list($field, $value);
+    }
+
+    /**
+     * format_fieldvalue_manualcompletion
+     *
+     * @param string $value of field from the record
+     * @return string formatted version of the value
+     * @todo Finish documenting this function
+     */
+    protected function format_fieldvalue_manualcompletion($field, $value) {
+        return $this->format_templatevalue_yesno($field, $value);
     }
 
     /////////////////////////////////////////////////////////

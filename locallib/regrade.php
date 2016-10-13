@@ -281,9 +281,9 @@ class taskchain_regrade extends taskchain_base {
                 }
 
                 if ($status==0) {
-                    if ($aggregate->maxstatus==self::STATUS_COMPLETED) {
-                        // at least one attempt is completed
-                        $status = self::STATUS_COMPLETED;
+                    if ($aggregate->maxstatus==self::STATUS_COMPLETED || $aggregate->maxstatus==self::STATUS_PENDING) {
+                        // at least one attempt is completed OR pending completion
+                        $status = $aggregate->maxstatus;
                     } else if ($aggregate->minstatus==self::STATUS_INPROGRESS && $record->allowresume) {
                         // at least one attempt can be resumed
                         $status = self::STATUS_INPROGRESS;
@@ -598,14 +598,22 @@ class taskchain_regrade extends taskchain_base {
         } else if ($nexttaskid) {
             // post-conditions specify different task (or menu)
             $status = self::STATUS_INPROGRESS;
-        } else if ($status==self::STATUS_INPROGRESS) {
+        } else if ($status==self::STATUS_INPROGRESS || $status==self::STATUS_PENDING) {
             $counttasks = $chains[$chain->id]->counttasks;
             if ($chain->timelimit && $duration > $chain->timelimit) {
                 // total time on tasks exceeds chain time limit
-                $status = self::STATUS_TIMEDOUT;
+                if ($status==self::STATUS_PENDING) {
+                    $status = self::STATUS_COMPLETED;
+                } else {
+                    $status = self::STATUS_TIMEDOUT;
+                }
             } else if ($counttasks && $counttasks==$counttaskscores && $minstatus==self::STATUS_COMPLETED && $maxstatus==self::STATUS_COMPLETED) {
                 // all tasks are completed
-                $status = self::STATUS_COMPLETED;
+                if ($chain->manualcompletion) {
+                    $status = self::STATUS_PENDING;
+                } else {
+                    $status = self::STATUS_COMPLETED;
+                }
             } else if ($thisuser) {
                 if ($chain->allowresume==self::ALLOWRESUME_NO && $this->TC->get_lastattempt('task') && $this->TC->lasttaskattempt->status==self::STATUS_ABANDONED) {
                     // chain may not be resumed and last task attempt was abandoned

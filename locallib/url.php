@@ -40,6 +40,18 @@ defined('MOODLE_INTERNAL') || die();
 class taskchain_url extends taskchain_base {
 
     /**
+     * attempt_frame
+     *
+     * @param xxx $framename (optional, default='')
+     * @return moodle_url of this taskchain's attempt page
+     * @todo Finish documenting this function
+     */
+    public function attempt_frame($framename) {
+        $params = array('framename' => $framename);
+        return $this->attempt($params);
+    }
+
+    /**
      * attempt
      *
      * @param xxx $framename (optional, default='')
@@ -47,14 +59,7 @@ class taskchain_url extends taskchain_base {
      * @return moodle_url of this taskchain's attempt page
      * @todo Finish documenting this function
      */
-    public function attempt($framename='', $cm=null) {
-        if (is_null($cm)) {
-            $cm = $this->TC->coursemodule;
-        }
-        $params = array();
-        if ($framename) {
-            $params['framename'] = $framename;
-        }
+    public function attempt($params=false) {
         $params = $this->TC->merge_params($params, null, 'coursemoduleid');
         return new moodle_url('/mod/taskchain/attempt.php', $params);
     }
@@ -132,7 +137,7 @@ class taskchain_url extends taskchain_base {
      * @todo Finish documenting this function
      */
     public function report($mode='', $params=null) {
-        if (is_null($params)) {
+        if ($params===null) {
             $params = array();
             $params['id'] = $this->TC->coursemodule->id;
         }
@@ -150,7 +155,7 @@ class taskchain_url extends taskchain_base {
      * @todo Finish documenting this function
      */
     public function review($taskattempt=null) {
-        if (is_null($taskattempt)) {
+        if ($taskattempt===null) {
             $taskattempt = $this->TC->taskattempt;
         }
         return new moodle_url('/mod/taskchain/review.php', array('id' => $taskattempt->id));
@@ -164,7 +169,7 @@ class taskchain_url extends taskchain_base {
      * @todo Finish documenting this function
      */
     public function submit($taskattempt=null) {
-        if (is_null($taskattempt)) {
+        if ($taskattempt===null) {
             $taskattempt = $this->TC->taskattempt;
         }
         return new moodle_url('/mod/taskchain/submit.php', array('id' => $taskattempt->id));
@@ -177,10 +182,14 @@ class taskchain_url extends taskchain_base {
      * @return moodle_url of this taskchain's view page
      * @todo Finish documenting this function
      */
-    public function view($cm=null) {
-        if (is_null($cm)) {
+    public function view($cm=null, $params=null) {
+        if ($params===null) {
+            $params = array();
+        }
+        if ($cm===null) {
             $cm = $this->TC->coursemodule;
         }
-        return new moodle_url('/mod/'.$cm->modname.'/view.php', array('id' => $cm->id));
+        $params['id'] = $cm->id;
+        return new moodle_url('/mod/'.$cm->modname.'/view.php', $params);
     }
 }

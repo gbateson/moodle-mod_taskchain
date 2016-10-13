@@ -187,7 +187,7 @@ class taskchain_base {
     const STATUS_TIMEDOUT             = 2;
     const STATUS_ABANDONED            = 3;
     const STATUS_COMPLETED            = 4;
-    const STATUS_PAUSED               = 5;
+    const STATUS_PENDING              = 5;
     /**#@-*/
 
     /**#@+

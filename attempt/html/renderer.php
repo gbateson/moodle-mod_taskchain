@@ -225,7 +225,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
             //$search = '/(?<=sesskey=)\w+/';
             //$this->bodycontent = preg_replace($search, sesskey(), $this->bodycontent);
             $search = '/(?<=["\/]attempt\.php\?id=)[0-9]+/';
-            $this->bodycontent = preg_replace($search, $this->TC->create_attempt('task'), $this->bodycontent);
+            $this->bodycontent = preg_replace($search, $this->TC->create->attempt('task'), $this->bodycontent);
             return true;
         }
 
@@ -322,7 +322,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
 
         // prepare form parameters and attributes
         $params = array(
-            'id' => $this->TC->create_attempt('task'),
+            'id' => $this->TC->create->attempt('task'),
             $this->scorefield => '0', 'detail'  => '0', 'status'   => mod_taskchain::STATUS_COMPLETED,
             'starttime'       => '0', 'endtime' => '0', 'redirect' => '1',
         );
