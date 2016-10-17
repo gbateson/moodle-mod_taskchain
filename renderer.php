@@ -951,7 +951,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             $number = 'tnumber';
             $grade = 'score';
         }
-        $mode = $type.$grade;
+        $mode = $type.'attempt';
         $gradelimit = $grade.'limit';
         $grademethod = $grade.'method';
         $gradeweighting = $grade.'weighting';
@@ -960,7 +960,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             // show summary of attempts so far
 
             // get chaingrades/taskscores
-            $graderecords = $mode.'s';
+            $graderecords = $type.$grade.'s';
             $this->TC->get->$graderecords();
 
             $dateformat = get_string('strftimerecentfull');
@@ -972,6 +972,13 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 $showselectcolumn = true;
             } else {
                 $showselectcolumn = false;
+            }
+
+            // cache showgradecolumn switch
+            if ($this->TC->$type->$gradelimit && $this->TC->$type->$gradeweighting) {
+                $showgradecolumn = true;
+            } else {
+                $showgradecolumn = false;
             }
 
             $canstart = $this->TC->can->attempts('start'.$type);
@@ -1002,7 +1009,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             $table->align = array('center', 'center', 'left', 'left');
             $table->size  = array('', '', '', '');
 
-            if ($this->TC->$type->$gradelimit && $this->TC->$type->$gradeweighting) {
+            if ($showgradecolumn) {
                 // insert grade column
                 array_splice($table->head, 1, 0, array(get_string($grade, 'mod_taskchain')));
                 array_splice($table->align, 1, 0, array('center'));
@@ -1046,14 +1053,14 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 }
 
                 $row->cells[] = $attempt->$number;
-                if ($this->TC->$type->$gradelimit && $this->TC->$type->$gradeweighting) {
-                    if ($canreview && isset($this->TC->$mode)) {
-                        $params = array('tab' => 'report', 'mode' => $mode, $mode.'id' => $this->TC->$mode->id);
+                if ($showgradecolumn) {
+                    $cell = $attempt->$grade.'%';
+                    if ($canreview) {
+                        $params = array('tab' => 'report', 'mode' => $mode, $mode.'id' => $attempt->id);
                         $href = $this->format_url('report.php', '', $params);
-                        $row->cells[] = '<a href="'.$href.'">'.$attempt->$grade.'%</a>';
-                    } else {
-                        $row->cells[] = $attempt->$grade.'%';
+                        $cell = '<a href="'.$href.'">'.$cell.'</a>';
                     }
+                    $row->cells[] = $cell;
                 }
                 $row->cells[] = mod_taskchain::format_status($attempt->status);
                 $row->cells[] = mod_taskchain::format_time($attempt->duration);

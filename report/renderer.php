@@ -156,7 +156,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      */
     public function reportheaderdata($type)  {
         $data = array();
-        if (property_exists($this->TC, $type)) {
+        if (property_exists($this->TC, $type) && $this->TC->$type) {
             $record = &$this->TC->$type;
             switch ($type) {
                 case 'taskattempt' : $data[] = '('.$record->tnumber.')';

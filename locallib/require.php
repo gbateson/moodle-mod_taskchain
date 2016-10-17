@@ -718,7 +718,7 @@ class taskchain_require extends taskchain_base {
      * @todo Finish documenting this function
      */
     function chain_availability() {
-        if (($this->TC->tab=='info' || $this->TC->tab=='preview' || $this->TC->tab=='attempt') && $this->TC->can->preview()) {
+        if (($this->TC->tab=='info' || $this->TC->tab=='preview' || $this->TC->tab=='attempt' || $this->TC->tab=='submit') && $this->TC->can->preview()) {
             // teacher can always view the entry page
             return false;
         }

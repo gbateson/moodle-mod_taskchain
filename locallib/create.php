@@ -154,7 +154,12 @@ class taskchain_create extends taskchain_base {
         // set status of previous chain attempts (and their task_attempts and task_scores) to adandoned
         $DB->set_field_select('taskchain_task_attempts',  'status', self::STATUS_ABANDONED, "taskid IN ($taskids) AND $select", $params);
         $DB->set_field_select('taskchain_task_scores',    'status', self::STATUS_ABANDONED, "taskid IN ($taskids) AND $select", $params);
-        $DB->set_field_select('taskchain_chain_attempts', 'status', self::STATUS_ABANDONED, "chainid=? AND $select",     $params);
+        $DB->set_field_select('taskchain_chain_attempts', 'status', self::STATUS_ABANDONED, "chainid=? AND $select",            $params);
+
+        // set status of previous PENDING chain attempts to COMPLETED
+        $select  = 'chainid=? AND cnumber<? AND userid=? AND status=?';
+        $params  = array($chainid, $cnumber, $userid, self::STATUS_PENDING);
+        $DB->set_field_select('taskchain_chain_attempts', 'status', self::STATUS_COMPLETED, $select, $params);
 
         // TODO : might be nice to have a setting for "number of concurrent attempts allowed"
 

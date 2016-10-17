@@ -998,8 +998,7 @@ class taskchain_get extends taskchain_base {
             $cnumber = $this->TC->get_cnumber();
             $taskscores = &$this->TC->taskscores;
         }
-
-        if (is_null($taskscores)) {
+        if (is_null($taskscores) && $cnumber>=0) {
             if ($tasks = $this->tasks($chainid)) {
                 $taskids = implode(',', array_keys($tasks));
                 $select = "taskid IN ($taskids) AND userid=?";
