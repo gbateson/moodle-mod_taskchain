@@ -54,3 +54,16 @@ To add a TaskChain activity to your Moodle course
     8. review other settings on the "Adding a new TaskChain" page
 
     9. click "Save changes" at bottom of page
+
+===============================================
+Credits
+===============================================
+
+    Many thanks to all the users of this module for the feedback over the years.
+
+    In particular, I am very grateful to my erstwhile colleague Wes Cunningham,
+    whose help, feedback and ideas have been invaluable during the development of
+    the TaskChain module and its predecessor the QuizPort module (for Moodle 1.x).
+
+    I am also very grateful for the recognition and support that this software
+    has received from the Moodle Association of Japan (MAJ). Arigatō gozaimashita!
