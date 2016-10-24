@@ -221,7 +221,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
 
         $type = $this->TC->get_columnlisttype();
         $lists = $this->TC->get_columnlists($type);
-        $options = array_merge(array('0' => get_string('add').' ...'), $lists);
+        $options = array('00' => get_string('add').' ...') + $lists;
 
         // javascript to auto submit the form if a new columnlist is selected
         $js = '';
@@ -252,8 +252,10 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
         $elements[] = $this->mform->createElement('text', 'columnlistname', '', array('size' => '10'));
         $elements[] = $this->mform->createElement('static', 'onchangecolumnlistid', '', $js);
         $this->mform->addGroup($elements, 'columnlists_elements', '', array(' '), false);
-        $this->mform->disabledIf('columnlists_elements', 'columnlists', 'ne', 0);
-        $this->mform->setDefault('columnlists', get_user_preferences('taskchain_'.$type.'_columnlists', 0));
+        if (count($lists)) {
+            $this->mform->disabledIf('columnlists_elements', 'columnlistid', 'ne', '00');
+        }
+        $this->mform->setType('columnlistid', PARAM_ALPHANUM);
         $this->mform->setType('columnlistname', PARAM_TEXT);
     }
 
@@ -275,14 +277,16 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
         $uselinks = false;
         if ($uselinks) {
             $links = '';
-            $links .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in_element_with_id("'.$section.'hdr", true); return false;'));
+            $onclick = 'select_all_in_element_with_id("id_'.$section.'hdr", true); return false;';
+            $links .= html_writer::tag('a', get_string('all'), array('onclick' => $onclick));
             $links .= ' / ';
-            $links .= html_writer::tag('a', get_string('none'), array('onclick' => 'select_all_in_element_with_id("'.$section.'hdr", false); return false;'));
+            $onclick = 'select_all_in_element_with_id("id_'.$section.'hdr", false); return false;';
+            $links .= html_writer::tag('a', get_string('none'), array('onclick' => $onclick));
             $links = html_writer::tag('span', $links, array('class' => 'allnonelinks'));
             return $label.' '.$links;
         } else {
             $title = get_string('selectall').' / '.get_string('deselectall');
-            $onclick = 'select_all_in_element_with_id("'.$section.'hdr", this.checked);';
+            $onclick = 'select_all_in_element_with_id("id_'.$section.'hdr", this.checked);';
             $checkbox = html_writer::empty_tag('input', array('type' => 'checkbox', 'onclick' => $onclick, 'title' => $title));
             return $checkbox.' '.$label;
         }
@@ -308,6 +312,19 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
     protected function get_fieldvalue_columnlistsheading() {
         $type = $this->TC->get_columnlisttype();
         return get_string('columnlists'.$type, 'mod_taskchain');
+    }
+
+    /**
+     * add_action_buttons
+     *
+     * @return array($name => $text)
+     * @todo Finish documenting this function
+     */
+    protected function get_action_buttons() {
+        return array('submit' => '',
+                     'cancel' => '',
+                     'delete' => '',
+                     'deleteall' => '');
     }
 
     /////////////////////////////////////////////////////////

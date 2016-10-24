@@ -55,19 +55,96 @@ $mform = new mod_taskchain_edit_columnlists_form();
 
 if ($mform->is_cancelled()) {
     $TC->action = 'editcancelled';
-} else if ($TC->action=='update' && ($newdata = $mform->get_data())) {
-    $TC->action = 'datasubmitted';
+}
+if ($TC->action=='submit') {
+    if ($mform->is_submitted() && $mform->is_validated()) {
+        $newdata = $mform->get_data();
+    } else {
+        $newdata = array();
+    }
+    if (empty($newdata)) {
+        $TC->action = '';
+    } else {
+        $TC->action = 'datasubmitted';
+    }
 }
 
 switch ($TC->action) {
 
-    case 'deleteconfirmed' :
-        $text = '';
+    case 'datasubmitted':
+    case 'submit':
 
         $id = $TC->get_columnlistid();
         $type = $TC->get_columnlisttype();
+        $name = $TC->get_columnlistname();
         $lists = $TC->get_columnlists($type);
 
+        if (empty($name)) {
+            // no list name given, so use old name if there was one
+            if (array_key_exists($id, $lists)) {
+                $name = $lists[$id];
+            }
+        } else {
+            // list name given, so check it is unique
+            if (in_array($name, $lists)) {
+                $id = array_search($name, $lists);
+            }
+        }
+
+        if ($id=='' || $id=='0' || $id=='00') {
+            if (count($lists)) {
+                // new columnlist id required
+                $id = array_keys($lists);
+                $id = array_map('intval', $id);
+                $id = sprintf('%02d', max($id) + 1);
+            } else {
+                // first column list is being added
+                $id = '01';
+            }
+        }
+        $newdata->columnlistid = $id;
+
+        if (empty($name)) {
+            $name = get_string('columnlist', 'mod_taskchain', $id);
+        }
+        $newdata->columnlistname = $name;
+
+        $name = 'taskchain_'.$type.'_columnlist_'.$id;
+        $value = $newdata->columnlistname.':'.implode(',', $newdata->columnlist);
+        set_user_preference($name, $value);
+
+        if ($TC->inpopup) {
+            echo $output->page_quick(get_string('changessaved'), 'close');
+        } else {
+            redirect($TC->url->edit('tasks', array('columnlistid' => $id)));
+        }
+        break;
+
+    case 'delete' :
+        $type = $TC->get_columnlisttype();
+        $text = get_string('confirmdelete'.$type.'columnlist', 'mod_taskchain', $TC->get_columnlist($type));
+        $params = array('inpopup'        => $TC->inpopup,
+                        'chainid'        => $TC->get_chainid(),
+                        'columnlistid'   => $TC->get_columnlistid(),
+                        'columnlisttype' => $type);
+        echo $output->page_delete($text, 'edit/columnlists.php', $params);
+        break;
+
+    case 'deleteall' :
+        $type = $TC->get_columnlisttype();
+        $text = get_string('confirmdelete'.$type.'columnlists', 'mod_taskchain');
+        $params = array('inpopup'        => $TC->inpopup,
+                        'chainid'        => $TC->get_chainid(),
+                        'columnlistid'   => '00', // i.e. all
+                        'columnlisttype' => $type);
+        echo $output->page_delete($text, 'edit/columnlists.php', $params);
+        break;
+
+    case 'deleteconfirmed' :
+        $text = '';
+        $id = $TC->get_columnlistid();
+        $type = $TC->get_columnlisttype();
+        $lists = $TC->get_columnlists($type);
         if (is_numeric($id) && $id>0) {
             if (array_key_exists($id, $lists)) {
                 // delete a single columnlist
@@ -79,7 +156,7 @@ switch ($TC->action) {
             foreach ($lists as $id => $name) {
                 unset_user_preference('taskchain_'.$type.'_columnlist_'.$id);
                 if ($text=='') {
-                    $text = get_string('lists'.$type, 'mod_taskchain');
+                    $text = get_string('columnlists'.$type, 'mod_taskchain');
                 }
             }
         }
@@ -87,71 +164,10 @@ switch ($TC->action) {
         echo $output->page_quick($text, 'close');
         break;
 
-    case 'delete' :
-        $type = $TC->get_columnlisttype();
-        $text = get_string('confirmdelete'.$type.'columnlist', 'mod_taskchain');
-        $params = array('inpopup'        => $TC->inpopup,
-                        'chainid'        => $TC->get_chainid(),
-                        'columnlistid'   => $TC->get_columnlistid(),
-                        'columnlisttype' => $TC->get_columnlisttype());
-        echo $output->page_delete($text, 'edit/columnlists.php', $params);
-        break;
-
-    case 'deleteall' :
-        $type = $TC->get_columnlisttype();
-        $text = get_string('confirmdelete'.$type.'columnlists', 'mod_taskchain');
-        $params = array('inpopup'        => $TC->inpopup,
-                        'chainid'        => $TC->get_chainid(),
-                        'columnlistid'   => '00', // i.e. all
-                        'columnlisttype' => $TC->get_columnlisttype());
-        echo $output->page_delete($text, 'edit/columnlists.php', $params);
-        break;
-
     case 'deletecancelled':
     case 'editcancelled':
+    case 'cancel':
         close_window();
-        break;
-
-    case 'datasubmitted':
-        $columnlistnames = $TC->get_columnlists($TC->columnlisttype);
-
-        if ($newdata->columnlistname) {
-            // list name given, so check it is unique
-            $id = array_search($newdata->columnlistname, $columnlistnames);
-            if (is_numeric($id)) {
-                $newdata->columnlistid = $id;
-            }
-        } else {
-            // no list name given, so use old name if there was one
-            if ($newdata->columnlistid && array_key_exists($newdata->columnlistid, $columnlistnames)) {
-                $newdata->columnlistname = $columnlistnames[$newdata->columnlistid];
-            }
-        }
-
-        if (empty($newdata->columnlistid)) {
-            if (count($columnlistnames)) {
-                // new columnlist id required
-                $id = max(array_keys($columnlistnames)) + 1;
-                $newdata->columnlistid = sprintf('%02d', $id);
-            } else {
-                // first column list is being added
-                $newdata->columnlistid = '01';
-            }
-        }
-
-        if (empty($newdata->columnlistname)) {
-            $newdata->columnlistname = get_string('columnlist', 'mod_taskchain', $newdata->columnlistid);
-        }
-
-        $name = 'taskchain_'.$newdata->columnlisttype.'_columnlist_'.$newdata->columnlistid;
-        set_user_preference($name, $newdata->columnlistname.':'.implode(',', $newdata->columnlist));
-
-        if ($TC->inpopup) {
-            echo $output->page_quick(get_string('changessaved'), 'close');
-        } else {
-            $params = array('columnlistid' => $newdata->columnlistid);
-            redirect($TC->url->edit('tasks', $params));
-        }
         break;
 
     case 'update':
@@ -169,5 +185,4 @@ switch ($TC->action) {
         $mform->display();
 
         echo $output->footer();
-
 }

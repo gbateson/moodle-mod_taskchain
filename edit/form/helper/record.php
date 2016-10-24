@@ -1563,4 +1563,14 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         global $OUTPUT;
         return ' '.$OUTPUT->help_icon('timeopenclose', 'taskchain');
     }
+
+    /**
+     * add_action_buttons
+     *
+     * @return array($name => $text)
+     * @todo Finish documenting this function
+     */
+    protected function get_action_buttons() {
+        return array('submit' => '', 'cancel' => '');
+    }
 }

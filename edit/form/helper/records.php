@@ -1060,4 +1060,14 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
         $this->mform->setDefault($name, self::SORT_INCREMENT);
         $this->mform->disabledIf($name, 'action', 'ne', 'reorder'.$types);
     }
+
+    /**
+     * add_action_buttons
+     *
+     * @return array($name => $text)
+     * @todo Finish documenting this function
+     */
+    protected function get_action_buttons() {
+        return array('submit' => get_string('go'));
+    }
 }

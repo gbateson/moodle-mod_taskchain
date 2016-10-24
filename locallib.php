@@ -495,21 +495,25 @@ class mod_taskchain extends taskchain_base {
                 $this->columnlistid = optional_param('columnlistid', $this->columnlistid, PARAM_ALPHA);
             }
 
+            // set action
             if ($this->action=='' && ($pageclass=='mod-taskchain' || $pageclass=='mod-taskchain-edit')) {
                 $actions = array('add',
                                  'update',
+                                 'submit',
+                                 'cancel',
                                  'delete',
                                  'deleteall',
                                  'deletecancelled',
                                  'deleteconfirmed');
                 foreach ($actions as $action) {
-                    if (optional_param($action, '', PARAM_RAW)) {
+                    if (optional_param($action.'button', '', PARAM_RAW)) {
                         $this->action = $action;
                         break;
                     }
                 }
             }
 
+            // check sesskey, if required
             if ($this->action) {
                 require_sesskey();
             }

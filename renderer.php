@@ -1509,9 +1509,9 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_tag('div', array('class' => 'buttons'));
         $output .= html_writer::tag('p', $message);
-        $output .= html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'deleteconfirmed', 'value' => get_string('yes')));
+        $output .= html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'deleteconfirmedbutton', 'value' => get_string('yes')));
         $output .= ' ';
-        $output .= html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'deletecancelled', 'value' => get_string('no')));
+        $output .= html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'deletecancelledbutton', 'value' => get_string('no')));
         $output .= html_writer::end_tag('div');
         $output .= $this->form_end();
 

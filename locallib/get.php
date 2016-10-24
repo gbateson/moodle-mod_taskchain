@@ -240,11 +240,11 @@ class taskchain_get extends taskchain_base {
         }
         if ($value) {
             return $value;
-        } else if ($optional_param) {
-            return optional_param($field, $default, $param_type);
-        } else {
-            return $default;
         }
+        if ($optional_param) {
+            return optional_param($field, $default, $param_type);
+        }
+        return $default;
     }
 
     /**
@@ -482,6 +482,16 @@ class taskchain_get extends taskchain_base {
     }
 
     /**
+     * columnlistname
+     *
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function columnlistname() {
+        return $this->field('', 'columnlistname', '', true, PARAM_TEXT);
+    }
+
+    /**
      * popup
      *
      * @return xxx
@@ -521,7 +531,7 @@ class taskchain_get extends taskchain_base {
      *     $name : user-supplied alphanumeric string
      *     $columns : comma-separated list of column (=field) names
      *
-     * @param string $type
+     * @param string $type ("chains" or "tasks")
      * @param boolean $return_columns (optional, default=false)
      * @return array
      * @todo Finish documenting this function
@@ -530,13 +540,16 @@ class taskchain_get extends taskchain_base {
         $columnlists = array();
         $asort = false;
         if ($preferences = get_user_preferences()) {
+            $search = '/^taskchain_'.$type.'_columnlist_(\d+)$/';
             foreach ($preferences as $name => $value) {
-                if (preg_match('/^taskchain_'.$type.'_columnlist_(\d+)$/', $name, $matches)) {
+                if (preg_match($search, $name, $matches)) {
                     $id = $matches[1];
                     list($name, $columns) = explode(':', $value, 2);
                     if ($return_columns) {
                         // $columnlistid => array($column1, $column2, ...)
-                        $columnlists[$id] = explode(',', $columns);
+                        $columns = explode(',', $columns);
+                        $columns = array_filter($columns);
+                        $columnlists[$id] = $columns;
                     } else {
                         // $columnlistid => $columnlistname
                         $columnlists[$id] = $name;
@@ -549,6 +562,27 @@ class taskchain_get extends taskchain_base {
             asort($columnlists);
         }
         return $columnlists;
+    }
+
+    /**
+     * return a single columnlist
+     *
+     * @param string $type ("chains" or "tasks")
+     * @param string $id   (optional, default='')
+     * @param boolean $return_columns (optional, default=false)
+     * @return array
+     * @todo Finish documenting this function
+     */
+    public function columnlist($type, $id='', $return_columns=false) {
+        $lists = $this->columnlists($type, $return_columns);
+        if ($id=='') {
+            $id = $this->columnlistid();
+        }
+        if (array_key_exists($id, $lists)) {
+            return $lists[$id];
+        } else {
+            return '';
+        }
     }
 
     /**

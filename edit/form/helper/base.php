@@ -2337,6 +2337,63 @@ abstract class taskchain_form_helper_base {
         return $text;
      }
 
+    /**
+     * add_action_buttons
+     *
+     * @return array($name => $text)
+     * @todo Finish documenting this function
+     */
+    protected function get_action_buttons() {
+        return array();
+    }
+
+    /**
+     * add_action_buttons
+     *
+     * @param bool $cancel whether to show cancel button, default true
+     * @param string $submit label for submit button, defaults to get_string('savechanges')
+     */
+    public function add_action_buttons($cancel=true, $submit=null) {
+        $action_buttons = $this->get_action_buttons();
+        switch (count($action_buttons)) {
+            case 0: return $this->mform->add_action_buttons($cancel, $submit);
+            case 1: $multiplebuttons = false; break;
+            default: $multiplebuttons = true; break;
+        }
+        $buttons = array();
+        foreach ($action_buttons as $name => $text) {
+            if ($name=='cancel') {
+                $type = 'cancel';
+            } else {
+                $type = 'submit';
+            }
+            if ($name=='submit' && $this->singlefield) {
+                $params = array('onclick' => $this->ajax_edit_onclick($this->singlefield, true));
+            } else {
+                $params = null;
+            }
+            if ($text=='') {
+                if ($name=='submit') {
+                    $text = ($this->singlefield ? get_string('save', 'admin') : get_string('savechanges'));
+                } else {
+                    $text = get_string($name);
+                }
+            }
+            $name .= 'button';
+            if ($multiplebuttons) {
+                $buttons[] = $this->mform->createElement($type, $name, $text, $params);
+            } else {
+                $this->mform->addElement($type, $name, $text, $params);
+                $this->mform->closeHeaderBefore($name);
+            }
+        }
+        if ($multiplebuttons) {
+            $name = 'actionbuttons';
+            $this->mform->addGroup($buttons, $name, '', array(' '), false);
+            $this->mform->closeHeaderBefore($name);
+        }
+    }
+
     /////////////////////////////////////////////////////////
     // get javascript
     /////////////////////////////////////////////////////////
@@ -2348,40 +2405,6 @@ abstract class taskchain_form_helper_base {
      */
     public function get_js() {
         return '';
-    }
-
-
-    /**
-     * add_action_buttons
-     *
-     * @param bool $cancel whether to show cancel button, default true
-     * @param string $submit label for submit button, defaults to get_string('savechanges')
-     */
-    public function add_action_buttons($cancel=true, $submit=null) {
-        if ($cancel===true) {
-            $cancel = get_string('cancel');
-        }
-        if ($submit===null) {
-            $submit = ($this->singlefield ? get_string('save', 'admin') : get_string('savechanges'));
-        }
-        if ($this->singlefield) {
-            $params = array('onclick' => $this->ajax_edit_onclick($this->singlefield, true));
-        } else {
-            $params = null;
-        }
-        if ($cancel) {
-            $elements = array(
-                $this->mform->createElement('submit', 'submitbutton', $submit, $params),
-                $this->mform->createElement('cancel', 'cancelbutton', $cancel)
-            );
-            $name = 'actionbuttons';
-            $this->mform->addGroup($elements, $name, '', array(' '), false);
-            $this->mform->closeHeaderBefore($name);
-        } else {
-            $name = 'submitbutton';
-            $this->mform->addElement('submit', $name, $submit, $params);
-            $this->mform->closeHeaderBefore($name);
-        }
     }
 
     /**
