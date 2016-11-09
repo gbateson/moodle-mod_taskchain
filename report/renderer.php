@@ -205,8 +205,14 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
             return false;
         }
 
-        // set baseurl for this page (used for filters and table)
-        $baseurl = $this->TC->url->report($this->mode)->out();
+        // set baseurl for this page (used for filters and pagination links)
+        if ($name = $this->id_param_name) {
+            $method = 'get_'.$this->id_param_name;
+            $params = array($name => $this->TC->$method());
+        } else {
+            $params = array('id' => $this->TC->get_coursemoduleid());
+        }
+        $baseurl = $this->TC->url->report($this->mode, $params)->out();
 
         // display user and attempt filters
         //$this->display_filters($baseurl);
