@@ -1479,6 +1479,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             'param'  => 'value',
             'script' => 'src',
             'source' => 'src', // HTML5
+            'track'  => 'src', // HTML5
             '(?:table|th|td)' => 'background',
             '[a-z]+' => 'style'
         );
