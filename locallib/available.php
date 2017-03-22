@@ -452,10 +452,11 @@ class taskchain_available extends taskchain_base {
      */
     static public function titles_list() {
         return array (
-            self::TEXTSOURCE_SPECIFIC => get_string('taskchainname',      'mod_taskchain'),
+            self::TEXTSOURCE_TASKNAME => get_string('textsourcetaskname', 'mod_taskchain'),
             self::TEXTSOURCE_FILE     => get_string('textsourcefile',     'mod_taskchain'),
             self::TEXTSOURCE_FILENAME => get_string('textsourcefilename', 'mod_taskchain'),
-            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'mod_taskchain')
+            self::TEXTSOURCE_FILEPATH => get_string('textsourcefilepath', 'mod_taskchain'),
+            self::TEXTSOURCE_SPECIFIC => get_string('textsourcespecific', 'mod_taskchain')
         );
     }
 }

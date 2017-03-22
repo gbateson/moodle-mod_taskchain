@@ -113,8 +113,9 @@
         <FIELD NAME="configlocation" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="outputformat" PREVIOUS="configfile"/>
         <FIELD NAME="outputformat" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the required output format for this task" NEXT="navigation" PREVIOUS="configlocation"/>
         <FIELD NAME="navigation" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the navigation used for tasks in this TaskChain chain 1 : bar : Moodle navigation bar 2 : frame : Moodle navigation frame 3 : iframe : embedded IFRAME 4 : original : task’s original navigation 5 : giveup : a single “Give Up” button 6 : none" NEXT="title" PREVIOUS="outputformat"/>
-        <FIELD NAME="title" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="3" SEQUENCE="false" NEXT="stopbutton" PREVIOUS="navigation"/>
-        <FIELD NAME="stopbutton" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="stoptext" PREVIOUS="title"/>
+        <FIELD NAME="title" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="3" SEQUENCE="false" NEXT="titletext" PREVIOUS="navigation"/>
+        <FIELD NAME="titletext" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" NEXT="stopbutton" PREVIOUS="title"/>
+        <FIELD NAME="stopbutton" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="stoptext" PREVIOUS="titletext"/>
         <FIELD NAME="stoptext" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" NEXT="allowpaste" PREVIOUS="stopbutton"/>
         <FIELD NAME="allowpaste" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="usefilters" PREVIOUS="stoptext"/>
         <FIELD NAME="usefilters" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="useglossary" PREVIOUS="allowpaste"/>

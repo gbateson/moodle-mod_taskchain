@@ -504,6 +504,42 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
+    $newversion = 2017031738;
+    if ($oldversion < $newversion) {
+        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+        $table = new xmldb_table('taskchain_tasks');
+        $field = new xmldb_field('titletext', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'title');
+        xmldb_taskchain_fix_previous_field($dbman, $table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->change_field_type($table, $field);
+        } else {
+            $dbman->add_field($table, $field);
+
+            // initialize "titletext" to empty string
+            $DB->execute('UPDATE {taskchain_tasks} SET titletext = ?', array(''));
+
+            // shift CHAINNAME and SORTORDER bits to the left (i.e. multiply by 2)
+            $update = '{taskchain_tasks}';
+            $title  = '((2 * ((title & :sortorder) + (title & :chainname))) + (title & :source))';
+            $params = array('source'    => (mod_taskchain::TITLE_SOURCE >> 1),
+                            'chainname' => (mod_taskchain::TITLE_CHAINNAME >> 1),
+                            'sortorder' => (mod_taskchain::TITLE_SORTORDER >> 1));
+            $DB->execute("UPDATE $update SET title = $title", $params);
+
+            // replace SPECIFIC with TASKNAME
+            $update = '{taskchain_tasks}';
+            $title  = '(((title & :sortorder) + (title & :chainname)) + :taskname)';
+            $where  = '(title & :source) = :specific';
+            $params = array('source'    => mod_taskchain::TITLE_SOURCE,
+                            'chainname' => mod_taskchain::TITLE_CHAINNAME,
+                            'sortorder' => mod_taskchain::TITLE_SORTORDER,
+                            'specific'  => mod_taskchain::TEXTSOURCE_SPECIFIC,
+                            'taskname'  => mod_taskchain::TEXTSOURCE_TASKNAME);
+            $DB->execute("UPDATE $update SET title = $title WHERE $where", $params);
+        }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
     if ($empty_cache) {
         $DB->delete_records('taskchain_cache');
     }

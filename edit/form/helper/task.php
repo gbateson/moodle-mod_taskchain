@@ -84,6 +84,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'titleprependchainname' => mod_taskchain::NO,
         'titleappendsortorder'  => mod_taskchain::NO,
         'title'           => mod_taskchain::TEXTSOURCE_FILE,
+        'titletext'       => '',
         'stopbutton'      => mod_taskchain::NO,
         'stoptext'        => '',
         'allowpaste'      => mod_taskchain::NO,
@@ -282,10 +283,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name = $this->get_fieldname($field);
         $label = get_string($field, 'mod_taskchain');
 
+        $field_text    = $field.'text';
         $field_source  = $field.'source';
         $field_prepend = $field.'prependchainname';
         $field_append  = $field.'appendsortorder';
 
+        $name_text     = $this->get_fieldname($field_text);
         $name_source   = $this->get_fieldname($field_source);
         $name_prepend  = $this->get_fieldname($field_prepend);
         $name_append   = $this->get_fieldname($field_append);
@@ -293,20 +296,28 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         $elements = array();
         $elements[] = $this->mform->createElement('select',   $name_source,  '', taskchain_available::titles_list());
+        $elements[] = $this->mform->createElement('text',     $name_text,    '', array('size' => '20'));
+        $elements[] = $this->mform->createElement('static',   '',            '', html_writer::empty_tag('br'));
         $elements[] = $this->mform->createElement('checkbox', $name_prepend, '', get_string($field_prepend, 'mod_taskchain'));
+        $elements[] = $this->mform->createElement('static',   '',            '', html_writer::empty_tag('br'));
         $elements[] = $this->mform->createElement('checkbox', $name_append,  '', get_string($field_append,  'mod_taskchain'));
+        
 
-        $this->mform->addGroup($elements, $name_elements, $label, html_writer::empty_tag('br'), false);
-        $this->add_helpbutton($name_elements, $field, 'taskchain');
+        $this->mform->addGroup($elements, $name_elements, $label, ' ', false);
+        $this->add_helpbutton($name_elements, $field, 'mod_taskchain');
         $this->mform->setAdvanced($name_elements);
 
+        $this->mform->setType($name_text,   PARAM_TEXT);
         $this->mform->setType($name_source,  PARAM_INT);
         $this->mform->setType($name_prepend, PARAM_INT);
         $this->mform->setType($name_append,  PARAM_INT);
 
+        $this->mform->setDefault($name_text,    $this->get_defaultvalue($field_text));
         $this->mform->setDefault($name_source,  $this->get_defaultvalue($field_source));
         $this->mform->setDefault($name_prepend, $this->get_defaultvalue($field_prepend));
         $this->mform->setDefault($name_append,  $this->get_defaultvalue($field_append));
+
+        $this->mform->disabledIf($name_text, $name_source, 'neq', mod_taskchain::TEXTSOURCE_SPECIFIC);
     }
 
     /**
@@ -660,14 +671,14 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         $name = $this->get_fieldname($field.'source');
         if (isset($data->$name)) {
-            $value |= ($data->$name & mod_taskchain::TITLE_SOURCE); // 1st/2nd bits
+            $value |= ($data->$name & mod_taskchain::TITLE_SOURCE); // 1st-3rd bits
             unset($data->$name);
         }
 
         $name = $this->get_fieldname($field.'prependchainname');
         if (isset($data->$name)) {
             if ($data->$name) {
-                $value |= mod_taskchain::TITLE_CHAINNAME; // 3rd bit
+                $value |= mod_taskchain::TITLE_CHAINNAME; // 4th bit
             }
             unset($data->$name);
         }
@@ -675,7 +686,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name = $this->get_fieldname($field.'appendsortorder');
         if (isset($data->$name)) {
             if ($data->$name) {
-                $value |= mod_taskchain::TITLE_SORTORDER; // 4th bit
+                $value |= mod_taskchain::TITLE_SORTORDER; // 5th bit
             }
             unset($data->$name);
         }
@@ -853,7 +864,8 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function format_fieldvalue_title($field, $value) {
-        $title = $this->format_templatevalue_list($field, ($value & mod_taskchain::TITLE_SOURCE));
+        $title = ($value & mod_taskchain::TITLE_SOURCE);
+        $title = $this->format_templatevalue_list($field, $title);
         if ($value & mod_taskchain::TITLE_CHAINNAME) {
             $title = get_string('taskchainname', 'mod_taskchain').': '.$title;
         }

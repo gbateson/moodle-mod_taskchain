@@ -206,6 +206,7 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
             // task name
             $cell = format_string($task->name);
+            //$cell = $this->get_tasktitle($task);
             if (in_array($taskid, $linktaskids)) {
                 $params = array('taskid'=>$taskid, 'tnumber'=>-1, 'taskattemptid'=>0, 'taskscoreid'=>0);
                 $href = $this->format_url('attempt.php', '', $params);
@@ -289,6 +290,54 @@ class mod_taskchain_renderer extends plugin_renderer_base {
         $output .= $this->js_reloadcoursepage();
 
         return $output;
+    }
+
+    /**
+     * get_title
+     *
+     * @return xxx
+     * @todo Finish documenting this function
+     */
+    public function get_tasktitle($task)  {
+        switch ($task->title & mod_taskchain::TITLE_SOURCE) {
+            case mod_taskchain::TEXTSOURCE_FILE:
+                $title = $task->source->get_title();
+                break;
+            case mod_taskchain::TEXTSOURCE_FILENAME:
+                $title = basename($task->sourcefile);
+                break;
+            case mod_taskchain::TEXTSOURCE_FILEPATH:
+                $title = ltrim($task->sourcefile, '/');
+                break;
+            case mod_taskchain::TEXTSOURCE_SPECIFIC:
+                $title = format_string($task->titletext);
+                break;
+            case mod_taskchain::TEXTSOURCE_TASKNAME:
+                $title = format_string($task->name);
+                break;
+            default:
+                $title = ''; // shouldn't happen !!
+        }
+
+        if ($task->title & mod_taskchain::TITLE_CHAINNAME) {
+            if ($title=='') {
+                $title = $task->TC->taskchain->name;
+            } else {
+                $title = $task->TC->taskchain->name.': '.$title;
+            }
+        }
+
+        if ($task->title & mod_taskchain::TITLE_SORTORDER) {
+            if ($title=='') {
+                $title = $task->sortorder;
+            } else {
+                $title .= ' ('.$task->sortorder.')';
+            }
+        }
+
+        $title = mod_taskchain::textlib('utf8_to_entities', $title);
+
+        return $title;
     }
 
     /**

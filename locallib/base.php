@@ -93,6 +93,7 @@ class taskchain_base {
     const TEXTSOURCE_FILENAME         = 1;
     const TEXTSOURCE_FILEPATH         = 2;
     const TEXTSOURCE_SPECIFIC         = 3;
+    const TEXTSOURCE_TASKNAME         = 4; // added 2017-03-18
     /**#@-*/
 
     /**#@+
@@ -135,13 +136,13 @@ class taskchain_base {
     /**#@-*/
 
     /**#@+
-     * bit-masks used to extract bits from the taskchain "title" setting
+     * bit-masks used to extract bits from the task "title" setting
      *
      * @var integer
      */
-    const TITLE_SOURCE                = 0x03; // 1st - 2nd bits
-    const TITLE_CHAINNAME             = 0x04; // 3rd bit
-    const TITLE_SORTORDER             = 0x08; // 4th bit
+    const TITLE_SOURCE                = 7; // 1st - 3rd bits
+    const TITLE_CHAINNAME             = 8; // 4th bit
+    const TITLE_SORTORDER             = 16; // 5th bit
     /**#@-*/
 
     /**#@+

@@ -1082,8 +1082,8 @@ $string['tasktype'] = 'Task type';
 $string['textsourcefile'] = 'Get from source file';
 $string['textsourcefilename'] = 'Use source file name';
 $string['textsourcefilepath'] = 'Use source file path';
-$string['textsourcespecific'] = 'Specific text';
-$string['textsourcetask'] = 'Get from task';
+$string['textsourcespecific'] = 'Use specific text';
+$string['textsourcetaskname'] = 'Use the task name';
 $string['timeclose'] = 'Available until';
 $string['timedout'] = 'Timed out';
 $string['timehdr'] = 'Time restrictions';
@@ -1110,8 +1110,8 @@ $string['timeopenclose_help'] = 'You can specify times when the task is accessib
 $string['title'] = 'Title';
 $string['title_help'] = 'This setting specifies the title to be displayed on the web page.
 
-**TaskChain activity name**
-: the name of this TaskChain activity will be displayed as the web page title.
+**Use the task name**
+: the task name, as defined on this page, will be displayed as the web page title.
 
 **Get from source file**
 : the title, if any, defined in the source file will be used as the web page title.
@@ -1120,7 +1120,10 @@ $string['title_help'] = 'This setting specifies the title to be displayed on the
 : the source file name, excluding any folder names, will be used as the web page title.
 
 **Use source file path**
-: the source file path, including any folder names, will be used as the web page title.';
+: the source file path, including any folder names, will be used as the web page title.
+
+**Use specific text**
+: the text in the textbox will be used as web page title.';
 $string['titleappendsortorder'] = 'Append sort order';
 $string['titleprependchainname'] = 'Prepend chain name';
 $string['tnumber'] = 'Task attempt';
