@@ -1114,7 +1114,7 @@ $string['title_help'] = 'This setting specifies the title to be displayed on the
 : the task name, as defined on this page, will be displayed as the web page title.
 
 **Get from source file**
-: the title, if any, defined in the source file will be used as the web page title.
+: the title, if any, defined in the source file will be used as the web page title. Note that this option is NOT efficient for the server, bcause the source file must be read every time the title is displayed.
 
 **Use source file name**
 : the source file name, excluding any folder names, will be used as the web page title.

@@ -205,8 +205,8 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             }
 
             // task name
-            $cell = format_string($task->name);
-            //$cell = $this->get_tasktitle($task);
+            //$cell = format_string($task->name);
+            $cell = $this->get_tasktitle($task);
             if (in_array($taskid, $linktaskids)) {
                 $params = array('taskid'=>$taskid, 'tnumber'=>-1, 'taskattemptid'=>0, 'taskscoreid'=>0);
                 $href = $this->format_url('attempt.php', '', $params);
@@ -299,8 +299,13 @@ class mod_taskchain_renderer extends plugin_renderer_base {
      * @todo Finish documenting this function
      */
     public function get_tasktitle($task)  {
+
         switch ($task->title & mod_taskchain::TITLE_SOURCE) {
             case mod_taskchain::TEXTSOURCE_FILE:
+                if (get_class($task)=='stdClass') {
+                    $task = new taskchain_task($task, array('TC' => $this->TC));
+                }
+                $task->get_source();
                 $title = $task->source->get_title();
                 break;
             case mod_taskchain::TEXTSOURCE_FILENAME:
@@ -336,7 +341,6 @@ class mod_taskchain_renderer extends plugin_renderer_base {
         }
 
         $title = mod_taskchain::textlib('utf8_to_entities', $title);
-
         return $title;
     }
 
