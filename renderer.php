@@ -185,7 +185,8 @@ class mod_taskchain_renderer extends plugin_renderer_base {
             // shortcuts to task and taskscore
             $task = &$this->TC->tasks[$taskid];
             if (isset($task->taskscore)) {
-                $taskscore = &$task->taskscore;
+                $taskscore = $task->taskscore;
+                unset($task->taskscore);
             } else {
                 $taskscore = false;
             }

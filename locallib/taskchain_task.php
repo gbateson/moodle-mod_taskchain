@@ -154,13 +154,10 @@ class taskchain_task extends taskchain_base {
     private $discarddetails      = 0;
 
     /** object representing the task source file */
-    public $source            = null;
+    public $source = null;
 
     /** object representing the task config file */
-    public $config            = null;
-
-    /** object representing the task score db record (used by renderer.php) */
-    public $taskscore         = null;
+    public $config = null;
 
     /**
      * get the "id" property
@@ -983,24 +980,6 @@ class taskchain_task extends taskchain_base {
         // file not found - shouldn't happen !!
         return null;
         //  throw new moodle_exception($type.'filenotfound', 'taskchain', '', $this->$typefile);
-    }
-
-    /**
-     * get the "taskscore" property
-     *
-     * @return string (255) the current taskscore $value
-     */
-    public function get_taskscore() {
-        return $this->taskscore;
-    }
-
-    /**
-     * set the "taskscore" property
-     *
-     * @param string (255) the new taskscore $value
-     */
-    public function set_taskscore($value) {
-        $this->taskscore = $value;
     }
 }
 

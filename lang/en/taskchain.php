@@ -1005,6 +1005,7 @@ The text that is displayed on the stop button can be one of the preset phrases f
 $string['stopbuttonlangpack'] = 'From language pack';
 $string['stopbuttonspecific'] = 'Use specific text';
 $string['stoptext'] = 'Stop button text';
+$string['stoptext_help'] = 'This text is used if the "Show stop button" setting specifies "Yes - Use specific text"';
 $string['storedetails'] = 'Store the raw XML details of TaskChain task attempts';
 $string['studentfeedback'] = 'Student feedback';
 $string['studentfeedback_help'] = 'If enabled, a link to a pop-up feedback window will be displayed whenever the student clicks on the "Check" button. The feedback window allows students to discuss this task with their teacher and classmates in one of the following ways:
@@ -1114,7 +1115,7 @@ $string['title_help'] = 'This setting specifies the title to be displayed on the
 : the task name, as defined on this page, will be displayed as the web page title.
 
 **Get from source file**
-: the title, if any, defined in the source file will be used as the web page title. Note that this option is NOT efficient for the server, bcause the source file must be read every time the title is displayed.
+: the title, if any, defined in the source file will be used as the web page title. Note that this option is not efficient for the server, because the source file must be read every time the title is displayed.
 
 **Use source file name**
 : the source file name, excluding any folder names, will be used as the web page title.
@@ -1124,6 +1125,8 @@ $string['title_help'] = 'This setting specifies the title to be displayed on the
 
 **Use specific text**
 : the text in the textbox will be used as web page title.';
+$string['titletext'] = 'Title text';
+$string['titletext_help'] = 'This text is used if the "Title" setting is "Use specific text"';
 $string['titleappendsortorder'] = 'Append sort order';
 $string['titleprependchainname'] = 'Prepend chain name';
 $string['tnumber'] = 'Task attempt';

@@ -49,7 +49,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     protected $sections = array(
         'general'    => array('sortorder', 'edit', 'defaultrecord', 'selectrecord', 'name'),
         'tasks'      => array('sourcefile', 'sourcetype', 'sourcelocation', 'configfile', 'configlocation', 'addtype', 'tasknames'),
-        'display'    => array('outputformat', 'navigation', 'title', 'stopbutton', 'stoptext', 'allowpaste', 'usefilters', 'useglossary', 'usemediafilter', 'studentfeedback', 'studentfeedbackurl'),
+        'display'    => array('outputformat', 'navigation', 'title', 'titletext', 'stopbutton', 'stoptext', 'allowpaste', 'usefilters', 'useglossary', 'usemediafilter', 'studentfeedback', 'studentfeedbackurl'),
         'time'       => array('timeopen', 'timeclose', 'timelimit', 'delay1', 'delay2', 'delay3'),
         'attempts'   => array('attemptlimit', 'allowresume'),
         'security'   => array('password', 'subnet'),
@@ -318,6 +318,16 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $this->mform->setDefault($name_append,  $this->get_defaultvalue($field_append));
 
         $this->mform->disabledIf($name_text, $name_source, 'neq', mod_taskchain::TEXTSOURCE_SPECIFIC);
+    }
+
+    /**
+     * add_field_titletext
+     *
+     * @param string name of $field
+     * @todo Finish documenting this function
+     */
+    protected function add_field_titletext($field) {
+        // do nothing - this field was added by add_field_title($field)
     }
 
     /**
@@ -1204,16 +1214,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     public function get_helpicon_reviewoptions() {
         return '';
-    }
-
-    /**
-     * get_helpicon_stoptext
-     *
-     * @uses $OUTPUT
-     */
-    public function get_helpicon_stoptext() {
-        global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('stopbutton', 'taskchain');
     }
 
     /**
