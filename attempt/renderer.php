@@ -574,11 +574,11 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
         if (empty($CFG->taskchain_lockframe)) {
             $lock_frameset = '';
-            $lock_top = '';
+            $lock_top = '';
             $lock_main = '';
         } else {
             $lock_frameset = ' border="0" frameborder="0" framespacing="0"';
-            $lock_top = ' noresize="noresize" scrolling="no"';
+            $lock_top = ' noresize="noresize" scrolling="no"';
             $lock_main = ' noresize="noresize"';
         }
 
@@ -596,7 +596,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         echo '<title>'.$title.'</title>'."\n";
         echo '</head>'."\n";
         echo '<frameset rows="'.$rows.',*".'.$lock_frameset.'>'."\n";
-        echo '<frame title="'.$title_top.'" src="'.$src_top.'"'.$lock_top.' />'."\n";
+        echo '<frame title="'.$title_top.'" src="'.$src_top.'"'.$lock_top.' />'."\n";
         echo '<frame title="'.$title_main.'" src="'.$src_main.'"'.$lock_main.' />'."\n";
         echo '<noframes>'."\n";
         echo '<p>'.get_string('framesetinfo').'</p>'."\n";
