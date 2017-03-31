@@ -1838,9 +1838,9 @@ abstract class taskchain_form_helper_base {
         $id = $this->get_fieldvalue('id');
         $type = $this->recordtype;
         $params = array('id'      => $id,
-                         'type'    => $type,
-                         'field'   => $field,
-                         'sesskey' => sesskey());
+                        'type'    => $type,
+                        'field'   => $field,
+                        'sesskey' => sesskey());
         $helper = new moodle_url('/mod/taskchain/edit/form/helper.js.php', $params);
 
         $params = array($helper, $field.'['.$id.']');
