@@ -890,14 +890,24 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         // add module icons, if possible - there is no API for this, so we have to hack :-(
         if ($modinfo) {
             $element = reset($this->mform->getElement($type.'cm_elements')->getElements());
+            if (method_exists($PAGE->theme, 'image_url')) {
+                $image_url = 'image_url'; // Moodle >= 3.3
+            } else {
+                $image_url = 'pix_url'; // Moodle <= 3.2
+            }
             for ($i=0; $i<count($element->_optGroups); $i++) {
                 $optgroup = &$element->_optGroups[$i];
                 for ($ii=0; $ii<count($optgroup['options']); $ii++) {
                     $option = &$optgroup['options'][$ii];
                     if (isset($option['attr']['value']) && $option['attr']['value']>0) {
                         $cmid = $option['attr']['value'];
-                        $url = $PAGE->theme->pix_url('icon', $modinfo->cms[$cmid]->modname)->out();
-                        $option['attr']['style'] = "background-image: url($url); background-repeat: no-repeat; background-position: 1px 2px; min-height: 20px;";
+                        $modname = $modinfo->cms[$cmid]->modname;
+                        $url = $PAGE->theme->$image_url('icon', $modname)->out();
+                        $option['attr']['style'] = 'background-image: url('.$url.'); '.
+                                                   'background-repeat: no-repeat; '.
+                                                   'background-position: 1px 2px; '.
+                                                   'min-height: 20px; '.
+                                                   'padding-left: 12px;';
                     }
                 }
             }

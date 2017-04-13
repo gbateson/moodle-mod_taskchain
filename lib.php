@@ -1105,8 +1105,13 @@ function taskchain_print_recent_mod_activity($activity, $courseid, $detail, $mod
         $row->cells[] = $cell;
 
         // activity icon and link to activity
-        $src = $OUTPUT->pix_url('icon', $activity->type);
-        $img = html_writer::tag('img', array('src'=>$src, 'class'=>'icon', $alt=>$activity->name));
+        if (method_exists($OUTPUT, 'image_icon')) {
+            // Moodle >= 3.3
+            $img = $OUTPUT->image_icon('icon', $modnames[$activity->type], $activity->type);
+        } else {
+            // Moodle <= 3.2
+            $img = $OUTPUT->pix_icon('icon', $modnames[$activity->type], $activity->type);
+        }
 
         // link to activity
         $href = new moodle_url('/mod/taskchain/view.php', array('id' => $activity->cmid));

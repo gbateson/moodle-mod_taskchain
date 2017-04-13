@@ -516,9 +516,7 @@ class taskchain_mediafilter {
             if ($options['iconlink'] && preg_match('/href="([^"]*)"/', $link, $matches)) {
 
                 // create audio icon
-                $img = $PAGE->theme->pix_url('f/audio', 'core')->out();
-                $style = 'border-style: none; border-left: 4px solid transparent;';
-                $img = html_writer::empty_tag('img', array('src' => $img, 'title' => 'audio', 'style' => $style));
+                $img = $PAGE-theme->pix_icon('f/audio', 'audio');
 
                 // append link to audio
                 $onclick = "this.target='iconlink'; ".
