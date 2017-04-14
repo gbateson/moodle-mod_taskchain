@@ -516,7 +516,9 @@ class taskchain_mediafilter {
             if ($options['iconlink'] && preg_match('/href="([^"]*)"/', $link, $matches)) {
 
                 // create audio icon
-                $img = $PAGE-theme->pix_icon('f/audio', 'audio');
+                $img = $PAGE->theme->pix_url('f/audio', 'core')->out();
+                $style = 'border-style: none; border-left: 4px solid transparent;';
+                $img = html_writer::empty_tag('img', array('src' => $img, 'title' => 'audio', 'style' => $style));
 
                 // append link to audio
                 $onclick = "this.target='iconlink'; ".
@@ -528,7 +530,7 @@ class taskchain_mediafilter {
                            "if (newwin) newwin.focus(); ".
                            "newwin = null; ".
                            "return false;";
-                $object .= html_writer::tag('a', $img, array('onclick' => $onclick));
+                $object .= html_writer::tag('a', $img, array('onclick' => $onclick)).$img.'XXX';
             }
             unset($options['iconlink'], $matches, $onclick, $img, $style);
         }
