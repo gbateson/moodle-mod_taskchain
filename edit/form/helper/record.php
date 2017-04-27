@@ -843,43 +843,43 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     /**
      * fix_field_name
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @param string name of the $field to fix
      * @todo Finish documenting this function
      */
-    protected function fix_field_name(&$data, $field) {
+    protected function fix_field_name($data, $field) {
         $this->fix_template_textsource($data, $field, $this->get_defaultvalue($field));
     }
 
     /**
      * fix_field_sourcefile
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @param string name of the $field to fix
      * @todo Finish documenting this function
      */
-    protected function fix_field_sourcefile(&$data, $field) {
+    protected function fix_field_sourcefile($data, $field) {
         $this->fix_template_filearea($data, 'source');
     }
 
     /**
      * fix_field_configfile
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @param string name of the $field to fix
      * @todo Finish documenting this function
      */
-    protected function fix_field_configfile(&$data, $field) {
+    protected function fix_field_configfile($data, $field) {
         $this->fix_template_filearea($data, 'config');
     }
 
     /**
      * fix_field_tasknames
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_tasknames(&$data, $field) {
+    protected function fix_field_tasknames($data, $field) {
         $this->fix_template_textsource($data, $field);
     }
 
@@ -890,12 +890,12 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     /**
      * fix_template_filearea
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string $type of filearea ("source", "config")
      * @return mixed file object if one was found, or null if no file was found
      * @todo Finish documenting this function
      */
-    protected function fix_template_filearea(&$data, $type) {
+    protected function fix_template_filearea($data, $type) {
         $component = 'mod_taskchain';
         $filearea  = $type.'file';
         $itemid    = $type.'itemid';
@@ -936,11 +936,11 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     /**
      * fix_template_textsource
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @param string $field name of text field ("name", "tasknames", "entrytext" or "exittext")
      * @todo Finish documenting this function
      */
-    protected function fix_template_textsource(&$data, $field, $default='') {
+    protected function fix_template_textsource($data, $field, $default='') {
         $name = $this->get_fieldname($field);
         $textsource = $this->get_fieldname($field.'source');
 

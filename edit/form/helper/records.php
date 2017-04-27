@@ -389,9 +389,10 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     /**
      * fix_field_action
      *
+     * @param stdClass $data (passed by reference)
      * @todo Finish documenting this function
      */
-    public function fix_field_action(&$data) {
+    public function fix_field_action($data) {
         $name = $this->get_fieldname('action');
         if (empty($data->$name)) {
             return;

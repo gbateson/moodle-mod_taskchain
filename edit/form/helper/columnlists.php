@@ -150,11 +150,11 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
     /**
      * fix_sections
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    public function fix_sections(&$data) {
+    public function fix_sections($data) {
         $data->columnlist = array();
         $sections = $this->get_sections();
         foreach ($sections as $section => $fields) {

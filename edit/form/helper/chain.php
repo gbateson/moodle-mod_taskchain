@@ -921,11 +921,11 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /**
      * fix_template_pagetext
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @param string $type type of options field (""entry" or "exit")
      * @todo Finish documenting this function
      */
-    protected function fix_template_pagetext(&$data, $type) {
+    protected function fix_template_pagetext($data, $type) {
         // set field names - use $this->get_fieldname() ?
         $textfield   = $type.'text';
         $formatfield = $type.'format';
@@ -978,11 +978,11 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /**
      * fix_template_pageoptions
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @param string $type type of options field (""entry" or "exit")
      * @todo Finish documenting this function
      */
-    protected function fix_template_pageoptions(&$data, $type) {
+    protected function fix_template_pageoptions($data, $type) {
         // set field names
         $page = $type.'page';
         $options = $type.'options';
@@ -1021,111 +1021,111 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /**
      * fix_field_entrypage
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @param string name of $field to fix
      * @todo Finish documenting this function
      */
-    protected function fix_field_entrypage(&$data, $field) {
+    protected function fix_field_entrypage($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
     }
 
     /**
      * fix_field_entrytext
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_entrytext(&$data, $field) {
+    protected function fix_field_entrytext($data, $field) {
         $this->fix_template_pagetext($data, 'entry');
     }
 
     /**
      * fix_field_entryoptions
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_entryoptions(&$data, $field) {
+    protected function fix_field_entryoptions($data, $field) {
         $this->fix_template_pageoptions($data, 'entry');
     }
 
     /**
      * fix_field_entrycm
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_entrycm(&$data, $field) {
+    protected function fix_field_entrycm($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
     }
 
     /**
      * fix_field_entrygrade
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_entrygrade(&$data, $field) {
+    protected function fix_field_entrygrade($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
     }
 
     /**
      * fix_field_exitpage
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_exitpage(&$data, $field) {
+    protected function fix_field_exitpage($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
     }
 
     /**
      * fix_field_exittext
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_exittext(&$data, $field) {
+    protected function fix_field_exittext($data, $field) {
         $this->fix_template_pagetext($data, 'exit');
     }
 
     /**
      * fix_field_exitoptions
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_exitoptions(&$data, $field) {
+    protected function fix_field_exitoptions($data, $field) {
         $this->fix_template_pageoptions($data, 'exit');
     }
 
     /**
      * fix_field_exitcm
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_exitcm(&$data, $field) {
+    protected function fix_field_exitcm($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
     }
 
     /**
      * fix_field_exitgrade
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_exitgrade(&$data, $field) {
+    protected function fix_field_exitgrade($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
     }
 
     /**
      * fix_field_showpopup
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_showpopup(&$data, $field) {
+    protected function fix_field_showpopup($data, $field) {
         $popupoptions = array();
 
         if (empty($data->$field)) {
@@ -1158,10 +1158,10 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /**
      * fix_field_gradecategory
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_gradecategory(&$data, $field) {
+    protected function fix_field_gradecategory($data, $field) {
         if (empty($data->gradelimit) || empty($data->gradeweighting) || empty($data->gradecategory)) {
             unset($data->gradecategory, $data->gradecat);
         } else {

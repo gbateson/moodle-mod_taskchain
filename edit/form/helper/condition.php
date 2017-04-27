@@ -472,54 +472,54 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
     /**
      * fix_field_conditionscore
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @param string name of $field to fix
      * @todo Finish documenting this function
      */
-    protected function fix_field_conditionscore(&$data, $field) {
+    protected function fix_field_conditionscore($data, $field) {
         $this->fix_template_minmax($data, $field);
     }
 
     /**
      * fix_field_attemptcount
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @param string name of $field to fix
      * @todo Finish documenting this function
      */
-    protected function fix_field_attemptcount(&$data, $field) {
+    protected function fix_field_attemptcount($data, $field) {
         $this->fix_template_minmax($data, $field);
     }
 
     /**
      * fix_field_attemptduration
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @param string name of $field to fix
      * @todo Finish documenting this function
      */
-    protected function fix_field_attemptduration(&$data, $field) {
+    protected function fix_field_attemptduration($data, $field) {
         $this->fix_template_minmax($data, $field);
     }
 
     /**
      * fix_field_attemptdelay
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @todo Finish documenting this function
      */
-    protected function fix_field_attemptdelay(&$data, $field) {
+    protected function fix_field_attemptdelay($data, $field) {
         $this->fix_template_minmax($data, $field);
     }
 
     /**
      * fix_template_minmax
      *
-     * @param object $data (passed by reference) from form
+     * @param stdClass $data (passed by reference) from form
      * @param string name of minmax $field to fix
      * @todo Finish documenting this function
      */
-    protected function fix_template_minmax(&$data, $field) {
+    protected function fix_template_minmax($data, $field) {
 
         $name = $this->get_fieldname($field);
         $name_enable = $this->get_fieldname($field.'enable');

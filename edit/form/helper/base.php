@@ -330,11 +330,11 @@ abstract class taskchain_form_helper_base {
     /**
      * update_singlefield
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @return void may modify $this->record
      * @todo Finish documenting this function
      */
-    public function update_singlefield(&$data) {
+    public function update_singlefield($data) {
         if ($field = $this->singlefield) {
             $this->record->$field = $data->$field;
             $this->update_record();
@@ -687,11 +687,11 @@ abstract class taskchain_form_helper_base {
     /**
      * get_datavalue
      *
-     * @param object $data (passed by reference) recently submitted form $data
+     * @param stdClass $data (passed by reference) recently submitted form $data
      * @param string name of required user preference $field
      * @todo Finish documenting this function
      */
-    protected function get_datavalue(&$data, $field) {
+    protected function get_datavalue($data, $field) {
         $method = 'get_datavalue_'.$field;
         if (method_exists($this, $method)) {
             return $this->$method($data, $field);
@@ -706,9 +706,10 @@ abstract class taskchain_form_helper_base {
     /**
      * set_preferences
      *
+     * @param stdClass $data (passed by reference)
      * @todo Finish documenting this function
      */
-    public function set_preferences(&$data) {
+    public function set_preferences($data) {
         $fields = $this->get_preferencefields(true, $this->is_update());
         $length = $this->get_preferencelength();
 
@@ -1581,11 +1582,11 @@ abstract class taskchain_form_helper_base {
     /**
      * fix_sections
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    public function fix_sections(&$data) {
+    public function fix_sections($data) {
         $sections = $this->get_sections();
         foreach ($sections as $section => $fields) {
             $this->fix_section($data, $section, $fields);
@@ -1595,13 +1596,13 @@ abstract class taskchain_form_helper_base {
     /**
      * fix_section
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string $section name of section
      * @param array $fields within this section
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_section(&$data, $section, $fields) {
+    protected function fix_section($data, $section, $fields) {
         $method = 'fix_section_'.$section;
         if (method_exists($this, $method)) {
             $this->$method($data, $section, $fields);
@@ -1615,12 +1616,12 @@ abstract class taskchain_form_helper_base {
     /**
      * fix_field
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string $field name of field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_field(&$data, $field) {
+    protected function fix_field($data, $field) {
         if ($this->is_multiple) {
             $id = $this->get_fieldvalue('id');
             if (isset($data->$field) && is_array($data->$field) && array_key_exists($id, $data->$field)) {
@@ -1644,12 +1645,12 @@ abstract class taskchain_form_helper_base {
     /**
      * fix_template_notnull
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string $field name of field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_template_notnull(&$data, $field, $default) {
+    protected function fix_template_notnull($data, $field, $default) {
         if (! isset($data->$field)) {
             $data->$field = $default;
         }

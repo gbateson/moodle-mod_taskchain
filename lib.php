@@ -135,10 +135,10 @@ function taskchain_update_instance(stdclass $data, $mform) {
  * Set secondary fields (i.e. fields derived from the form fields)
  * for this TaskChain acitivity
  *
- * @param stdclass $data (passed by reference)
+ * @param stdclass $data
  * @param moodle_form $mform
  */
-function taskchain_process_formdata(stdclass &$data, $mform) {
+function taskchain_process_formdata(stdclass $data, $mform) {
     global $CFG, $DB;
     require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
@@ -1099,32 +1099,24 @@ function taskchain_print_recent_mod_activity($activity, $courseid, $detail, $mod
     $table->cellspacing = 0;
 
     if ($detail) {
+        $type = $activity->type;
+        $name = $activity->name;
+
         $row = new html_table_row();
 
-        $cell = new html_table_cell('&nbsp;', array('width'=>15));
+        $cell = new html_table_cell('&nbsp;', array('width' => 15));
         $row->cells[] = $cell;
 
         // activity icon and link to activity
-        if (method_exists($OUTPUT, 'image_icon')) {
-            // Moodle >= 3.3
-            $img = $OUTPUT->image_icon('icon', $modnames[$activity->type], $activity->type);
-        } else {
-            // Moodle <= 3.2
-            $img = $OUTPUT->pix_icon('icon', $modnames[$activity->type], $activity->type);
-        }
+        $img = $OUTPUT->pix_icon('icon', $modnames[$type], $type);
 
         // link to activity
-        $href = new moodle_url('/mod/taskchain/view.php', array('id' => $activity->cmid));
-        $link = html_writer::link($href, $activity->name);
+        $href = new moodle_url('/mod/'.$type.'/view.php', array('id' => $activity->cmid));
+        $link = html_writer::link($href, $name);
 
         $cell = new html_table_cell("$img $link");
         $cell->colspan = 6;
         $row->cells[] = $cell;
-
-        $table->data[] = new html_table_row(array(
-            new html_table_cell('&nbsp;', array('width'=>15)),
-            new html_table_cell("$img $link")
-        ));
 
         $table->data[] = $row;
     }
@@ -2641,7 +2633,7 @@ function taskchain_set_missing_fields($table, &$record, &$formdata, $fieldnames)
  * @param string $fieldprefix prefix to add to all columns in their aliases, does not apply to 'id'
  * @return string
  */
- function taskchain_get_userfields($tableprefix = '', array $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
+function taskchain_get_userfields($tableprefix = '', array $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
     if (class_exists('user_picture')) { // Moodle >= 2.6
         return user_picture::fields($tableprefix, $extrafields, $idalias, $fieldprefix);
     }

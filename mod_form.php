@@ -75,10 +75,10 @@ class mod_taskchain_mod_form extends moodleform_mod {
      * Fixes the form data that has just been submitted
      * Note: this is not a standard method of the moodleform class
      *
-     * @param array $data (passed by reference) to be set
+     * @param stdClass $data (passed by reference) to be set
      * @return void
      */
-    public function data_postprocessing(&$data) {
+    public function data_postprocessing($data) {
         // update context for newly created coursemodule
         $this->form_helper->set_context(CONTEXT_MODULE, $data->coursemodule);
         $this->form_helper->fix_sections($data);

@@ -671,12 +671,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     /**
      * fix_field_title
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_field_title(&$data, $field) {
+    protected function fix_field_title($data, $field) {
         $value = 0;
 
         $name = $this->get_fieldname($field.'source');
@@ -708,12 +708,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     /**
      * fix_field_stopbutton
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_field_stopbutton(&$data, $field) {
+    protected function fix_field_stopbutton($data, $field) {
         $name  = $this->get_fieldname($field);
         $name_yesno = $this->get_fieldname($field.'yesno');
         $name_type  = $this->get_fieldname($field.'type');
@@ -745,36 +745,36 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     /**
      * fix_field_timelimit
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_field_timelimit(&$data, $field) {
+    protected function fix_field_timelimit($data, $field) {
         $this->fix_template_timelist($data, $field);
     }
 
     /**
      * fix_field_delay3
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_field_delay3(&$data, $field) {
+    protected function fix_field_delay3($data, $field) {
         $this->fix_template_timelist($data, $field);
     }
 
     /**
      * fix_template_timelist
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_template_timelist(&$data, $field) {
+    protected function fix_template_timelist($data, $field) {
         $name = $this->get_fieldname($field);
         $name_options = $this->get_fieldname($field.'options');
         switch ($data->$name_options) {
@@ -793,12 +793,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     /**
      * fix_field_reviewoptions
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_field_reviewoptions(&$data, $field) {
+    protected function fix_field_reviewoptions($data, $field) {
         $name = $this->get_fieldname($field);
         $data->$name = 0;
 
@@ -1122,22 +1122,22 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     /**
      * get_datavalue_preconditions
      *
-     * @param stdclass $data (passed by reference) recently submitted form $data or db record
+     * @param stdClass $data (passed by reference) recently submitted form $data or db record
      * @param string name of required user preference $field
      * @todo Finish documenting this function
      */
-    protected function get_datavalue_preconditions(&$data, $field, $default=0) {
+    protected function get_datavalue_preconditions($data, $field, $default=0) {
         return (empty($data->id) ? 0 : $data->id);
     }
 
     /**
      * get_datavalue_postconditions
      *
-     * @param object $data (passed by reference) recently submitted form $data
+     * @param stdClass $data (passed by reference) recently submitted form $data
      * @param string name of required user preference $field
      * @todo Finish documenting this function
      */
-    protected function get_datavalue_postconditions(&$data, $field, $default=0) {
+    protected function get_datavalue_postconditions($data, $field, $default=0) {
         return (isset($data->id) ? $data->id : $default);
     }
 

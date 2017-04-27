@@ -429,6 +429,9 @@ body.path-course-view div.taskchainrecentactivity ul { font-size: 0.8em; margin:
 
 /** page-mod-taskchain-edit-chains **/
 
+/** hide unused legends */
+#page-mod-taskchain-edit-chains legend.ftoggler { display: none; }
+
 /** make overflow visible (because this is a w-i-d-e page) */
 #page-mod-taskchain-edit-chains div#page,
 #page-mod-taskchain-edit-chains div#page div#page-content,
