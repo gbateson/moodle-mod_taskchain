@@ -530,7 +530,7 @@ class taskchain_mediafilter {
                            "if (newwin) newwin.focus(); ".
                            "newwin = null; ".
                            "return false;";
-                $object .= html_writer::tag('a', $img, array('onclick' => $onclick)).$img.'XXX';
+                $object .= html_writer::tag('a', $img, array('onclick' => $onclick));
             }
             unset($options['iconlink'], $matches, $onclick, $img, $style);
         }

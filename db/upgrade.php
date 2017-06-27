@@ -485,12 +485,6 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2016100627;
-    if ($oldversion < $newversion) {
-        $empty_cache = true;
-        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
-    }
-
     $newversion = 2016101230;
     if ($oldversion < $newversion) {
         $table = new xmldb_table('taskchain_chains');
@@ -537,6 +531,12 @@ function xmldb_taskchain_upgrade($oldversion) {
                             'taskname'  => mod_taskchain::TEXTSOURCE_TASKNAME);
             $DB->execute("UPDATE $update SET title = $title WHERE $where", $params);
         }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
+    $newversion = 2017062747;
+    if ($oldversion < $newversion) {
+        $empty_cache = true;
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
