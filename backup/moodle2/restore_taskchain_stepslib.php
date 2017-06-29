@@ -165,7 +165,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @todo Finish documenting this function
      */
     protected function process_taskchain_task($data)  {
-        global $DB;
+        global $CFG, $DB;
 
         // convert $data to object
         $data = (object)$data;
@@ -177,6 +177,26 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
         $data->chainid = $this->get_new_parentid('taskchain_chain');
         $data->timeopen = $this->apply_date_offset($data->timeopen);
         $data->timeclose = $this->apply_date_offset($data->timeclose);
+
+        if ($this->task->get_old_moduleversion() < 2017031738) {
+            require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+            $data->titletext = '';
+            // shift CHAINNAME and SORTORDER bits to the left (i.e. multiply by 2)
+            $title = 0;
+            $title += ($data->title & (mod_taskchain::TITLE_SORTORDER >> 1));
+            $title += ($data->title & (mod_taskchain::TITLE_CHAINNAME >> 1));
+            $title *= 2;
+            $title += ($data->title & (mod_taskchain::TITLE_SOURCE >> 1));
+            if (($title & mod_taskchain::TITLE_SOURCE)==mod_taskchain::TEXTSOURCE_SPECIFIC) {
+                // replace SPECIFIC with TASKNAME
+                $data->title = 0;
+                $data->title += ($title & mod_taskchain::TITLE_SORTORDER);
+                $data->title += ($title & mod_taskchain::TITLE_CHAINNAME);
+                $data->title += (mod_taskchain::TEXTSOURCE_TASKNAME);
+            } else {
+                $data->title = $title;
+            }
+        }
 
         // add new record
         if (! $newid = $DB->insert_record('taskchain_tasks', $data)) {
