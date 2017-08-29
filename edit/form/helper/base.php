@@ -35,7 +35,7 @@
  * (1) $this->prepare_sections()    corresponds to $this->mform->data_preprocessing()
  * (2) $this->add_sections()        corresponds to $this->mform->definition()
  * (3) $this->validate_sections()   corresponds to $this->mform->validate_sections()
- * (4) $this->fix_sections()        corresponds to $this->mform->data_postprocessing()
+ * (4) $this->fix_sections()        corresponds to $this->mform->form_postprocessing()
  *
  * The classes hierarchy defined here is as follows:
  *

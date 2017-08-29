@@ -150,7 +150,7 @@ function taskchain_process_formdata(stdclass $data, $mform) {
     }
 
     // fix up secondary fields
-    $mform->data_postprocessing($data);
+    $mform->form_postprocessing($data);
 
     // set default name for a TaskChain activity
     $defaultname = get_string('modulename', 'mod_taskchain');

@@ -78,7 +78,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
      * @param stdClass $data (passed by reference) to be set
      * @return void
      */
-    public function data_postprocessing($data) {
+    public function form_postprocessing($data) {
         // update context for newly created coursemodule
         $this->form_helper->set_context(CONTEXT_MODULE, $data->coursemodule);
         $this->form_helper->fix_sections($data);
@@ -207,18 +207,35 @@ class mod_taskchain_mod_form extends moodleform_mod {
      * Return submitted data if properly submitted
      * or returns NULL if there is no submitted data or validation fails.
      *
-     * note: $slashed param removed
+     * Note: $slashed param was removed in Moodle 2.0
      *
      * @return object submitted data; NULL if not valid or not submitted or cancelled
      */
-    public function get_data($slashed = true) {
-        if ($data = parent::get_data($slashed)) {
-            // Remove completionmingrade, if it is not enabled and greater than 0.0
-            if (empty($data->completionmingradeenabled) || empty($data->completionmingrade) || floatval($data->completionmingrade)==0.0) {
-                $data->completionmingradeenabled = 0;
-                $data->completionmingrade = 0.0;
+    public function get_data() {
+        if ($data = parent::get_data()) {
+            if (! method_exists('moodleform_mod', 'data_postprocessing')) {
+                // In Moodle >= 3.3, the get_data() method calls
+                // the data_postprocessing() method automatically,
+                // but in Moodle <= 3.2 we have to call it manually
+                $data = $this->data_postprocessing($data);
             }
         }
         return $data;
+    }
+
+    /**
+     * Allows modules to modify the data returned by form get_data().
+     * This method is also called in the bulk activity completion form.
+     *
+     * Only available on moodleform_mod in Moodle >= 3.3
+     *
+     * @param stdClass $data passed by reference
+     */
+    public function data_postprocessing($data) {
+        // Remove completionmingrade, if it is not enabled and greater than 0.0
+        if (empty($data->completionmingradeenabled) || empty($data->completionmingrade) || floatval($data->completionmingrade)==0.0) {
+            $data->completionmingradeenabled = 0;
+            $data->completionmingrade = 0.0;
+        }
     }
 }

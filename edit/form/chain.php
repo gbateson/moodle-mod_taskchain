@@ -79,7 +79,7 @@ class mod_taskchain_edit_chain_form extends moodleform {
      * @param array $data (passed by reference) to be set
      * @return void
      */
-    public function data_postprocessing(&$data) {
+    public function form_postprocessing(&$data) {
         $this->form_helper->fix_sections($data);
         $this->form_helper->set_preferences($data);
     }
