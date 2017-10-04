@@ -558,11 +558,16 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function add_field_reviewoptions($field) {
+        global $PAGE;
+
         $name = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
 
         $times = taskchain_available::reviewoptions_list('times');
         $items = taskchain_available::reviewoptions_list('items');
+
+        // js_amd_inline is available in Moodle >= 3.3
+        $js_amd_inline = method_exists($PAGE->requires, 'js_amd_inline');
 
         foreach ($times as $timename => $timevalue) {
 
@@ -572,9 +577,38 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
             // set All/None links
             $allnone = '';
-            $allnone .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in("DIV", "fitem", "'.$groupid.'")'));
-            $allnone .= ' / ';
-            $allnone .= html_writer::tag('a', get_string('none'), array('onclick' => 'deselect_all_in("DIV", "fitem", "'.$groupid.'")'));
+            if ($js_amd_inline) {
+                // Moodle >= 3.3
+                $select = $name.$timename.'select';
+                $allnone .= html_writer::tag('a', get_string('all'), array('href' => '#', 'id' => $select.'all'));
+                $allnone .= ' / ';
+                $allnone .= html_writer::tag('a', get_string('reset'), array('href' => '#', 'id' => $select.'reset'));
+                $allnone .= ' / ';
+                $allnone .= html_writer::tag('a', get_string('none'), array('href' => '#', 'id' => $select.'none'));
+                $PAGE->requires->js_amd_inline(
+                    'require(["jquery"], function($) {'.
+                        '$("#'.$select.'all").click(function(e) {'.
+                            '$(this).closest("div.fitem").find("input:checkbox").prop("checked", true);'.
+                            'e.preventDefault();'.
+                        '});'.
+                        '$("#'.$select.'reset").click(function(e) {'.
+                            '$(this).closest("div.fitem").find("input:checkbox").each(function(){'.
+                                '$(this).prop("checked", $(this).prop("defaultChecked"));'.
+                            '});'.
+                            'e.preventDefault();'.
+                        '});'.
+                        '$("#'.$select.'none").click(function(e) {'.
+                            '$(this).closest("div.fitem").find("input:checkbox").prop("checked", false);'.
+                            'e.preventDefault();'.
+                        '});'.
+                    '});'
+                );
+            } else {
+                // Moodle <= 3.2
+                $allnone .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in("DIV", "fitem", "'.$groupid.'")'));
+                $allnone .= ' / ';
+                $allnone .= html_writer::tag('a', get_string('none'), array('onclick' => 'deselect_all_in("DIV", "fitem", "'.$groupid.'")'));
+            }
 
             $elements = array();
             foreach ($items as $itemname => $itemvalue) {

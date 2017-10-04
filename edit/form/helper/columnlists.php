@@ -267,6 +267,8 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function get_sectionlabel($section) {
+        global $PAGE;
+
         $method = 'get_sectionlabel_'.$section;
         if (method_exists($this, $method)) {
             $label = $this->$method();
@@ -274,22 +276,43 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
             $label = get_string($section.'hdr', 'mod_taskchain');
         }
 
-        $uselinks = false;
-        if ($uselinks) {
-            $links = '';
-            $onclick = 'select_all_in_element_with_id("id_'.$section.'hdr", true); return false;';
-            $links .= html_writer::tag('a', get_string('all'), array('onclick' => $onclick));
-            $links .= ' / ';
-            $onclick = 'select_all_in_element_with_id("id_'.$section.'hdr", false); return false;';
-            $links .= html_writer::tag('a', get_string('none'), array('onclick' => $onclick));
-            $links = html_writer::tag('span', $links, array('class' => 'allnonelinks'));
-            return $label.' '.$links;
+        $commands = '';
+        if (method_exists($PAGE->requires, 'js_amd_inline')) {
+            // Moodle >= 3.3
+            $select = $section.'select';
+            $commands .= html_writer::tag('small', get_string('all'), array('id' => $select.'all'));
+            $commands .= html_writer::tag('small', ' / ');
+            $commands .= html_writer::tag('small', get_string('reset'), array('id' => $select.'reset'));
+            $commands .= html_writer::tag('small', ' / ');
+            $commands .= html_writer::tag('small', get_string('none'), array('id' => $select.'none'));
+            $PAGE->requires->js_amd_inline(
+                'require(["jquery"], function($) {'.
+                    '$("#'.$select.'all").click(function(e) {'.
+                        '$(this).closest("fieldset").find("input:checkbox").prop("checked", true);'.
+                    '});'.
+                    '$("#'.$select.'reset").click(function(e) {'.
+                        '$(this).closest("fieldset").find("input:checkbox").each(function(){'.
+                            '$(this).prop("checked", $(this).prop("defaultChecked"));'.
+                        '});'.
+                    '});'.
+                    '$("#'.$select.'none").click(function(e) {'.
+                        '$(this).closest("fieldset").find("input:checkbox").prop("checked", false);'.
+                    '});'.
+                '});'
+            );
         } else {
-            $title = get_string('selectall').' / '.get_string('deselectall');
-            $onclick = 'select_all_in_element_with_id("id_'.$section.'hdr", this.checked);';
-            $checkbox = html_writer::empty_tag('input', array('type' => 'checkbox', 'onclick' => $onclick, 'title' => $title));
-            return $checkbox.' '.$label;
+            // Moodle <= 3.2
+            $onclick = 'select_all_in_element_with_id("id_'.$section.'hdr", true); return false;';
+            $commands .= html_writer::tag('small', get_string('all'), array('onclick' => $onclick));
+            $commands .= html_writer::tag('small', ' / ');
+            $onclick = 'select_all_in_element_with_id("id_'.$section.'hdr", false); return false;';
+            $commands .= html_writer::tag('small', get_string('none'), array('onclick' => $onclick));
         }
+
+        // wrap the commands in a DIV for styling purposes
+        $commands = html_writer::tag('div', $commands, array('class' => 'selectcommands'));
+
+        return $label.' '.$commands;
     }
 
     /**

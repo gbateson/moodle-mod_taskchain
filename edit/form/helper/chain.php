@@ -756,24 +756,47 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function add_template_pageoptions($type, $groups) {
+        global $PAGE;
+
+        // js_amd_inline is available in Moodle >= 3.3
+        $js_amd_inline = method_exists($PAGE->requires, 'js_amd_inline');
 
         foreach ($groups as $groupname => $names) {
-
-            $name_elements = $this->get_fieldname($groupname.'_elements');
 
             $label = $this->get_fieldlabel($groupname);
             $label .= html_writer::empty_tag('br'); // separator
 
-            // select_all_in_element_with_id() is not available in Moodle 2.0
-            // $onclick = 'select_all_in_element_with_id("fgroup_id_'.$name_elements.'", true)';
-            $onclick = 'select_all_in("DIV", "'.$groupname.'", null)';
-            $label .= html_writer::tag('small', get_string('all'), array('onclick' => $onclick));
-
-            $label .= html_writer::tag('small', ' / '); // separator
-
-            // $onclick = 'select_all_in_element_with_id("fgroup_id_'.$name_elements.'", false)';
-            $onclick = 'deselect_all_in("DIV", "'.$groupname.'", null)';
-            $label .= html_writer::tag('small', get_string('none'), array('onclick' => $onclick));
+            if ($js_amd_inline) {
+                // Moodle >= 3.3
+                $select = $groupname.'select';
+                $label .= html_writer::tag('small', get_string('all'), array('id' => $select.'all'));
+                $label .= html_writer::tag('small', ' / ');
+                $label .= html_writer::tag('small', get_string('reset'), array('id' => $select.'reset'));
+                $label .= html_writer::tag('small', ' / ');
+                $label .= html_writer::tag('small', get_string('none'), array('id' => $select.'none'));
+                $PAGE->requires->js_amd_inline(
+                    'require(["jquery"], function($) {'.
+                        '$("#'.$select.'all").click(function(e) {'.
+                            '$(this).closest("div.fitem").find("input:checkbox").prop("checked", true);'.
+                        '});'.
+                        '$("#'.$select.'reset").click(function(e) {'.
+                            '$(this).closest("div.fitem").find("input:checkbox").each(function(){'.
+                                '$(this).prop("checked", $(this).prop("defaultChecked"));'.
+                            '});'.
+                        '});'.
+                        '$("#'.$select.'none").click(function(e) {'.
+                            '$(this).closest("div.fitem").find("input:checkbox").prop("checked", false);'.
+                        '});'.
+                    '});'
+                );
+            } else {
+                // Moodle <= 3.2
+                $onclick = 'select_all_in("DIV", "'.$groupname.'", null)';
+                $label .= html_writer::tag('small', get_string('all'), array('onclick' => $onclick));
+                $label .= html_writer::tag('small', ' / ');
+                $onclick = 'deselect_all_in("DIV", "'.$groupname.'", null)';
+                $label .= html_writer::tag('small', get_string('none'), array('onclick' => $onclick));
+            }
 
             $elements = array();
             foreach ($names as $name) {
@@ -787,6 +810,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                 $elements[] = $this->mform->createElement('checkbox', $name, '', $text);
             }
 
+            $name_elements = $this->get_fieldname($groupname.'_elements');
             $this->mform->addGroup($elements, $name_elements, $label, html_writer::empty_tag('br'), false);
             $this->mform->setAdvanced($name_elements);
             $this->add_helpbutton($name_elements, $groupname, 'taskchain');

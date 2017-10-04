@@ -237,5 +237,6 @@ class mod_taskchain_mod_form extends moodleform_mod {
             $data->completionmingradeenabled = 0;
             $data->completionmingrade = 0.0;
         }
+        return $data;
     }
 }

@@ -717,6 +717,8 @@ body.path-course-view div.taskchainrecentactivity ul { font-size: 0.8em; margin:
 #page-mod-taskchain-edit-columnlists fieldset.clearfix { width: 240px; margin-left: auto; margin-right: auto; }
 #page-mod-taskchain-edit-columnlists fieldset.clearfix legend { position: relative; }
 #page-mod-taskchain-edit-columnlists fieldset.clearfix legend input { position: absolute; right: 28px; top: 20px; }
+#page-mod-taskchain-edit-columnlists fieldset.clearfix legend small { font-size: x-small; }
+#page-mod-taskchain-edit-columnlists fieldset.clearfix legend .selectcommands { position: absolute; right: 28px; top: 0px; }
 
 #page-mod-taskchain-edit-columnlists .mform .fitem .fitemtitle { float: left; text-align: right; }
 #page-mod-taskchain-edit-columnlists .mform .fitem .felement { margin-left: 0px; }
