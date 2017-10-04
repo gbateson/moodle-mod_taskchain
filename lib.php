@@ -99,7 +99,14 @@ function taskchain_supports($feature) {
  * @todo Finish documenting this function
  */
 function taskchain_add_instance(stdclass $data, $mform) {
-    return taskchain_process_formdata($data, $mform);
+    $data->id = taskchain_process_formdata($data, $mform);
+
+    if (class_exists('\core_completion\api')) {
+        $completionexpected = (empty($data->completionexpected) ? null : $data->completionexpected);
+        \core_completion\api::update_completion_date_event($data->coursemodule, 'taskchain', $data->id, $completionexpected);
+    }
+
+    return $data->id;
 }
 
 /**
@@ -115,9 +122,7 @@ function taskchain_add_instance(stdclass $data, $mform) {
 function taskchain_update_instance(stdclass $data, $mform) {
     global $DB;
 
-    taskchain_process_formdata($data, $mform);
-
-    $data->id = $data->instance;
+    $data->id = taskchain_process_formdata($data, $mform);
     $DB->update_record('taskchain', $data);
 
     // update gradebook item
@@ -126,6 +131,11 @@ function taskchain_update_instance(stdclass $data, $mform) {
     } else {
         // recalculate grades for all users
         taskchain_update_grades($data);
+    }
+
+    if (class_exists('\core_completion\api')) {
+        $completionexpected = (empty($data->completionexpected) ? null : $data->completionexpected);
+        \core_completion\api::update_completion_date_event($data->coursemodule, 'taskchain', $data->id, $completionexpected);
     }
 
     return true;
@@ -2737,4 +2747,34 @@ function taskchain_get_completion_state($course, $cm, $userid, $type) {
     }
 
     return $state;
+}
+
+/**
+ * This function receives a calendar event and returns the action associated with it, or null if there is none.
+ *
+ * This is used by block_myoverview in order to display the event appropriately. If null is returned then the event
+ * is not displayed on the block.
+ *
+ * @param calendar_event $event
+ * @param \core_calendar\action_factory $factory
+ * @return \core_calendar\local\event\entities\action_interface|null
+ */
+function mod_taskchain_core_calendar_provide_event_action(calendar_event $event,
+                                                            \core_calendar\action_factory $factory) {
+    $cm = get_fast_modinfo($event->courseid)->instances['taskchain'][$event->instance];
+
+    $completion = new \completion_info($cm->get_course());
+
+    $completiondata = $completion->get_data($cm, false);
+
+    if ($completiondata->completionstate != COMPLETION_INCOMPLETE) {
+        return null;
+    }
+
+    return $factory->create_instance(
+            get_string('view'),
+            new \moodle_url('/mod/taskchain/view.php', ['id' => $cm->id]),
+            1,
+            true
+    );
 }
