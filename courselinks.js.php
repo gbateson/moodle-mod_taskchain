@@ -69,9 +69,17 @@ function print_courselinks() {
     $numsections = 0;
     if ($course->format=='topics' || $course->format=='weekly') {
         if (function_exists('course_get_format')) {
-            // Moodle >= 2.3
-            $options = course_get_format($course)->get_format_options();
-            $numsections = $options['numsections'];
+            $format = course_get_format($course);
+            if (method_exists($format, 'get_last_section_number')) {
+            	// Moodle >= 3.3
+            	$numsections = $format->get_last_section_number();
+            } else {
+            	// Moodle 2.3 to 3.2
+				$options = $format->get_format_options();
+				if (isset($options['numsections'])) {
+					$numsections = $options['numsections'];
+				}
+            }
         } else {
             // Moodle <= 2.2
             $numsections = $course->numsections;
@@ -229,7 +237,7 @@ function print_courselinks() {
                     case 'hotpot':      $capability = 'attempt';     break;
                     case 'taskchain':   $capability = 'attempt';     break;
                     case 'survey':      $capability = 'participate'; break;
-                    case 'workshop':    $capability = 'participate'; break;
+                    case 'workshop':    $capability = 'submit';      break;
                     case 'lesson':      // do nothing
                     case 'scorm':       // do nothing
                     default:            // do nothing
