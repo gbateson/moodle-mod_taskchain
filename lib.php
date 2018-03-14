@@ -382,14 +382,14 @@ function taskchain_process_formdata(stdclass $data, $mform) {
 function taskchain_add_tasks(&$data, &$mform, &$chain, $aftertaskid=0) {
     global $CFG, $DB;
 
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+    require_once($CFG->dirroot.'/mod/taskchain/source/class.php');
+
     if (empty($CFG->formatstringstriptags)) {
         $PARAM = PARAM_CLEAN;
     } else {
         $PARAM = PARAM_TEXT;
     }
-
-    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
-    require_once($CFG->dirroot.'/mod/taskchain/source/class.php');
 
     $sortorder = 0;
     $taskids = array();
@@ -2729,7 +2729,6 @@ function taskchain_get_completion_state($course, $cm, $userid, $type) {
                     $state = ($grade && $grade->is_passed());
                     break;
                 case 'completioncompleted':
-                    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
                     $params = array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY,
                                     'parentid'   => $cm->instance,
                                     'userid'     => $userid,
