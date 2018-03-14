@@ -2435,6 +2435,7 @@ function taskchain_update_events_wrapper($taskchain) {
 function taskchain_update_events(&$taskchain, &$chain, &$eventids, $delete) {
     global $CFG, $DB;
     require_once($CFG->dirroot.'/calendar/lib.php');
+    require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
 
     static $stropens = '';
     static $strcloses = '';
@@ -2479,7 +2480,9 @@ function taskchain_update_events(&$taskchain, &$chain, &$eventids, $delete) {
 
     // only setup calendar events,
     // if this user is allowed to
-    if ($can_manage_events) {
+    if (empty($chain)) {
+        // do nothing - probably cron job deleting a TaskChain
+    } else if ($can_manage_events) {
 
         // set duration
         if ($chain->timeclose && $chain->timeopen) {
@@ -2541,15 +2544,14 @@ function taskchain_update_events(&$taskchain, &$chain, &$eventids, $delete) {
                 'timeduration' => 0,
             );
         }
+        // cache description and visiblity (saves doing it twice for long events)
+        if (empty($chain->entrytext)) {
+            $description = '';
+        } else {
+            $description = $chain->entrytext;
+        }
+        $visible = instance_is_visible('taskchain', $taskchain);
     }
-
-    // cache description and visiblity (saves doing it twice for long events)
-    if (empty($chain->entrytext)) {
-        $description = '';
-    } else {
-        $description = $chain->entrytext;
-    }
-    $visible = instance_is_visible('taskchain', $taskchain);
 
     foreach ($events as $event) {
         $event->groupid = 0;

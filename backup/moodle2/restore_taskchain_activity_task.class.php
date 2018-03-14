@@ -90,20 +90,18 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * of {@link restore_log_rule} objects
      */
     static public function define_restore_log_rules() {
-        $rules = array();
-
-        $rules[] = new restore_log_rule('taskchain', 'attempt', 'view.php?id={course_module}', '{taskchain}');
-        $rules[] = new restore_log_rule('taskchain', 'editchains', 'view.php?id={course_module}', '{taskchain}');
-        $rules[] = new restore_log_rule('taskchain', 'editcolumnlists', 'view.php?id={course_module}', '{taskchain}');
-        $rules[] = new restore_log_rule('taskchain', 'editcondition', 'view.php?id={course_module}', '{taskchain}');
-        $rules[] = new restore_log_rule('taskchain', 'edittask', 'view.php?id={course_module}', '{taskchain}');
-        $rules[] = new restore_log_rule('taskchain', 'edittasks', 'view.php?id={course_module}', '{taskchain}');
-        $rules[] = new restore_log_rule('taskchain', 'report', 'report.php?id={course_module}', '{taskchain}');
-        $rules[] = new restore_log_rule('taskchain', 'review', 'view.php?id={course_module}', '{taskchain}');
-        $rules[] = new restore_log_rule('taskchain', 'submit', 'view.php?id={course_module}', '{taskchain}');
-        $rules[] = new restore_log_rule('taskchain', 'view', 'view.php?id={course_module}', '{taskchain}');
-
-        return $rules;
+        return array(
+            new restore_log_rule('taskchain', 'attempt', 'view.php?id={course_module}', '{taskchain}'),
+            new restore_log_rule('taskchain', 'editchains', 'view.php?id={course_module}', '{taskchain}'),
+            new restore_log_rule('taskchain', 'editcolumnlists', 'view.php?id={course_module}', '{taskchain}'),
+            new restore_log_rule('taskchain', 'editcondition', 'view.php?id={course_module}', '{taskchain}'),
+            new restore_log_rule('taskchain', 'edittask', 'view.php?id={course_module}', '{taskchain}'),
+            new restore_log_rule('taskchain', 'edittasks', 'view.php?id={course_module}', '{taskchain}'),
+            new restore_log_rule('taskchain', 'report', 'report.php?id={course_module}', '{taskchain}'),
+            new restore_log_rule('taskchain', 'review', 'view.php?id={course_module}', '{taskchain}'),
+            new restore_log_rule('taskchain', 'submit', 'view.php?id={course_module}', '{taskchain}'),
+            new restore_log_rule('taskchain', 'view', 'view.php?id={course_module}', '{taskchain}')
+        );
     }
 
     /**
@@ -117,10 +115,8 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * activity level. All them are rules not linked to any module instance (cmid = 0)
      */
     static public function define_restore_log_rules_for_course() {
-        $rules = array();
-
-        $rules[] = new restore_log_rule('taskchain', 'index', 'index.php?id={course}', null);
-
-        return $rules;
+        return array(
+            new restore_log_rule('taskchain', 'index', 'index.php?id={course}', null)
+        );
     }
 }
