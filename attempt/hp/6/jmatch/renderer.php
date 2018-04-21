@@ -341,6 +341,10 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
             ."		var count = 0;\n"
             ."	}\n"
             ."	if (count==0){\n"
+            ."		if (Qs) {\n"
+            ."			var p = Qs.parentNode;\n"
+            ."			p.parentNode.removeChild(p);\n"
+            ."		}\n"
             ."		HP_send_results($event);\n"
             ."	}\n"
             ."}\n"
@@ -367,17 +371,7 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
 
         if ($pos = strrpos($substr, '}')) {
             $append = "\n"
-                ."	var canvas = document.getElementById('$this->themecontainer');\n"
-                ."	if (canvas) {\n"
-                ."		var b = 0;\n"
-                ."		var tbody = document.getElementById('Questions');\n"
-                ."		if (tbody) {\n"
-                ."			var b = getOffset(tbody.parentNode, 'Bottom');\n"
-                ."			if (b){\n"
-                ."				setOffset(canvas, 'Bottom', b+4);\n"
-                ."			}\n"
-                ."		}\n"
-                ."	}\n"
+                ."	StretchCanvasToCoverContent();\n"
                 ."	HP.onclickCheck(CurrItem);\n"
             ;
             $substr = substr_replace($substr, $append, $pos, 0);

@@ -97,10 +97,12 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_duplicates_renderer extends 
         unset($texts);
 
         foreach ($this->r_items as $i=>$item) {
-            $str .= "D[$i] = new Array();\n";
-            $str .= "D[$i][0] = '".$this->TC->task->source->js_value_safe($item['text'], true)."';\n";
-            $str .= "D[$i][1] = ".$keys[$item['key']].";\n";
-            $str .= "D[$i][2] = ".$item['fixed'].";\n";
+            if (array_key_exists($item['key'], $keys)) {
+                $str .= "D[$i] = new Array();\n";
+                $str .= "D[$i][0] = '".$this->TC->task->source->js_value_safe($item['text'], true)."';\n";
+                $str .= "D[$i][1] = ".$keys[$item['key']].";\n";
+                $str .= "D[$i][2] = ".$item['fixed'].";\n";
+            }
         }
         return $str;
     }

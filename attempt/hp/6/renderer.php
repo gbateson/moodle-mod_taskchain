@@ -299,6 +299,24 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             ."		value -= getOffset(obj.offsetParent, type);\n"
             ."	}\n"
             ."	if (obj.style) {\n"
+            ."		var p = new Array();\n"
+            ."		var cs = window.getComputedStyle(obj, null);\n"
+            ."		if (cs.getPropertyValue('box-sizing')=='content-box') {\n"
+            ."			switch (type){\n"
+            ."				case 'Height':\n"
+            ."					var p = new Array('margin-top', 'margin-bottom', 'border-width-top', 'border-width-bottom', 'padding-top', 'padding-bottom');\n"
+            ."					break;\n"
+            ."				case 'Width':\n"
+            ."					var p = new Array('margin-left', 'margin-right', 'border-width-left', 'border-width-right', 'padding-left', 'padding-right');\n"
+            ."					break;\n"
+            ."			}\n"
+            ."		}\n"
+            ."		for (var i=0; i<p.length; i++) {\n"
+            ."			var v = cs.getPropertyValue(p[i]);\n"
+            ."			if (v) {\n"
+            ."				value -= parseInt(v.replace('px', ''));\n"
+            ."			}\n"
+            ."		}\n"
             ."		obj.style[type.toLowerCase()] = value + 'px';\n"
             ."	}\n"
             ."}\n"
@@ -764,7 +782,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
         // fix DragTop (=top side of Drag area)
         $search = '/DragTop = [^;]+;/';
-        $replace = "DragTop = getOffset(document.getElementById('CheckButtonDiv'),'Bottom') + 10;";
+        $replace = "DragTop = getOffset(document.getElementById('CheckButtonDiv'), 'Bottom') + 10;";
         $substr = preg_replace($search, $replace, $substr, 1);
     }
 
@@ -882,37 +900,88 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 ."		return;\n"
                 ."	}\n"
                 ."	var canvas = $canvas;\n"
-                ."	if (canvas){\n"
-                ."		var ids = new Array('Reading','ReadingDiv','MainDiv');\n"
-                ."		var i_max = ids.length;\n"
-                ."		for (var i=i_max-1; i>=0; i--){\n"
-                ."			var obj = document.getElementById(ids[i]);\n"
-                ."			if (obj){\n"
-                ."				obj.style.height = ''; // reset height\n"
-                ."			} else {\n"
-                ."				ids.splice(i, 1); // remove this id\n"
-                ."				i_max--;\n"
-                ."			}\n"
-                ."		}\n"
-                ."		var b = 0;\n"
-                ."		for (var i=0; i<i_max; i++){\n"
-                ."			var obj = document.getElementById(ids[i]);\n"
-                ."			b = Math.max(b, getOffset(obj,'Bottom'));\n"
-                ."		}\n"
-                ."		if (window.Segments) {\n" // JMix special
-                ."			var obj = document.getElementById('D'+(Segments.length-1));\n"
-                ."			if (obj) {\n"
-                ."				b = Math.max(b, getOffset(obj,'Bottom'));\n"
-                ."			}\n"
-                ."		}\n"
-                ."		if (b){\n"
-                ."			setOffset(canvas, 'Bottom', b + 21);\n"
-                ."			for (var i=0; i<i_max; i++){\n"
-                ."				var obj = document.getElementById(ids[i]);\n"
-                ."				setOffset(obj, 'Bottom', b);\n"
-                ."			}\n"
-                ."		}\n"
-                ."	}\n"
+            ."	if (canvas){\n"
+                    // unset height of TALL elements (may or may not be exist)
+            ."		var ids = new Array('Reading','ReadingDiv','MainDiv');\n"
+            ."		var i_max = ids.length;\n"
+            ."		for (var i=i_max-1; i>=0; i--){\n"
+            ."			var obj = document.getElementById(ids[i]);\n"
+            ."			if (obj){\n"
+            ."				obj.style.height = ''; // reset height\n"
+            ."			} else {\n"
+            ."				ids.splice(i, 1); // remove this id\n"
+            ."				i_max--;\n"
+            ."			}\n"
+            ."		}\n"
+                    // get BOTTOM of each TALL element
+            ."		var b = 0;\n"
+            ."		for (var i=0; i<i_max; i++){\n"
+            ."			var obj = document.getElementById(ids[i]);\n"
+            ."			b = Math.max(b, getOffset(obj, 'Bottom'));\n"
+            ."		}\n"
+                    // set TALL elements to standard height
+            ."		if (b){\n"
+            ."			for (var i=0; i<i_max; i++){\n"
+            ."				var obj = document.getElementById(ids[i]);\n"
+            ."				setOffset(obj, 'Bottom', b);\n"
+            ."			}\n"
+            ."		}\n"
+                    // get BOTTOM of last JMix drop line
+            ."		if (window.DropTotal) {\n"
+            ."			var obj = document.getElementById('Drop'+(DropTotal-1));\n"
+            ."			if (obj) {\n"
+            ."				b = Math.max(b, getOffset(obj, 'Bottom'));\n"
+            ."			}\n"
+            ."		}\n"
+                    // get BOTTOM of last JMix segment
+            ."		if (window.Segments) {\n"
+            ."			var obj = document.getElementById('D'+(Segments.length-1));\n"
+            ."			if (obj) {\n"
+            ."				b = Math.max(b, getOffset(obj, 'Bottom'));\n"
+            ."			}\n"
+            ."		}\n"
+                    // get BOTTOM of last JMatch fixed element
+            ."		if (window.F) {\n"
+            ."			var obj = document.getElementById('F'+(F.length-1));\n"
+            ."			if (obj) {\n"
+            ."				b = Math.max(b, getOffset(obj, 'Bottom'));\n"
+            ."			}\n"
+            ."		}\n"
+                    // get BOTTOM of last JMatch draggable element
+            ."		if (window.D) {\n"
+            ."			var obj = document.getElementById('D'+(D.length-1));\n"
+            ."			if (obj) {\n"
+            ."				b = Math.max(b, getOffset(obj, 'Bottom'));\n"
+            ."			}\n"
+            ."		}\n"
+                    // get BOTTOM of last JMatch Flashcard table
+            ."		if (window.JMatchFlashcard) {\n"
+            ."			var obj = canvas.querySelector('.FlashcardTable');\n"
+            ."			if (obj) {\n"
+            ."				b = Math.max(b, getOffset(obj, 'Bottom'));\n"
+            ."			}\n"
+            ."		}\n"
+                    // set BOTTOM of role=main element
+            ."		var obj = canvas.querySelector('[role=main]');\n"
+            ."		if (obj){\n"
+            ."			setOffset(obj, 'Bottom', b);\n"
+            ."		}\n"
+                    // locate activity-navigation (Moodle >= 3.4)
+            ."		var obj = document.getElementById('jump-to-activity')\n"
+            ."				|| document.getElementById('prev-activity-link')\n"
+            ."				|| document.getElementById('next-activity-link');\n"
+            ."		while (obj) {\n"
+            ."			if (obj.parentNode==canvas) {\n"
+            ."				b = Math.max(b, getOffset(obj, 'Bottom'));\n"
+            ."				obj = null;\n"
+            ."			} else {\n"
+            ."				obj = obj.parentNode;\n"
+            ."			}\n"
+            ."		}\n"
+            ."		if (b){\n"
+            ."			setOffset(canvas, 'Bottom', b);\n"
+            ."		}\n"
+            ."	}\n"
             ;
             if ($this->TC->task->navigation==mod_taskchain::NAVIGATION_EMBED) {
                 // stretch container object/iframe
@@ -1906,7 +1975,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         }
 
         // specify chars to be trimmed (whitespace and punctuation)
-        $trimchars = "\0\t\n\r !\"#$%&'()*+,-./:;<=>?@[\\]^_`{¦}~\x0B";
+        $trimchars = "\0\t\n\r !\"#$%&'()*+,-./:;<=>?@[\\]^_ {¦}~\x0B";
 
         // filter all $texts
         foreach ($texts as $i => $ii) {
@@ -4169,7 +4238,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         $pattern = '/&#x([0-9A-F]+);/i';
 
         // entities for all punctutation except '&#;' (because they are used in html entities)
-        $entities = $this->jmix_encode_punctuation('!"$%'."'".'()*+,-./:<=>?@[\]^_`{|}~');
+        $entities = $this->jmix_encode_punctuation('!"$%'."'".'()*+,-./:<=>?@[\]^_ {|}~');
 
         // xml tags for JMix segments and alternate answers
         $punctuation_tags = array(
