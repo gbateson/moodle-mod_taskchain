@@ -657,7 +657,7 @@ class mod_taskchain extends taskchain_base {
         $ignored = array('CVS', '_vti_cnf', 'simpletest', 'db', 'yui', 'phpchain');
 
         // get all the subplugins for this $plugintype
-        while (list($type, $dir) = each($types)) {
+        foreach ($types as $type => $dir) {
             $fulldir = $CFG->dirroot.'/'.$dir;
             if (is_dir($fulldir) && file_exists($fulldir.'/'.$classfilename)) {
 
