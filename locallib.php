@@ -657,7 +657,9 @@ class mod_taskchain extends taskchain_base {
         $ignored = array('CVS', '_vti_cnf', 'simpletest', 'db', 'yui', 'phpchain');
 
         // get all the subplugins for this $plugintype
-        foreach ($types as $type => $dir) {
+        reset($types);
+        while ($type = key($types)) {
+            $dir = current($types);
             $fulldir = $CFG->dirroot.'/'.$dir;
             if (is_dir($fulldir) && file_exists($fulldir.'/'.$classfilename)) {
 
@@ -680,6 +682,7 @@ class mod_taskchain extends taskchain_base {
                     }
                 }
             }
+            next($types);
         }
         sort($classes);
         return $classes;
