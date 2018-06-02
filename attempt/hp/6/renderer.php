@@ -1000,14 +1000,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     /**
      * fix_js_HideFeedback
      *
-     * @uses $CFG
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
      * @todo Finish documenting this function
      */
     public function fix_js_HideFeedback(&$str, $start, $length)  {
-        global $CFG;
         $substr = substr($str, $start, $length);
 
         // unhide <embed> elements on Chrome browser
@@ -1647,6 +1645,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @todo Finish documenting this function
      */
     public function fix_filters()  {
+        global $CFG;
 
         ////////////////////////////////////////////////
         // adjust filters
@@ -1756,32 +1755,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             $replace = '\['.'$1'.'\]';
             $this->headcontent = preg_replace($search, $replace, $this->headcontent);
         }
-
-        // make sure openpopup() function is available if needed (for glossary entries)
-        // Note: this could also be done using filter_add_javascript($this->htmlcontent)
-        // but that function expects entire htmlcontent, where we would prefer just the headcontent
-        if ($this->TC->task->navigation==mod_taskchain::NAVIGATION_ORIGINAL && in_array('mod/glossary', $filters)) {
-            // add openwindow() function (from lib/javascript.php)
-            $this->headcontent .= "\n"
-                .'<script type="text/javascript">'."\n"
-                .'//<![CDATA['."\n"
-                .'function openpopup(url, name, options, fullscreen) {'."\n"
-                .'    var fullurl = "'.$CFG->httpswwwroot.'" + url;'."\n"
-                .'    var windowobj = window.open(fullurl, name, options);'."\n"
-                .'    if (!windowobj) {'."\n"
-                .'        return true;'."\n"
-                .'    }'."\n"
-                .'    if (fullscreen) {'."\n"
-                .'        windowobj.moveTo(0, 0);'."\n"
-                .'        windowobj.resizeTo(screen.availWidth, screen.availHeight);'."\n"
-                .'    }'."\n"
-                .'    windowobj.focus();'."\n"
-                .'    return false;'."\n"
-                .'}'."\n"
-                .'//]]>'."\n"
-                .'</script>'
-            ;
-        }
     }
 
     /**
@@ -1823,7 +1796,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     /**
      * filter_text_headcontent_string
      *
-     * @uses $CFG
      * @param xxx $match
      * @return xxx
      * @todo Finish documenting this function
@@ -1831,7 +1803,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     public function filter_text_headcontent_string($match)  {
         // var YourScoreIs = 'Your score is';
         // I[q][1][a][2] = 'JCloze clue';
-        global $CFG;
 
         static $replace_pairs = array(
             // backslashes and quotes
@@ -2060,8 +2031,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 }
                 switch (count($cmids)) {
                     case 0: $this->TC->task->studentfeedback = mod_taskchain::FEEDBACK_NONE; break; // no forums !!
-                    case 1: $feedback[0] = "'".$CFG->wwwroot.'/mod/forum/view.php?id='.$cmids[0]."'"; break;
-                    default: $feedback[0] = "'".$CFG->wwwroot.'/mod/forum/index.php?id='.$this->TC->course->id."'";
+                    case 1: $feedback[0] = "'".$CFG->httpswwwroot.'/mod/forum/view.php?id='.$cmids[0]."'"; break;
+                    default: $feedback[0] = "'".$CFG->httpswwwroot.'/mod/forum/index.php?id='.$this->TC->course->id."'";
                 }
                 break;
 
@@ -2072,7 +2043,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     $teachers = '';
                 }
                 if ($teachers) {
-                    $feedback[0] = "'$CFG->wwwroot/message/discussion.php?id='";
+                    $feedback[0] = "'$CFG->httpswwwroot/message/discussion.php?id='";
                     $feedback[1] = $teachers;
                     $feedback[4] = 400; // width
                     $feedback[5] = 500; // height

@@ -682,32 +682,16 @@ class taskchain_require extends taskchain_base {
      * @todo Finish documenting this function
      */
     function chain_inpopup() {
-        global $CFG;
-
-        $error = '';
-        if ($this->TC->chain->showpopup) {
-
-            if (! $this->TC->inpopup) {
-
-                $target = "taskchain{$this->TC->chain->parentid}";
-                $params = $this->TC->merge_params(array('inpopup'=>1), null, 'coursemoduleid');
-                $popupurl = new moodle_url('/mod/taskchain/view.php', $params);
-                $openpopupurl = substr($popupurl->out(true), strlen($CFG->wwwroot));
-
-                $popupoptions = implode(',', preg_grep('/^moodle/i', explode(',', $this->TC->chain->get_popupoptions()), PREG_GREP_INVERT));
-                $openpopup = "openpopup('$openpopupurl','$target','{$popupoptions}')";
-                $error .= "\n".'<script type="text/javascript">'."\n"."//<![CDATA[\n"."$openpopup;\n"."//]]>\n"."</script>\n";
-
-                $onclick = "this.target='$target'; return $openpopup;";
-                $link = "\n".'<a href="'.$popupurl.'" onclick="'.$onclick.'">'.format_string($this->TC->taskchain->name).'</a>'."\n";
-                $error .= get_string('popupresource', 'resource').'<br />'.get_string('popupresourcelink', 'resource', $link);
-            }
+        if ($this->TC->chain->showpopup && ! $this->TC->inpopup) {
+            $target = 'taskchain'.$this->TC->chain->parentid;
+            $params = $this->TC->merge_params(array('inpopup'=>1), null, 'coursemoduleid');
+            $url = new moodle_url('/mod/taskchain/view.php', $params);
+            $options = implode(',', preg_grep('/^moodle/i', explode(',', $this->TC->chain->get_popupoptions()), PREG_GREP_INVERT));
+            $onclick = "this.target='$target'; return window.open('$url','$target','$options');";
+            $link = "\n".'<a href="'.$url.'" onclick="'.$onclick.'">'.format_string($this->TC->taskchain->name).'</a>'."\n";
+            return get_string('popupresource', 'resource').'<br />'.get_string('popupresourcelink', 'resource', $link);
         }
-        if ($error) {
-            return $error;
-        } else {
-            return false;
-        }
+        return false; // popup link not required
     }
 
     /**
