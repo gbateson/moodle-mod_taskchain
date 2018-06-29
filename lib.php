@@ -2080,6 +2080,7 @@ function taskchain_get_file_info($browser, $areas, $course, $cm, $context, $file
 
 /**
  * Extends the global navigation tree by adding taskchain nodes if there is a relevant content
+ * These settings are added to the "Navigation" menu
  *
  * This can be called by an AJAX request so do not rely on $PAGE as it might not be set up properly.
  *
@@ -2092,6 +2093,12 @@ function taskchain_get_file_info($browser, $areas, $course, $cm, $context, $file
  */
 function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $course, stdclass $module, cm_info $cm) {
     global $CFG, $TC;
+
+    // don't add notes in Moodle >= 2.5, because they will
+    // be added in "taskchain_extend_settings_navigation()"
+    if (isset($CFG->branch) && $CFG->branch >= '25') {
+        return;
+    }
 
     if (empty($TC)) {
         require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
@@ -2126,7 +2133,7 @@ function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $c
                     } else {
                         $url = $TC->url->report($mode, $params);
                     }
-                    $node->add($label, $url, $type, null, null, $icon);
+                    $node->add($label, $url, $type, null, 'taskchainreport_'.$mode, $icon);
                 }
                 if (method_exists($taskchainnode, 'add_node')) {
                     $taskchainnode->add_node($node); // Moodle >= 2.2
@@ -2143,6 +2150,7 @@ function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $c
 
 /**
  * Extends the settings navigation with the TaskChain settings
+ * These settings are added to the "Administration" menu
 
  * This function is called when the context for the page is a taskchain module. This is not called by AJAX
  * so it is safe to rely on the $PAGE.
@@ -2161,19 +2169,68 @@ function taskchain_extend_settings_navigation(settings_navigation $settingsnav, 
 
     // create our new nodes
     $nodes = array();
-    if (isset($TC->can) && $TC->can->manage()) {
-        $type = navigation_node::TYPE_SETTING;
-        $icon = new pix_icon('t/edit', '');
+    if (isset($TC->can)) {
 
-        $params = $TC->merge_params(array('columnlisttype' => 'chains'), null, 'coursemoduleid');
-        $action = new moodle_url('/mod/taskchain/edit/chains.php', $params);
-        $text   = get_string('editchains', 'mod_taskchain');
-        $nodes[] = new navigation_node(array('text'=>$text, 'action'=>$action, 'key'=>'editchains', 'type'=>$type, 'icon'=>$icon));
+        if ($TC->can->manage()) {
+            $type = navigation_node::TYPE_SETTING;
+            $icon = new pix_icon('t/edit', '');
 
-        $params = $TC->merge_params(array('columnlisttype' => 'tasks'), null, 'coursemoduleid');
-        $action = new moodle_url('/mod/taskchain/edit/tasks.php', $params);
-        $text   = get_string('edittasks', 'mod_taskchain');
-        $nodes[] = new navigation_node(array('text'=>$text, 'action'=>$action, 'key'=>'edittasks', 'type'=>$type, 'icon'=>$icon));
+            $params = array('columnlisttype' => 'chains');
+            $params = $TC->merge_params($params, null, 'coursemoduleid');
+            $action = new moodle_url('/mod/taskchain/edit/chains.php', $params);
+            $text   = get_string('editchains', 'mod_taskchain');
+            $nodes[] = new navigation_node(array('text'=>$text, 'action'=>$action, 'key'=>'editchains', 'type'=>$type, 'icon'=>$icon));
+
+            $params = array('columnlisttype' => 'tasks');
+            $params = $TC->merge_params($params, null, 'coursemoduleid');
+            $action = new moodle_url('/mod/taskchain/edit/tasks.php', $params);
+            $text   = get_string('edittasks', 'mod_taskchain');
+            $nodes[] = new navigation_node(array('text'=>$text, 'action'=>$action, 'key'=>'edittasks', 'type'=>$type, 'icon'=>$icon));
+        }
+
+        // only add the preview and report nodes here in Moodle >= 2.5
+        if (isset($CFG->branch) && $CFG->branch >= '25') {
+
+            if ($TC->can->preview()) {
+                $type = navigation_node::TYPE_SETTING;
+                $icon = new pix_icon('t/preview', '');
+
+                $params = array('tab' => 'preview', 'cnumber' => -1);
+                $params = $TC->merge_params($params, null, 'coursemoduleid');
+                $action = new moodle_url('/mod/taskchain/attempt.php', $params);
+                $text = get_string('preview', 'mod_taskchain');
+                $nodes[] = new navigation_node(array('text'=>$text, 'action'=>$action, 'key'=>'preview', 'type'=>$type, 'icon'=>$icon));
+            }
+
+            if ($TC->can->reviewattempts()) {
+                $type = navigation_node::TYPE_SETTING;
+                foreach ($TC->get_report_modes() as $name => $submodes) {
+
+                    // create report parent node
+                    $mode = key($submodes); // first report
+                    $params = array('text' => get_string($name, 'mod_taskchain'),
+                                    'action' => $TC->url->report($mode, $submodes[$mode]),
+                                    'key' => $name,
+                                    'type' => $type,
+                                    'icon' => new pix_icon('i/report', ''));
+                    $node = new navigation_node($params);
+
+                    // add reports
+                    $icon = new pix_icon('i/item', '');
+                    foreach ($submodes as $mode => $params) {
+                        $text = get_string('pluginname', 'taskchainreport_'.$mode);
+                        if ($mode=='taskattempt') {
+                            $action = $TC->url->review();
+                        } else {
+                            $action = $TC->url->report($mode, $params);
+                        }
+                        $node->add($text, $action, $type, null, 'taskchainreport_'.$mode, $icon);
+                    }
+                    $nodes[] = $node;
+                    unset($node);
+                }
+            }
+        }
     }
 
     // only teachers/admins will have new nodes to add
