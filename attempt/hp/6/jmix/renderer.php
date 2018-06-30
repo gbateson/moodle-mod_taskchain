@@ -100,6 +100,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
         $search = '/for \(var i=0; i<DropTotal; i\+\+\)\{.*?\}/s';
         $replace = ''
             ."var myParentNode = null;\n"
+            ."var myNextNode = null;\n"
             ."if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
             ."	// IE8+ (compatible mode) IE7, IE6, IE5 ...\n"
             ."} else {\n"
@@ -109,7 +110,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             ."		myParentNode = obj[obj.length - 1].parentNode;\n"
                     // handle situation where script is running after page has loaded (e.g. Boost theme)
             ."		if (myParentNode.tagName.toLowerCase()=='body') {\n"
-                        // locate Check Buttons or Feedback div
+                        // locate Check Buttons of Feedback div
             ."			myNextNode = document.getElementById('CheckButtonDiv');\n"
             ."			if (myNextNode) {\n"
             ."				myNextNode = myNextNode.nextSibling;\n"
@@ -151,7 +152,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             ."		div.setAttribute('class', 'DropLine');\n"
             ."		div.setAttribute('align', 'center');\n"
             ."		div.innerHTML = '&nbsp;<br />&nbsp;';\n"
-            ."		myParentNode.appendChild(div);\n"
+            ."		myParentNode.insertBefore(div, myNextNode);\n"
             ."	} else {\n"
             ."		document.write('".'<div id="'."Drop' + i + '".'" class="DropLine" align="center"'.">&nbsp;<br />&nbsp;</div>');\n"
             ."	}\n"
@@ -169,7 +170,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
                 ."	div.setAttribute('id', 'JMixPrefix');\n"
                 ."	div.setAttribute('class', 'CardStyle');\n"
                 ."	div.innerHTML = '$prefix';\n"
-                ."	myParentNode.appendChild(div);\n"
+                ."	myParentNode.insertBefore(div, myNextNode);\n"
                 ."} else {\n"
                 ."	document.write('".'<div id="JMixPrefix" class="CardStyle"'.">$prefix</div>');\n"
                 ."}\n"
@@ -181,7 +182,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             ."		var div = document.createElement('div');\n"
             ."		div.setAttribute('id', 'D' + i);\n"
             ."		div.setAttribute('class', 'CardStyle');\n"
-            ."		div = myParentNode.appendChild(div);\n"
+            ."		div = myParentNode.insertBefore(div, myNextNode);\n"
             ."		HP_add_listener(div, 'mousedown', 'beginDrag(event, ' + i + ')');\n"
             ."	} else {\n"
             ."		document.write('".'<div id="'."D' + i + '".'" class="CardStyle" onmousedown="'."beginDrag(event, ' + i + ')".'"'."></div>');\n"
@@ -196,14 +197,14 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
                 ."	div.setAttribute('id', 'JMixSuffix');\n"
                 ."	div.setAttribute('class', 'CardStyle');\n"
                 ."	div.innerHTML = '$suffix';\n"
-                ."	myParentNode.appendChild(div);\n"
+                ."	myParentNode.insertBefore(div, myNextNode);\n"
                 ."} else {\n"
                 ."	document.write('".'<div id="JMixsuffix" class="CardStyle"'.">$suffix</div>');\n"
                 ."}\n"
             ;
         }
         $replace .= ''
-            ."myParentNode = div = null;"
+            ."myParentNode = myNextNode = div = null;"
         ;
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent, 1);
     }
