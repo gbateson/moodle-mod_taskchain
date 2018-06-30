@@ -107,6 +107,27 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             ."	var obj = document.getElementsByTagName('div');\n"
             ."	if (obj && obj.length) {\n"
             ."		myParentNode = obj[obj.length - 1].parentNode;\n"
+                    // handle situation where script is running after page has loaded (e.g. Boost theme)
+            ."		if (myParentNode.tagName.toLowerCase()=='body') {\n"
+                        // locate Check Buttons or Feedback div
+            ."			myNextNode = document.getElementById('CheckButtonDiv');\n"
+            ."			if (myNextNode) {\n"
+            ."				myNextNode = myNextNode.nextSibling;\n"
+            ."			} else {\n"
+            ."				myNextNode = document.getElementById('FeedbackDiv');\n"
+            ."			}\n"
+            ."			if (myNextNode) {\n"
+            ."				myParentNode = myNextNode.parentNode;\n"
+            ."			} else {\n"
+                            // desperate search for other expected elements !!
+            ."				myParentNode = document.getElementById('InstructionsDiv');\n"
+            ."				if (myParentNode) {\n"
+            ."					myParentNode = myParentNode.parentNode;\n"
+            ."				} else {\n"
+            ."					myParentNode = document.querySelector('.Titles').parentNode;\n"
+            ."				}\n"
+            ."			}\n"
+            ."		}\n"
             ."		var css_prefix = new Array('webkit', 'khtml', 'moz', 'ms', 'o', '');\n"
             ."		for (var i=0; i<css_prefix.length; i++) {\n"
             ."			if (css_prefix[i]=='') {\n"
@@ -227,7 +248,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
         $drag = 'beginDrag,doDrag,endDrag';
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '')."CardSetHTML,$drag,CheckAnswer,TimesUp,WriteToGuess,$drag";
+        $names .= ($names ? ',' : '')."CardSetHTML,$drag,CheckAnswer,TimesUp,WriteToGuess,$drag,SetInitialPositions";
         return $names;
     }
 
@@ -462,6 +483,25 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             ;
             //$substr = substr_replace($substr, $insert, $pos, 0);
         }
+    }
+
+    /**
+     * fix_js_SetInitialPositions
+     *
+     * @param xxx $str (passed by reference)
+     * @param xxx $start
+     * @param xxx $length
+     */
+    function fix_js_SetInitialPositions(&$str, $start, $length)  {
+        $substr = substr($str, $start, $length);
+
+        // prevent error on Boost-based themes
+        if ($pos = strpos($substr, '(RowWidth + Cds[i].GetW() + 5) < DivWidth')) {
+            $insert = 'RowWidth==0 || ';
+            $substr = substr_replace($substr, $insert, $pos, 0);
+        }
+
+        $str = substr_replace($str, $substr, $start, $length);
     }
 
     /**

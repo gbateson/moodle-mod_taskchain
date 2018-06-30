@@ -2242,14 +2242,18 @@ function taskchain_extend_settings_navigation(settings_navigation $settingsnav, 
         // detect Moodle >= 2.2 (it has an easy way to do what we want)
         if (method_exists($taskchainnode, 'get_children_key_list')) {
 
-            // in Moodle >= 2.2, we can locate the "Edit settings" node
-            // by its key and use that as the "beforekey" for the new nodes
+            // in Moodle >= 2.2, we can locate the "Edit settings" node by its key, and
+            // use the key for the node AFTER that as the "beforekey" for the new nodes
             $keys = $taskchainnode->get_children_key_list();
-            $i = array_search('modedit', $keys);
+            $key = 'modedit';
+            $i = array_search($key, $keys);
             if ($i===false) {
-                $i = 0;
+                $i = 0; // shouldn't happen !!
             } else {
                 $i = ($i + 1);
+                $icon = new pix_icon('t/edit', '');
+                $type = navigation_node::TYPE_SETTING;
+                $taskchainnode->find($key, $type)->icon = $icon;
             }
             if (array_key_exists($i, $keys)) {
                 $beforekey = $keys[$i];
@@ -2542,7 +2546,7 @@ function taskchain_update_events(&$taskchain, &$chain, &$eventids, $delete) {
     } else if ($can_manage_events) {
 
         // set duration
-        if ($chain->timeclose && $chain->timeopen) {
+        if ($chain && $chain->timeclose && $chain->timeopen) {
             $duration = max(0, $chain->timeclose - $chain->timeopen);
         } else {
             $duration = 0;
