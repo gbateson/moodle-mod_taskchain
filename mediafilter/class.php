@@ -516,7 +516,12 @@ class taskchain_mediafilter {
             if ($options['iconlink'] && preg_match('/href="([^"]*)"/', $link, $matches)) {
 
                 // create audio icon
-                $img = $PAGE->theme->pix_url('f/audio', 'core')->out();
+                if (method_exists($PAGE->theme, 'image_url')) {
+                    $image_url = 'image_url'; // Moodle >= 3.3
+                } else {
+                    $image_url = 'pix_url'; // Moodle <= 3.2
+                }
+                $img = $PAGE->theme->$image_url('f/audio', 'core')->out();
                 $style = 'border-style: none; border-left: 4px solid transparent;';
                 $img = html_writer::empty_tag('img', array('src' => $img, 'title' => 'audio', 'style' => $style));
 
