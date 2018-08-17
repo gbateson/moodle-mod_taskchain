@@ -2206,6 +2206,10 @@ function taskchain_extend_settings_navigation(settings_navigation $settingsnav, 
                 $type = navigation_node::TYPE_SETTING;
                 foreach ($TC->get_report_modes() as $name => $submodes) {
 
+                    if (empty($submodes)) {
+                        continue; // shouldn't happen !!
+                    }
+
                     // create report parent node
                     $mode = key($submodes); // first report
                     $params = array('text' => get_string($name, 'mod_taskchain'),
