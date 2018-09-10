@@ -540,6 +540,19 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
+    $newversion = 2018091075;
+    if ($oldversion < $newversion) {
+        // clear cache for tasks that use Moodle messaging
+        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+        $params = array('studentfeedback' => mod_taskchain::FEEDBACK_MOODLEMESSAGING);
+        if ($ids = $DB->get_records('taskchain_tasks', $params, 'id', 'id,studentfeedback')) {
+            $ids = array_keys($ids);
+            list($select, $params) = $DB->get_in_or_equal($ids);
+            $DB->delete_records_select('taskchain_cache', "taskid $select", $params);
+        }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
     if ($empty_cache) {
         $DB->delete_records('taskchain_cache');
     }
