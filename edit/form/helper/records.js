@@ -25,6 +25,60 @@
 M.mod_taskchain_edit_form_helper_records = {
 
     /**
+     * fix_css_classes
+     *
+     * @param object Y
+     * @return void, but will set properties of this object
+     */
+    fix_css_classes : function(Y) {
+
+        // add "fitem_xxx" id in Boost theme e.g. fitem_id_defaultrecord_1
+        var divs = document.querySelectorAll("div.form-group:not([id])");
+        for (var d in divs) {
+            if (divs[d].querySelector) {
+                var input = divs[d].querySelector("input[id]");
+                if (input) {
+                    divs[d].id = "fitem_" + input.id;
+                }
+            }
+        }
+
+        // add CSS class to DIVs in Boost
+        var divs = document.querySelectorAll("div.form-group");
+        for (var d in divs) {
+            if (divs[d].id) {
+                var id = divs[d].id;
+                switch (true) {
+                    case (id=="fitem_id_applydefaults_selectedtasks"):
+                    case (id=="fitem_id_applydefaults_filteredtasks"):
+                        divs[d].className += " applydefaults";
+                        break;
+                    case (id.substr(0, 23)=="fitem_id_recordsaction_"):
+                        // e.g. fitem_id_recordsaction_addtasks
+                        divs[d].className += " recordsaction";
+                        break;
+                    case (id.substr(0, 9)=="fitem_id_"):
+                        // e.g. fitem_id_recordsaction_addtasks
+                        divs[d].className += " " + id.substr(9).replace("_start", "");
+                        break;
+                    case (id.substr(0, 10)=="fgroup_id_"):
+                        // e.g. fgroup_id_movetasksafter_elements
+                        divs[d].className += " " + id.substr(10).replace("_elements", "");
+                        break;
+                }
+            }
+        }
+
+        // add "fitemtitle" class in Boost theme
+        var divs = document.querySelectorAll("div.col-md-3");
+        for (var d in divs) {
+            if (divs[d].className) {
+                divs[d].className += " fitemtitle";
+            }
+        }
+    },
+
+    /**
      * define_action_elements
      *
      * @param object Y
@@ -32,7 +86,7 @@ M.mod_taskchain_edit_form_helper_records = {
      * @param string field
      * @param string formid
      * @param array actions
-     * @return void, but will set properties of this oboject
+     * @return void, but will set properties of this object
      */
     setup_action_elements : function(Y, fieldsetid, fieldname, actions) {
         this.fieldsetid = "actionshdr";
@@ -68,6 +122,18 @@ M.mod_taskchain_edit_form_helper_records = {
      * @todo Finish documenting this function
      */
     set_fitem_heights_and_widths : function(Y) {
+
+        // add "id" in Boost theme e.g. fitem_id_defaultrecord_1
+        var divs = document.querySelectorAll("div.form-group:not([id])");
+        for (var d in divs) {
+            if (divs[d].querySelector) {
+                var input = divs[d].querySelector("input[id]");
+                if (input) {
+                    divs[d].id = "fitem_" + input.id;
+                }
+            }
+        }
+
         var fieldsets = document.getElementsByTagName("FIELDSET")
         if (fieldsets) {
             var hdrFieldsetId = new RegExp("^labels|defaults|selects|(record[0-9]+)$");

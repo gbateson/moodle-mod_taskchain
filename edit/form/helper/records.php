@@ -339,6 +339,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
                              'fieldname' => $name,
                              'actions' => $actions);
             $M = 'M.mod_taskchain_edit_form_helper_records';
+            $PAGE->requires->js_init_call("$M.fix_css_classes",              null, false, $module);
             $PAGE->requires->js_init_call("$M.setup_action_elements",    $options, false, $module);
             $PAGE->requires->js_init_call("$M.set_fitem_heights_and_widths", null, false, $module);
             $PAGE->requires->js_init_call("$M.set_bottom_borders",           null, false, $module);

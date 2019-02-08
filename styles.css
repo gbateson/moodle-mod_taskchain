@@ -383,6 +383,14 @@ body.path-course-view div.taskchainrecentactivity ul { font-size: 0.8em; margin:
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcefile,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcetype { padding-left: 4.0em; width: 40.0em; } /* 48px 460px */
 
+/** Boost theme **/
+#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filtercoursename,
+#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filteractivityname,
+#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filtertaskname,
+#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filtertaskposition,
+#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filtersourcefile,
+#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filtersourcetype { padding-left: 4.0em; width: 42.0em; } /* 48px 460px */
+
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_reordertasks_sortfield,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_addtasks_start,
 #page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_movetasks_start,
@@ -407,6 +415,22 @@ body.path-course-view div.taskchainrecentactivity ul { font-size: 0.8em; margin:
         this.currentStyle.getAttribute('min-width') ? /* ie6 */
         this.currentStyle.getAttribute('min-width') : null
     )
+}
+
+#page-mod-taskchain-edit-tasks .form-check-input {
+    margin-left: 0px;
+    margin-top:  0px;
+    top:         0px;
+}
+
+#page-mod-taskchain-edit-tasks fieldset#actionshdr div {
+    text-align: left;
+}
+#page-mod-taskchain-edit-tasks fieldset#actionshdr .form-check-input {
+    position: static;
+}
+#page-mod-taskchain-edit-tasks fieldset#actionshdr .form-group.fitem {
+    overflow: auto;
 }
 
 /** action buttons */
