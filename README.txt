@@ -22,7 +22,7 @@ To INSTALL or UPDATE the TaskChain module
     1. download the zip file from one of the following locations
 
         * Moodle.org plugins repository (moodle.org -> Downloads -> Plugins)
-        * http://bateson.kanazawa-gu.ac.jp/moodle/zip/plugins_mod_taskchain.zip
+        * https://bateson.kochi-tech.ac.jp/zip/plugins_mod_taskchain.zip
 
     2. unzip the zip file - creates folder called "taskchain"
 
