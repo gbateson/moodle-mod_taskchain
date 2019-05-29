@@ -1913,7 +1913,11 @@ function taskchain_pluginfile_externalfile($context, $component, $filearea, $fil
             switch (true) {
                 case isset($file['source']): $param = 'source'; break; // file
                 case isset($file['path']):   $param = 'path';   break; // dir
-                default: continue; // shouldn't happen !!
+                default: $param = ''; // shouldn't happen !!
+            }
+
+            if ($param=='') {
+                continue;
             }
 
             if ($encodepath) {
