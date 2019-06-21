@@ -106,9 +106,9 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="chainid"/>
         <FIELD NAME="chainid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the “id” of the “taskchain_chains” record to which this TaskChain task is associated" NEXT="name" PREVIOUS="id"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" NEXT="sourcefile" PREVIOUS="chainid"/>
-        <FIELD NAME="sourcefile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="either the URL or file path (within the Files folder) of the source file for this task" NEXT="sourcelocation" PREVIOUS="name"/>
-        <FIELD NAME="sourcetype" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the type of the sourcefile file either “html” or the name of the task creator software, e.g. TaskChain, qedoc, examview each type has its own subfolder beneath the “mod/taskchain/types” folder"/>
-        <FIELD NAME="sourcelocation" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="configfile" PREVIOUS="sourcefile"/>
+        <FIELD NAME="sourcefile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="either the URL or file path (within the Files folder) of the source file for this task" NEXT="sourcetype" PREVIOUS="name"/>
+        <FIELD NAME="sourcetype" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the type of the sourcefile file either html or the name of the task creator software" NEXT="sourcelocation" PREVIOUS="sourcefile"/>
+        <FIELD NAME="sourcelocation" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="configfile" PREVIOUS="sourcetype"/>
         <FIELD NAME="configfile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" NEXT="configlocation" PREVIOUS="sourcelocation"/>
         <FIELD NAME="configlocation" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="outputformat" PREVIOUS="configfile"/>
         <FIELD NAME="outputformat" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the required output format for this task" NEXT="navigation" PREVIOUS="configlocation"/>
