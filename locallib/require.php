@@ -784,12 +784,12 @@ class taskchain_require extends taskchain_base {
             switch ($cm->modname) {
                 case 'resource':
                     $table = 'log';
-                    $select = 'cmid=? AND userid=? AND action=?';
+                    $select = 'cmid = ? AND userid = ? AND action = ?';
                     $params = array($cm->id, $USER->id, 'view');
                     break;
                 case 'lesson':
                     $table = 'lesson_grades';
-                    $select = 'userid=? AND lessonid==? AND completed>?';
+                    $select = 'userid = ? AND lessonid == ? AND completed > ?';
                     $params = array($USER->id, $cm->instance, 0);
                     break;
                 default:

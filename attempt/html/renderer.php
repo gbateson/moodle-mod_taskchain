@@ -276,7 +276,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         }
 
         list($select, $params) = $DB->get_in_or_equal($urls);
-        $select = "course=? AND sourcefile $select";
+        $select = "course = ? AND sourcefile $select";
         array_unshift($params, $this->TC->course->id);
 
         if ($tasks = $DB->get_records_select('taskchain', $select, $params, 'id', 'id,sourcefile')) {

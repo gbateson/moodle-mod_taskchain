@@ -710,7 +710,7 @@ class taskchain_get extends taskchain_base {
             }
             if ($taskchains) {
                 $parentids = implode(',', array_keys($taskchains));
-                $select = "parenttype=? AND parentid IN ($parentids)";
+                $select = "parenttype = ? AND parentid IN ($parentids)";
                 $params = array(self::PARENTTYPE_ACTIVITY);
                 $chains = $DB->get_records_select('taskchain_chains', $select, $params);
             } else {
@@ -768,7 +768,7 @@ class taskchain_get extends taskchain_base {
         if (is_null($chaingrades)) {
             if ($taskchains = $this->taskchains($thisuser ? 0 : $userid)) {
                 $parentids = implode(',', array_keys($taskchains));
-                $select = "parenttype=? AND parentid IN ($parentids) AND userid=?";
+                $select = "parenttype = ? AND parentid IN ($parentids) AND userid = ?";
                 $params = array(self::PARENTTYPE_ACTIVITY, $userid);
                 $chaingrades = $DB->get_records_select('taskchain_chain_grades', $select, $params);
             } else {
@@ -855,7 +855,7 @@ class taskchain_get extends taskchain_base {
             } else {
                 // all chain attempts at one particular cm/taskchain/chain in the course
                 if ($chainid) {
-                    $select .= ' AND chainid=?';
+                    $select .= ' AND chainid = ?';
                     $params[] = $chainid;
                 }
             }
@@ -927,7 +927,7 @@ class taskchain_get extends taskchain_base {
             $chainattemptid = $this->chainattemptid();
         }
         if ($chainattemptid==0) {
-            $select = "chainid=? AND cnumber=? AND userid=?";
+            $select = "chainid = ? AND cnumber = ? AND userid = ?";
             $params = array($chainid, $cnumber, $userid);
             if ($chainattempt = $DB->get_record_select('taskchain_chain_attempts', $select, $params)) {
                 $chainattemptid = $chainattempt->id;
@@ -973,7 +973,7 @@ class taskchain_get extends taskchain_base {
             } else {
                 // all tasks in one particular cm/taskchain/chain in the course
                 if ($chainid) {
-                    $select = 'chainid=?';
+                    $select = 'chainid = ?';
                     $params = array($chainid);
                 }
             }
@@ -1035,10 +1035,10 @@ class taskchain_get extends taskchain_base {
         if (is_null($taskscores) && $cnumber>=0) {
             if ($tasks = $this->tasks($chainid)) {
                 $taskids = implode(',', array_keys($tasks));
-                $select = "taskid IN ($taskids) AND userid=?";
+                $select = "taskid IN ($taskids) AND userid = ?";
                 $params = array($userid);
                 if ($cnumber>0) {
-                    $select .= ' AND cnumber=?';
+                    $select .= ' AND cnumber = ?';
                     $params[] = $cnumber;
                 }
                 $taskscores = $DB->get_records_select('taskchain_task_scores', $select, $params, 'timemodified');
@@ -1124,13 +1124,13 @@ class taskchain_get extends taskchain_base {
             $select = '';
             $params = array();
             if ($taskid) {
-                $select = 'taskid=? AND userid=?';
+                $select = 'taskid = ? AND userid = ?';
                 $params = array($taskid, $userid);
                 if ($cnumber>0) {
-                    $select .= ' AND cnumber=?';
+                    $select .= ' AND cnumber = ?';
                     $params[] = $cnumber;
                     if ($tnumber>0) {
-                        $select .= " AND tnumber=?";
+                        $select .= " AND tnumber = ?";
                         $params[] = $tnumber;
                     }
                 }
@@ -1139,10 +1139,10 @@ class taskchain_get extends taskchain_base {
             } else {
                 if ($tasks = $this->tasks($chainid)) {
                     $taskids = implode(',', array_keys($tasks));
-                    $select = "taskid IN ($taskids) AND userid=?";
+                    $select = "taskid IN ($taskids) AND userid = ?";
                     $params = array($userid);
                     if ($cnumber>0) {
-                        $select .= ' AND cnumber=?';
+                        $select .= ' AND cnumber = ?';
                         $params[] = $cnumber;
                     }
                 }
@@ -1184,7 +1184,7 @@ class taskchain_get extends taskchain_base {
             $taskattemptid = $this->taskattemptid();
         }
         if ($taskattemptid==0) {
-            $select = 'taskid=? AND cnumber=? AND tnumber=? AND userid=?';
+            $select = 'taskid = ? AND cnumber = ? AND tnumber = ? AND userid = ?';
             $params = array($taskid, $cnumber, $tnumber, $userid);
             if ($taskattempt = $DB->get_record_select('taskchain_task_attempts', $select, $params)) {
                 $taskattemptid = $taskattempt->id;
@@ -1366,7 +1366,7 @@ class taskchain_get extends taskchain_base {
                 $this->TC->cache_taskattempts[$taskid] = false;
             } else {
                 // get attempts at $taskid in this cnumber
-                $select = 'taskid=? AND userid=? AND cnumber=?';
+                $select = 'taskid = ? AND userid = ? AND cnumber = ?';
                 $params = array($taskid, $this->TC->userid, $cnumber);
                 $this->TC->cache_taskattempts[$taskid] = $DB->get_records_select('taskchain_task_attempts', $select, $params, 'resumestart DESC');
             }

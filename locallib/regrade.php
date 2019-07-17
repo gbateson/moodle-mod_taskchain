@@ -435,7 +435,7 @@ class taskchain_regrade extends taskchain_base {
         $maxstatus = 0;
         $timemodified = 0;
 
-        $select = "userid=? AND cnumber=? AND taskid in ($taskids)";
+        $select = "userid = ? AND cnumber = ? AND taskid in ($taskids)";
         $params = array($userid, $cnumber);
         $taskscores = $DB->get_records_select('taskchain_task_scores', $select, $params);
 

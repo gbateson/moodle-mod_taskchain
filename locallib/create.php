@@ -125,7 +125,7 @@ class taskchain_create extends taskchain_base {
             $chainid = $this->TC->get_chainid();
         }
         if (! $cnumber) {
-            $select = 'chainid=? AND userid=?';
+            $select = 'chainid = ? AND userid = ?';
             $params = array($chainid, $userid);
             $cnumber = $this->TC->count_records_select('taskchain_chain_attempts', $select, $params, 'MAX(cnumber)') + 1;
         }
@@ -147,17 +147,17 @@ class taskchain_create extends taskchain_base {
         $chainattemptid = $chainattempt->id;
 
         // sql to select previous chain_attempts and their task_scores and task_attempts
-        $taskids = "SELECT id FROM {taskchain_tasks} WHERE chainid=?";
-        $select  = 'cnumber<? AND userid=? AND status=?';
+        $taskids = "SELECT id FROM {taskchain_tasks} WHERE chainid = ?";
+        $select  = 'cnumber < ? AND userid = ? AND status = ?';
         $params  = array($chainid, $cnumber, $userid, self::STATUS_INPROGRESS);
 
         // set status of previous chain attempts (and their task_attempts and task_scores) to adandoned
         $DB->set_field_select('taskchain_task_attempts',  'status', self::STATUS_ABANDONED, "taskid IN ($taskids) AND $select", $params);
         $DB->set_field_select('taskchain_task_scores',    'status', self::STATUS_ABANDONED, "taskid IN ($taskids) AND $select", $params);
-        $DB->set_field_select('taskchain_chain_attempts', 'status', self::STATUS_ABANDONED, "chainid=? AND $select",            $params);
+        $DB->set_field_select('taskchain_chain_attempts', 'status', self::STATUS_ABANDONED, "chainid = ? AND $select",            $params);
 
         // set status of previous PENDING chain attempts to COMPLETED
-        $select  = 'chainid=? AND cnumber<? AND userid=? AND status=?';
+        $select  = 'chainid = ? AND cnumber < ? AND userid = ? AND status = ?';
         $params  = array($chainid, $cnumber, $userid, self::STATUS_PENDING);
         $DB->set_field_select('taskchain_chain_attempts', 'status', self::STATUS_COMPLETED, $select, $params);
 
@@ -270,7 +270,7 @@ class taskchain_create extends taskchain_base {
         }
 
         // get maximum tnumber (task attempt number)
-        $select = "taskid=? AND cnumber=? AND userid=?";
+        $select = "taskid = ? AND cnumber = ? AND userid = ?";
         $params = array($taskid, $cnumber, $userid);
         $tnumber = $this->TC->count_records_select('taskchain_task_attempts', $select, $params, 'MAX(tnumber)') + 1;
 
@@ -301,7 +301,7 @@ class taskchain_create extends taskchain_base {
         $this->TC->force_tnumber(0);
 
         // set previous task attempts to adandoned
-        $select = 'taskid=? AND cnumber=? AND tnumber<? AND userid=? AND status=?';
+        $select = 'taskid = ? AND cnumber = ? AND tnumber < ? AND userid = ? AND status = ?';
         $params = array($taskid, $cnumber, $tnumber, $userid, self::STATUS_INPROGRESS);
         $DB->set_field_select('taskchain_task_attempts', 'status', self::STATUS_ABANDONED, $select, $params);
 

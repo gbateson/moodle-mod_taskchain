@@ -2338,7 +2338,7 @@ function taskchain_reset_gradebook($courseid, $type='') {
     $sql = ''
         .'SELECT h.*, cm.idnumber AS cmidnumber, cm.course AS courseid '
         .'FROM {taskchain} h, {course_modules} cm, {modules} m '
-        ."WHERE m.name='taskchain' AND m.id=cm.module AND cm.instance=h.id AND h.course=?"
+        ."WHERE m.name = 'taskchain' AND m.id = cm.module AND cm.instance = h.id AND h.course = ?"
     ;
     if ($taskchains = $DB->get_records_sql($sql, array($courseid))) {
         foreach ($taskchains as $taskchain) {
