@@ -1,0 +1,7 @@
+{
+    "plugintypes": {
+        "taskchainattempt": "mod\/taskchain\/attempt",
+        "taskchainsource": "mod\/taskchain\/source",
+        "taskchainreport": "mod\/taskchain\/report"
+    }
+}
