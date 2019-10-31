@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2019-10-31 (86)
+ - use default media player when spcified player is not available
+
 2019-07-28 (84)
  -  add db/subplugins.json for compatability with Moodle >= 3.8 
 

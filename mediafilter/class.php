@@ -454,7 +454,7 @@ class taskchain_mediafilter {
         }
 
         // set player default, if necessary
-        if (empty($options['player'])) {
+        if (empty($options['player']) || empty($this->players[$options['player']])) {
             $options['player'] = $this->defaultplayer;
         }
 
