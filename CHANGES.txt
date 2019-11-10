@@ -3,1350 +3,1121 @@ Change log for mod_taskchain
 ========================================
 
 2019-10-31 (86)
+ - standardize layout and spelling in CHANGES.txt
+
+2019-10-31 (86)
  - use default media player when spcified player is not available
 
 2019-07-28 (84)
- -  add db/subplugins.json for compatability with Moodle >= 3.8 
+ - add db/subplugins.json for compatability with Moodle >= 3.8
 
 2019-07-17 (83)
- -  separate '<?' to '< ?' so that it is not mistaken for a PHP short tag 
+ - separate '<?' to '< ?' so that it is not mistaken for a PHP short tag
 
 2019-06-21 (82)
- -  fix PREVIOUS/NEXT for 'sourcetype' field in 'taskchain_tasks' table in db/install.xml 
+ - fix PREVIOUS/NEXT for 'sourcetype' field in 'taskchain_tasks' table in db/install.xml
 
 2019-05-30 (81)
- -  remove 'continue' statement inside SWITCH block 
+ - remove 'continue' statement inside SWITCH block
 
 2019-04-05 (80)
- -  add comments about events_trigger availability 
+ - add comments about events_trigger availability
 
 2019-03-30 (79)
- -  ensure 'modname' is defined when creating new activities in Moodle >= 3.5 
+ - ensure 'modname' is defined when creating new activities in Moodle >= 3.5
 
 2019-03-11 (78)
- -  bump version number to force use of new CSS 
+ - bump version number to force use of new CSS
 
 2019-02-08 (77)
- -  fix URL of secondary zip download site 
+ - fix URL of secondary zip download site
 
 2019-02-08 (77)
- -  mod/taskchain adjust CSS to suite Boost theme 
+ - adjust CSS to suite Boost theme
 
 2019-01-21 (76)
- -  remove use of 'events_trigger' for compatability with Moodle 3.6 
+ - remove use of 'events_trigger' for compatability with Moodle 3.6
 
 2018-09-10 (75)
- -  mod/taskchain fix URL for Moodle message feedback in Moodle >= 3.2 
-
-2018-09-10 (74)
- -  mod/taskchain fix URL for Moodle message feedback in Moodle >= 3.2 
+ - fix URL for Moodle message feedback in Moodle >= 3.2
 
 2018-08-17 (73)
- -  mod/taskchain fix error when mode has no submodes on view page 
+ - fix error when mode has no submodes on view page
 
 2018-07-04 (72)
- -  mod/taskchain replace deprecated pix_url with image_url in Moodle >= 3.3 
+ - replace deprecated pix_url with image_url in Moodle >= 3.3
 
 2018-06-30 (71)
- -  mod/taskchain fix location of parentNode in JMix under Boost theme 
+ - fix location of parentNode in JMix under Boost theme
 
 2018-06-30 (70)
- -  mod/taskchain fix javascript error: Cannot use 'in' operator to search for 'onbeforeunload' in window 
+ - fix javascript error: Cannot use 'in' operator to search for 'onbeforeunload' in window
 
 2018-06-30 (69)
- -  mod/taskchain fix location of parentNode in JMix under Boost theme 
+ - fix location of parentNode in JMix under Boost theme
 
 2018-06-29 (68)
- -  mod/taskchain display reports in Admin menu in Moodle >= 2.5 to ensure that they remain accessible in Boost theme 
+ - display reports in Admin menu in Moodle >= 2.5 to ensure that they remain accessible in Boost theme
 
 2018-06-26 (66)
- -  mod/taskchain replace shorthand declaration of array, [...], with standard array(...) for compatability with PHP 5.3 
+ - replace shorthand declaration of array, [...], with standard array(...) for compatability with PHP 5.3
 
 2018-06-02 (65)
- -  mod/taskchain use standard window.open to open popups instead of Moodle's erstwhile openpopup() 
+ - use standard window.open to open popups instead of Moodle's erstwhile openpopup()
 
 2018-06-02 (64)
- -  mod/taskchain add missing global $CFG in hp/6/renderer.php 
+ - add missing global $CFG in hp/6/renderer.php
 
 2018-05-30 (63)
- -  mod/taskchain add output format descriptor strings for Rottmeier DropDown and JGloss 
+ - add output format descriptor strings for Rottmeier DropDown and JGloss
 
 2018-05-30 (62)
- -  mod/taskchain replace each() with key(), continue() and next() for compatability with PHP 7.2 
+ - replace each() with key(), continue() and next() for compatability with PHP 7.2
 
 2018-05-29 (61)
- -  mod/taskchain replace 'each()' with 'foreach()' for compatability with PHP 7.2 
+ - replace 'each()' with 'foreach()' for compatability with PHP 7.2
 
 2018-05-25 (60)
- -  mod/taskchain add to <open-text> tags to JCloze XML to account for new behavior of XML parser in Moodle >= 3.5 
+ - add to <open-text> tags to JCloze XML to account for new behavior of XML parser in Moodle >= 3.5
 
 2018-04-21 (59)
- -  mod/taskchain add to <open-text> tags to JCloze XML to account for new behavior of XML parser in Moodle >= 3.5 
-
-2018-04-21 (59)
- -  mod/taskchain fix activity-navigation bar (Moodle >= 3.4) being covered by position:absolute and floating elements 
-
-2018-04-21 (58)
- -  mod/taskchain fix activity-navigation bar (Moodle >= 3.4) being covered by position:absolute and floating elements 
+ - fix activity-navigation bar (Moodle >= 3.4) being covered by position:absolute and floating elements
 
 2018-04-20 (57)
- -  mod/taskchain in responses report, replace deprecated tick/cross icons in Moodle >= 2.5 
+ - in responses report, replace deprecated tick/cross icons in Moodle >= 2.5
 
 2018-03-15 (56)
- -  mod/taskchain remove duplicate line to include locallib.php 
+ - remove duplicate line to include locallib.php
 
 2018-03-15 (55)
- -  mod/taskchain fix error when deleting TaskChain activities with cron in Moodle 3.4 'Trying to access property of empty object' 
+ - fix error when deleting TaskChain activities with cron in Moodle 3.4 'Trying to access property of empty object'
 
 2018-02-27 (54)
- -  mod/taskchain update coursleinks.js.php to use new get_last_section_number() method Moodle >= 3.3 
+ - update coursleinks.js.php to use new get_last_section_number() method Moodle >= 3.3
 
 2017-10-04 (53)
- -  mod/taskchain update coursleinks.js.php to use new get_last_section_number() method Moodle >= 3.3 
-
-2017-10-04 (53)
- -  Added support for block_myoverview in Moodle 3.3+ 
+ - Added support for block_myoverview in Moodle 3.3+
 
 2017-10-04 (52)
- -  fix save button on TaskChain settings page; replace use of (de)select_all_in JS in Moodle >= 3.3 
+ - fix save button on TaskChain settings page; replace use of (de)select_all_in JS in Moodle >= 3.3
 
 2017-09-14 (51)
- -  replace JS (de)seleect_all_in with Jquery equivalent in Moodle >= 3.3 
+ - replace JS (de)seleect_all_in with Jquery equivalent in Moodle >= 3.3
 
 2017-09-14 (51)
- -  fix positioning of JMatch items and box sizing on templatable themes in Moodle >= 3.3 
+ - fix positioning of JMatch items and box sizing on templatable themes in Moodle >= 3.3
 
 2017-08-29 (50)
- -  rename data_postprocessing() method to form_postprocessing in order not to classh with standard method names in Moodle >= 3.3 
+ - rename data_postprocessing() method to form_postprocessing in order not to classh with standard method names in Moodle >= 3.3
 
 2017-06-29 (49)
- -  add fix for 'title' field whenrestoring pre-2017-06-29 (49) TaskChain to pos-2017-06-29 (49) version of the plugin 
+ - add fix for 'title' field whenrestoring pre-2017-06-29 (49) TaskChain to pos-2017-06-29 (49) version of the plugin
 
 2017-06-29 (48)
- -  add records.js to github repository 
+ - add records.js to github repository
 
 2017-06-27 (47)
- -  'XXX' code that was remove leftover from testing 
+ - 'XXX' code that was remove leftover from testing
 
 2017-04-27 (46)
- -  replace use of pix_url for compatability with Moodle >= 3.3 
+ - replace use of pix_url for compatability with Moodle >= 3.3
 
 2017-04-27 (46)
- -  add compatability with new mform method: data_postprocessing (Moodle >= 3.3) 
+ - add compatability with new mform method: data_postprocessing (Moodle >= 3.3)
 
 2017-04-14 (45)
- -  replace use of undefined method theme->pix_icon with theme->pix_url 
+ - replace use of undefined method theme->pix_icon with theme->pix_url
 
 2017-04-13 (44)
- -  use pix_icon instead of pix_url for compatability with Moodle 3.3 
+ - use pix_icon instead of pix_url for compatability with Moodle 3.3
 
 2017-04-01 (43)
- -  Fix 'Unexpected character in input' warning in PHP 7.1 
+ - Fix 'Unexpected character in input' warning in PHP 7.1
 
 2017-03-31 (42)
- -  in Moodle >= 3.1, remove '[' and ']' ids when search for form elements 
+ - in Moodle >= 3.1, remove '[' and ']' ids when search for form elements
 
 2017-03-30 (41)
- -  add 'titletext' column to 'Edit tasks' page 
+ - add 'titletext' column to 'Edit tasks' page
 
 2017-03-30 (40)
- -  if required, display task titles on task menu from source file 
+ - if required, display task titles on task menu from source file
 
 2017-03-22 (39)
- -  fix 'Unsupported $module syntax' warning during installation via CLI 
+ - fix 'Unsupported $module syntax' warning during installation via CLI
 
 2017-03-17 (38)
- -  preliminary code to get task title from source file when displaying task menu 
+ - preliminary code to get task title from source file when displaying task menu
 
 2017-02-15 (37)
- -  convert relative URLs in add HTML5 <track> tags 
+ - convert relative URLs in add HTML5 <track> tags
 
 2016-11-09 (36)
- -  fix setting of baseurl in table, required for filters and pagination links 
+ - fix setting of baseurl in table, required for filters and pagination links
 
 2016-10-25 (35)
- -  add 'credits' section to README file 
+ - add 'credits' section to README file
 
 2016-10-24 (34)
- -  add 'credits' section to README file 
-
-2016-10-24 (34)
- -  fix functionality of add/edit/dete column lists for tasks and chains 
+ - fix functionality of add/edit/dete column lists for tasks and chains
 
 2016-10-23 (33)
- -  add new edit/form/helper method to allow add action buttons 
+ - add new edit/form/helper method to allow add action buttons
 
 2016-10-22 (32)
- -  improve layout of columnlists form 
+ - improve layout of columnlists form
 
 2016-10-17 (31)
- -  small improvement to CSS that positions checkboxes on edit form for column lists 
+ - small improvement to CSS that positions checkboxes on edit form for column lists
 
 2016-10-17 (31)
- -  fix display of task menu when starting 2nd or subsequent chain attempt; make chainattempt the default report mode; allow admins to skip checks on entry activity grade 
+ - fix display of task menu when starting 2nd or subsequent chain attempt; make chainattempt the default report mode; allow admins to skip checks on entry activity grade
 
 2016-10-12 (30)
- -  finish implementation of new 'manualcompletion' field which allows students to manually finish and close a chain with no post-conditions 
+ - finish implementation of new 'manualcompletion' field which allows students to manually finish and close a chain with no post-conditions
 
 2016-10-12 (29)
- -  preliminary implementaion of new functionality to allow students to manually declare a chain attempt finished 
+ - preliminary implementaion of new functionality to allow students to manually declare a chain attempt finished
 
 2016-10-11 (28)
- -  fix missing string when deleting multiple conditions 
+ - fix missing string when deleting multiple conditions
 
 2016-10-06 (27)
- -  fix enabling and disabling of filter on Moodle 3.x 
+ - fix enabling and disabling of filter on Moodle 3.x
 
 2016-09-15 (26)
- -  handle self-modified HP html files that have no Begin|EndSubmissionsForm markers 
+ - handle self-modified HP html files that have no Begin|EndSubmissionsForm markers
 
 2016-07-24 (25)
- -  mod/taskchain fix JCross and JMemori (JMatch) button captions with apostrophe 
+ - fix JCross and JMemori (JMatch) button captions with apostrophe
 
 2016-07-16 (24)
- -  mod/taskchain Moodle coding standards compatability: remove all usage of 'print' and 'create_function' in PHP code 
+ - Moodle coding standards compatability: remove all usage of 'print' and 'create_function' in PHP code
 
 2016-07-13 (23)
- -  mod/taskchain tidy up code to show/hide actions on page to Edit tasks/chains 
+ - tidy up code to show/hide actions on page to Edit tasks/chains
 
 2016-07-11 (22)
- -  mod/taskchain fix addition of borders to actions on Edit tasks page 
+ - fix addition of borders to actions on Edit tasks page
 
 2016-07-10 (21)
- -  mod/taskchain allow timielimit to use or override setting in template/source file 
+ - allow timielimit to use or override setting in template/source file
 
 2016-07-03 (20)
- -  mod/taskchain use YUI file to add js to edit page for multiple records 
+ - use YUI file to add js to edit page for multiple records
 
 2016-07-03 (20)
- -  mod/taskchain small improvement to JS the show/hide actions on page to Edit multiple tasks/chains 
+ - small improvement to JS the show/hide actions on page to Edit multiple tasks/chains
 
 2016-07-03 (20)
- -  mod/taskchain fix setting of timlimt on settings page for individual task or taskchain 
+ - fix setting of timlimt on settings page for individual task or taskchain
 
 2016-06-15 (19)
- -  fix setting of current group id during and between Moodle sessions 
+ - fix setting of current group id during and between Moodle sessions
 
 2016-06-13 (18)
- -  mod/taskchain allow grade book pass grade eto be set on TaskChain settings page 
+ - allow grade book pass grade eto be set on TaskChain settings page
 
 2016-06-10 (17)
- -  remove residue testing code which prevente chains being imported in Moodle <= 3.0 
+ - remove residue testing code which prevente chains being imported in Moodle <= 3.0
 
 2016-06-09 (16)
- -  use $CFG->branch to detect Moodle's major version in version.php 
+ - use $CFG->branch to detect Moodle's major version in version.php
 
 2016-06-08 (15)
- -  small improvements to the handling of Xerte HTML5 activities, but the display of these activities is still not fully functionaly 
+ - small improvements to the handling of Xerte HTML5 activities, but the display of these activities is still not fully functionaly
 
 2016-06-01 (14)
- -  fix display of recent Xerte (SWF) quizzes 
+ - fix display of recent Xerte (SWF) quizzes
 
 2016-05-14 (13)
- -  mod/taskchain allow detection of BOMs in Moodle system (=core) scripts 
+ - allow detection of BOMs in Moodle system (=core) scripts
 
 2016-05-11 (12)
- -  mod/taskchain allow detection of BOMs in Moodle system (=core) scripts 
-
-2016-05-11 (12)
- -  mod/taskchain fix detection of completion conditions for 'Student must receive grade' 
+ - fix detection of completion conditions for 'Student must receive grade'
 
 2016-04-25 (11)
- -  fix access to folders in 'filesystem' repository in Moodle >= 3.1 
-
-2016-04-25 (10)
- -  fix access to folders in 'filesystem' repository in Moodle >= 3.1 
+ - fix access to folders in 'filesystem' repository in Moodle >= 3.1
 
 2016-04-21 (09)
- -  fix constructor function for 'heading' form field on Moodle <= 2.9 
+ - fix constructor function for 'heading' form field on Moodle <= 2.9
 
 2016-04-20 (08)
- -  fix constructor function for 'heading' form field on Moodle <= 2.9 
-
-2016-04-20 (08)
- -  fix updaing of completion status when using COMPLETION_TRACKING_MANUAL 
+ - fix updaing of completion status when using COMPLETION_TRACKING_MANUAL
 
 2016-03-16 (07)
- -  mod/taskchain standardize name of constructor methods to __construct 
+ - standardize name of constructor methods to __construct
 
 2016-02-06 (06)
- -  mod/taskchain limit width of grade containers on course page to 95% of parent width 
+ - limit width of grade containers on course page to 95% of parent width
 
 2016-01-12 (05)
- -  CONTRIB-6084 mod/taskchain decode HTML entities to UTF8 before encoding as JS unicode 
+ - CONTRIB-6084 decode HTML entities to UTF8 before encoding as JS unicode
 
 2015-12-30 (04)
- -  mod/taskchain fix small incompatabilities with Moodle 3.0 
+ - fix small incompatabilities with Moodle 3.0
 
 2015-12-10 (03)
- -  mod/taskchain fix overlapping of activity grades and completion checkboxes on the course page 
+ - fix overlapping of activity grades and completion checkboxes on the course page
 
 2015-12-09 (02)
- -  mod/taskchain allow specification of ALL mods in courselinks.js.php 
+ - allow specification of ALL mods in courselinks.js.php
 
 2015-11-05 (01)
- -  mod/taskchain allow specification of ALL mods in courselinks.js.php 
-
-2015-11-05 (01)
- -  mod/taskchain fix bug that prevented JMatch FlashCard from finishing 
+ - fix bug that prevented JMatch FlashCard from finishing
 
 2015-11-03 (00)
- -  mod/taskchain fix activity completion when status becomes completed 
+ - fix activity completion when status becomes completed
 
 2015-11-01 (99)
- -  mod/taskchain improve detection and reporting of faulty HTML tags in JQuiz questions 
-
-2015-11-01 (99)
- -  mod/taskchain improve detection and reporting of faulty HTML tags in JQuiz questions 
+ - improve detection and reporting of faulty HTML tags in JQuiz questions
 
 2015-10-29 (98)
- -  mod/taskchain standardize white spce in JS template files for JCloze and JQuiz 
+ - standardize white spce in JS template files for JCloze and JQuiz
 
 2015-10-28 (97)
- -  mod/taskchain remove troublesome ascii control chars from HP XML files, and handle floating elements when setting canvas height in browser 
-
-2015-10-27 (97)
- -  mod/taskchain remove troublesome ascii control chars from HP XML files, and handle floating elements when setting canvas height in browser 
-
-2015-10-27 (97)
- -  mod/taskchain remove troublesome ascii control chars from HP XML files, and handle floating elements when setting canvas height in browser 
-
-2015-10-27 (97)
- -  mod/taskchain remove troublesome ascii control chars from HP XML files, and handle floating elements when setting canvas height in browser 
+ - remove troublesome ascii control chars from HP XML files, and handle floating elements when setting canvas height in browser
 
 2015-10-26 (96)
- -  mod/taskchain fix disabling of completion criteria for passing grade in main TaskChain settings form 
+ - fix disabling of completion criteria for passing grade in main TaskChain settings form
 
 2015-10-07 (95)
- -  mod/taskchain standardize format of release string in version.php 
-
-2015-10-01 (94)
- -  mod/taskchain standardize format of release string in version.php 
+ - standardize format of release string in version.php
 
 2015.10.01 (94)
- -  mod/taskchain disable FEATURE_CONTROLS_GRADE_VISIBILITY as it was not being used 
+ - disable FEATURE_CONTROLS_GRADE_VISIBILITY as it was not being used
 
 2015.10.01 (93)
- -  mod/taskchain disable advanced grading as it was not being used 
+ - disable advanced grading as it was not being used
 
 2015.09.27 (92)
- -  mod/taskchain added missing strings for JCloze Find-It (a) 
+ - added missing strings for JCloze Find-It (a)
 
 2015.09.20 (91)
- -  mod/taskchain improve efficiency of fetching group/grouping user ids and counts 
+ - improve efficiency of fetching group/grouping user ids and counts
 
 2015.09.14 (90)
- -  mod/taskchain fix broken media players in RHS of JMatch caused by obfuscation of JS making URLs undetectable 
+ - fix broken media players in RHS of JMatch caused by obfuscation of JS making URLs undetectable
 
 2015.09.13 (89)
- -  mod/taskchain fix adding of new task to begining or middle of chain 
+ - fix adding of new task to begining or middle of chain
 
 2015.09.11 (88)
- -  mod/taskchain improve logic to select mainfile accounting for archive files (zip, tgz) 
-
-2015.09.11 (87)
- -  mod/taskchain improve logic to select mainfile accounting for archive files (zip, tgz) 
+ - improve logic to select mainfile accounting for archive files (zip, tgz)
 
 2015.09.11 (86)
- -  mod/taskchain when adding a new TaskChain, zip/tgz files will be unpacked and searched for task files 
+ - when adding a new TaskChain, zip/tgz files will be unpacked and searched for task files
 
 2015.09.07 (85)
- -  mod/taskchain fix display of specific previous/next activities on Entry/Exit page columns on page to Edit Chains 
+ - fix display of specific previous/next activities on Entry/Exit page columns on page to Edit Chains
 
 2015.09.06 (84)
- -  mod/taskchain fix syntax error in file/hp/class.php 
-
-2015.09.03 (83)
- -  mod/taskchain fix syntax error in file/hp/class.php 
+ - fix syntax error in file/hp/class.php
 
 2015.09.03 (82)
- -  mod/taskchain fix URLs in JCloze clues 
+ - fix URLs in JCloze clues
 
 2015.08.11 (81)
- -  mod/taskchain rename completionpassed field to completionpass, as in Quiz module 
+ - rename completionpassed field to completionpass, as in Quiz module
 
 2015.07.27 (80)
- -  mod/taskchain fix infinite loop generating course page when a TaskChain activity has 'showdescription' enabled 
+ - fix infinite loop generating course page when a TaskChain activity has 'showdescription' enabled
 
 2015.07.09 (79)
- -  mod/taskchain CONTRIB-5819 improve wording of delay3: Use specific delay 
+ - CONTRIB-5819 improve wording of delay3: Use specific delay
 
 2015.06.02 (78)
- -  mod/taskchain do not use undefined property, 'lastchainattempttime', when checking for required delay1/2 
+ - do not use undefined property, 'lastchainattempttime', when checking for required delay1/2
 
 2015.06.02 (78)
- -  mod/taskchain do not use undefined property, 'lastchainattempttime', when checking for required delay1/2 
-
-2015.06.02 (78)
- -  mod/taskchain fix setting of inpopup switch when viewing pages in link from non-popup page 
-
-2015.06.01 (77)
- -  mod/taskchain fix setting of inpopup switch when viewing pages in link from non-popup page 
+ - fix setting of inpopup switch when viewing pages in link from non-popup page
 
 2015.05.14 (76)
- -  mod/taskchain improve Moodle version detection using compare_version 
+ - improve Moodle version detection using compare_version
 
 2015.05.13 (75)
- -  mod/taskchain allow detection of Moodle version from $CFG->yui3version, if $CFG->release is not available, for example when installing from the CLI using PHPunit 
+ - allow detection of Moodle version from $CFG->yui3version, if $CFG->release is not available, for example when installing from the CLI using PHPunit
 
 2015.04.12 (74)
- -  mod/taskchain remove old code that was blocking the display of grades on the course page 
+ - remove old code that was blocking the display of grades on the course page
 
 2015.04.12 (74)
- -  mod/taskchain fix display of grades for specific groups 
+ - fix display of grades for specific groups
 
 2015.04.12 (74)
- -  mod/taskchain remove duplicated "defined" statement in settings.php 
+ - remove duplicated "defined" statement in settings.php
 
 2015.04.12 (74)
- -  mod/hotpot compatability with Moodle 2.9: use core_date::get_user_timezone() instead of get_user_timezone_offset() 
+ - mod/hotpot compatability with Moodle 2.9: use core_date::get_user_timezone() instead of get_user_timezone_offset()
 
 2015.03.26 (73)
- -  mod/taskchain add version.php for subplugins of TaskChain 
+ - add version.php for subplugins of TaskChain
 
 2015.03.26 (73)
- -  mod/taskchain fix display of grades on course page; always allow teachers and admins to access TaskChains even if previous activity condition is not met; fix display of activity names on Edit Chains page 
+ - fix display of grades on course page; always allow teachers and admins to access TaskChains even if previous activity condition is not met; fix display of activity names on Edit Chains page
 
 2015.03.10 (71)
- -  mod/taskchain fix deletion of TaskChain chain/task attempts during course reset 
-
-2015.03.10 (71)
- -  mod/taskchain fix deletion of TaskChain chain/task attempts during course reset 
+ - fix deletion of TaskChain chain/task attempts during course reset
 
 2015.03.07 (70)
- -  mod/taskchain add missing method define_restore_log_rules() required for restore on Moodle >= 2.x 
+ - add missing method define_restore_log_rules() required for restore on Moodle >= 2.x
 
 2015.02.18 (69)
- -  mod/taskchain small code optimizationwhen converting tap/click events 
+ - small code optimizationwhen converting tap/click events
 
 2015.02.11 (68)
- -  mod/taskchain standardize white space (tab -> 4 spaces) in *.js file 
+ - standardize white space (tab -> 4 spaces) in *.js file
 
 2015.02.11 (68)
- -  mod/taskchain handle devices that detect both mouse events and tap events 
-
-2015.02.11 (67)
- -  mod/taskchain handle devices that detect both mouse events and tap events 
+ - handle devices that detect both mouse events and tap events
 
 2015.01.20 (66)
- -  mod/taskchain fix faulty conversation of decimal HTML entities with leading zero in Moodle <= 2.5 
+ - fix faulty conversation of decimal HTML entities with leading zero in Moodle <= 2.5
 
 2015.01.14 (65)
- -  mod/taskchain fix upgrade error 'Class not found on line 423 in upgrade.php' 
+ - fix upgrade error 'Class not found on line 423 in upgrade.php'
 
 2015.01.12 (64)
- -  mod/taskchain small improvements to code readabaility (white space and comments) 
-
-2015.01.12 (64)
- -  mod/taskchain_navigation add new custom completion criteria based on grade and status 
-
-2015.01.11 (63)
- -  mod/taskchain_navigation add new custom completion criteria based on grade and status 
-
-2015.01.11 (63)
- -  mod/taskchain_navigation add new custom completion criteria based on grade and status 
+ - small improvements to code readabaility (white space and comments)
+ - add new custom completion criteria based on grade and status
 
 2015.01.07 (62)
- -  mod/taskchain fix deletion of attempts by site admins 
+ - fix deletion of attempts by site admins
 
 2015.01.06 (61)
- -  mod/taskchain limit display of TaskChains on MyMoodle page to activities that are open and are not closed, i.e. the open date is in the past and the closing deadline has not yet passed 
+ - limit display of TaskChains on MyMoodle page to activities that are open and are not closed, i.e. the open date is in the past and the closing deadline has not yet passed
 
 2015.01.04 (60)
- -  mod/taskchain fix deletion of attempts using checkboxes on reports 
+ - fix deletion of attempts using checkboxes on reports
 
 2014.12.28 (59)
- -  mod/taskchain fix review page for JMatch with commas in draggable items 
+ - fix review page for JMatch with commas in draggable items
 
 2014.12.22 (58)
- -  mod/taskchain add TaskChain activities to MyMoodle page 
-
-2014.12.22 (58)
- -  mod/taskchain add TaskChain activities to MyMoodle page 
-
-2014.12.22 (58)
- -  mod/taskchain add TaskChain activities to MyMoodle page 
+ - add TaskChain activities to MyMoodle page
 
 2014.12.19 (57)
- -  mod/taskchain fix display of event description and explanation in Site admin -> Reports -> Logs and Events list 
+ - fix display of event description and explanation in Site admin -> Reports -> Logs and Events list
 
 2014.12.17 (56)
- -  mod/taskchain fix error adding and updating logs for TaskChain 'view all' event 
+ - fix error adding and updating logs for TaskChain 'view all' event
 
 2014.12.12 (55)
- -  mod/taskchain always report view event in log, even when there is no entry page 
+ - always report view event in log, even when there is no entry page
 
 2014.12.11 (54)
- -  mod/taskchain disable legacy log during log migration upgrade 
+ - disable legacy log during log migration upgrade
 
 2014.12.11 (53)
- -  mod/taskchain fix incorrect TaskChain actions in log table and optimize classes/event/*.php by using a base class 
+ - fix incorrect TaskChain actions in log table and optimize classes/event/*.php by using a base class
 
 2014.12.05 (52)
- -  mod/taskchain add record snapshots to logging in Moodle >= 2.6 
-
-2014.12.05 (52)
- -  mod/taskchain add record snapshots to logging in Moodle >= 2.6 
+ - add record snapshots to logging in Moodle >= 2.6
 
 2014.12.01 (51)
- -  mod/taskchain remove calls to init() in classes/event/*.php files 
+ - remove calls to init() in classes/event/*.php files
 
 2014.11.28 (50)
- -  mod/taskchain hide update progress bar when updating via CLI 
+ - hide update progress bar when updating via CLI
 
 2014.11.28 (50)
- -  mod/taskchain enable new 'standard' logging on TaskChain module 
+ - enable new 'standard' logging on TaskChain module
 
 2014.11.28 (49)
- -  mod/taskchain fix add_to_log wrapper function and add event strings to lang pack 
+ - fix add_to_log wrapper function and add event strings to lang pack
 
 2014.11.27 (48)
- -  mod/taskchain fix add_to_log wrapper function and add event strings to lang pack 
-
-2014.11.27 (48)
- -  mod/taskchain add event classes for Moodle Event API 2.0 
-
-2014.11.27 (48)
- -  mod/taskchain add event classes for Moodle Event API 2.0 
+ - add event classes for Moodle Event API 2.0
 
 2014.11.27 (47)
- -  mod/taskchain improve 'lazy' detection and transfer of files from Private Files to sourcefile file-area 
+ - improve 'lazy' detection and transfer of files from Private Files to sourcefile file-area
 
 2014.11.26 (46)
- -  mod/taskchain fix placement of suffix in JMix deluxe output format 
-
-2014.11.26 (46)
- -  mod/taskchain fix placement of suffix in JMix deluxe output format 
+ - fix placement of suffix in JMix deluxe output format
 
 2014.11.26 (45)
- -  mod/taskchain fix placement of suffix in JMix deluxe output format 
-
-2014.11.26 (45)
- -  mod/taskchain fix fetching of secondary files (images etc) from Private Files 
+ - fix fetching of secondary files (images etc) from Private Files
 
 2014.11.26 (44)
- -  mod/taskchain fix detection of source files in Private Files area 
+ - fix detection of source files in Private Files area
 
 2014.11.26 (43)
- -  mod/taskchain detect and add task config file when adding/updating tasks 
+ - detect and add task config file when adding/updating tasks
 
 2014.11.24 (42)
- -  mod/taskchain fix position of feedback in JGloss 
-
-2014.11.24 (42)
- -  mod/taskchain fix position of feedback in JGloss 
+ - fix position of feedback in JGloss
 
 2014.11.21 (41)
- -  mod/taskchain fix position of prefix and suffix in JMix deluxe output format 
-
-2014.21.11 (41)
- -  mod/taskchain fix position of prefix and suffix in JMix deluxe output format 
+ - fix position of prefix and suffix in JMix deluxe output format
 
 2014.11.11 (40)
- -  mod/taskchain fix VIEW completion on TaskChain module 
+ - fix VIEW completion on TaskChain module
 
 2014.10.18 (39)
- -  mod/taskchain fix 'convert object to string' error in lib.php 
+ - fix 'convert object to string' error in lib.php
 
 2014.10.18 (39)
- -  mod/taskchain fix warnings regarding undefined class 'mod_taskchain' in lib.php, and unknown method 'get_file' in edit/task.php 
+ - fix warnings regarding undefined class 'mod_taskchain' in lib.php, and unknown method 'get_file' in edit/task.php
 
 2014.10.18 (39)
- -  mod/taskchain fix edit of single items on edit tasks/chains pages 
+ - fix edit of single items on edit tasks/chains pages
 
 2014.09.30 (38)
- -  mod/taskchain half-finished attempt to implement ajax updating of singlefields on edit tasks page 
+ - half-finished attempt to implement ajax updating of singlefields on edit tasks page
 
 2014.09.30 (38)
- -  mod/taskchain do not include renamed main file when adding new TaskChain and searching folder for task files 
+ - do not include renamed main file when adding new TaskChain and searching folder for task files
 
 2014.09.30 (38)
- -  mod/taskchain fix window width whe  adding/updating task conditions 
+ - fix window width whe  adding/updating task conditions
 
 2014.09.30 (38)
- -  mod/taskchain add header to all reports 
+ - add header to all reports
 
 2014.09.29 (37)
- -  mod/taskchain fix unknown pageid error when duplicating a TaskChain error activity on the course page 
+ - fix unknown pageid error when duplicating a TaskChain error activity on the course page
 
 2014.09.19 (36)
- -  mod/taskchain fix 'version value is missing from version.php 
+ - fix 'version value is missing from version.php
 
 2014.09.19 (35)
- -  mod/hotpot fix 'Undefined variable  version.php' 
+ - mod/hotpot fix 'Undefined variable  version.php'
 
 2014.09.19 (35)
- -  mod/taskchain fix 'undefined ->version' in Moodle 2.4 - 2.5 
+ - fix 'undefined ->version' in Moodle 2.4 - 2.5
 
 2014.09.16 (34)
- -  mod/taskchain fix user-switching in TaskChain reports 
+ - fix user-switching in TaskChain reports
 
 2014.09.14 (33)
- -  mod/taskchain fix handling of unicode characters in main text of Rhubarb exercises 
+ - fix handling of unicode characters in main text of Rhubarb exercises
 
 2014.08.31 (32)
- -  mod/taskchain fix editing of entrytext and exittext 
+ - fix editing of entrytext and exittext
 
 2014.08.09 (31)
- -  mod/taskchain fix errors caused by invalid parent$this syntax (Rhubarb and JMix keypress) 
+ - fix errors caused by invalid parent$this syntax (Rhubarb and JMix keypress)
 
 2014.07.22 (30)
- -  mod/tasckchain fix display of DropArea span in JQuiz Autoadvance JMix questions 
+ - mod/tasckchain fix display of DropArea span in JQuiz Autoadvance JMix questions
 
 2014.07.04 (29)
- -  mod/tasckchain small improvement to code layout in event.js 
+ - mod/tasckchain small improvement to code layout in event.js
 
 2014.07.04 (29)
- -  mod/taskchain fix all calls to get_string() to use 'mod_taskchain' 
+ - fix all calls to get_string() to use 'mod_taskchain'
 
 2014.07.02 (28)
- -  mod/taskchain fix urls for Windows Media Player using 'url' in PARAM tag 
-
-2014.07.02 (27)
- -  mod/taskchain fix urls for Windows Media Player using 'url' in PARAM tag 
+ - fix urls for Windows Media Player using 'url' in PARAM tag
 
 2014.07.01 (26)
- -  mod/taskchain add new output format JMatch Sort (html) 
-
-2014.06.30 (24)
- -  mod/taskchain add new output format JMatch Sort (html) 
-
-2014.06.30 (24)
- -  mod/taskchain add new output format JMatch Sort (html) 
-
-2014.06.30 (24)
- -  mod/taskchain add new output format JMatch Sort (html) 
+ - add new output format JMatch Sort (html)
 
 2014.06.28 (23)
- -  mod/taskchain add new JMatch Sort (html) output format 
+ - add new JMatch Sort (html) output format
 
 2014.06.28 (23)
- -  mod/taskchain add new JMatch Sort (html) output format 
-
-2014.06.28 (23)
- -  mod/taskchain fix urls on HP next/prev navigation buttons 
+ - fix urls on HP next/prev navigation buttons
 
 2014.06.26 (22)
- -  mod/taskchain fix sorting of sub/superscript chars in keypad 
+ - fix sorting of sub/superscript chars in keypad
 
 2014.06.25 (21)
- -  mod/taskchain improve code layout in new JQuiz Intro renderer 
+ - improve code layout in new JQuiz Intro renderer
 
 2014.06.25 (21)
- -  mod/taskchainadd new JQuiz Intro output format 
-
-2014.06.25 (21)
- -  mod/taskchainadd new JQuiz Intro output format 
+ - mod/taskchainadd new JQuiz Intro output format
 
 2014.06.25 (20)
- -  mod/taskchain re-introduce 'iconlink' parameter for square-brakcets notation 
+ - re-introduce 'iconlink' parameter for square-brakcets notation
 
 2014.06.24 (19)
- -  mod/taskchain fix loading of audio players in files which shuffle and remove document elements 
+ - fix loading of audio players in files which shuffle and remove document elements
 
 2014.06.23 (18)
- -  mod/taskchain add missing output format: JMatch allow duplicates 
-
-2014.06.23 (18)
- -  mod/taskchain add missing output format: JMatch allow duplicates 
+ - add missing output format: JMatch allow duplicates
 
 2014.06.18 (17)
- -  mod/taskchain add event.js 
+ - add event.js
 
 2014.06.18 (17)
- -  mod/taskchain intermittant commit to fix audio players in JMatch/Jmix 
+ - intermittant commit to fix audio players in JMatch/Jmix
 
 2014.06.18 (17)
- -  mod/taskchain fix JMatch/JMix drag and drop in Firefox 
+ - fix JMatch/JMix drag and drop in Firefox
 
 2014.06.18 (17)
- -  mod/taskchain force loading of flowplayer before inserting audio media players 
+ - force loading of flowplayer before inserting audio media players
 
 2014.06.16 (16)
- -  mod/taskchain fix JMix v6+ with audio player 
+ - fix JMix v6+ with audio player
 
 2014.06.16 (15)
- -  mod/taskchain fix audio players on JMatch drag-and-drop 
+ - fix audio players on JMatch drag-and-drop
 
 2014.06.13 (14)
- -  mod/taskchain fix JMatch and JMix drag-and-drop on touch screens 
-
-2014.06.13 (14)
- -  mod/taskchain fix JMatch and JMix drag-and-drop on touch screens 
-
-2014.06.13 (14)
- -  mod/taskchain fix JMatch and JMix drag-and-drop on touch screens 
+ - fix JMatch and JMix drag-and-drop on touch screens
 
 2014.06.10 (13)
- -  mod/taskchain enable JMix v6+ on touch screen devices 
-
-2014.06.10 (13)
- -  mod/taskchain enable JMix v6+ on touch screen devices 
+ - enable JMix v6+ on touch screen devices
 
 2014.06.06 (12)
- -  CONTRIB-5100 mod/taskchain fix JMix restart button to move all tiles/segment back to their original positions 
+ - CONTRIB-5100 fix JMix restart button to move all tiles/segment back to their original positions
 
 2014.06.05 (11)
- -  mod/taskchain use em instead of px for styles on edit-tasks page 
+ - use em instead of px for styles on edit-tasks page
 
 2014.05.25 (10)
- -  mod/taskchain fix preparation of delay3 field on task settings form 
+ - fix preparation of delay3 field on task settings form
 
 2014.05.24 (09)
- -  mod/taskchain add _get_completion_state function required for course/activity completion 
-
-2014.05.24 (08)
- -  mod/taskchain add _get_completion_state function required for course/activity completion 
-
-2014.05.24 (08)
- -  mod/taskchain add _get_completion_state function required for course/activity completion 
-
-2014.05.24 (08)
- -  mod/taskchain add _get_completion_state function required for course/activity completion 
+ - add _get_completion_state function required for course/activity completion
 
 2014.05.22 (07)
- -  mod/taschain remove use of non-exitant table 'taskchain_attempt' 
+ - mod/taschain remove use of non-exitant table 'taskchain_attempt'
 
 2014.05.16 (06)
- -  mod/taskchain convert 'quizport' to 'taskchain' and 'attforblock' to 'attendance' in course section summaries using courselinks.js.php 
+ - convert 'quizport' to 'taskchain' and 'attforblock' to 'attendance' in course section summaries using courselinks.js.php
 
 2014.05.01 (05)
- -  mod/taskchain fix MySQL collations utility to convert from utf8_unicode.ci to utf8_general.ci 
+ - fix MySQL collations utility to convert from utf8_unicode.ci to utf8_general.ci
 
 2014.05.01 (05)
- -  mod/taskchain position course grades on the right of the course page 
+ - position course grades on the right of the course page
 
 2014.05.01 (05)
- -  mod/taskchain fix display of taskgrades on course page 
+ - fix display of taskgrades on course page
 
 2014.05.01 (05)
- -  mod/taskchain fix errors from menu_select statements in courselinks script 
+ - fix errors from menu_select statements in courselinks script
 
 2014.05.01 (05)
- -  mod/taskchain convert usemediafilter tag from quizport to taskchain when migrating from QuizPort to TaskChain 
+ - convert usemediafilter tag from quizport to taskchain when migrating from QuizPort to TaskChain
 
 2014.05.01 (04)
- -  mod/taskchain restore config file from moodle1 backup file 
+ - restore config file from moodle1 backup file
 
 2014.04.30 (03)
- -  mod/taskchain have taskchain handle the conversion of quizport to taskchain in the moodle.xml backup file 
+ - have taskchain handle the conversion of quizport to taskchain in the moodle.xml backup file
 
 2014.04.30 (03)
- -  mod/taskchain improve comments in moodle1 conversion script 
+ - improve comments in moodle1 conversion script
 
 2014.04.30 (03)
- -  mod/taskchain fix restore of task conditions in Moodle1 and Moodle2 
+ - fix restore of task conditions in Moodle1 and Moodle2
 
 2014.04.30 (02)
- -  mod/taskchain improve restore of Moodle1 (QuizPort) to Moodle2 (TaskChain) 
+ - improve restore of Moodle1 (QuizPort) to Moodle2 (TaskChain)
 
 2014.04.27 (01)
- -  mod/taskchain improve conversion of Moodle1 backup to Moodle2 backup 
+ - improve conversion of Moodle1 backup to Moodle2 backup
 
 2014.04.27 (01)
- -  mod/taskchain initial version of Moodle1 to Moodle2 conversion script 
+ - initial version of Moodle1 to Moodle2 conversion script
 
 2014.04.27 (01)
- -  mod/taskchain reword version.php to pass moodle.org repository validation checks 
-
-2014.04.26 (00)
- -  mod/taskchain reword version.php to pass moodle.org repository validation checks 
+ - reword version.php to pass moodle.org repository validation checks
 
 2014.04.21 (99)
- -  mod/taskchain fix glossary filtering on Moodle >= 2.3 
+ - fix glossary filtering on Moodle >= 2.3
 
 2014.03.18 (98)
- -  mod/taskchain fix detection of strings to be filtered 
+ - fix detection of strings to be filtered
 
 2014.03.17 (97)
- -  mod/taskchain use course object, instead of id only, when calling get_fast_modinfo 
+ - use course object, instead of id only, when calling get_fast_modinfo
 
 2014.03.17 (97)
- -  mod/taskchain remove unneccesary mapping of condition ids in taskchain restore script 
+ - remove unneccesary mapping of condition ids in taskchain restore script
 
 2014.03.17 (97)
- -  mod/taskchain improve saving of defaults on chain/task forms 
+ - improve saving of defaults on chain/task forms
 
 2014.03.16 (96)
- -  mod/taskchain remove superflous code from textlib method 
+ - remove superflous code from textlib method
 
 2014.03.16 (96)
- -  mod/taskchain fix white page error when updating conditions on Edit tasks page 
+ - fix white page error when updating conditions on Edit tasks page
 
 2014.03.16 (95)
- -  mod/taskchain initial implement restore for Moodle 2.x 
+ - initial implement restore for Moodle 2.x
 
 2014.03.13 (94)
- -  mod/taskchain first attempt at Moodle 2.x backup script 
+ - first attempt at Moodle 2.x backup script
 
 2014.03.11 (93)
- -  mod/taskchain remove record id numbers from css ids in default values row of edit tasks screen 
+ - remove record id numbers from css ids in default values row of edit tasks screen
 
 2014.03.08 (92)
- -  mod/taskchain fix setting of default conditions when apply default conditions on 'Edit tasks' page 
+ - fix setting of default conditions when apply default conditions on 'Edit tasks' page
 
 2014.03.06 (91)
- -  mod/taskchain fix linking to NEXT activity when a specific activity is specified 
+ - fix linking to NEXT activity when a specific activity is specified
 
 2014.03.02 (90)
- -  mod/taskchain further improvements to positioning of elements in JMatch intro output format 
+ - further improvements to positioning of elements in JMatch intro output format
 
 2014.03.02 (89)
- -  mod/taskchain fix updating of task source file when TaskChain cache is enabled 
+ - fix updating of task source file when TaskChain cache is enabled
 
 2014.03.02 (88)
- -  mod/taskchain remember entry/exit page settings in user preferences and use them when creating new TaskChain activities 
+ - remember entry/exit page settings in user preferences and use them when creating new TaskChain activities
 
 2014.03.01 (87)
- -  mod/taskchain improve styles on edit-tasks page 
+ - improve styles on edit-tasks page
 
 2014.02.28 (86)
- -  mod/taskchain only apply filters to text outside of html tags 
+ - only apply filters to text outside of html tags
 
 2014.02.27 (85)
- -  mod/taskchain fix display on JMatch intro 
+ - fix display on JMatch intro
 
 2014.02.27 (84)
- -  mod/taskchain fix outputformat for updated task files 
+ - fix outputformat for updated task files
 
 2014.02.26 (83)
- -  mod/taskchain fix adding new tasks to a chain 
+ - fix adding new tasks to a chain
 
 2014.02.10 (82)
- -  mod/taskchain remove style and script tags from quiz name in HTML files 
+ - remove style and script tags from quiz name in HTML files
 
 2014.02.10 (82)
- -  mod/taskchain remove style andscript tags when extracting name from HTML files 
+ - remove style andscript tags when extracting name from HTML files
 
 2014.01.26 (81)
- -  mod/taskchain fix continue button on tasks using HTML files 
-
-2014.01.26 (81)
- -  mod/taskchain fix continue button on tasks using HTML files 
+ - fix continue button on tasks using HTML files
 
 2014.01.23 (80)
- -  mod/taskchain fix extraction of title from html files 
+ - fix extraction of title from html files
 
 2014.01.22 (79)
- -  mod/taskchain make recent_activity function compatible with Moodle <= 2.3 
+ - make recent_activity function compatible with Moodle <= 2.3
 
 2014.01.22 (78)
- -  mod/taskchain use modinfo methods instead of direct access to properties in recent_activity reports 
+ - use modinfo methods instead of direct access to properties in recent_activity reports
 
 2014.01.22 (77)
- -  mod/taskchain enable use of config file to override source file for a task 
+ - enable use of config file to override source file for a task
 
 2014.01.22 (76)
- -  mod/taskchain fix setting of html file titles 
-
-2014.01.21 (75)
- -  mod/taskchain mod/taskchain fix setting of html file titles 
-
-2014.01.21 (75)
- -  mod/taskchain fix setting of html file titles 
-
-2014.01.21 (75)
- -  mod/taskchain fix setting of html file titles 
+ - fix setting of html file titles
 
 2014.01.17 (74)
- -  mod/taskchain fix updefined proerty task->source in html and xerte attempts 
+ - fix updefined proerty task->source in html and xerte attempts
 
 2014.01.17 (74)
- -  mod/taskchain fix error in upgrade script: undefined function taskchain_update_grades() 
-
-2014.01.17 (73)
- -  mod/taskchain fix error in upgrade script: undefined function taskchain_update_grades() 
-
-2014.01.17 (73)
- -  mod/taskchain fix error in upgrade script: undefined function taskchain_update_grades() 
+ - fix error in upgrade script: undefined function taskchain_update_grades()
 
 2014.01.16 (72)
- -  mod/taskchain force recalculation of TaskChain grades and make utilities compatible with Moodle 2.6+ 
+ - force recalculation of TaskChain grades and make utilities compatible with Moodle 2.6+
 
 2014.01.14 (71)
- -  mod/taskchain make import_hotpot_tables compatible with Moodle >= 2.6 
+ - make import_hotpot_tables compatible with Moodle >= 2.6
 
 2014.01.14 (71)
- -  mod/taskchain add setting for FEATURE_USES_QUESTIONS feature in lib.php 
+ - add setting for FEATURE_USES_QUESTIONS feature in lib.php
 
 2014.01.14 (71)
- -  mod/taskchain small fix to allow Xerte source files to specify either rlo or rlt files 
+ - small fix to allow Xerte source files to specify either rlo or rlt files
 
 2014.01.14 (70)
- -  mod/taskchain remove double slash from baseurl in Xerte output format 
+ - remove double slash from baseurl in Xerte output format
 
 2014.01.12 (69)
- -  mod/taskchain fix reading of sibling files required for Xerte files 
-
-2014.01.12 (68)
- -  mod/taskchain fix reading of sibling files required for Xerte files 
-
-2014.01.12 (68)
- -  mod/taskchain fix reading of sibling files required for Xerte files 
+ - fix reading of sibling files required for Xerte files
 
 2014.01.12 (67)
- -  mod/taskchain fix undefined property attempt->score when submitting task attempt 
+ - fix undefined property attempt->score when submitting task attempt
 
 2014.01.11 (66)
- -  mod/taskchain fix undefined property cm in jmemori output format 
+ - fix undefined property cm in jmemori output format
 
 2014.01.05 (65)
- -  mod/taskchain first attempt to improve deletion of attempts 
+ - first attempt to improve deletion of attempts
 
 2014.01.05 (65)
- -  mod/taskchain optimize detection and enabling of user editing mode 
+ - optimize detection and enabling of user editing mode
 
 2013.12.16 (64)
- -  mod/taskchain CONTRIB-4795 fix missing strings: nomorechainattempts and attemptsallowed 
+ - CONTRIB-4795 fix missing strings: nomorechainattempts and attemptsallowed
 
 2013.12.08 (63)
- -  mod/taskchain fix position of list items in conditions on edit tasks page in Moodle 2.0 
+ - fix position of list items in conditions on edit tasks page in Moodle 2.0
 
 2013.11.27 (62)
- -  mod/taskchain fix missing strings errors when adding new taskchain 
+ - fix missing strings errors when adding new taskchain
 
 2013.11.26 (61)
- -  mod/taskchain fix missing strings errors when adding new taskchain 
+ - ignore showdescription field in Moodle <= 2.1
 
 2013.11.26 (61)
- -  mod/taskchain ignore showdescription field in Moodle <= 2.1 
-
-2013.11.26 (61)
- -  mod/taskchain improve editing of individual fields on edit tasks/chains pages 
+ - improve editing of individual fields on edit tasks/chains pages
 
 2013.11.24 (60)
- -  mod/taskchain improve editing of individual fields on edit tasks/chains pages 
-
-2013.11.24 (60)
- -  mod/taskchain fix error in Moodle 2.0 - 2.2 which nas no file.set_sortorder method 
+ - fix error in Moodle 2.0 - 2.2 which nas no file.set_sortorder method
 
 2013.11.19 (59)
- -  mod/taskchain fix error in Moodle 2.0 - 2.2 which nas no file.set_sortorder method 
-
-2013.11.19 (59)
- -  mod/taskchain improve detection of code to handle finish of JMatch Sort 
-
-2013.11.19 (59)
- -  mod/taskchain improve detection of code to handle finish of JMatch Sort 
+ - improve detection of code to handle finish of JMatch Sort
 
 2013.11.19 (58)
- -  mod/taskchain always call setType for the 'addtype' form field 
+ - always call setType for the 'addtype' form field
 
 2013.11.19 (58)
- -  mod/taskchain add TC_request and TC_response to edit/form/helper.js.php 
+ - add TC_request and TC_response to edit/form/helper.js.php
 
 2013.11.19 (58)
- -  mod/taskchain add preliminary version of edit/form/helper.js.php 
+ - add preliminary version of edit/form/helper.js.php
 
 2013.11.19 (58)
- -  mod/taskchain add 'update', 'delete' and 'preview' icons to edit/chains page 
+ - add 'update', 'delete' and 'preview' icons to edit/chains page
 
 2013.11.17 (57)
- -  mod/taskchain add 'update', 'delete' and 'preview' icons to edit/chains page 
+ - fix error returning from adding multiple tasks to a chain
 
 2013.11.17 (57)
- -  mod/taskchain fix error returning from adding multiple tasks to a chain 
+ - remove tasks from add/move affter list, if they have been deleted
 
 2013.11.17 (57)
- -  mod/taskchain remove tasks from add/move affter list, if they have been deleted 
+ - fix link from recent activity report to report.php
 
 2013.11.17 (57)
- -  mod/taskchain fix link from recent activity report to report.php 
+ - remove tasks from add/move affter list, if they have been deleted
 
 2013.11.17 (57)
- -  mod/taskchain remove tasks from add/move affter list, if they have been deleted 
+ - remove records from RAM cache if they are deleted from attempt lists on screen
 
 2013.11.17 (57)
- -  mod/taskchain remove records from RAM cache if they are deleted from attempt lists on screen 
-
-2013.11.17 (57)
- -  mod/taskchain fix DB error accessing wrong table in taskchain_get_recent_mod_activity 
+ - fix DB error accessing wrong table in taskchain_get_recent_mod_activity
 
 2013.11.16 (56)
- -  mod/taskchain ensure StartUp is not run more than once 
+ - ensure StartUp is not run more than once
 
 2013.11.15 (55)
- -  mod/taskchain add new JMatch Sort output format 
+ - add new JMatch Sort output format
 
 2013.11.15 (55)
- -  mod/taskchain prepare to add new JMatch Sort output format 
+ - prepare to add new JMatch Sort output format
 
 2013.11.15 (55)
- -  mod/taskchain add new field allowpaste to specify whether or not students can copy, paste and drag text into text input boxes 
-
-2013.11.15 (55)
- -  mod/taskchain add new field allowpaste to specify whether or not students can copy, paste and drag text into text input boxes 
+ - add new field allowpaste to specify whether or not students can copy, paste and drag text into text input boxes
 
 2013.11.14 (53)
- -  mod/taskchain optimize bodystyles settings code 
-
-2013.11.14 (53)
- -  mod/taskchain optimize bodystyles settings code 
+ - optimize bodystyles settings code
 
 2013.11.13 (52)
- -  mod/taskchain add new TaskChain config setting to allow Hot Potatoes styles to override Moodle theme is required 
-
-2013.11.13 (51)
- -  mod/taskchain add new TaskChain config setting to allow Hot Potatoes styles to override Moodle theme is required 
+ - add new TaskChain config setting to allow Hot Potatoes styles to override Moodle theme is required
 
 2013.11.13 (50)
- -  mod/taskchain markdown for usemediafilters help text 
+ - markdown for usemediafilters help text
 
 2013.11.13 (50)
- -  mod/taskchain fix undefined property 'context' when usefilters is enabled for a task 
+ - fix undefined property 'context' when usefilters is enabled for a task
 
 2013.11.06 (49)
- -  mod/taskchain fix path to autoadvance img and styles 
+ - fix path to autoadvance img and styles
 
 2013.10.26 (48)
- -  mod/taskchain move autoadvance functions into attempt/hp/6/jcloze/xml so that the can be shared between ANCT-Scan and v6 autoadvance output formats 
+ - move autoadvance functions into attempt/hp/6/jcloze/xml so that the can be shared between ANCT-Scan and v6 autoadvance output formats
 
 2013.10.26 (47)
- -  mod/taskchain move autoadvance functions into attempt/hp/6/jcloze/xml so that the can be shared between ANCT-Scan and v6 autoadvance output formats 
+ - add new ANCT-Scan auto-advance output format for JCloze
 
 2013.10.26 (47)
- -  mod/taskchain add new ANCT-Scan auto-advance output format for JCloze 
-
-2013.10.26 (47)
- -  mod/taskchain fix conversion of TheSound relative urls in PARAM tags 
+ - fix conversion of TheSound relative urls in PARAM tags
 
 2013.10.21 (46)
- -  mod/taskchain micro-increment version 
+ - micro-increment version
 
 2013.10.21 (45)
- -  mod/taskchain add force_autoupdate utility 
-
-2013.10.21 (44)
- -  mod/taskchain add force_autoupdate utility 
+ - add force_autoupdate utility
 
 2013.10.21 (45)
- -  use formatted version as release e.g. 2013.10.21 (45) 
+ - use formatted version as release e.g. 2013.10.21 (45)
 
 v1.0.44
- -  prevent negative taskid from masking chainid when merging URL params 
- -  change module maturity to STABLE, and set release 1.0.44 
+ - prevent negative taskid from masking chainid when merging URL params
+ - change module maturity to STABLE, and set release 1.0.44
 
 v0.9.43
- -  fix use get_context_instance in Moodle 2.0 and 2.1 
- -  fix use get_context_instance in Moodle 2.0 and 2.1 
-
-v0.9.42
- -  fix use get_context_instance in Moodle 2.0 and 2.1 
- -  restore id_ prefix to ids on header elements in forms for single chain, task and condition records 
+ - fix use get_context_instance in Moodle 2.0 and 2.1
+ - restore id_ prefix to ids on header elements in forms for single chain, task and condition records
 
 v0.9.41
- -  add new classes/plugininfo folder for compatability with Moodle 2.6 
- -  add new additional user fields to reports for compatability with Moodle 2.6 
+ - add new classes/plugininfo folder for compatability with Moodle 2.6
+ - add new additional user fields to reports for compatability with Moodle 2.6
 
 v0.9.40
- -  small change to comment in hp.js 
- -  fix error when source/config repositoryids are not set in taskchain_cache 
+ - small change to comment in hp.js
+ - fix error when source/config repositoryids are not set in taskchain_cache
 
 v0.9.39
- -  improve detection of updated files in Private files 
+ - improve detection of updated files in Private files
 
 v0.9.38
- -  fix the setting of 'id' in edit/form; allow deletion of attempts using report.php 
-
-v0.9.37
- -  fix the setting of 'id' in edit/form; allow deletion of attempts using report.php 
- -  fix DB error on index.php 
-
-v0.9.36
- -  fix DB error on index.php 
- -  fix form header ids for Moodle 2.5 and later 
- -  correctly set, display and retrieve the stop button settings 
-
-v0.9.35
- -  correctly set, display and retrieve the stop button settings 
- -  fix Fatal error: Call-time pass-by-reference in 'mod/taskchain/attempt/review.php' - thanks to eviweb 
- -  improve performance of Rhubarb STOP button 
- -  remove select effect when dragging in JMatch and JMix 
+ - fix the setting of 'id' in edit/form; allow deletion of attempts using report.php
+ - fix DB error on index.php
+ - fix form header ids for Moodle 2.5 and later
+ - correctly set, display and retrieve the stop button settings
+ - fix Fatal error: Call-time pass-by-reference in 'mod/taskchain/attempt/review.php' - thanks to eviweb
+ - improve performance of Rhubarb STOP button
+ - remove select effect when dragging in JMatch and JMix
 
 v0.9.34
- -  allow pasting of answers if window.allow_paste_input = true 
+ - allow pasting of answers if window.allow_paste_input = true
 
 v0.9.33
- -  fix errors caused by setting usemediaplayer to YES 
- -  fix display of 'title' field on Edit Tasks form 
+ - fix errors caused by setting usemediaplayer to YES
+ - fix display of 'title' field on Edit Tasks form
 
 v0.9.32
- -  fix display and setting of 'title' field in task edit form 
- -  restore broken mediafilter/class.php 
- -  remove use of deprecated get_context_instance and get_textlib 
-
-v0.9.31
- -  remove use of deprecated get_context_instance and get_textlib 
- -  allow setting and display of reviewoptions for taskchain tasks 
+ - fix display and setting of 'title' field in task edit form
+ - restore broken mediafilter/class.php
+ - remove use of deprecated get_context_instance and get_textlib
+ - allow setting and display of reviewoptions for taskchain tasks
 
 v0.9.30
- -  make courselinks.js.php aware of groupid in taskchain_navigation block 
- -  force HP results to be saved in Chrome and other browsers which have no onunload event 
- -  Moodle.2x mod/hotpot force HP results to be saved in Chrome and other browsers which have no onunload event 
-
-v0.9.29
- -  Moodle.2x mod/hotpot force HP results to be saved in Chrome and other browsers which have no onunload event 
- -  hide empty rows on report tables 
+ - make courselinks.js.php aware of groupid in taskchain_navigation block
+ - force HP results to be saved in Chrome and other browsers which have no onunload event
+ - Moodle.2x mod/hotpot force HP results to be saved in Chrome and other browsers which have no onunload event
+ - hide empty rows on report tables
 
 v0.9.28
- -  Moodle.2x mod/reader force students to resume 'in progress' task attempts when there is no entry screen 
-
-v0.9.27
- -  Moodle.2x mod/reader force students to resume 'in progress' task attempts when there is no entry screen 
- -  add option 'id' parameter to merge_params function 
- -  fix Hint/ShowAnswer button in FindIt 
-
-v0.9.26
- -  fix Hint/ShowAnswer button in FindIt 
- -  improve interface on utility to redo upgrade 
- -  fix link from attempts summary on entry page to report.php 
- -  replace relative dirname(__FILE__) with absolute file path in edit/* scripts 
- -  prevent paste on text imput elements and textareas in tasks 
-
-v0.9.25
- -  prevent paste on text imput elements and textareas in tasks 
- -  replace all references to mod_taskchain::available_xxx by taskchain_available::xxx 
-
-v0.9.24
- -  replace all references to mod_taskchain::available_xxx by taskchain_available::xxx 
- -  replace all references to mod_taskchain::available_xxx by taskchain_available::xxx 
- -  remove need for __callStatic for compatability with PHP 5.2 
-
-v0.9.23
- -  remove need for __callStatic for compatability with PHP 5.2 
- -  remove class::method() from review.php for compatability with PHP 5.2 
- -  replace __DIR__ with dirname(__FILE__) for compatability with PHP 5.2 
- -  replace __DIR__ with dirname(__FILE__) for compatability with PHP 5.2 
- -  replace __DIR__ with dirname(__FILE__) for compatability with PHP 5.2 
- -  remove 'id_' prefix from ids of FIELDSET.clearfix in edit tasks/chain pages (for compatability with Moodle 2.0) 
+ - Moodle.2x mod/reader force students to resume 'in progress' task attempts when there is no entry screen
+ - add option 'id' parameter to merge_params function
+ - fix Hint/ShowAnswer button in FindIt
+ - improve interface on utility to redo upgrade
+ - fix link from attempts summary on entry page to report.php
+ - replace relative dirname(__FILE__) with absolute file path in edit/* scripts
+ - prevent paste on text imput elements and textareas in tasks
+ - replace all references to mod_taskchain::available_xxx by taskchain_available::xxx
+ - remove need for __callStatic for compatability with PHP 5.2
+ - remove class::method() from review.php for compatability with PHP 5.2
+ - replace __DIR__ with dirname(__FILE__) for compatability with PHP 5.2
+ - remove 'id_' prefix from ids of FIELDSET.clearfix in edit tasks/chain pages (for compatability with Moodle 2.0)
 
 v0.9.22
- -  rename templatesfolders property to templatefolders 
+ - rename templatesfolders property to templatefolders
 
 v0.9.21
- -  don't show entry page when TC has allowresume set to 'force' yet entrypage is 'YES' 
+ - don't show entry page when TC has allowresume set to 'force' yet entrypage is 'YES'
 
 v0.9.20
- -  force fieldsets to have default 'id_' prefix used in Moodle >= 2.5 
+ - force fieldsets to have default 'id_' prefix used in Moodle >= 2.5
 
 v0.9.19
- -  stretch rows to cover all columns in Edit Tasks/Chains 
+ - stretch rows to cover all columns in Edit Tasks/Chains
 
 v0.9.18
- -  fix undefined field 'timeclose' error when reviewing task attempt 
- -  force creation of taskchain_chain_attempt/grade 
- -  microincrement version number 
+ - fix undefined field 'timeclose' error when reviewing task attempt
+ - force creation of taskchain_chain_attempt/grade
+ - microincrement version number
 
 v0.9.17
- -  fix id of fieldsets in forms which caused Edit Tasks page to hang in javascript 
- -  CONTRIB-4506 fix creation of non-ascii chars for keypad 
- -  don't use deprecated get_all_sections in Moodle >= 2.3 
- -  add new setting to prev/next activity to allow selection of graded activities 
+ - fix id of fieldsets in forms which caused Edit Tasks page to hang in javascript
+ - CONTRIB-4506 fix creation of non-ascii chars for keypad
+ - don't use deprecated get_all_sections in Moodle >= 2.3
+ - add new setting to prev/next activity to allow selection of graded activities
 
 v0.9.16
- -  fix feedback messaging and webpages and microincrement version number 
- -  fix feedback messaging and webpages and microincrement version number 
+ - fix feedback messaging and webpages and microincrement version number
 
 v0.9.15
- -  first try at chaingrades report 
- -  finish taskattempt report/review 
- -  first try at quizscore report 
- -  finish chainattempt report 
- -  first attempt at chaingrade report 
- -  fix error regarding unset  variable on exit page 
- -  check for missing methods in navigation nodes in Moodle 2.0 and 2.1 
- -  rename chaingrades report lang files 
- -  rename report lang files 
- -  fix names of taskXXX report lang files 
- -  fix name of taskclicktrail report 
- -  add chaingrades report and fix names of taskXXXs report lang files 
- -  remove underscore from task_xxx reports 
- -  tidy up report tablelib.php and userfiltering.php 
- -  fix names of report classes 
- -  rename lang files for task_xxx reports
- -  add new TaskChain reports for chain grade/attempt, and task score/attempt
- -  rename report folders for task_xxx
- -  add new TaskChain reports for chain grade/attempt, and task score/attempt
- -  pass correct parameters to reports, and split reports into 'My attempts' and 'Class reports'
- -  make all sections NOT collapsible in Moodle 2.5+
- -  fix error: class 'taskchain_get' does not have a method 'chain_attempt'
- -  add default grade category and empty grade category cells to edit chains page
- -  fix showing of sortorder on pre-condition
- -  pass $context, $component and $filearea to xml_locate_file when search for tasks in a chain
- -  fix display of conditions after 'applydefauls'; add prepare_field_gradecategory; fix setting of checkboxes with '[' and ']' in name
- -  use gradecategory field instead of gradecat field on chain editing form, so it doesn't get hidden automatically by course/moodleform_mod.php
- -  ensure all TaskChains that need one have a grade item 
+ - first try at chaingrades report
+ - finish taskattempt report/review
+ - first try at quizscore report
+ - finish chainattempt report
+ - first attempt at chaingrade report
+ - fix error regarding unset  variable on exit page
+ - check for missing methods in navigation nodes in Moodle 2.0 and 2.1
+ - rename chaingrades report lang files
+ - rename report lang files
+ - fix names of taskXXX report lang files
+ - fix name of taskclicktrail report
+ - add chaingrades report and fix names of taskXXXs report lang files
+ - remove underscore from task_xxx reports
+ - tidy up report tablelib.php and userfiltering.php
+ - fix names of report classes
+ - rename lang files for task_xxx reports
+ - add new TaskChain reports for chain grade/attempt, and task score/attempt
+ - rename report folders for task_xxx
+ - add new TaskChain reports for chain grade/attempt, and task score/attempt
+ - pass correct parameters to reports, and split reports into 'My attempts' and 'Class reports'
+ - make all sections NOT collapsible in Moodle 2.5+
+ - fix error: class 'taskchain_get' does not have a method 'chain_attempt'
+ - add default grade category and empty grade category cells to edit chains page
+ - fix showing of sortorder on pre-condition
+ - pass $context, $component and $filearea to xml_locate_file when search for tasks in a chain
+ - fix display of conditions after 'applydefauls'; add prepare_field_gradecategory; fix setting of checkboxes with '[' and ']' in name
+ - use gradecategory field instead of gradecat field on chain editing form, so it doesn't get hidden automatically by course/moodleform_mod.php
+ - ensure all TaskChains that need one have a grade item
 
 v0.9.14
- -  merge 'removegradeitem' and 'gradecat' fields on 'chain' form
- -  fix settings to allow task preview from 'Edit tasks' page
- -  first attempt to add grade categories menu back to mod_form.php
- -  add reports to navigation menu; fix path to dots on auto-advance; adjust 'mainfile' before editing a task
- -  fix error: Using  when not in object context in source/class.php on line 498
- -  sort items on a task's output format menu
- -  fix error when editing or deleting a condition
- -  center the exit options list and only show 'Continue' buttton is 'Course' option is not shown
- -  allow for song_url as a parameter name to hold a relative URL 
+ - merge 'removegradeitem' and 'gradecat' fields on 'chain' form
+ - fix settings to allow task preview from 'Edit tasks' page
+ - first attempt to add grade categories menu back to mod_form.php
+ - add reports to navigation menu; fix path to dots on auto-advance; adjust 'mainfile' before editing a task
+ - fix error: Using  when not in object context in source/class.php on line 498
+ - sort items on a task's output format menu
+ - fix error when editing or deleting a condition
+ - center the exit options list and only show 'Continue' buttton is 'Course' option is not shown
+ - allow for song_url as a parameter name to hold a relative URL
 
 v0.9.13
- -  mod/taskchain disable restore functions as they are not operational and cause fatal errors in restore
- -  fix comment in TaskChain form
- -  add lang string for 'taskchain:regrade' capability
- -  small typo in lang file: navagation -> navigation
- -  disable reports and moodle2 backup until those features are fully implemented
- -  fix small typo in lang pack: attenpmts -> attempts
- -  fix missing property ->showdescription on Moodle 2.0-2.1 
- -  add select all/none checkboxes to columnlists page 
+ - disable restore functions as they are not operational and cause fatal errors in restore
+ - fix comment in TaskChain form
+ - add lang string for 'taskchain:regrade' capability
+ - small typo in lang file: navagation -> navigation
+ - disable reports and moodle2 backup until those features are fully implemented
+ - fix small typo in lang pack: attenpmts -> attempts
+ - fix missing property ->showdescription on Moodle 2.0-2.1
+ - add select all/none checkboxes to columnlists page
 
 v0.9.12
- -  fix deleting of single or ALL columnlists 
- -  restore accidentally deleted columnlists form helper 
- -  add fields on columnlists page 
- -  fix wrongly named constant FEATURE_SHOW_DESCRIPTION 
- -  remove 'Show description' from Moodle 2.0 - 2.1 
- -  fix setting of conditiontaskid and nexttaskid which was preventing automatic transition to next task 
+ - fix deleting of single or ALL columnlists
+ - restore accidentally deleted columnlists form helper
+ - add fields on columnlists page
+ - fix wrongly named constant FEATURE_SHOW_DESCRIPTION
+ - remove 'Show description' from Moodle 2.0 - 2.1
+ - fix setting of conditiontaskid and nexttaskid which was preventing automatic transition to next task
 
 v0.9.11
- -  small adjustment to cvs/git ignore 
- -  improve cvs/git ignore files 
- -  exclude courselinks.js.php from CVS/GIT repositories 
- -  fix cvs/git/svn ignore files 
- -  fix cvs/git/svn ignore files 
- -  improve exclusion strings in .gitignore 
- -  do not use FEATURE_SHOW_DESCRIPTION in Moodle <= 2.1 
- -  add pix files to cvs/git ignore 
- -  hide courselinks.js.php from CVS and GIT repository 
- -  add standard showdescription setting to mod_form.php 
- -  add missing files to cvs/git ignore 
- -  add cvs/git/svn ignore files 
- -  fix require_popup() error 
- -  improve detection of secondary files in course files and private files 
+ - small adjustment to cvs/git ignore
+ - improve cvs/git ignore files
+ - exclude courselinks.js.php from CVS/GIT repositories
+ - fix cvs/git/svn ignore files
+ - improve exclusion strings in .gitignore
+ - do not use FEATURE_SHOW_DESCRIPTION in Moodle <= 2.1
+ - add pix files to cvs/git ignore
+ - hide courselinks.js.php from CVS and GIT repository
+ - add standard showdescription setting to mod_form.php
+ - add missing files to cvs/git ignore
+ - add cvs/git/svn ignore files
+ - fix require_popup() error
+ - improve detection of secondary files in course files and private files
 
 v0.9.10
 v0.9.10
- -   refine detection of Firefox Gecko version (for FF 17+) 
+ - refine detection of Firefox Gecko version (for FF 17+)
 
 v0.9.09
- -  add missing edit/form/helper/columnlists.php
- -  fix invalid callback error caused by require_chain_entrycm
- -  fix error: Using  when not in object context (edit/task.php)
- -  add javascript to ensure last subaction (on edit tasks/chains page) always has a border
- -  fix API for context and textlib on Moodle 2.0 and Moodle 2.1
- -  make textlib::xxx() compatiable with Moodle 2.0 - 2.1
- -  make context_xxx::instance() compatible with Moodle 2.0-2.1
- -  use "(de)select_all_in" instead of "select_all_in_element_with_id" to be compatible with Moodle 2.0 - 2.1
- -  improve setting of fitem heights on add tasks/chains page
- -  add js to expand height of divs on edit tasks/chains page to create smoother vertical borders for the cells
- -  small fix to README.txt
- -  set maturity to ALPHA in version.php
- -  small changes to .cvsignore files
- -  add applyfilters action to edit chains page
- -  fix required Moodle version and add README.txt
- -  fix conditions format error when no preference condition exists; force correct columnlisttype in Settings menu;
- -  finish formatting of fields on edit chains page
- -  add custom columnlists to columnlists menu on tasks page
- -  implement functionality to add a new columnlist (for tasks)
- -  improve js in columnlists all/none
- -  improve styles on columnlists form
- -  fix conditions on edit single task page
- -  provisional implementation of copying conditions to other tasks
- -  add js to update conditions when editing or deleting conditions from edit tasks page
- -  open condition settings in a new window and rewrite updated conditions in main window
- -  tidy up handlling of default form settings
- -  fix id of div.fitem for radio elements so they can be styles
- -  add missing edit/form/helper/condition.php
- -  new form renderer class to allow CSS class to be added to div.fitem
- -  split exitoptions into exitfeedback and exitlinks on edit chain page
- -  add javascript to hide unused action settings on edit tasks page
- -  allow sorting by sourcefile name
- -  add new heading form element
- -  allow sorting on fields other than sortorder on edit tasks page
- -  implement movetasks (start, end, after) on edit tasks page
- -  implement deletetasks on edit tasks page
- -  implement applydefault action (filteredtasks)  on edit tasks page
- -  implement applydefault action on edit tasks page
- -  first attempt at sorting form elements
- -  switch disabled checkboxes to enabl on condition form
- -  preliminary version of conditions form
- -  check styles (especially overflow) on all main themes)
- -  start formatting of pre/post conditions on edit tasks page
- -  add columnslist select to edit/tasks page
- -  add whitespace.sh
- -  remove edit/*.class.php
- -  move edit/condition.form.php edit/condition.php
- -  move helper to edit/form/helper
- -  move edit/*.form.php to edit/form/*.php
- -  add edit/form folder
- -  rename form to helper
- -  add disabledIf events to actions on edit tasks page
- -  split formslib into files within form folder
- -  improve styles on edit tasks page
- -  improve styles to indent actions on edit tasks page
- -  add actions to edit tasks page
- -  fix layout of edit tasks page in firefox
- -  add edit column on edit tasks page
- -  adjust column widths on edit tasks page
- -  add styles to edit tasks page
- -  add field specific formtting for source and config fields on edit tasks page
- -  on tasks edit page, hide field names, and add onclick stub to edit individual fields
- -  fix convert_url, and improve location of secondary media files in repository
- -  fix empty content from aliasses to filesystem repository
- -  on edit tasks page, use format_field instead of add_field
- -  first attempt add edit tasks page
- -  first effort at single task form
- -  add preliminary task form
- -  fix includes in edit scripts
- -  add new edit scripts
- -  standardize phpdoc
- -  standardize phpdoc
- -  fix error when adding files from My Private Files; fix JQuiz js error caused by JTask (instead of Quiz) 
+ - add missing edit/form/helper/columnlists.php
+ - fix invalid callback error caused by require_chain_entrycm
+ - fix error: Using  when not in object context (edit/task.php)
+ - add javascript to ensure last subaction (on edit tasks/chains page) always has a border
+ - fix API for context and textlib on Moodle 2.0 and Moodle 2.1
+ - make textlib::xxx() compatiable with Moodle 2.0 - 2.1
+ - make context_xxx::instance() compatible with Moodle 2.0-2.1
+ - use "(de)select_all_in" instead of "select_all_in_element_with_id" to be compatible with Moodle 2.0 - 2.1
+ - improve setting of fitem heights on add tasks/chains page
+ - add js to expand height of divs on edit tasks/chains page to create smoother vertical borders for the cells
+ - small fix to README.txt
+ - set maturity to ALPHA in version.php
+ - small changes to .cvsignore files
+ - add applyfilters action to edit chains page
+ - fix required Moodle version and add README.txt
+ - fix conditions format error when no preference condition exists; force correct columnlisttype in Settings menu;
+ - finish formatting of fields on edit chains page
+ - add custom columnlists to columnlists menu on tasks page
+ - implement functionality to add a new columnlist (for tasks)
+ - improve js in columnlists all/none
+ - improve styles on columnlists form
+ - fix conditions on edit single task page
+ - provisional implementation of copying conditions to other tasks
+ - add js to update conditions when editing or deleting conditions from edit tasks page
+ - open condition settings in a new window and rewrite updated conditions in main window
+ - tidy up handlling of default form settings
+ - fix id of div.fitem for radio elements so they can be styles
+ - add missing edit/form/helper/condition.php
+ - new form renderer class to allow CSS class to be added to div.fitem
+ - split exitoptions into exitfeedback and exitlinks on edit chain page
+ - add javascript to hide unused action settings on edit tasks page
+ - allow sorting by sourcefile name
+ - add new heading form element
+ - allow sorting on fields other than sortorder on edit tasks page
+ - implement movetasks (start, end, after) on edit tasks page
+ - implement deletetasks on edit tasks page
+ - implement applydefault action (filteredtasks)  on edit tasks page
+ - implement applydefault action on edit tasks page
+ - first attempt at sorting form elements
+ - switch disabled checkboxes to enabl on condition form
+ - preliminary version of conditions form
+ - check styles (especially overflow) on all main themes)
+ - start formatting of pre/post conditions on edit tasks page
+ - add columnslist select to edit/tasks page
+ - add whitespace.sh
+ - remove edit/*.class.php
+ - move edit/condition.form.php edit/condition.php
+ - move helper to edit/form/helper
+ - move edit/*.form.php to edit/form/*.php
+ - add edit/form folder
+ - rename form to helper
+ - add disabledIf events to actions on edit tasks page
+ - split formslib into files within form folder
+ - improve styles on edit tasks page
+ - improve styles to indent actions on edit tasks page
+ - add actions to edit tasks page
+ - fix layout of edit tasks page in firefox
+ - add edit column on edit tasks page
+ - adjust column widths on edit tasks page
+ - add styles to edit tasks page
+ - add field specific formtting for source and config fields on edit tasks page
+ - on tasks edit page, hide field names, and add onclick stub to edit individual fields
+ - fix convert_url, and improve location of secondary media files in repository
+ - fix empty content from aliasses to filesystem repository
+ - on edit tasks page, use format_field instead of add_field
+ - first attempt add edit tasks page
+ - first effort at single task form
+ - add preliminary task form
+ - fix includes in edit scripts
+ - add new edit scripts
+ - standardize phpdoc
+ - fix error when adding files from My Private Files; fix JQuiz js error caused by JTask (instead of Quiz)
 
 v0.9.08
- -  fixed moving on to next task 
+ - fixed moving on to next task
 
 v0.9.07
- -  display and store first TaskChain task 
+ - display and store first TaskChain task
 
 v0.9.04
- -  standardize phpdocs 
- -  display menu of tasks in a chain 
- -  edging toward display of first TaskChain 
- -  separate methods into separate objects in locallib directory 
+ - standardize phpdocs
+ - display menu of tasks in a chain
+ - edging toward display of first TaskChain
+ - separate methods into separate objects in locallib directory
 
 v0.9.03
- -  modularize some functions in the mod_takschain contructor method
- -  optimize 'can' object using __call magic method
- -  optimize creation of main taskchain objects
- -  add new class to generate URLs for a given taskchain
- -  add new "can" class to cache taskchain capabilities
- -  get import from external repository working again after recent regression
- -  first attempt to create separate classes for each taskchain table record
- -  allow white space around equals sign when searching for relative URLs in html tag attributes
- -  ensure all fields  are not null in install.xml
- -  fix field types of text field during module installation
- -  improve findboms utilitiy and installtion
- -  fix setting of name, entrytext and exit text from task files
- -  find and remove BOMs in all php files
- -  second attempt to add tasks in a chain
- -  first successful attempt tp import a chain of task files
- -  first attempt to add multiple quiz files from repository
- -  small fixes for strict PHP coding style
- -  small fixes for strict PHP coding style
- -  use quizport_get_textlib() instead of textlib_get_instance()
- -  got the entry page working. stil need to work out how to add quizzes ...
- -  merge QuizPort add_instance and single record TaskChain add_instance
- -  add new standard capability "mod/taskchain:addinstance" 
+ - modularize some functions in the mod_takschain contructor method
+ - optimize 'can' object using __call magic method
+ - optimize creation of main taskchain objects
+ - add new class to generate URLs for a given taskchain
+ - add new "can" class to cache taskchain capabilities
+ - get import from external repository working again after recent regression
+ - first attempt to create separate classes for each taskchain table record
+ - allow white space around equals sign when searching for relative URLs in html tag attributes
+ - ensure all fields  are not null in install.xml
+ - fix field types of text field during module installation
+ - improve findboms utilitiy and installtion
+ - fix setting of name, entrytext and exit text from task files
+ - find and remove BOMs in all php files
+ - second attempt to add tasks in a chain
+ - first successful attempt tp import a chain of task files
+ - first attempt to add multiple quiz files from repository
+ - small fixes for strict PHP coding style
+ - use quizport_get_textlib() instead of textlib_get_instance()
+ - got the entry page working. stil need to work out how to add quizzes ...
+ - merge QuizPort add_instance and single record TaskChain add_instance
+ - add new standard capability "mod/taskchain:addinstance"
 
 v0.9.02
- -  first attempt at adding multiple tasks to a single chain
- -  remove superflous PHPDocs comments from DB scripts and add modulename_help message
- -  improve detection of JMix html and Sequitur html files
- -  check capabilities when adding taskchain related calendar events
- -  improve detection of relative URLs in window.open javascript
- -  add detection and conversion of relative URLs in <source> tag (for HTML5)
- -  fix phpDoc comments and transfer recent fixes for calendar events from HotPot module
- -  fix "undefined variable $CFG" in JCloze auto-advance output format
- -  remove dir.txt
- -  add .cvsignore files to hide svn files and folders from CVS
- -  add .svnignore files to ignore CVS files and folders
- -  add initial versions of taskchain scripts 
+ - first attempt at adding multiple tasks to a single chain
+ - remove superflous PHPDocs comments from DB scripts and add modulename_help message
+ - improve detection of JMix html and Sequitur html files
+ - check capabilities when adding taskchain related calendar events
+ - improve detection of relative URLs in window.open javascript
+ - add detection and conversion of relative URLs in <source> tag (for HTML5)
+ - fix phpDoc comments and transfer recent fixes for calendar events from HotPot module
+ - fix "undefined variable $CFG" in JCloze auto-advance output format
+ - remove dir.txt
+ - add .cvsignore files to hide svn files and folders from CVS
+ - add .svnignore files to ignore CVS files and folders
+ - add initial versions of taskchain scripts
