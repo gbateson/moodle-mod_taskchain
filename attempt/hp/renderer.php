@@ -395,11 +395,11 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         while ($i<$strlen) {
             switch ($state) {
                 case 1: // single-quoted string
-                    $out .= $str{$i};
-                    switch ($str{$i}) {
+                    $out .= $str[$i];
+                    switch ($str[$i]) {
                         case "\\":
                             $i++; // skip next char
-                            $out .= $str{$i};
+                            $out .= $str[$i];
                             break;
                         case "\n":
                         case "\r":
@@ -410,11 +410,11 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                     break;
 
                 case 2: // double-quoted string
-                    $out .= $str{$i};
-                    switch ($str{$i}) {
+                    $out .= $str[$i];
+                    switch ($str[$i]) {
                         case "\\":
                             $i++; // skip next char
-                            $out .= $str{$i};
+                            $out .= $str[$i];
                             break;
                         case "\n":
                         case "\r":
@@ -425,14 +425,14 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                     break;
 
                 case 3: // single line comment
-                    if ($str{$i}=="\n" || $str{$i}=="\r") {
+                    if ($str[$i]=="\n" || $str[$i]=="\r") {
                         $state = 0; // end of this comment
-                        $out .= $str{$i};
+                        $out .= $str[$i];
                     }
                     break;
 
                 case 4: // multi-line comment
-                    if ($str{$i}=='*' && $str{$i+1}=='/') {
+                    if ($str[$i]=='*' && $str[$i+1]=='/') {
                         $state = 0; // end of this comment
                         $i++;
                     }
@@ -440,19 +440,19 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
 
                 case 0: // plain old JavaScript code
                 default:
-                    switch ($str{$i}) {
+                    switch ($str[$i]) {
                         case "'":
-                            $out .= $str{$i};
+                            $out .= $str[$i];
                             $state = 1; // start of single quoted string
                             break;
 
                         case '"':
-                            $out .= $str{$i};
+                            $out .= $str[$i];
                             $state = 2; // start of double quoted string
                             break;
 
                         case '/':
-                            switch ($str{$i+1}) {
+                            switch ($str[$i+1]) {
                                 case '/':
                                     switch (true) {
                                         // allow certain single line comments
@@ -484,12 +484,12 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                                     break;
                                 default:
                                     // a slash - could be start of RegExp ?!
-                                    $out .= $str{$i};
+                                    $out .= $str[$i];
                             }
                             break;
 
                         default:
-                            $out .= $str{$i};
+                            $out .= $str[$i];
 
                     } // end switch : non-comment char
             } // end switch : status
@@ -656,7 +656,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
             while ($i<$strlen && ! $finish) {
                 switch ($state) {
                     case 1: // single-quoted string
-                        switch ($str{$i}) {
+                        switch ($str[$i]) {
                             case "\\":
                                 $i++; // skip next char
                                 break;
@@ -667,7 +667,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                         break;
 
                     case 2: // double-quoted string
-                        switch ($str{$i}) {
+                        switch ($str[$i]) {
                             case "\\":
                                 $i++; // skip next char
                                 break;
@@ -678,13 +678,13 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                         break;
 
                     case 3: // single line comment
-                        if ($str{$i}=="\n" || $str{$i}=="\r") {
+                        if ($str[$i]=="\n" || $str[$i]=="\r") {
                             $state = 0; // end of this comment
                         }
                         break;
 
                     case 4: // multi-line comment
-                        if ($str{$i}=='*' && $str{$i+1}=='/') {
+                        if ($str[$i]=='*' && $str[$i+1]=='/') {
                             $state = 0; // end of this comment
                             $i++;
                         }
@@ -692,7 +692,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
 
                     case 0: // plain old JavaScript code
                     default:
-                        switch ($str{$i}) {
+                        switch ($str[$i]) {
                             case "'":
                                 $state = 1; // start of single quoted string
                                 break;
@@ -702,7 +702,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                                 break;
 
                             case '/':
-                                switch ($str{$i+1}) {
+                                switch ($str[$i+1]) {
                                     case '/':
                                         $state = 3; // start of single line comment
                                         $i++;
@@ -743,7 +743,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                                 }
 
                                 // detect trailing semicolon, if any
-                                if ($str{$i+1}==';') {
+                                if ($str[$i+1]==';') {
                                     $i++;
                                 }
                                 if ($count==0) { // end of outer code block (e.g. end of function)

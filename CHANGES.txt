@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2021-06-09 (91)
+ - mod_hotpot when indexing strings and arrays, replace use of curly brackets, {}, with square brackets, [], for compatability with PHP 8.x
+
 2020-06-05 (89)
  - mod/taskchain convert URLs in 'src' attribute of <audio> and <video> tags
 

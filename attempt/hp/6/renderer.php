@@ -4308,7 +4308,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         $entities = array();
         $i_max = strlen($str);
         for ($i=0; $i<$i_max; $i++) {
-            $entities[$str{$i}] = '&#x'.sprintf('%04X', ord($str{$i})).';';
+            $entities[$str[$i]] = '&#x'.sprintf('%04X', ord($str[$i])).';';
         }
         return $entities;
     }

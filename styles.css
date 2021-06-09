@@ -229,7 +229,7 @@ body.path-course-view div.taskchainrecentactivity ul { font-size: 0.8em; margin:
     /* cross-browser rounded corners (Note: Safari and Chrome use Webkit) */
     /* css3    */ border-top-left-radius: 12px; border-top-right-radius: 12px;
     /* Opera   */ -o-border-top-left-radius: 12px; -o-border-top-right-radius: 12px;
-    /* Firefox */ -moz-border-top-left-radius: 12px; -moz-border-top-right-radius: 12px;
+    /* Firefox */ -moz-border-radius-topleft: 12px; -moz-border-radius-topright: 12px;
     /* Webkit  */ -webkit-border-top-left-radius: 12px; -webkit-border-top-right-radius: 12px;
 }
 
@@ -552,7 +552,7 @@ body.path-course-view div.taskchainrecentactivity ul { font-size: 0.8em; margin:
     /* cross-browser rounded corners (Note: Safari and Chrome use Webkit) */
     /* css3    */ border-top-left-radius: 12px; border-top-right-radius: 12px;
     /* Opera   */ -o-border-top-left-radius: 12px; -o-border-top-right-radius: 12px;
-    /* Firefox */ -moz-border-top-left-radius: 12px; -moz-border-top-right-radius: 12px;
+    /* Firefox */ -moz-border-radius-topleft: 12px; -moz-border-radius-topright: 12px;
     /* Webkit  */ -webkit-border-top-left-radius: 12px; -webkit-border-top-right-radius: 12px;
 }
 
@@ -774,11 +774,16 @@ body.path-course-view div.taskchainrecentactivity ul { font-size: 0.8em; margin:
 }
 #page-mod-taskchain-edit-columnlists #fgroup_id_action_buttons_elements input { width: 90px; margin: 6px; }
 
-/*
-    TaskChain grade colors
-    (see mod/taskchain/courselinks.js.php)
-*/
+/* override "-31px" in "Boost" and "Classic" themes */
+.section .activity .activityinstance > a.taskchaingrade {
+    text-indent: initial;
+    padding-left: initial;
+}
 
+/**
+ *  TaskChain grade styles
+ *  (see mod/taskchain/courselinks.js.php)
+ */
 .path-course-view .activity a.taskchaingrade {
     border-bottom: 2px #666666 dotted;
     width: 100%;
@@ -792,24 +797,24 @@ body.path-course-view div.taskchainrecentactivity ul { font-size: 0.8em; margin:
     display: inline;
     min-width: 2.6em;
     text-align: right;
-    margin: 6px auto auto 6px; /* top and left 6px */
+    margin: 4px auto auto 6px;
     padding: 1px 6px 1px 4px; /* 2px 6px 2px 4px */
 
     /* for Safari and Chrome */
-    -webkit-border-radius-topleft: 4px;
-    -webkit-border-radius-topright: 4px;
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
 
     /* for Firefox */
     -moz-border-radius-topleft: 4px;
     -moz-border-radius-topright: 4px;
 
     /* when Opera Presto 2.3 or later is released */
-    -o-border-radius-topleft: 4px;
-    -o-border-radius-topright: 4px;
+    -o-border-top-left-radius: 4px;
+    -o-border-top-right-radius: 4px;
 
     /* future proofing for when border-radius is supported in CSS3 */
-    border-radius-topleft: 4px;
-    border-radius-topright: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 }
 
 .path-course-view .activity .taskchainhighgrade {
