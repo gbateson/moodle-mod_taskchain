@@ -131,23 +131,23 @@ $string['addtasks'] = 'Add (more) tasks';
 $string['addtype'] = 'Files to be added';
 $string['addtype_help'] = 'Which files should be added as tasks?
 
-**Detect automatically**
-: If a file is selected, then it is treated either as a **task file** at the start of a chain of tasks, or as **chain file** that contains a list files to be added. If no file is selected, all recognizeable files in the folder are added as tasks.
+**Detect automatically**  
+&nbsp; If a file is selected, then it is treated either as a **task file** at the start of a chain of tasks, or as **chain file** that contains a list files to be added. If no file is selected, all recognizeable files in the folder are added as tasks.
 
-**Add selected file only**
-: Only the selected source file will be added to this activity as a task.
+**Add selected file only**  
+&nbsp; Only the selected source file will be added to this activity as a task.
 
-**Add chain starting at selected file**
-: The selected source file is assumed to be a **task file** at the start of a chain of tasks. All tasks in the chain will be added to this activity. Each task must have a link to the next task in the chain.
+**Add chain starting at selected file**  
+&nbsp; The selected source file is assumed to be a **task file** at the start of a chain of tasks. All tasks in the chain will be added to this activity. Each task must have a link to the next task in the chain.
 
-**Add all files listed in selected file**
-: The selected source file is assumed to be **chain file**, such as a Hot Potatoes masher file or index.html. Any tasks listed in the selected file will be added to this activity.
+**Add all files listed in selected file**  
+&nbsp; The selected source file is assumed to be **chain file**, such as a Hot Potatoes masher file or index.html. Any tasks listed in the selected file will be added to this activity.
 
-**Add all files in selected folder**
-: All recognizable task files in the source folder will be added to this activity.
+**Add all files in selected folder**  
+&nbsp; All recognizable task files in the source folder will be added to this activity.
 
-**Add all files in all folders**
-: All recognizable task files in the source folder and all its subfolders will be added to this activity.';
+**Add all files in all folders**  
+&nbsp; All recognizable task files in the source folder and all its subfolders will be added to this activity.';
 $string['addtypeauto'] = 'Detect automatically';
 $string['addtypechainfile'] = 'Add all files listed in selected file';
 $string['addtypechainfolder'] = 'Add all files in selected folder';
@@ -163,27 +163,27 @@ $string['allowfreeaccess_help'] = 'This setting specifies whether or not student
 
 Once students have free access, they can access any task in the TaskChain, regardless of the tasks\' pre-conditions and post-conditions.
 
-**No**
-: The students will not be given free access to tasks in the TaskChain. In other words, access to the tasks will always be controlled by the tasks\' pre-conditions and post-conditions.
+**No**  
+&nbsp; The students will not be given free access to tasks in the TaskChain. In other words, access to the tasks will always be controlled by the tasks\' pre-conditions and post-conditions.
 
-**Yes: Grades**
-: The students will be given free access to the tasks in the TaskChain, once they have achieved the required grade
+**Yes: Grades**  
+&nbsp; The students will be given free access to the tasks in the TaskChain, once they have achieved the required grade
 
-**Yes: Attempts**
-: The students will be given free access to the tasks in the TaskChain, once they have completed the required number of attempts.';
+**Yes: Attempts**  
+&nbsp; The students will be given free access to the tasks in the TaskChain, once they have completed the required number of attempts.';
 $string['allowpaste'] = 'Allow paste';
 $string['allowpaste_help'] = 'If this setting is enabled, students will be allowed to copy, paste and drag text into text input boxes.';
 $string['allowresume'] = 'Allow resume';
 $string['allowresume_help'] = 'This setting specifies whether or not students can resume an attempt.
 
-**No**
-: Attempts cannot be resumed.
+**No**  
+&nbsp; Attempts cannot be resumed.
 
-**Yes**
-: Students will be given the choice to either resume any previous attempts that are still in progress, or start a new attempt.
+**Yes**  
+&nbsp; Students will be given the choice to either resume any previous attempts that are still in progress, or start a new attempt.
 
-**Force**
-: If there is a previous attempt that is still in progress, students will be forced to resume that attempt. Otherwise, they can start a new attempt.';
+**Force**  
+&nbsp; If there is a previous attempt that is still in progress, students will be forced to resume that attempt. Otherwise, they can start a new attempt.';
 $string['allowreview'] = 'Allow review';
 $string['allowreview_help'] = 'If enabled, students may review their task attempts after the task is closed.';
 $string['allpostconditions'] = 'All post-conditions';
@@ -284,23 +284,23 @@ $string['attemptgrade'] = 'Attempt grade';
 $string['attemptgrademethod'] = 'Attempt grading method';
 $string['attemptgrademethod_help'] = 'This setting defines how the grade for a single attempt at this TaskChain activity is calculated.
 
-**Total**
-: The attempt grade will be set to the sum of the weighted task scores.
+**Total**  
+&nbsp; The attempt grade will be set to the sum of the weighted task scores.
 
-**Highest**
-: The attempt grade will be set to highest weighted task score.
+**Highest**  
+&nbsp; The attempt grade will be set to highest weighted task score.
 
-**Last**
-: The attempt grade will be set to the weighted score of the most recently attempted task.
+**Last**  
+&nbsp; The attempt grade will be set to the weighted score of the most recently attempted task.
 
-**Last (completed)**
-: The attempt grade will be set to the weighted score of the most recently attempted task whose status is "completed". Other task scores will be ignored.
+**Last (completed)**  
+&nbsp; The attempt grade will be set to the weighted score of the most recently attempted task whose status is "completed". Other task scores will be ignored.
 
-**Last (timed out)**
-: The attempt grade will be set to the weighted score of the most recently attempted task whose status is "completed" or "timed out". Other task scores will be ignored.
+**Last (timed out)**  
+&nbsp; The attempt grade will be set to the weighted score of the most recently attempted task whose status is "completed" or "timed out". Other task scores will be ignored.
 
-**Last (abandoned)**
-: The attempt grade will be set to the weighted score of the most recently attempted task whose status is "completed" or "timed out" or "abandoned". Tasks whose status is "in progress" will be ignored.';
+**Last (abandoned)**  
+&nbsp; The attempt grade will be set to the weighted score of the most recently attempted task whose status is "completed" or "timed out" or "abandoned". Tasks whose status is "in progress" will be ignored.';
 $string['attemptlimit'] = 'Attempt limit';
 $string['attemptlimit_help'] = 'The maximum number of attempts a student may have at this TaskChain activity';
 $string['attemptnumber'] = 'Attempt number';
@@ -414,17 +414,17 @@ $string['delay2summary'] = 'Time delay between later attempts';
 $string['delay3'] = 'Delay 3';
 $string['delay3_help'] = 'The setting specifies the delay between finishing the task and returning control of the display to Moodle.
 
-**Use specific delay**
-: control will be returned to Moodle after the specified delay.
+**Use specific delay**  
+&nbsp; control will be returned to Moodle after the specified delay.
 
-**Use settings in source/template file**
-: control will be returned to Moodle after the number of seconds specified in the source file or the template files for this output format.
+**Use settings in source/template file**  
+&nbsp; control will be returned to Moodle after the number of seconds specified in the source file or the template files for this output format.
 
-**Wait till student clicks OK**
-: control will be returned to Moodle after the student clicks the OK button on the completion message in the task.
+**Wait till student clicks OK**  
+&nbsp; control will be returned to Moodle after the student clicks the OK button on the completion message in the task.
 
-**Do not continue automatically**
-: control will not be returned to Moodle after the task is finished. The student will be free to navigate away from the task page.
+**Do not continue automatically**  
+&nbsp; control will not be returned to Moodle after the task is finished. The student will be free to navigate away from the task page.
 
 Note, the task results are always returned to Moodle immediately the task is completed or abandoned, regardless of this setting.';
 $string['delay3afterok'] = 'Wait till student clicks OK';
@@ -484,25 +484,25 @@ $string['entrygradewarning'] = 'You cannot start this activity until you score {
 $string['entryoptions'] = 'Entry page options';
 $string['entryoptions_help'] = 'These check boxes enable and disable the display of items on the TaskChain\'s entry page.
 
-**Chain name as title**
-: if checked, the chain name will be displayed as the title of the entry page.
+**Chain name as title**  
+&nbsp; if checked, the chain name will be displayed as the title of the entry page.
 
-**Grading**
-: if checked, the TaskChain\'s grading information will be displayed on the entry page.
+**Grading**  
+&nbsp; if checked, the TaskChain\'s grading information will be displayed on the entry page.
 
-**Dates**
-: if checked, the TaskChain\'s open and close dates will be displayed on the entry page.
+**Dates**  
+&nbsp; if checked, the TaskChain\'s open and close dates will be displayed on the entry page.
 
-**Attempts**
-: if checked, a table showing details of a user\'s previous attempts at this TaskChain will be displayed on the entry page. Attempts that may be resumed will have a resume button displayed in the rightmost column.';
+**Attempts**  
+&nbsp; if checked, a table showing details of a user\'s previous attempts at this TaskChain will be displayed on the entry page. Attempts that may be resumed will have a resume button displayed in the rightmost column.';
 $string['entrypage'] = 'Show entry page';
 $string['entrypage_help'] = 'Should the students be shown an initial page before starting the TaskChain activity?
 
-**Yes**
-: the students will be shown an entry page before starting the TaskChain. The contents of the entry page are determined by the TaskChain\'s entry page options.
+**Yes**  
+&nbsp; the students will be shown an entry page before starting the TaskChain. The contents of the entry page are determined by the TaskChain\'s entry page options.
 
-**No**
-: the students will not be shown an entry page, and will start the TaskChain immediately.
+**No**  
+&nbsp; the students will not be shown an entry page, and will start the TaskChain immediately.
 
 An entry page is always shown to the teacher, in order to provide access to the reports and edit tasks page';
 $string['entrypagehdr'] = 'Entry page';
@@ -535,21 +535,21 @@ $string['exit_excellent'] = 'Excellent!';
 $string['exit_feedback'] = 'Exit page feedback';
 $string['exit_feedback_help'] = 'These options enable and disable the display of feedback items on a TaskChain\'s exit page.
 
-**Chain name as title**
-: if checked, the chain name will be displayed as the title of the exit page.
+**Chain name as title**  
+&nbsp; if checked, the chain name will be displayed as the title of the exit page.
 
-**Encouragement**
-: if checked, some encouragement will displayed on the exit page. The encouragement depends on the TaskChain grade:
-: **> 90%**: Excellent!
-: **> 60%**: Well done
-: **> 0%**: Good try
-: **= 0%**: Are you OK?
+**Encouragement**  
+&nbsp; if checked, some encouragement will displayed on the exit page. The encouragement depends on the TaskChain grade:
+&nbsp; **> 90%**: Excellent!
+&nbsp; **> 60%**: Well done
+&nbsp; **> 0%**: Good try
+&nbsp; **= 0%**: Are you OK?
 
-**Chain attempt grade**
-: if checked, the grade for the chain attempt that has just been completed will be displayed on the exit page.
+**Chain attempt grade**  
+&nbsp; if checked, the grade for the chain attempt that has just been completed will be displayed on the exit page.
 
-**Chain grade**
-: if checked the TaskChain grade will be displayed on the exit page.
+**Chain grade**  
+&nbsp; if checked the TaskChain grade will be displayed on the exit page.
 
 In addition, if the chain grading method is highest a message to tell the user if the most recent attempt was equal to or better than their previous will be displayed.';
 $string['exit_goodtry'] = 'Good try!';
@@ -560,17 +560,17 @@ $string['exit_index_text'] = 'Go to the index of activities';
 $string['exit_links'] = 'Exit page links';
 $string['exit_links_help'] = 'These options enable and disable the display of certain navigation links on a TaskChain\'s exit page.
 
-**Retry**
-: if multiple attempts are allowed at this TaskChain and the student still has some attempts left, a link to allow the student to retry the TaskChain will be displayed
+**Retry**  
+&nbsp; if multiple attempts are allowed at this TaskChain and the student still has some attempts left, a link to allow the student to retry the TaskChain will be displayed
 
-**Index**
-: if checked, a link to the TaskChain index page will be displayed.
+**Index**  
+&nbsp; if checked, a link to the TaskChain index page will be displayed.
 
-**Course**
-: if checked, a link to the Moodle course page will be displayed.
+**Course**  
+&nbsp; if checked, a link to the Moodle course page will be displayed.
 
-**Grades**
-: if checked, a link to the Moodle gradebook will be displayed.';
+**Grades**  
+&nbsp; if checked, a link to the Moodle gradebook will be displayed.';
 $string['exit_next'] = 'Next';
 $string['exit_next_text'] = 'Try the next activity';
 $string['exit_nograde'] = 'You have successfully completed this activity!';
@@ -608,11 +608,11 @@ $string['exitoptions'] = 'Exit options';
 $string['exitpage'] = 'Show exit page';
 $string['exitpage_help'] = 'Should a exit page displayed after the TaskChain task has been completed?
 
-**Yes**
-: the students will be shown an exit page when the TaskChain is completed. The contents of the exit page are determined by the settings for the TaskChain\'s exit page feedback and links.
+**Yes**  
+&nbsp; the students will be shown an exit page when the TaskChain is completed. The contents of the exit page are determined by the settings for the TaskChain\'s exit page feedback and links.
 
-**No**
-: the students will not be shown an exit page. Instead, they will either go immediately to the next activity or return to the Moodle course page.';
+**No**  
+&nbsp; the students will not be shown an exit page. Instead, they will either go immediately to the next activity or return to the Moodle course page.';
 $string['exitpagehdr'] = 'Exit page';
 $string['exittaskchaincourse'] = 'Next TaskChain in this course';
 $string['exittaskchainsection'] = 'Next TaskChain in this course section';
@@ -642,11 +642,11 @@ $string['grade'] = 'Grade';
 $string['gradeignore'] = 'Ignore voids';
 $string['gradeignore_help'] = 'This setting specifies whether void attempts, i.e. abandoned attempts with a grade of 0%, are ignored or included when students\' grades for this TaskChain are calculated.
 
-**Yes**
-: Void attempts are *ignored* during the calculation of grades for this TaskChain activity.
+**Yes**  
+&nbsp; Void attempts are *ignored* during the calculation of grades for this TaskChain activity.
 
-**No**
-: Void attempts are *not ignored*, that is to say they are *included* in the calculation of grades for this TaskChain activity.
+**No**  
+&nbsp; Void attempts are *not ignored*, that is to say they are *included* in the calculation of grades for this TaskChain activity.
 
 Void attempts occur when a student starts a TaskChain activity, but then does not attempt to answer an questions in any tasks, before leaving. Such attempts can have a significant impact on the grade when the grading method is Average, First or Last. In such situations, the teacher may decide that it is better to ignore the void attempts when the grade is calculated.';
 $string['gradelimit'] = 'Grade limit';
@@ -654,21 +654,21 @@ $string['gradelimit_help'] = 'The grades for chain attempts are scaled to fit in
 
 The maximum grade for a TaskChain activity in the Moodle gradebook is calculated as follows:
 
-: maximum grade x (grade weighting / 100)';
+&nbsp; maximum grade x (grade weighting / 100)';
 $string['grademethod'] = 'Grading method';
 $string['grademethod_help'] = 'This setting defines how the TaskChain activity grade is calculated from the attempt grades.
 
-**Highest score**
-: the activity grade will be set to the highest grade for an attempt at this TaskChain activity.
+**Highest score**  
+&nbsp; the activity grade will be set to the highest grade for an attempt at this TaskChain activity.
 
-**Average scsore**
-: the grade will be set to the average grade for attempts at this TaskChain activity.
+**Average scsore**  
+&nbsp; the grade will be set to the average grade for attempts at this TaskChain activity.
 
-**First attempt**
-: the grade will be set to the grade of the first attempt at this TaskChain activity.
+**First attempt**  
+&nbsp; the grade will be set to the grade of the first attempt at this TaskChain activity.
 
-**Last attempt**
-: the grade will be set to the grade of the most recent attempt at this TaskChain activity.';
+**Last attempt**  
+&nbsp; the grade will be set to the grade of the most recent attempt at this TaskChain activity.';
 $string['gradeweighting'] = 'Grade weighting';
 $string['gradeweighting_help'] = 'Grades for this TaskChain activity will be scaled to this number in the Moodle gradebook.';
 $string['groupid'] = 'Group';
@@ -694,11 +694,11 @@ $string['maxeventlength'] = 'Maximum number of days for a single calendar event'
 $string['maximum'] = '&lt;=';
 $string['manualcompletion_help'] = 'This setting determines the action to be taken when all tasks are complete but the post-conditions on the final task do _NOT_ specify what to do next.
 
-**No**
-: After all tasks have been completed, the chain attempt will automatically be marked as completed and students will not be able to redo tasks.
+**No**  
+&nbsp; After all tasks have been completed, the chain attempt will automatically be marked as completed and students will not be able to redo tasks.
 
-**Yes**
-: After completing all tasks, students will be able to redo tasks and must manually click a button to finish a chain attempt.';
+**Yes**  
+&nbsp; After completing all tasks, students will be able to redo tasks and must manually click a button to finish a chain attempt.';
 $string['manualcompletion'] = 'Manual completion';
 $string['mediafilter_moodle'] = 'Moodle\'s standard media filters';
 $string['mediafilter_taskchain'] = 'TaskChain media filter';
@@ -743,23 +743,23 @@ $string['navigation_frame'] = 'Moodle navigation frame';
 $string['navigation_give_up'] = 'A single &quot;Give Up&quot; button';
 $string['navigation_help'] = 'This setting specifies the navigation used in the task:
 
-**Moodle navigation bar**
-: the Moodle navigation bar will be displayed in the same window as the task at the top of the page
+**Moodle navigation bar**  
+&nbsp; the Moodle navigation bar will be displayed in the same window as the task at the top of the page
 
-**Moodle navigation frame**
-: the Moodle navigation bar will be displayed in a separate frame at the top of the task
+**Moodle navigation frame**  
+&nbsp; the Moodle navigation bar will be displayed in a separate frame at the top of the task
 
-**Embedded web page**
-: the Moodle navigation bar will be displayed with the task embedded within the window
+**Embedded web page**  
+&nbsp; the Moodle navigation bar will be displayed with the task embedded within the window
 
-**Original navigation aids**
-: the task will be displayed with the navigation buttons, if any, defined in the task
+**Original navigation aids**  
+&nbsp; the task will be displayed with the navigation buttons, if any, defined in the task
 
-**A single "Give Up" button**
-: the task will be displayed with a single "Give Up" button at the top of the page
+**A single "Give Up" button**  
+&nbsp; the task will be displayed with a single "Give Up" button at the top of the page
 
-**None**
-: the task will be displayed without any navigation aids, so when all questions have been answered correctly, depending on the "Show next task?" setting, Moodle will either return to the course page or display the next task';
+**None**  
+&nbsp; the task will be displayed without any navigation aids, so when all questions have been answered correctly, depending on the "Show next task?" setting, Moodle will either return to the course page or display the next task';
 $string['navigation_moodle'] = 'Standard Moodle navigation bars (top and side)';
 $string['navigation_none'] = 'None';
 $string['navigation_original'] = 'Original navigation aids';
@@ -1012,36 +1012,36 @@ $string['storedetails'] = 'Store the raw XML details of TaskChain task attempts'
 $string['studentfeedback'] = 'Student feedback';
 $string['studentfeedback_help'] = 'If enabled, a link to a pop-up feedback window will be displayed whenever the student clicks on the "Check" button. The feedback window allows students to discuss this task with their teacher and classmates in one of the following ways:
 
-**Web page**
-: requires URL of the web page, for example http://myserver.com/feedbackform.html
+**Web page**  
+&nbsp; requires URL of the web page, for example http://myserver.com/feedbackform.html
 
-**Feedback form**
-: requires URL of the form script, for example http://myserver.com/cgi-bin/formmail.pl
+**Feedback form**  
+&nbsp; requires URL of the form script, for example http://myserver.com/cgi-bin/formmail.pl
 
-**Moodle forum**
-: the forum index for the course will be displayed
+**Moodle forum**  
+&nbsp; the forum index for the course will be displayed
 
-**Moodle messaging**
-: the Moodle instant messaging window will be displayed. If the course has several teachers, the student will be prompted to select a teacher before the messaging window appears.';
+**Moodle messaging**  
+&nbsp; the Moodle instant messaging window will be displayed. If the course has several teachers, the student will be prompted to select a teacher before the messaging window appears.';
 $string['studentfeedbackurl'] = 'Student feedback URL';
 $string['submits'] = 'Submissions';
 $string['task'] = 'Task';
 $string['taskaction_help'] = 'These options specify what action will be taken when the "Go" button is clicked.
 
-**Reorder tasks**
-: The tasks will be reordered according to the new sort numbers.
+**Reorder tasks**  
+&nbsp; The tasks will be reordered according to the new sort numbers.
 
-**Add (more) tasks**
-: A new web page will be displayed from where you can add one or more new tasks to this TaskChain activity.
+**Add (more) tasks**  
+&nbsp; A new web page will be displayed from where you can add one or more new tasks to this TaskChain activity.
 
-**Move tasks**
-: The selected tasks will be moved to a different place in this TaskChain activity, or to another TaskChain activity.
+**Move tasks**  
+&nbsp; The selected tasks will be moved to a different place in this TaskChain activity, or to another TaskChain activity.
 
-**Apply selected default values**
-: The selected default values will be applied to the selected tasks.
+**Apply selected default values**  
+&nbsp; The selected default values will be applied to the selected tasks.
 
-**Delete tasks**
-: The selected tasks will be deleted from the TaskChain activity.';
+**Delete tasks**  
+&nbsp; The selected tasks will be deleted from the TaskChain activity.';
 $string['taskattempt'] = 'Task attempt';
 $string['taskattemptnotinprogress'] = 'Task attempt not in progress';
 $string['taskchainname'] = 'TaskChain name';
@@ -1065,17 +1065,17 @@ A unique name for each task will be created by appending the task sort number to
 $string['tasknames'] = 'Task names';
 $string['tasknames_help'] = 'The task names can be derived from specfic text entered by the teacher or they can be automatically generated.
 
-**Get from source file**
-: The task names will be extracted from the source files.
+**Get from source file**  
+&nbsp; The task names will be extracted from the source files.
 
-**Use source file name**
-: The source file names will be used as the task names.
+**Use source file name**  
+&nbsp; The source file names will be used as the task names.
 
-**Use source file path**
-: The source file path of each task will be used as the name for that task. Any slashes in the file path will be replaced by spaces.
+**Use source file path**  
+&nbsp; The source file path of each task will be used as the name for that task. Any slashes in the file path will be replaced by spaces.
 
-**Specific text**
-: A unique name for each task will be created by appending the task sort number to the specific text entered by the teacher.';
+**Specific text**  
+&nbsp; A unique name for each task will be created by appending the task sort number to the specific text entered by the teacher.';
 $string['tasknotavailable'] = 'Sorry this task is not available to you until {$a}.';
 $string['taskposition'] = 'Task position';
 $string['taskrequirepasswordmessage'] = 'To attempt this task, you need to know the password.';
@@ -1093,14 +1093,14 @@ $string['timehdr'] = 'Time restrictions';
 $string['timelimit'] = 'Time limit';
 $string['timelimit_help'] = 'This setting specifies the maximum duration of a single attempt.
 
-**Use settings in source/template file**
-: the time limit will be taken from the source file or the template files for this output format
+**Use settings in source/template file**  
+&nbsp; the time limit will be taken from the source file or the template files for this output format
 
-**Use specific time**
-: the time limit specified on the TaskChain task settings page will be used as the time limit for an attempt at this task. This setting overrides time limits in the source file, configuration file, or template files for this output format.
+**Use specific time**  
+&nbsp; the time limit specified on the TaskChain task settings page will be used as the time limit for an attempt at this task. This setting overrides time limits in the source file, configuration file, or template files for this output format.
 
-**Disable**
-: no time limit will be set for attempts at this task.
+**Disable**  
+&nbsp; no time limit will be set for attempts at this task.
 
 Note that if an attempt is resumed, the timer continues from where the attempt was previously paused.';
 $string['timelimitexpired'] = 'The time limit for this attempt has expired';
@@ -1113,20 +1113,20 @@ $string['timeopenclose_help'] = 'You can specify times when the task is accessib
 $string['title'] = 'Title';
 $string['title_help'] = 'This setting specifies the title to be displayed on the web page.
 
-**Use the task name**
-: the task name, as defined on this page, will be displayed as the web page title.
+**Use the task name**  
+&nbsp; the task name, as defined on this page, will be displayed as the web page title.
 
-**Get from source file**
-: the title, if any, defined in the source file will be used as the web page title. Note that this option is not efficient for the server, because the source file must be read every time the title is displayed.
+**Get from source file**  
+&nbsp; the title, if any, defined in the source file will be used as the web page title. Note that this option is not efficient for the server, because the source file must be read every time the title is displayed.
 
-**Use source file name**
-: the source file name, excluding any folder names, will be used as the web page title.
+**Use source file name**  
+&nbsp; the source file name, excluding any folder names, will be used as the web page title.
 
-**Use source file path**
-: the source file path, including any folder names, will be used as the web page title.
+**Use source file path**  
+&nbsp; the source file path, including any folder names, will be used as the web page title.
 
-**Use specific text**
-: the text in the textbox will be used as web page title.';
+**Use specific text**  
+&nbsp; the text in the textbox will be used as web page title.';
 $string['titletext'] = 'Title text';
 $string['titletext_help'] = 'This text is used if the "Title" setting is "Use specific text"';
 $string['titleappendsortorder'] = 'Append sort order';
@@ -1147,40 +1147,40 @@ Note that this setting overrides the site administration setting to enable or di
 $string['usemediafilter'] = 'Use media filter';
 $string['usemediafilter_help'] = 'This setting specifies the media filter to be used.
 
-**None**
-: the content will not be passed through any media filters.
+**None**  
+&nbsp; the content will not be passed through any media filters.
 
-**Moodle\'s standard media filters**
-: the content will be passed through Moodle\'s standard media filters. These filters search for links to common types of sound and movie file, and convert those links to suitable media players.
+**Moodle\'s standard media filters**  
+&nbsp; the content will be passed through Moodle\'s standard media filters. These filters search for links to common types of sound and movie file, and convert those links to suitable media players.
 
-**TaskChain media filter**
-: the content will be passed through filters which detect links, images, sounds and movies to be specified using a square bracket notation.
+**TaskChain media filter**  
+&nbsp; the content will be passed through filters which detect links, images, sounds and movies to be specified using a square bracket notation.
 
 The square-bracket notation has the following syntax:
 <code>[url player width height options]</code>
 
-**url**
-: the relative or absolute url of the media file
+**url**  
+&nbsp; the relative or absolute url of the media file
 
 **player** (optional)
-: the name of the player to be inserted. The default value for this setting is "moodle". The standard version of the TaskChain module also offers the following players:
-: **dew**: an mp3 player
-: **dyer**: mp3 player by Bernard Dyer
-: **hbs**: mp3 player from Half-Baked Software
-: **image**: insert an image into the web page
-: **link**: insert a link to another web page
+&nbsp; the name of the player to be inserted. The default value for this setting is "moodle". The standard version of the TaskChain module also offers the following players:
+&nbsp; **dew**: an mp3 player
+&nbsp; **dyer**: mp3 player by Bernard Dyer
+&nbsp; **hbs**: mp3 player from Half-Baked Software
+&nbsp; **image**: insert an image into the web page
+&nbsp; **link**: insert a link to another web page
 
 **width** (optional)
-: the required width of the player
+&nbsp; the required width of the player
 
 **height** (optional)
-: the required height of the player. If omitted this value will be set to the same as the width setting.
+&nbsp; the required height of the player. If omitted this value will be set to the same as the width setting.
 
 **options** (optional)
-: a comma-separated list options to be passed to the player. Each option can be a simple on/off switch, or a name value pair.
-: *name*
-: *name=value*
-: *name="some value with spaces"*';
+&nbsp; a comma-separated list options to be passed to the player. Each option can be a simple on/off switch, or a name value pair.
+&nbsp; *name*
+&nbsp; *name=value*
+&nbsp; *name="some value with spaces"*';
 $string['viewreports'] = 'View reports for {$a} user(s)';
 $string['views'] = 'Views';
 $string['weighting'] = 'Weighting';
@@ -1189,11 +1189,11 @@ $string['weightingnone'] = 'No weighting';
 $string['window'] = 'Window';
 $string['window_help'] = 'Show the activity in the main Moodle window, or in a popup window.
 
-**Same window**
-: The TaskChain activity will be shown in the same window as the Moodle course page.
+**Same window**  
+&nbsp; The TaskChain activity will be shown in the same window as the Moodle course page.
 
-**New window**
-: The TaskChain activity will be shown in a popup window. Several features of the popup window can be enabled or disabled with check boxes. The required width and height of the popup window are specified as a number of pixels.';
+**New window**  
+&nbsp; The TaskChain activity will be shown in a popup window. Several features of the popup window can be enabled or disabled with check boxes. The required width and height of the popup window are specified as a number of pixels.';
 $string['windowdirectories'] = 'Show the directory links';
 $string['windowheight'] = 'Default window height (in pixels)';
 $string['windowlocation'] = 'Show the location bar';

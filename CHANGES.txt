@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2021-09-14 (92)
+ - modify markdown syntax for long help messages (for compatability with Moodle 3.11)
+
 2021-06-09 (91)
  - mod_hotpot when indexing strings and arrays, replace use of curly brackets, {}, with square brackets, [], for compatability with PHP 8.x
 
