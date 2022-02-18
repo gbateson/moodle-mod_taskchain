@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2022-02-18 (93)
+ - fix error when displaying grades on course page for non-editing teacher
+
 2021-09-14 (92)
  - modify markdown syntax for long help messages (for compatability with Moodle 3.11)
 

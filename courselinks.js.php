@@ -174,7 +174,7 @@ function print_courselinks() {
             if ($accessallgroups==false) {
                 // user can only see members in groups to which (s)he belongs
                 // (e.g. non-editing teacher when groups are separate)
-                $groupids = 'SELECT groupid FROM {groups_members} WHERE userid = :userid AND groupid IN ($groupids)';
+                $groupids = 'SELECT groupid FROM {groups_members} WHERE userid = :userid AND groupid IN ('.$groupids.')';
                 $params['userid'] = $USER->id;
             }
             if ($records = $DB->get_records_select_menu('groups_members', 'groupid IN ('.$groupids.')', $params, '', 'id,userid')) {
