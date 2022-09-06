@@ -62,7 +62,7 @@ class taskchain_user_filtering extends user_filtering {
             case 'grouping':
                 return new taskchain_filter_group($fieldname, $advanced, $default);
             case 'grade':
-                $label = get_string('grade');
+                $label = get_string('grade', 'grades');
                 return new taskchain_filter_grade($fieldname, $label, $advanced, $default);
             case 'timemodified':
                 $label = get_string('time', 'quiz');

@@ -48,6 +48,12 @@ class taskchain extends taskchain_base {
     /** db field: name (string (255), default='') */
     private $name                = '';
 
+    /** db field: introtext (string, default='') */
+    private $intro               = '';
+
+    /** db field: introformat (integer, default=0) */
+    private $introformat         = 0;
+
     /** db field: timecreated (integer, default=0) */
     private $timecreated         = 0;
 
@@ -118,6 +124,42 @@ class taskchain extends taskchain_base {
      */
     public function set_name($value) {
         $this->name = $value;
+    }
+
+    /**
+     * get the "intro" property
+     *
+     * @return string the current intro $value
+     */
+    public function get_intro() {
+        return $this->intro;
+    }
+
+    /**
+     * set the "intro" property
+     *
+     * @param string the new intro $value
+     */
+    public function set_intro($value) {
+        $this->intro = $value;
+    }
+
+    /**
+     * get the "introformat" property
+     *
+     * @return integer the current introformat $value
+     */
+    public function get_introformat() {
+        return $this->introformat;
+    }
+
+    /**
+     * set the "introformat" property
+     *
+     * @param integer the new introformat $value
+     */
+    public function set_introformat($value) {
+        $this->introformat = $value;
     }
 
     /**

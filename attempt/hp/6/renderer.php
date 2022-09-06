@@ -4521,7 +4521,13 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     $liststart = '<ol class="MSelAnswers">'."\n";
                     break;
                 default:
-                    continue; // unknown question type
+                    $textbox = false;
+                    $liststart = '';
+            }
+
+            // Skip unknown question types.
+            if ($textbox == false && $liststart == '') {
+                continue;
             }
 
             $first_answer_tags = $question."['answers'][0]['#']['answer'][0]['#']['text'][0]['#']";

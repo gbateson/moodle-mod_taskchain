@@ -541,9 +541,26 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @return string
      */
      function get_userfields($tableprefix = '', array $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
-        if (class_exists('user_picture')) { // Moodle >= 2.6
+
+        // Moodle >= 3.11
+        if (class_exists('\\core_user\\fields')) {
+            $fields = \core_user\fields::for_userpic();
+            if ($extrafields) {
+                $fields->including($extrafields);
+            }
+            $fields = $fields->get_sql($tablealias, false, $fieldprefix, $idalias, false)->selects;
+            if ($tablealias === '') {
+                $fields = str_replace('{user}.', '', $fields);
+            }
+            return str_replace(', ', ',', $fields);
+            // id, picture, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename, imagealt, email
+        }
+
+        // Moodle >= 2.6
+        if (class_exists('user_picture')) {
             return user_picture::fields($tableprefix, $extrafields, $idalias, $fieldprefix);
         }
+
         // Moodle <= 2.5
         $fields = array('id', 'firstname', 'lastname', 'picture', 'imagealt', 'email');
         if ($tableprefix || $extrafields || $idalias) {

@@ -553,6 +553,23 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
+    $newversion = 2022090694;
+    if ($oldversion < $newversion) {
+        $table = new xmldb_table('taskchain');
+        $fields = array(
+            new xmldb_field('intro', XMLDB_TYPE_TEXT, 'small', null, null, null, null, 'name'),
+            new xmldb_field('introformat', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'intro'),
+        );
+        foreach ($fields as $field) {
+            xmldb_taskchain_fix_previous_field($dbman, $table, $field);
+            if ($dbman->field_exists($table, $field)) {
+                $dbman->change_field_type($table, $field);
+            } else {
+                $dbman->add_field($table, $field);
+            }
+        }
+    }
+
     if ($empty_cache) {
         $DB->delete_records('taskchain_cache');
     }

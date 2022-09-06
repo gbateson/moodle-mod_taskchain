@@ -581,7 +581,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         );
 
         $options = array();
-        $str = get_string('grade');
+        $str = get_string('grade', 'grades');
         for ($i=5; $i<=100; $i+=5) {
             $options[$i] = $str.' >= '.$i.'%';
         }
@@ -616,7 +616,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function add_field_grademethod($field) {
-        $this->add_template_method('grade');
+        $this->add_template_method('grade', 'grades');
     }
 
     /**
@@ -1402,7 +1402,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             return get_string('no');
         }
         if ($value>0) {
-            return get_string('yes').': '.get_string('grade').' >= '.$value.'%';
+            return get_string('yes').': '.get_string('grade', 'grades').' >= '.$value.'%';
         } else {
             return get_string('yes').': '.get_string('attempts', 'quiz').' >= '.abs($value);
         }
