@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2022-09-06 (95)
+ - small fix for error message when adding new conditions to a taskchain
+
 2022-09-06 (94)
  - fix compatibility with PHP 8.x and Moodle 4.x [1] remove use of  deprecated string ('grade', 'core') [2] remove use of continue in switch statement; [3] remove use of curly braces on strings; [4] add 'intro' and 'introformat' fields; [5] use custom version of utf8_to_entities() that does not convert strings to lowercase;
 

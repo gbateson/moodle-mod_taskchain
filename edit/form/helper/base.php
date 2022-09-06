@@ -1265,12 +1265,14 @@ abstract class taskchain_form_helper_base {
         if (method_exists($this, $method)) {
             return $this->$method();
         }
-        $method = 'get_'.$field;
-        if (method_exists($this->record, $method)) {
-            return $this->record->$method();
-        }
-        if (isset($this->record->$field)) {
-            return $this->record->$field;
+        if ($this->record) {
+            $method = 'get_'.$field;
+            if (method_exists($this->record, $method)) {
+                return $this->record->$method();
+            }
+            if (isset($this->record->$field)) {
+                return $this->record->$field;
+            }
         }
         return null; // shouldn't happen !!
     }
@@ -1290,12 +1292,14 @@ abstract class taskchain_form_helper_base {
         }
 
         // update $this->record->$field
-        $method = 'set_'.$field;
-        if (method_exists($this->record, $method)) {
-            $this->record->$method($value);
-        } else if (isset($this->record->$field)) {
-            $this->record->$field = $value;
-            // update DB record too ?
+        if ($this->record) {
+            $method = 'set_'.$field;
+            if (method_exists($this->record, $method)) {
+                $this->record->$method($value);
+            } else if (isset($this->record->$field)) {
+                $this->record->$field = $value;
+                // update DB record too ?
+            }
         }
 
         // update $this->mform element
