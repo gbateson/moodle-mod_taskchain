@@ -180,8 +180,10 @@ function taskchain_process_formdata(stdclass $data, $mform) {
 
             if (empty($data->instance)) {
                 $parent = new stdClass();
-                $parent->name        = $data->name;
                 $parent->course      = $data->course;
+                $parent->name        = $data->name;
+                $parent->intro       = $data->intro;
+                $parent->introformat = $data->introformat;
                 $parent->timecreated = $time;
             } else {
                 if (! $parent = $DB->get_record($parenttable, array('id'=>$data->instance, 'course'=>$data->course))) {

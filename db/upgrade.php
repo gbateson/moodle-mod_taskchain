@@ -553,7 +553,7 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
-    $newversion = 2022090694;
+    $newversion = 2022091596;
     if ($oldversion < $newversion) {
         $table = new xmldb_table('taskchain');
         $fields = array(
@@ -568,6 +568,9 @@ function xmldb_taskchain_upgrade($oldversion) {
                 $dbman->add_field($table, $field);
             }
         }
+        // Set NULL intros to empty string - just to be tidy ;-)
+        $DB->set_field_select('taskchain', 'intro', '', 'intro IS NULL');
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
     if ($empty_cache) {

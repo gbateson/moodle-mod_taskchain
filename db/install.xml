@@ -8,10 +8,10 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="course"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="name" PREVIOUS="id"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" NEXT="timecreated" PREVIOUS="course"/>
-        <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="not used, but required for Moodle 4.x" NEXT="introformat" PREVIOUS="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" NEXT="intro" PREVIOUS="course"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="not used, but required for Moodle 4.x" NEXT="introformat" PREVIOUS="name"/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="not used, but required for Moodle 4.x" NEXT="timecreated" PREVIOUS="intro"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="timemodified" PREVIOUS="name"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="timemodified" PREVIOUS="introformat"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="completionmingrade" PREVIOUS="timecreated"/>
         <FIELD NAME="completionmingrade" TYPE="number" LENGTH="6" NOTNULL="true" DEFAULT="0.00" SEQUENCE="false" DECIMALS="2" NEXT="completionpass" PREVIOUS="timemodified"/>
         <FIELD NAME="completionpass" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" NEXT="completioncompleted" PREVIOUS="completionmingrade"/>

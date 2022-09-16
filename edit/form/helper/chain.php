@@ -48,7 +48,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /** sections and fields in this form **/
     protected $sections = array(
         // Note: "headings" section will be added by mod_moodleform
-        'general'    => array('edit', 'defaultrecord', 'selectrecord', 'name', 'showdescription'),
+        'general'    => array('edit', 'defaultrecord', 'selectrecord', 'name', 'intro', 'showdescription'),
         'tasks'      => array('sourcefile', 'sourcelocation', 'configfile', 'configlocation', 'addtype', 'tasknames'),
         'entrypage'  => array('entrypage', 'entrytext', 'entryoptions', 'entrycm', 'entrygrade'),
         'exitpage'   => array('exitpage', 'exittext', 'exitoptions', 'exitcm', 'exitgrade'),
@@ -70,6 +70,8 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
     /** default values in a chain record (includes form fields not stored in the database ) */
     protected $defaultvalues= array(
+        'intro'              => '',
+        'introformat'        => 0, // FORMAT_MOODLE
         'name'               => '',
         'namesource'         => mod_taskchain::TEXTSOURCE_FILE,
         'tasknamessource'    => mod_taskchain::TEXTSOURCE_FILE,
@@ -391,6 +393,21 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /////////////////////////////////////////////////////////
     // add_field ...
     /////////////////////////////////////////////////////////
+
+    /**
+     * add_field_intro
+     *
+     * @param string name of $field
+     * @todo Finish documenting this function
+     */
+    protected function add_field_intro($field)  {
+        // The intro field was added in Moodle 4.0 because it is
+        // expected in "lib/classes/output/activity_header.php".
+        $this->mform->addElement('hidden', $field, '');
+        $this->mform->setType($field, PARAM_TEXT);
+        $this->mform->addElement('hidden', $field.'format', 0);
+        $this->mform->setType($field.'format', PARAM_INT);
+    }
 
     /**
      * add_field_entrypage
@@ -1041,6 +1058,18 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /////////////////////////////////////////////////////////
     // fix_field ...
     /////////////////////////////////////////////////////////
+
+    /**
+     * fix_field_intro
+     *
+     * @param stdClass $data (passed by reference) from form
+     * @param string name of $field to fix
+     * @todo Finish documenting this function
+     */
+    protected function fix_field_intro($data, $field) {
+        $this->fix_template_notnull($data, $field, '');
+        $this->fix_template_notnull($data, $field.'format', 0);
+    }
 
     /**
      * fix_field_entrypage

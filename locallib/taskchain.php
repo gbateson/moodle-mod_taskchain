@@ -48,7 +48,7 @@ class taskchain extends taskchain_base {
     /** db field: name (string (255), default='') */
     private $name                = '';
 
-    /** db field: introtext (string, default='') */
+    /** db field: intro (string, default='') */
     private $intro               = '';
 
     /** db field: introformat (integer, default=0) */

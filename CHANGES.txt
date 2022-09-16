@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2022-09-15 (96)
+ - fix setting of intro field in Moodle 4.x
+
 2022-09-06 (95)
  - small fix for error message when adding new conditions to a taskchain
 

@@ -584,6 +584,7 @@ abstract class taskchain_form_helper_base {
         $sections = $this->get_sections();
         foreach ($sections as $sectionname => $sectionfields) {
             if ($sectionname=='headings' || $sectionname=='general' || $sectionname=='actions' || $sectionname=='hidden') {
+                $fields = array_merge($fields, array_intersect($sectionfields, array_keys($this->defaultvalues)));
                 continue;
             }
             $fields = array_merge($fields, $sectionfields);
