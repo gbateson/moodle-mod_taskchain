@@ -546,10 +546,10 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         if (class_exists('\\core_user\\fields')) {
             $fields = \core_user\fields::for_userpic();
             if ($extrafields) {
-                $fields->including($extrafields);
+                $fields->including(...$extrafields); // splat operator is available from PHP 5.5
             }
-            $fields = $fields->get_sql($tablealias, false, $fieldprefix, $idalias, false)->selects;
-            if ($tablealias === '') {
+            $fields = $fields->get_sql($tableprefix, false, $fieldprefix, $idalias, false)->selects;
+            if ($tableprefix === '') {
                 $fields = str_replace('{user}.', '', $fields);
             }
             return str_replace(', ', ',', $fields);

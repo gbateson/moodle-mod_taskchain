@@ -48,7 +48,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
     /** sections and fields in this form **/
     protected $sections = array(
         // Note: "headings" section will be added by mod_moodleform
-        'general'    => array('edit', 'defaultrecord', 'selectrecord', 'name', 'intro', 'showdescription'),
+        'general'    => array('edit', 'defaultrecord', 'selectrecord', 'name', 'showdescription'),
         'tasks'      => array('sourcefile', 'sourcelocation', 'configfile', 'configlocation', 'addtype', 'tasknames'),
         'entrypage'  => array('entrypage', 'entrytext', 'entryoptions', 'entrycm', 'entrygrade'),
         'exitpage'   => array('exitpage', 'exittext', 'exitoptions', 'exitcm', 'exitgrade'),

@@ -4524,6 +4524,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     $textbox = false;
                     $liststart = '';
             }
+            if ($textbox == false && $liststart == '') {
+                continue; // unknown question type
+            }
 
             // Skip unknown question types.
             if ($textbox == false && $liststart == '') {

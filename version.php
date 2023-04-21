@@ -40,8 +40,8 @@ $plugin->cron      = 0; // 60
 $plugin->component = 'mod_taskchain';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->requires  = 2010112400; // Moodle 2.0
-$plugin->version   = 2022091596;
-$plugin->release   = '2022-09-15 (96)';
+$plugin->version   = 2023042197;
+$plugin->release   = '2023-04-21 (97)';
 
 if (isset($CFG->yui3version) && version_compare($CFG->yui3version, '3.15.0') < 0) {
     $module = clone($plugin); // Moodle <= 2.6

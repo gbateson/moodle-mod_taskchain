@@ -232,7 +232,7 @@ class taskchain_get extends taskchain_base {
                 $value = $this->TC->$field;
             }
         } else if (isset($this->TC->$type) && is_object($this->TC->$type)) {
-            if (method_exists($this->TC->$type, $method)) {
+            if (is_object($this->TC->$type) && method_exists($this->TC->$type, $method)) {
                 $value = $this->TC->$type->$method();
             } else if (isset($this->TC->$type->$field)) {
                 $value = $this->TC->$type->$field;

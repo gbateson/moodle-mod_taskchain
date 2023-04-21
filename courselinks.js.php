@@ -55,7 +55,7 @@ function print_courselinks() {
         return false;
     }
 
-    // get optional parameters
+    // use course id to fetch course record and context
     if (! $id = optional_param('id', 0, PARAM_INT)) {
         return false;
     }
@@ -64,6 +64,45 @@ function print_courselinks() {
     }
     if (! $course->context = mod_taskchain::context(CONTEXT_COURSE, $id)) {
         return false;
+    }
+
+    $config = (object)array(
+        'showgrades' => 0,
+        'displayasblock' => 0,
+        'lowgrade' => '0',
+        'mediumgrade' => '60',
+        'highgrade' => '90',
+        'gradelinecolor' => '666',
+        'gradelinestyle' => 'dashed',
+        'gradelinewidth' => '640px'
+    );
+
+    $params = array('blockname' => 'taskchain_navigation',
+                    'parentcontextid' => $course->context->id);
+    if ($instance = $DB->get_record('block_instances', $params)) {
+        $instance->config = unserialize(base64_decode($instance->configdata));
+        foreach ($config as $name => $value) {
+            if (isset($instance->config->$name)) {
+                $config->$name = $instance->config->$name;
+            }
+        }
+    }
+
+    // Add the editing switch
+    $name = 'isediting';
+    $value = ($PAGE->user_is_editing() ? 'true' : 'false');
+    echo "TC.$name = $value;\n";
+
+    // Add other config settings
+    foreach ($config as $name => $value) {
+        $value = optional_param($name, $value, PARAM_ALPHANUM);
+        if ($name == 'gradelinecolor' && preg_match('/^[A-F0-9]+$/', $value)) {
+            $value = "#$value";
+        }
+        if ($name == 'gradelinewidth' && preg_match('/^[0-9]+$/', $value)) {
+            $value += 'px';
+        }
+        echo "TC.$name = '$value';\n";
     }
 
     $numsections = 0;
@@ -264,7 +303,7 @@ function print_courselinks() {
                     }
                 }
                 if ($zero_grade) {
-                    echo 'activityzerogrades["module-'.$cmid.'"] = 1;'."\n";
+                    echo '    TC.activityzerogrades["module-'.$cmid.'"] = 1;'."\n";
                 } else {
                     $count = 0;
                     $total = 0;
@@ -286,11 +325,11 @@ function print_courselinks() {
                         if ($showaverages) {
                             $percent = "$percent% ($count)";
                         }
-                        echo 'activitygrades["module-'.$cmid.'"] = "'.$percent.'";'."\n";
+                        echo '    TC.activitygrades["module-'.$cmid.'"] = "'.$percent.'";'."\n";
                     }
                 }
             } else {
-                echo 'activityunavailables["module-'.$cmid.'"] = 1;'."\n";
+                echo '    TC.activityunavailables["module-'.$cmid.'"] = 1;'."\n";
             }
             $result = true;
         }
@@ -298,228 +337,102 @@ function print_courselinks() {
     return $result;
 }
 ?>
-var activitygrades = new Array(); // attempted
-var activityzerogrades = new Array(); // zero-grade
-var activityunavailables = new Array(); // not available
+(function() {
+    window.TC = {};
+
+    TC.activitygrades = new Array(); // attempted
+    TC.activityzerogrades = new Array(); // zero-grade
+    TC.activityunavailables = new Array(); // not available
 <?php
 if (print_courselinks()) {
 ?>
-function modify_taskchain_links() {
+    TC.modify_taskchain_links = function(){
 
-    // this is the expected DOM that we are trying to manipulate
-    // LI.activity <================================ activities[i]
-    //   DIV (position: relative)
-    //     DIV.mod-indent-outer
-    //       DIV
-    //         DIV.activityinstance
-    //           A.taskchaingrade <===================== links[ii]
-    //             DIV.taskchain[high|med|low]grade (float: right)
-    //             IMG.activityicon
-    //             SPAN.instancename
-    //         SPAN.actions
-    //           IMG (position: absolute) <=== completion checkbox
+        document.querySelectorAll("li.activity").forEach(function(li){
 
-    var m = navigator.userAgent.match(new RegExp('MSIE (\\d+)'));
-    if (m && m[1]<=7) {
-        // IE7 and earlier
-        var classAttribute = 'className';
-    } else {
-        var classAttribute = 'class';
-    }
-    var isediting = <?php echo ($PAGE->user_is_editing() ? 'true' : 'false') ?>;
-    var showgrades = <?php echo optional_param('showgrades', 0, PARAM_INT) ?>;
-    var displayasblock = <?php echo optional_param('displayasblock', 0, PARAM_INT) ?>;
-
-    var activities = document.getElementsByTagName('li');
-    if (activities) {
-        var i_max = activities.length;
-    } else {
-        var i_max = 0;
-    }
-
-    // checkbox width may be required to prevent grades
-    // from overlapping completion checkboxes, if any
-    var checkboxWidth = 0;
-    for (var i=0; i<i_max; i++) {
-        var obj = activities[i].getElementsByTagName('span');
-        if (obj) {
-            var ii_max = obj.length;
-        } else {
-            var ii_max = 0;
-        }
-        for (var ii=0; ii<ii_max; ii++) {
-            if (obj[ii].getAttribute(classAttribute)=='actions') {
-                checkboxWidth += obj[ii].offsetWidth;
-                break;
+            if (li.matches(".label, .book, .file, .folder, .imscp, .page, .resource, .url")) {
+                return false; // resources have no score, so ignore them
             }
-        }
-        if (checkboxWidth) {
-            break;
-        }
-    }
 
-    for (var i=0; i<i_max; i++) {
-        if (typeof(activities[i].id) != 'string' || activities[i].id.substr(0, 7) != 'module-') {
-            continue; // not an item in a list of activities
-        }
-
-        var myClassName = activities[i].getAttribute(classAttribute);
-
-        if (typeof(myClassName)!='string' || myClassName.substr(0, 8)!='activity') {
-            continue; // not an Moodle activity
-        }
-
-        // skip labels and resources
-        if (myClassName.substr(9, 5)=='label') {
-            continue;
-        }
-        if (myClassName.substr(9, 4)=='book') {
-            continue;
-        }
-        if (myClassName.substr(9, 4)=='book') {
-            continue;
-        }
-        if (myClassName.substr(9, 6)=='folder') {
-            continue;
-        }
-        if (myClassName.substr(9, 5)=='imscp') {
-            continue;
-        }
-        if (myClassName.substr(9, 4)=='page') {
-            continue;
-        }
-        if (myClassName.substr(9, 8)=='resource') {
-            continue;
-        }
-        if (myClassName.substr(9, 3)=='url') {
-            continue;
-        }
-
-        var links = activities[i].getElementsByTagName('a');
-        if (links) {
-            var ii_max = links.length;
-        } else {
-            var ii_max = 0;
-        }
-        for (var ii=ii_max-1; ii>=0; ii--) {
-            if (typeof(links[ii].href)=='string') {
-                var m = links[ii].href.match(new RegExp('mod/[a-z0-9]+/view\\.php\\?id=([0-9]+)'))
-                if (m && m[1]) {
-                    break;
-                }
+            var s = "a[href*='/mod/'][href*='/view.php']";
+            var a = li.querySelector(".activityname " + s);
+            if (a === null) { // Moodle 3.11 and eariler
+                a = li.querySelector(".activityinstance " + s);
             }
-        }
-        if (ii_max==0 || ii==ii_max) {
-            continue; // could not find link to view activity
-        }
-        if (activityunavailables[activities[i].id]) {
-            var grade = '';
-            var myClassName = 'dimmed';
-        } else if (activityzerogrades[activities[i].id]) {
-            var grade = '';
-            var myClassName = '';
-        } else if (typeof(activitygrades[activities[i].id])=='undefined') {
-            var grade = '--';
-            var myClassName = 'taskchainnograde';
-        } else {
-            var grade = parseInt(activitygrades[activities[i].id]);
-            if (grade>=90) {
-                var myClassName = 'taskchainhighgrade';
-            } else if (grade>=60) {
-                var myClassName = 'taskchainmediumgrade';
+            if (a === null) {
+                return false; // shouldn't happen !!
+            }
+
+            // cache the id e.g. module-99
+            var id = li.id;
+
+            // Initialize the grade and CSS class
+            var grade = "";
+            var cssclass = "";
+
+            if (TC.activityunavailables[li.id]) {
+                cssclass = "dimmed";
+            } else if (TC.activityzerogrades[li.id]) {
+                // leave grade and class name blank
+            } else if (typeof(TC.activitygrades[li.id]) == "undefined") {
+                grade = "--";
+                cssclass = "taskchainnograde";
             } else {
-                var myClassName = 'taskchainlowgrade';
-            }
-            if (isNaN(activitygrades[activities[i].id])) {
-                grade = activitygrades[activities[i].id];
-            } else {
-                grade = grade + '%';
-            }
-        }
-        if (showgrades && grade) {
-            var div = document.createElement('div');
-            div.setAttribute(classAttribute, myClassName);
-
-            var txt = document.createTextNode(grade);
-            div.appendChild(txt);
-
-            links[ii].insertBefore(div, links[ii].childNodes[0]);
-            myClassName = 'taskchaingrade';
-        }
-        if (myClassName) {
-            var str = links[ii].getAttribute(classAttribute);
-            if (str) {
-                myClassName = str + ' ' + myClassName;
-            }
-            links[ii].setAttribute(classAttribute, myClassName);
-        }
-        if (displayasblock) {
-
-            // hide "spacer" images, and replace with left-margin CSS
-            var indentWidth = 0;
-            var obj = links[ii];
-            while (obj = obj.previousSibling) {
-                if (obj.tagName=='IMG' && obj.getAttribute(classAttribute)=='spacer') {
-                    indentWidth += (parseInt(obj.offsetWidth) || 0);
-                    obj.style.display = 'none';
+                grade = parseInt(TC.activitygrades[li.id]);
+                if (grade>=TC.highgrade) {
+                    cssclass = "taskchainhighgrade";
+                } else if (grade>=TC.mediumgrade) {
+                    cssclass = "taskchainmediumgrade";
+                } else {
+                    cssclass = "taskchainlowgrade";
+                }
+                if (isNaN(TC.activitygrades[li.id])) {
+                    grade = TC.activitygrades[li.id];
+                } else {
+                    grade = grade + "%";
                 }
             }
-            if (indentWidth) {
-                indentWidth += (parseInt(links[ii].style.marginLeft) || 0);
-                links[ii].style.marginLeft = indentWidth + 'px';
-            }
-            if (isediting==false) {
 
-                // get width, w, of widest ancestor
-                var w = 0;
-                var obj = links[ii];
-                while (obj = obj.parentNode) {
-                    w = Math.max(w, (parseInt(obj.offsetWidth) || 0));
-                    if (window.getComputedStyle) {
-                        var style = getComputedStyle(obj);
-                    } else {
-                        var style = obj.currentStyle // IE
+            if (TC.showgrades && grade) {
+                var div = document.createElement("div");
+                if (cssclass) {
+                    div.classList.add(cssclass);
+                }
+                div.appendChild(document.createTextNode(grade));
+                a.insertBefore(div, a.firstChild);
+                a.classList.add("d-block", "taskchaingrade");
+                if (TC.displayasblock) {
+                    if (TC.gradelinecolor || TC.gradelinestyle) {
+                        a.style.setProperty("border-bottom-width", "2px");
                     }
-                    indentWidth += (parseInt(style.marginLeft) || 0);
-                    indentWidth += (parseInt(style.paddingLeft) || 0);
-                    if (obj.tagName=='LI') {
-                        break;
+                    if (TC.gradelinecolor) {
+                        a.style.setProperty("border-bottom-color", TC.gradelinecolor);
+                    }
+                    if (TC.gradelinestyle) {
+                        a.style.setProperty("border-bottom-style", TC.gradelinestyle);
+                    }
+                    if (TC.gradelinewidth) {
+                        a.style.setProperty("width", "100%");
+                        a.style.setProperty("max-width", TC.gradelinewidth);
+                    }
+                    const p = a.closest(".activity-instance.d-flex");
+                    if (p) {
+                        p.classList.remove("d-flex");
+                        p.parentNode.classList.remove("d-flex");
                     }
                 }
-
-                // convert <a> to block element
-                links[ii].style.display = 'block';
-
-                // expand <a> to full width
-                if (w) {
-                    if (checkboxWidth) {
-                        w -= checkboxWidth;
-                        w -= links[ii].firstChild.offsetWidth; // grade width
-                    }
-                    if (indentWidth) {
-                        w -= indentWidth;
-                    }
-                    links[ii].style.width = w + 'px';
-                    links[ii].style.maxWidth = '95%';
-                }
+            } else if (cssclass) {
+                a.classList.add(cssclass);
             }
-        }
+        });
+    };
+
+    if (window.addEventListener) {
+        window.addEventListener("load", TC.modify_taskchain_links, false);
+    } else if (window.attachEvent) {
+        window.attachEvent("onload", TC.modify_taskchain_links);
     }
-    obj = null;
-    links = null;
-    activities = null;
-}
-
-if (window.addEventListener) {
-    window.addEventListener('load', modify_taskchain_links, false);
-} else if (window.attachEvent) {
-    window.attachEvent('onload', modify_taskchain_links);
-} else if (typeof(window.onload)=='function') {
-    window.onload_taskchain_links = onload;
-    window.onload = new Function('onload_taskchain_links();modify_taskchain_links();');
-} else {
-    window.onload = modify_taskchain_links;
-}
+}());
 
 <?php
 } // end if print_courselinks()
