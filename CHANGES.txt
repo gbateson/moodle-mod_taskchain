@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2023-09-08 (98)
+ - fix a couple of compatability issues with Moodle 4.x. [1] ensure 'introformat' field is not null, [2] ensure 'tableprefix' value is not null when request chaingrade report
+
 2023-04-21 (97)
  - fix display of grades on coure page in Moodle >= 4.x
 

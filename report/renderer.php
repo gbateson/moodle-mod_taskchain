@@ -542,6 +542,11 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      */
      function get_userfields($tableprefix = '', array $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
 
+        // Ensure $tableprefix is a string.
+        if ($tableprefix === null) {
+            $tableprefix = '';
+        }
+
         // Moodle >= 3.11
         if (class_exists('\\core_user\\fields')) {
             $fields = \core_user\fields::for_userpic();
