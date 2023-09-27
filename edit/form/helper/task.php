@@ -1150,7 +1150,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $text = $this->format_conditions($taskid, $type, $return_intro);
         $elements[] = $this->mform->createElement('static', '', '', $text);
         $name_elements = $this->get_fieldname($field.'_elements');
-        $this->mform->addGroup($elements, $name_elements, '', html_writer::empty_tag('br'));
+        if ($this->bootstrap) {
+            $label = $this->get_fieldlabel($field);
+        } else {
+            $label = '';
+        }
+        $this->mform->addGroup($elements, $name_elements, $label, html_writer::empty_tag('br'));
     }
 
     /**

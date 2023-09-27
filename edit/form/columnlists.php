@@ -109,15 +109,6 @@ class mod_taskchain_edit_columnlists_form extends moodleform {
     }
 
     /**
-     * return javascript to be inserted in footer of page
-     *
-     * @return string
-     */
-    public function get_js() {
-        return $this->form_helper->get_js();
-    }
-
-    /**
      * add_action_buttons
      *
      * @param bool $cancel whether to show cancel button, default true

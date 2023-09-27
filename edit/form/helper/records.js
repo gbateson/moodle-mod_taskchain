@@ -79,6 +79,45 @@ M.mod_taskchain_edit_form_helper_records = {
     },
 
     /**
+     * setup_selectall_checkboxes
+     *
+     * @param object Y
+     * @param string id "id_columnlistid"
+     * @return void, but will set event handlers on target checkbox
+     */
+    setup_columnlist : function(Y, id) {
+        var list = document.getElementById(id);
+        if (list) {
+            Y.one(list).on("change", function(e){
+                window.onbeforeunload = null;
+                this.get("form").submit();
+            });
+        }
+        var btn = document.getElementById(id + "submit");
+        if (btn) {
+            btn.style.setProperty("display", "none");
+        }
+    },
+
+    /**
+     * setup_selectall
+     *
+     * @param object Y
+     * @param string id "id_selectfield_all" or "id_selectrecord_all"
+     * @return void, but will set event handlers on target checkbox
+     */
+    setup_selectall : function(Y, id) {
+        var selectall = document.getElementById(id);
+        if (selectall) {
+            Y.one(selectall).on("change", function(e){
+                var n = this.get("name").substr(0, this.get("name").lastIndexOf("_"));
+                var s = "input[type=checkbox][name^=" + n + "]:not([name$=_all])";
+                document.querySelectorAll(s).forEach(cb => cb.checked = this.get("checked"));
+            });
+        }
+    },
+
+    /**
      * define_action_elements
      *
      * @param object Y
@@ -124,101 +163,54 @@ M.mod_taskchain_edit_form_helper_records = {
     set_fitem_heights_and_widths : function(Y) {
 
         // add "id" in Boost theme e.g. fitem_id_defaultrecord_1
-        var divs = document.querySelectorAll("div.form-group:not([id])");
-        for (var d in divs) {
-            if (divs[d].querySelector) {
-                var input = divs[d].querySelector("input[id]");
-                if (input) {
-                    divs[d].id = "fitem_" + input.id;
-                }
+        document.querySelectorAll("div.form-group:not([id])").forEach(function(div){
+            var input = div.querySelector("input[id]");
+            if (input) {
+                div.setAttribute("id", "fitem_" + input.id);
             }
-        }
+        });
 
-        var fieldsets = document.getElementsByTagName("FIELDSET")
-        if (fieldsets) {
-            var hdrFieldsetId = new RegExp("^labels|defaults|selects|(record[0-9]+)$");
-            var fcontainerClass = new RegExp("\\b"+"fcontainer"+"\\b");
-            var felementClass = new RegExp("\\b"+"felement"+"\\b");
-            var fitemClass = new RegExp("\\b"+"fitem"+"\\b");
-            var fitemId = new RegExp("^(?:fgroup|fitem)_id_(?:(?:defaultfield|selectfield)_)?([a-z]+).*$");
-            var maxWidths = new Array();
-            var f_max = fieldsets.length;
-            for (var f=0; f<f_max; f++) {
-                if (fieldsets[f].id.match(hdrFieldsetId)) {
-                    var divs = fieldsets[f].getElementsByTagName("DIV");
-                    if (divs) {
-                        var maxRight = 0;
-                        var maxHeight = 0;
-                        var d_max = divs.length;
-                        for (var d=0; d<d_max; d++) {
-                            if (divs[d].className && divs[d].className.match(fitemClass)) {
-                                if (divs[d].offsetLeft && divs[d].offsetWidth) {
-                                    maxRight = Math.max(maxRight, divs[d].offsetLeft + divs[d].offsetWidth);
-                                }
-                                if (divs[d].parentNode && divs[d].parentNode.className && divs[d].parentNode.className.match(fcontainerClass)) {
-                                    if (divs[d].style.width) {
-                                        divs[d].style.width = null;
-                                    }
-                                }
-                                var col = divs[d].id.replace(fitemId, "$1");
-                                var c_max = divs[d].childNodes.length;
-                                for (var c=0; c<c_max; c++) {
-                                    var child = divs[d].childNodes[c];
-                                    if (child.className && child.className.match(felementClass)) {
-                                        if (child.offsetHeight) {
-                                            maxHeight = Math.max(maxHeight, child.offsetHeight);
-                                        }
-                                        if (child.offsetWidth) {
-                                            if (maxWidths[col]==null) {
-                                                maxWidths[col] = 0;
-                                            }
-                                            maxWidths[col] = Math.max(maxWidths[col], child.offsetWidth);
-                                        }
-                                    }
-                                    var child = null;
-                                }
-                            }
-                        }
-                        for (var d=0; d<d_max; d++) {
-                            if (divs[d].parentNode && divs[d].parentNode.className && divs[d].parentNode.className.match(fcontainerClass)) {
-                                if (divs[d].className && divs[d].className.match(fitemClass)) {
-                                    divs[d].style.height = maxHeight + "px";
-                                }
-                            }
-                        }
-                        if (maxRight) {
-                            fieldsets[f].style.width = (maxRight - fieldsets[f].offsetLeft) + "px";
-                        }
-                     }
-                     divs = null;
-                }
+        var fitemId = new RegExp("^(?:fgroup|fitem)_id_(?:(?:defaultfield|selectfield)_)?([a-z]+).*$");
+
+        var maxRight = 0;
+        var maxWidths = new Array();
+
+        var s = "fieldset[id^=labels],"
+              + "fieldset[id^=defaults],"
+              + "fieldset[id^=selects],"
+              + "fieldset[id^=record]";
+        document.querySelectorAll(s).forEach(function(fieldset){
+            fieldset.querySelectorAll("div.fcontainer").forEach(function(fcontainer){
+                fcontainer.style.setProperty("width", "unset");
+            });
+            var maxHeight = 0;
+            fieldset.querySelectorAll("div.fitem").forEach(function(fitem){
+                maxRight = Math.max(maxRight, fitem.offsetLeft + fitem.offsetWidth);
+                var colname = fitem.id.replace(fitemId, "$1");
+                fitem.querySelectorAll(".felement").forEach(function(felement){
+                    maxHeight = Math.max(maxHeight, felement.offsetHeight);
+                    if (maxWidths[colname] === undefined) {
+                        maxWidths[colname] = felement.offsetWidth;
+                    } else {
+                        maxWidths[colname] = Math.max(maxWidths[colname], felement.offsetWidth);
+                    }
+                });
+            });
+            fieldset.querySelectorAll("div.fitem").forEach(function(fitem){
+                fitem.style.setProperty("min-height", maxHeight + "px");
+            });
+        });
+
+        document.querySelectorAll(s).forEach(function(fieldset){
+            if (maxRight) {
+                const w = (maxRight - fieldset.offsetLeft);
+                fieldset.style.setProperty("width", w + "px");
             }
-            for (var f=0; f<f_max; f++) {
-                if (fieldsets[f].id.match(hdrFieldsetId)) {
-                    var divs = fieldsets[f].getElementsByTagName("DIV");
-                    if (divs) {
-                        var d_max = divs.length;
-                        for (var d=0; d<d_max; d++) {
-                            if (divs[d].parentNode && divs[d].parentNode.className && divs[d].parentNode.className.match(fcontainerClass)) {
-                                var col = divs[d].id.replace(fitemId, "$1");
-                                if (col) {
-                                    if (maxWidths[col] && maxWidths[col] != divs[d].offsetWidth) {
-                                        divs[d].style.width = maxWidths[col] + "px";
-                                    }
-                                }
-                            }
-                        }
-                     }
-                     divs = null;
-                }
-            }
-            hdrFieldsetId = null;
-            fcontainerClass = null;
-            felementClass = null;
-            fitemClass = null;
-            fitemId = null;
-        }
-        fieldsets = null;
+            fieldset.querySelectorAll("div.fitem").forEach(function(fitem){
+                var colname = fitem.id.replace(fitemId, "$1");
+                fitem.style.setProperty("min-width", maxWidths[colname] + "px");
+            });
+        });
     },
 
     /**

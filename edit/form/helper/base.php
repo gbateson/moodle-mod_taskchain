@@ -190,6 +190,9 @@ abstract class taskchain_form_helper_base {
     /** boolean switch denoting whether or not this record is the default record */
     protected $is_default_record = false;
 
+    /** integer value of Bootstrap version */
+    protected $bootstrap = 0;
+
     /**
      * __construct
      *
@@ -200,7 +203,7 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     public function __construct(&$mform, &$context, &$record, $is_multiple=false) {
-        global $CFG, $TC;
+        global $CFG, $TC, $OUTPUT;
 
         if (empty($TC)) {
             $TC = new mod_taskchain();
@@ -211,6 +214,16 @@ abstract class taskchain_form_helper_base {
         $this->context  = $context;
         $this->record   = $record;
         $this->is_multiple = $is_multiple;
+
+        // Themes in Moodle 2.5 to 3.6 use Bootstrap 2.3
+        // Themes in Moodle 3.2 (and later) use Bootstrap 4.x
+        // The exact version of Bootstrap is available by search for 'Bootstrap v' in "style/moodle.css"
+        if ($CFG->theme == 'boost') {
+            $this->bootstrap = true;
+        } else {
+            $config = theme_config::load($CFG->theme);
+            $this->bootstrap = in_array('boost', $config->parents);
+        }
 
         // if this form is for a single field, adjust the $sections array
         if ($field = optional_param('field', '' , PARAM_ALPHANUM)) {
@@ -1188,7 +1201,7 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function get_sectionlabel_filters() {
-        return get_string('filters', 'admin');
+        return ''; // get_string('filters', 'admin');
     }
 
     /**
@@ -1229,6 +1242,20 @@ abstract class taskchain_form_helper_base {
         } else {
             return get_string($field, 'mod_taskchain');
         }
+    }
+
+    /**
+     * get_bootstrap_fieldlabel
+     *
+     * @param string $field name of field
+     * @return string
+     * @todo Finish documenting this function
+     */
+    protected function get_bootstrap_fieldlabel($field) {
+        if ($this->bootstrap) {
+            return $this->get_fieldlabel($field);
+        }
+        return ''; // Moodle <= 3.1
     }
 
     /**
@@ -1667,7 +1694,8 @@ abstract class taskchain_form_helper_base {
     /////////////////////////////////////////////////////////
 
     /**
-     * format_section_labels
+     * Format (i.e. add to $this->mform) the "labels" section
+     * of the form, including the heading and all the fields.
      *
      * @todo Finish documenting this function
      */
@@ -1680,7 +1708,7 @@ abstract class taskchain_form_helper_base {
                 $this->$method($fields);
             } else {
                 foreach ($fields as $field) {
-                    $this->format_fieldlabel($field);
+                    $this->format_labelfield($field);
                 }
             }
         }
@@ -1743,44 +1771,16 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
-     * format_sectionlabel_labels
-     *
-     * @param string $section name of section
-     * @todo Finish documenting this function
-     */
-    protected function format_sectionlabel_labels($section) {
-        $this->mform->addElement('header', $section, '');
-    }
-
-    /**
-     * format_sectionlabel_defaults
-     *
-     * @param string $section name of section
-     * @todo Finish documenting this function
-     */
-    protected function format_sectionlabel_defaults($section) {
-        $this->mform->addElement('header', $section, '');
-    }
-
-    /**
-     * format_sectionlabel_selects
-     *
-     * @param string $section name of section
-     * @todo Finish documenting this function
-     */
-    protected function format_sectionlabel_selects($section) {
-        $this->mform->addElement('header', $section, '');
-    }
-
-    /**
      * format_sectionlabel_record
      *
      * @param string $section name of section
      * @todo Finish documenting this function
      */
     protected function format_sectionlabel_record($section) {
-        $id = $this->get_fieldvalue('id');
-        $this->mform->addElement('header', $section.$id, '');
+        static $counter = 0;
+        $id = $section.$this->get_fieldvalue('id'); // e.g. "record99"
+        $text = get_string($this->recordtype.'x', 'taskchain', ++$counter);
+        $this->mform->addElement('header', $id, $text);
     }
 
     /**
@@ -1794,43 +1794,69 @@ abstract class taskchain_form_helper_base {
     }
 
     /**
-     * format_fieldlabel
+     * format_labelfield
      *
      * @param string $field name of field
      * @todo Finish documenting this function
      */
-    protected function format_fieldlabel($field) {
-        $method = 'format_fieldlabel_'.$field;
+    protected function format_labelfield($field) {
+        $method = 'format_labelfield_'.$field;
         if (method_exists($this, $method)) {
-            $this->$method();
+            $this->$method($field);
         } else {
-            $name = $field.'_label';
-            $text = $this->get_fieldlabel($field).$this->get_helpicon($field);
-            $text = html_writer::tag('span', $text, array('class' => 'headerfield'));
-            $this->mform->addElement('static', $name, '', $text);
+            $helpicon = $this->get_helpicon($field);
+            $text = $this->get_fieldlabel($field).$helpicon;
+            $this->format_headerfield($field, 'labelfield', $text);
         }
     }
 
     /**
-     * format_fieldlabel_defaultrecord
+     * format_labelfield_defaultrecord
      *
      * @todo Finish documenting this function
      */
-    protected function format_fieldlabel_defaultrecord() {
-        $text = $this->get_fieldlabel('defaultrecord');
-        $text = html_writer::tag('span', $text, array('class' => 'headerfield'));
-        $this->mform->addElement('static', 'defaultrecord_label', '', $text);
+    protected function format_labelfield_defaultrecord($field) {
+        $text = $this->get_fieldlabel($field);
+        $this->format_headerfield($field, 'labelfield', $text);
     }
 
     /**
-     * format_fieldlabel_select
+     * format_labelfield_select
      *
      * @todo Finish documenting this function
      */
-    protected function format_fieldlabel_selectrecord() {
-        $text = $this->get_fieldlabel('selectrecord');
-        $text = html_writer::tag('span', $text, array('class' => 'headerfield'));
-        $this->mform->addElement('static', 'selectrecord_label', '', $text);
+    protected function format_labelfield_selectrecord($field) {
+        $text = $this->get_fieldlabel($field);
+        $this->format_headerfield($field, 'labelfield', $text);
+    }
+
+    /**
+     * format_headerfield
+     *
+     * @todo Finish documenting this function
+     */
+    protected function format_headerfield($field, $class, $text) {
+        $label = $this->get_bootstrap_fieldlabel($field);
+        $text = html_writer::tag('span', $text, array('class' => $class));
+        $this->mform->addElement('static', 'header_'.$field, $label, $text);
+    }
+
+    /**
+     * format_labelfield_addtype
+     *
+     * @todo Finish documenting this function
+     */
+    protected function format_labelfield_addtype($field) {
+        // do nothing
+    }
+
+    /**
+     * format_labelfield_tasknames
+     *
+     * @todo Finish documenting this function
+     */
+    protected function format_labelfield_tasknames($field) {
+        // do nothing
     }
 
     /**
@@ -1866,14 +1892,24 @@ abstract class taskchain_form_helper_base {
         global $CFG, $OUTPUT, $PAGE;
 
         static $edit = null;
-        if ($edit===null) {
-            if (defined('AJAX_SCRIPT') && AJAX_SCRIPT) {
+        static $icon = null;
+        if ($edit === null) {
+            if ($this->bootstrap) {
+                $edit = false; // switch off editing for now.
+            } else if (defined('AJAX_SCRIPT') && AJAX_SCRIPT) {
                 $edit = (isset($_POST) && count($_POST));
             } else {
                 $filepath = '/mod/taskchain/edit/form/helper.js';
                 if ($edit = file_exists($CFG->dirroot.$filepath)) {
                     $PAGE->requires->js($filepath);
                 }
+            }
+            if (file_exists($CFG->dirroot.'/pix/t/editstring.png')) {
+                // Moodle >= 2.3
+                $icon = 't/editstring';
+            } else {
+                // Moodle <= 2.2
+                $icon = 't/edit';
             }
         }
 
@@ -1892,19 +1928,11 @@ abstract class taskchain_form_helper_base {
             $params  = array($idfield => $idvalue, 'field' => $field);
             $href    = $this->TC->url->edit($types, $params);
 
-            if (file_exists($CFG->dirroot.'/pix/t/editstring.png')) {
-                // Moodle >= 2.3
-                $icon = 't/editstring';
-            } else {
-                // Moodle <= 2.2
-                $icon = 't/edit';
-            }
-
             $onclick = $this->ajax_edit_onclick($field);
             $params  = array('title' => $label, 'onclick' => $onclick);
 
-            $icon    = $OUTPUT->pix_icon($icon, get_string('edit'));
-            $value  .= ($value=='' ? '' : ' ').html_writer::link($href, $icon, $params);
+            $pixicon = $OUTPUT->pix_icon($icon, get_string('edit'));
+            $value  .= ($value=='' ? '' : ' ').html_writer::link($href, $pixicon, $params);
         }
 
         return $value;
@@ -1921,10 +1949,9 @@ abstract class taskchain_form_helper_base {
         if (method_exists($this, $method)) {
             $this->$method($field);
         } else {
-            $name = 'defaultfield_'.$field;
-            $text = $this->format_fieldvalue($field, $this->get_defaultvalue($field));
-            $text = html_writer::tag('span', $text, array('class' => 'defaultfield'));
-            $this->mform->addElement('static', $name, '', $text);
+            $text = $this->get_defaultvalue($field);
+            $text = $this->format_fieldvalue($field, $text);
+            $this->format_headerfield($field, 'defaultfield', $text);
         }
     }
 
@@ -1968,7 +1995,9 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function format_defaultfield_defaultrecord($field) {
-        $this->mform->addElement('radio', $field, null, null, 0);
+        $label = $this->get_bootstrap_fieldlabel($field);
+        $text = ($label == '' ? '' : ' ');
+        $this->mform->addElement('radio', $field, $label, $text, 0);
     }
 
     /**
@@ -1994,7 +2023,13 @@ abstract class taskchain_form_helper_base {
             $this->$method($field);
         } else {
             $name = 'selectfield_'.$field;
-            $this->mform->addElement('checkbox', $name, '');
+            $label = $this->get_bootstrap_fieldlabel($field);
+            $text = ($label == '' ? '' : ' ');
+            //$this->mform->addElement('checkbox', $name, $label, $text);
+
+            $elements = array($this->mform->createElement('checkbox', $name, '', $text));
+            $this->mform->addGroup($elements, $name.'_elements', $label, array(' '), false);
+
         }
     }
 
@@ -2048,44 +2083,14 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function format_selectfield_selectrecord($field) {
-
-        // element names
-        $name_rows = $field.'_all';
-        $name_cols = 'selectfield_all';
-        $name_elements = $field.'_elements';
-
-        // javascript to (de)select all rows/cols
-        $js = '';
-        $js .= '<script type="text/javascript">'."\n";
-        $js .= "//<![CDATA[\n";
-        $js .= "    function selectAll(checkbox, nameprefix) {\n";
-        $js .= "        var target = new RegExp('^' + nameprefix + '[^a-zA-Z0-9]');\n";
-        $js .= "        var inputs = document.getElementsByTagName('input');\n";
-        $js .= "        for (var i=0; i<inputs.length; i++) {\n";
-        $js .= "            if(inputs[i].type && inputs[i].type=='checkbox') {\n";
-        $js .= "                if(inputs[i].name && inputs[i].name.match(target)) {\n";
-        $js .= "                    inputs[i].checked = checkbox.checked;\n";
-        $js .= "                }\n";
-        $js .= "            }\n";
-        $js .= "        }\n";
-        $js .= "        inputs = null;\n";
-        $js .= "    }\n";
-        $js .= "    var obj = document.getElementById('id_".$name_rows."');\n";
-        $js .= "    if (obj) {\n";
-        $js .= "        obj.onclick = function() { selectAll(this, 'selectrecord') }\n";
-        $js .= "    }\n";
-        $js .= "    var obj = document.getElementById('id_".$name_cols."');\n";
-        $js .= "    if (obj) {\n";
-        $js .= "        obj.onclick = function() { selectAll(this, 'selectfield') }\n";
-        $js .= "    }\n";
-        $js .= "//]]>\n";
-        $js .= '</script>'."\n";
-
-        $elements = array();
-        $elements[] = $this->mform->createElement('checkbox', $name_rows, '');
-        $elements[] = $this->mform->createElement('checkbox', $name_cols, '');
-        $elements[] = $this->mform->createElement('static', '', '', $js);
-        $this->mform->addGroup($elements, $name_elements, '', ' ', false);
+        $elements = array(
+            $this->mform->createElement('checkbox', 'selectrecord_all'),
+            $this->mform->createElement('checkbox', 'selectfield_all'),
+        );
+        $label = $this->get_bootstrap_fieldlabel($field);
+        $text = ($label == '' ? '' : ' ');
+        $this->mform->addGroup($elements, $field.'_elements', $label, $text, false);
+        // the javascript to selectall is initiated in the "add_field_action" method in "records.php"
     }
 
     /**
@@ -2142,9 +2147,10 @@ abstract class taskchain_form_helper_base {
             $this->$method($field);
         } else {
             $name  = $this->get_fieldname($field);
+            $label = $this->get_bootstrap_fieldlabel($field);
             $value = $this->get_fieldvalue($field);
             $value = $this->format_fieldvalue($field, $value);
-            $this->mform->addElement('static', $name, '', $value);
+            $this->mform->addElement('static', $name, $label, $value);
         }
     }
 
@@ -2217,7 +2223,8 @@ abstract class taskchain_form_helper_base {
 
         if ($text) {
             $name = $this->get_fieldname($field);
-            $this->mform->addElement('static', $name, '', $text);
+            $label = $this->get_bootstrap_fieldlabel($field);
+            $this->mform->addElement('static', $name, $label, $text);
         }
     }
 
@@ -2227,8 +2234,11 @@ abstract class taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function format_field_defaultrecord($field) {
+        $name = $this->get_fieldname($field);
+        $label = $this->get_bootstrap_fieldlabel($field);
+        $text = ($label == '' ? '' : ' ');
         $value = $this->get_fieldvalue('id');
-        $this->mform->addElement('radio', $field, null, null, $value);
+        $this->mform->addElement('radio', $field, $label, $text, $value);
     }
 
     /**
@@ -2238,7 +2248,9 @@ abstract class taskchain_form_helper_base {
      */
     protected function format_field_selectrecord($field) {
         $name = $this->get_fieldname($field);
-        $formelement = $this->mform->addElement('checkbox', $name, '');
+        $label = $this->get_bootstrap_fieldlabel($field);
+        $text = ($label == '' ? '' : ' ');
+        $formelement = $this->mform->addElement('checkbox', $name, $label, $text);
     }
 
     /**
@@ -2405,12 +2417,19 @@ abstract class taskchain_form_helper_base {
     /////////////////////////////////////////////////////////
 
     /**
-     * return javascript to be inserted in footer of page
+     * get_module_js
      *
-     * @return string
+     * @param string $objectname of javascript object
+     * @return array
+     * @todo Finish documenting this function
      */
-    public function get_js() {
-        return '';
+    protected function get_module_js($objectname) {
+        // determine fullpath of js file from $objectname
+        // e.g. if $objectname is "M.mod_taskchain_edit_form_helper_records",
+        // then $fullpath is "/mod/taskchain/edit/form/helper/records.js"
+        $fullpath = str_replace('_', '/', $objectname);
+        $fullpath = preg_replace('/^.+(mod\/taskchain\/.*)/', '/$1.js', $fullpath);
+        return array('name' => $objectname, 'fullpath' => $fullpath);
     }
 
     /**

@@ -195,30 +195,16 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $name_submit = $this->get_fieldname($field.'submit');
             $name_elements = $this->get_fieldname($field.'_elements');
 
-            $elements = array();
-            $elements[] = $this->mform->createElement('select', $name, '', $list);
-            $elements[] = $this->mform->createElement('submit', $name_submit, get_string('go'));
-
-            $text = '';
-            $text .= '<script type="text/javascript">'."\n";
-            $text .= '//<![CDATA['."\n";
-            $text .= '    var obj = document.getElementById("id_'.$name.'");'."\n";
-            $text .= '    if (obj) {'."\n";
-            $text .= '        obj.onchange = function() {window.onbeforeunload = null; this.form.submit()};'."\n";
-            $text .= '    }'."\n";
-            $text .= '    var obj = document.getElementById("id_'.$name_submit.'");'."\n";
-            $text .= '    if (obj) {'."\n";
-            $text .= '        obj.style.display = "none";'."\n";
-            $text .= '    }'."\n";
-            $text .= '//]]>'."\n";
-            $text .= '</script>'."\n";
-
+            // Create "command" element to initiate popup for editing a columnlist
             // command($type, $taskchainscriptname, $id, $params, $popup=false)
-            $params = array();
             $popup = array('width' => 300, 'fullheight' => true);
-            $text .= $output->command('edit', 'edit/columnlists.php', $this->recordtype, $params, $popup);
-            $elements[] = $this->mform->createElement('static', '', '', $text);
+            $command = $output->command('edit', 'edit/columnlists.php', $this->recordtype, array(), $popup);
 
+            $elements = array(
+                $this->mform->createElement('select', $name, '', $list),
+                $this->mform->createElement('submit', $name_submit, get_string('go')),
+                $this->mform->createElement('static', '', '', $command)
+            );
             $this->mform->addGroup($elements, $name_elements, $label, ' ', false);
 
             $this->mform->setType($name, PARAM_ALPHANUM);
@@ -235,12 +221,13 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     }
 
     /**
-     * add_section_labels
+     * This function add the "labels" section of the records form.
      *
      * @todo Finish documenting this function
      */
     public function add_section_labels($section, $fields) {
         if ($record = $this->get_live_records(1)) {
+            // $record is a 'taskchain_form_helper_task' object.
             $record->format_section_labels();
         }
     }
@@ -318,8 +305,9 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
                 $this->$method($action, $name);
             } else {
                 // by default we add this action as a radio button
-                $label = get_string($action, 'mod_taskchain');
-                $this->mform->addElement('radio', $name, '', $label, $action);
+                $label = get_string('action');
+                $text = get_string($action, 'mod_taskchain');
+                $this->mform->addElement('radio', $name, $label, $text, $action);
             }
 
             // add $action details, if required
@@ -333,28 +321,22 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $this->mform->setDefault($name, $default);
             $this->mform->setType($name, PARAM_ALPHA);
 
-            // add javascript to format actions
-            $module = $this->get_module_js();
-            $options = array('fieldsetid' => "actionshdr",
-                             'fieldname' => $name,
-                             'actions' => $actions);
             $M = 'M.mod_taskchain_edit_form_helper_records';
-            $PAGE->requires->js_init_call("$M.fix_css_classes",              null, false, $module);
-            $PAGE->requires->js_init_call("$M.setup_action_elements",    $options, false, $module);
-            $PAGE->requires->js_init_call("$M.set_fitem_heights_and_widths", null, false, $module);
-            $PAGE->requires->js_init_call("$M.set_bottom_borders",           null, false, $module);
-        }
-    }
+            $module = $this->get_module_js($M);
+            $options = array('actionshdr', $name, $actions);
 
-    /**
-     * get_module_js
-     *
-     * @return array
-     * @todo Finish documenting this function
-     */
-    protected function get_module_js() {
-        return array('name'     => 'M.mod_taskchain_edit_form_helper_records',
-                     'fullpath' => '/mod/taskchain/edit/form/helper/records.js');
+            $PAGE->requires->js_init_call("$M.fix_css_classes", null, false, $module);
+            $PAGE->requires->js_init_call("$M.setup_columnlist", array('id_columnlistid'), false, $module);
+            $PAGE->requires->js_init_call("$M.setup_selectall", array('id_selectfield_all'), false, $module);
+            $PAGE->requires->js_init_call("$M.setup_selectall", array('id_selectrecord_all'), false, $module);
+            $PAGE->requires->js_init_call("$M.setup_action_elements", $options, false, $module);
+
+            if (empty($this->bootstrap)) {
+                // add javascript to fix some dimensions and borders
+                $PAGE->requires->js_init_call("$M.set_fitem_heights_and_widths", null, false, $module);
+                $PAGE->requires->js_init_call("$M.set_bottom_borders", null, false, $module);
+            }
+        }
     }
 
     /**
@@ -589,7 +571,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @return integer -1 ($a > $b), 0 (equal), or 1 ($a < $b)
      * @todo Finish documenting this function
      */
-    protected function sort_sortorder_desc(&$a, &$b) {
+    protected function sort_sortorder_desc($a, $b) {
         return $this->sort($a, $b, 'sortorder', -1, 1);
     }
 
@@ -601,7 +583,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @return integer 1 ($a > $b), 0 (equal), or -1 ($a < $b)
      * @todo Finish documenting this function
      */
-    protected function sort_sortorder_asc(&$a, &$b) {
+    protected function sort_sortorder_asc($a, $b) {
         return $this->sort($a, $b, 'sortorder', 1, -1);
     }
 
@@ -617,7 +599,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @return integer 1 ($a > $b), 0 ($a==$b), or -1 ($a < $b)
      * @todo Finish documenting this function
      */
-    protected function sort(&$a, &$b, $field, $gt, $lt, $eq=0) {
+    protected function sort($a, $b, $field, $gt, $lt, $eq=0) {
         $method = 'get_'.$field;
 
         if (method_exists($a, $method)) {
@@ -1022,7 +1004,11 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      */
     protected function add_field_sortfield($field, $nameprefix='') {
         $name = $this->get_fieldname($nameprefix.$field);
-        $label = $this->get_fieldlabel($field);
+        if ($this->bootstrap) {
+            $label = $this->get_fieldlabel($field);
+        } else {
+            $label = '';
+        }
         $list = $this->get_sortfield_fields();
         $this->mform->addElement('select', $name, $label, $list);
         $this->add_helpbutton($name, $field, 'taskchain');

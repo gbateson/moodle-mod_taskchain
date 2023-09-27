@@ -25,759 +25,329 @@
  * @since     Moodle 2.0
  */
 
-/** generic style */
-div.centeredboxtable { margin-left: auto; margin-right: auto; width: 600px; text-align: center; }
-
-/** course view **/
-body.path-course-view div.taskchainrecentactivity p { margin: 0px; }
-body.path-course-view div.taskchainrecentactivity ul { font-size: 0.8em; margin: 0em 0em 0em 1em; padding: 0em 0em 0em 1em; }
-
-/** mod taskchain view **/
-#page-mod-taskchain-view .region-content { text-align: center; }
-#page-mod-taskchain-view .region-content ul.taskchainwarnings,
-#page-mod-taskchain-view .region-content table.taskchainentryoptions,
-#page-mod-taskchain-view .region-content table.taskchainattempts,
-#page-mod-taskchain-view .region-content table.taskchainattemptssummary,
-#page-mod-taskchain-view .region-content table.taskchaindeleteattempts { margin-left: auto; margin-right: auto; }
-#page-mod-taskchain-view .region-content table.taskchainentryoptions td.c0 { font-weight: bold; text-align: right; }
-#page-mod-taskchain-view .region-content table.taskchainentryoptions td.c1 { font-weight: normal; text-align: left; }
-
-/** mod taskchain attempt **/
-#page-mod-taskchain-attempt .region-content table.taskchaintaskssummary { margin-left: auto; margin-right: auto; }
-#page-mod-taskchain-attempt div.taskchainstopbutton { position: absolute; right: 0px; top: 0.8em; }
-#page-mod-taskchain-attempt div.taskchainstopbutton .FuncButton,
-#page-mod-taskchain-attempt div.taskchainstopbutton .FuncButtonUp,
-#page-mod-taskchain-attempt div.taskchainstopbutton .FuncButtonDown { margin-right: 18px; }
-#page-mod-taskchain-attempt input,
-#page-mod-taskchain-attempt textarea { width: auto; }
-
-/** mod taskchain submit **/
-#page-mod-taskchain-submit .region-content { text-align: center; }
-#page-mod-taskchain-submit .region-content ul.taskchainexitfeedback,
-#page-mod-taskchain-submit .region-content p.taskchainwhatnext,
-#page-mod-taskchain-submit .region-content ul.taskchainexitfeedback li { list-style-type: none; }
-#page-mod-taskchain-submit .region-content li.taskchainexitencouragement { font-size: 1.2em; margin-top: 6px; margin-bottom: 6px; }
-#page-mod-taskchain-submit .region-content table.taskchainexitlinks { margin-left: auto; margin-right: auto; }
-#page-mod-taskchain-submit .region-content table.taskchainexitlinks td.c0 { font-weight: bold; text-align: right; }
-#page-mod-taskchain-submit .region-content table.taskchainexitlinks td.c1 { font-weight: normal; text-align: left; }
-
-/** mod taskchain index **/
-#page-mod-taskchain-index .region-content { text-align: center; }
-#page-mod-taskchain-index .region-content table { margin-left: auto; margin-right: auto; }
-
-/** mod taskchain report **/
-#page-mod-taskchain-report table.flexible tr.emptyrow { display: none; }
-/* ================= */
-#page-mod-taskchain-report table.reportheader th:after { content: ":"; }
-#page-mod-taskchain-report table.reportheader th { text-align: right; padding-right: 4px; }
-#page-mod-taskchain-report table.reportheader td { text-align: left; padding-left: 4px; }
-/* ================= */
-#page-mod-taskchain-report table#attempts { clear: both; }
-#page-mod-taskchain-report table#attempts.analysis td.c0 { font-weight: bold; }
-#page-mod-taskchain-report table#attempts.analysis td.c0:after { content: ":"; }
-/* ================= */
-#page-mod-taskchain-report div#page,
-#page-mod-taskchain-report div#page div#page-content,
-#page-mod-taskchain-report div#page div#page-content div#region-main-box,
-#page-mod-taskchain-report div#page div#page-content div#region-main-box div#region-post-box,
-#page-mod-taskchain-report div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap,
-#page-mod-taskchain-report div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap div#region-main,
-#page-mod-taskchain-report div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap div#region-main div.region-content,
-#page-mod-taskchain-report div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap div#region-main div.region-content #attemptsform div.no-overflow { overflow:visible; }
-/* ================= */
-#page-mod-taskchain-report table#attempts th{ white-space: normal; }
-#page-mod-taskchain-report table#attempts td{ width: 60px; text-align: center; }
-#page-mod-taskchain-report table#attempts td.fullname,
-#page-mod-taskchain-report table#attempts td.taskname{ width: 120px; text-align: left; }
-#page-mod-taskchain-report table#attempts td.timemodified{ width: 80px; }
-#page-mod-taskchain-report table#attempts td.responsefield{ text-align: right; }
-#page-mod-taskchain-report table#attempts th span.grademethod,
-#page-mod-taskchain-report table#attempts th span.scoremethod{ font-size: 0.8em; font-weight: normal; }
-/* ================= */
-#page-mod-taskchain-report ul.response{ text-align: left; padding: 0px; margin-top: 0px; text-indent: -6px; }
-#page-mod-taskchain-report ul.response li { list-style: none; text-align: left; } /* white-space:nowrap; */
-#page-mod-taskchain-report ul.response li.correct.tick_green_small { color: green; list-style-image: url([[pix:i/tick_green_small]]); }
-#page-mod-taskchain-report ul.response li.correct.grade_correct { color: green; list-style-image: url([[pix:i/grade_correct]]); }
-#page-mod-taskchain-report ul.response li.ignored { color: grey; list-style-image: url([[pix:i/show]]); }
-#page-mod-taskchain-report ul.response li.wrong.cross_red_small { color: red; list-style-image: url([[pix:i/cross_red_small]]); }
-#page-mod-taskchain-report ul.response li.wrong.grade_incorrect { color: red; list-style-image: url([[pix:i/grade_incorrect]]); }
-#page-mod-taskchain-report ul.response li.score { color: inherit; list-style-image: url([[pix:i/item]]); }
-#page-mod-taskchain-report ul.response li.hintsclueschecks { color: #666666; list-style-image: url([[pix:i/item]]); }
-
-/** mod taskchain review **/
-#page-mod-taskchain-review table#responses { clear: both; margin-left: auto; margin-right: auto; }
-#page-mod-taskchain-review table#responses td.c0,
-#page-mod-taskchain-review table#responses td.c2,
-#page-mod-taskchain-review table#responses td.c4,
-#page-mod-taskchain-review table#responses td.c6 { font-weight: bold; text-align: right; }
-#page-mod-taskchain-review table#responses td.c1,
-#page-mod-taskchain-review table#responses td.c3,
-#page-mod-taskchain-review table#responses td.c5,
-#page-mod-taskchain-review table#responses td.lastcol { font-weight: normal; text-align: left; }
-#page-mod-taskchain-review table#responses td.c0:after,
-#page-mod-taskchain-review table#responses td.c2:after,
-#page-mod-taskchain-review table#responses td.c4:after,
-#page-mod-taskchain-review table#responses td.c6:after { content: ":"; }
-#page-mod-taskchain-review table#responses td.lastcol:after { content: ""; }
-
-/** mod taskchain edit task **/
-#page-mod-taskchain-edit-task #reviewoptionshdr .fitem { clear: none; float: left; margin-left: 48px; width: 20%; }
-#page-mod-taskchain-edit-task #reviewoptionshdr .fitemtitle { font-weight: bold; margin-left: 0; text-align: left; width: 100%; }
-#page-mod-taskchain-edit-task #reviewoptionshdr fieldset.fgroup { margin-left: 0; text-align: left; width: 100%; }
-#page-mod-taskchain-edit-task #reviewoptionshdr fieldset.fgroup { clear: left; margin: 0 0 1em; }
-#page-mod-taskchain-edit-task #reviewoptionshdr fieldset.fgroup > span { clear: left; float: left; line-height: 1.7; }
-#page-mod-taskchain-edit-task #reviewoptionshdr fieldset.fgroup span label { margin-left: 0.4em; }
-
-#page-mod-taskchain-edit-task.dir-rtl #reviewoptionshdr .fitem { float: right; }
-#page-mod-taskchain-edit-task.dir-rtl #reviewoptionshdr .fitemtitle { text-align: right; }
-#page-mod-taskchain-edit-task.dir-rtl #reviewoptionshdr fieldset.fgroup span { float: right; clear: right; }
-
-/** mod taskchain edit tasks **/
-
-/** make overflow visible (because this is a w-i-d-e page) */
-#page-mod-taskchain-edit-tasks div#page,
-#page-mod-taskchain-edit-tasks div#page-wrapper,
-#page-mod-taskchain-edit-tasks div#page-content,
-#page-mod-taskchain-edit-tasks div#region-pre-box,
-#page-mod-taskchain-edit-tasks div#region-main-box,
-#page-mod-taskchain-edit-tasks div#region-post-box,
-#page-mod-taskchain-edit-tasks div#region-main-wrap,
-#page-mod-taskchain-edit-tasks div#region-main-pad,
-#page-mod-taskchain-edit-tasks div#region-main,
-#page-mod-taskchain-edit-tasks div.region-content {
-    overflow   : visible !important;
-    /*
-    the following changes allow the fieldsets to be narrower than the full page width
-    but they will mess up the navigation and settings blocks when they are docked :-(
-    bottom     : 0px;
-    left       : 0px;
-    top        : 0px;
-    right      : 0px;
-    width      : auto;
-    */
+/* reduce vertical spacing on group elements */
+.path-mod-taskchain-edit .form-group {
+    margin-bottom: 0.2rem;
 }
 
-/** standardize */
-#page-mod-taskchain-edit-tasks form.mform,
-#page-mod-taskchain-edit-tasks fieldset,
-#page-mod-taskchain-edit-tasks fieldset div,
-#page-mod-taskchain-edit-tasks fieldset.clearfix,
-#page-mod-taskchain-edit-tasks div.fcontainer,
-#page-mod-taskchain-edit-tasks div.fitem,
-#page-mod-taskchain-edit-tasks div.fitemtitle,
-#page-mod-taskchain-edit-tasks div.felement,
-#page-mod-taskchain-edit-tasks div.felement.fgroup,
-#page-mod-taskchain-edit-tasks fieldset.felement,
-#page-mod-taskchain-edit-tasks fieldset.felement.fgroup {
-    clear            : none;
-    /*float            : none; */
-    overflow         : visible;
-    margin           : 0px;
-    margin-bottom    : 0px;
-    margin-left      : 0px;
-    margin-right     : 0px;
-    margin-top       : 0px;
-    padding          : 0px;
-    padding-bottom   : 0px;
-    padding-left     : 0px;
-    padding-right    : 0px;
-    padding-top      : 0px;
-    text-align       : center;
-    vertical-align   : top;
-    width            : auto;
-}
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem {
-    padding-top      : 6px;
-}
-#page-mod-taskchain-edit-tasks fieldset#labels div.fitem,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem div.felement {
-    vertical-align   : bottom;
+.path-mod-taskchain-edit #labelshdrcontainer .form-group,
+.path-mod-taskchain-edit #defaultshdrcontainer .form-group {
+    margin-bottom: 0;
 }
 
-#page-mod-taskchain-edit-tasks fieldset.clearfix,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fcontainer {
-    text-align   : left;
-    white-space  : nowrap;
-}
-#page-mod-taskchain-edit-tasks fieldset.clearfix {
-    min-width    : 600px;
-    _width:expression(
-        this.currentStyle.getAttribute('minWidth') ? /* ie7 */
-        this.currentStyle.getAttribute('minWidth') :
-        this.currentStyle.getAttribute('min-width') ? /* ie6 */
-        this.currentStyle.getAttribute('min-width') : null
-    )
+.path-mod-taskchain-edit .mform fieldset#labelshdr,
+.path-mod-taskchain-edit .mform fieldset#defaultshdr,
+.path-mod-taskchain-edit .mform fieldset#selectshdr {
+    margin-bottom: 0px;
+    border-bottom: none;
 }
 
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem div.fitemtitle,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem div.felement,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem div.felement.fgroup,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem fieldset.felement { white-space: normal; }
+/**
+ * =============================================================
+ * https://www.w3schools.com/bootstrap/bootstrap_grid_system.asp
+ * =============================================================
+ * xs (for phones - screens less than 768px wide)
+ * sm (for tablets - screens equal to or greater than 768px wide)
+ * md (for small laptops - screens equal to or greater than 992px wide)
+ * lg (for laptops and desktops - screens equal to or greater than 1200px wide
+ */
 
-/** fancy effects for top row (modern browsers only) */
-#page-mod-taskchain-edit-tasks fieldset#labels {
-    /* cross-browser gradient (Note: Safari and Chrome use Webkit) */
-    /* non-css3 */ background: #eeeeee;
-    /* css3     */ background: linear-gradient(top,  #ffffff,  #dddddd);
-    /* Opera    */ background: -o-linear-gradient(top,  #ffffff,  #dddddd);
-    /* Firefox  */ background: -moz-linear-gradient(top,  #ffffff,  #dddddd);
-    /* Webkit   */ background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#dddddd));
-    /* IE 6,7,8 */ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd');
-    /* IE 8+    */ -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd')";
-
-    /* cross-browser rounded corners (Note: Safari and Chrome use Webkit) */
-    /* css3    */ border-top-left-radius: 12px; border-top-right-radius: 12px;
-    /* Opera   */ -o-border-top-left-radius: 12px; -o-border-top-right-radius: 12px;
-    /* Firefox */ -moz-border-radius-topleft: 12px; -moz-border-radius-topright: 12px;
-    /* Webkit  */ -webkit-border-top-left-radius: 12px; -webkit-border-top-right-radius: 12px;
+/* fancy title */
+.path-mod-taskchain-edit fieldset[id$=hdr] h3,
+.path-mod-taskchain-edit fieldset[id^=record] h3 {
+    font-size: x-large;
+    font-weight: bold;
 }
 
-#page-mod-taskchain-edit-tasks fieldset#defaults,
-#page-mod-taskchain-edit-tasks fieldset#selects {
-    background   : #ffffff;
+/* hide top headings on small screens */
+.path-mod-taskchain-edit #labelshdr,
+.path-mod-taskchain-edit #defaultshdr,
+.path-mod-taskchain-edit #selectshdr {
+    display: none;
 }
 
-/** disable clearfix:after element */
-#page-mod-taskchain-edit-tasks div.clearfix:after,
-#page-mod-taskchain-edit-tasks fieldset.clearfix:after { clear: none; content: ""; display: none; }
-
-#page-mod-taskchain-edit-tasks div.advancedbutton { display: none; }
-#page-mod-taskchain-edit-tasks div.fitem {
-    border-right  : 1px solid #999999;
-    min-height    : 24px;
-    padding-left  : 3px;
-    padding-right : 3px;
-    width         : 120px;
-    /** cross-browser inline block */
-    display       : -moz-inline-box;   /* FF2  */
-    display       : -moz-inline-stack; /* FF3  */
-    display       : inline-block;      /* CSS2 */
-    zoom          : 1;                 /* IE   */
-    *display      : inline;            /* IE   */
+/* add grey stripes for heading rows */
+.path-mod-taskchain-edit #labelshdrcontainer.fcontainer > .fitem:nth-child(odd),
+.path-mod-taskchain-edit #selectshdrcontainer.fcontainer > .fitem:nth-child(odd) {
+    background-color: #dddddd;
+}
+.path-mod-taskchain-edit #labelshdrcontainer.fcontainer > .fitem:nth-child(even),
+.path-mod-taskchain-edit #selectshdrcontainer.fcontainer > .fitem:nth-child(even) {
+    background-color: #eeeeee;
 }
 
-/** add horizontal zebra stribes to rows */
-#page-mod-taskchain-edit-tasks fieldset.clearfix:nth-child(2n+6) { background-color: #eeeeaa; }
-#page-mod-taskchain-edit-tasks fieldset.clearfix:nth-child(2n+7) { background-color: #ffffee; }
-
-#page-mod-taskchain-edit-tasks span.headerfield  { font-size: 1.1em; font-weight: bold; }
-#page-mod-taskchain-edit-tasks span.defaultfield { font-style: italic; }
-
-/** remove right border of last (=rightmost) cell */
-#page-mod-taskchain-edit-tasks div.fitem:last-child { border-right: none; }
-
-/** adjust widths of main columns */
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sortorder,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.edit { width: 60px; }
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.defaultrecord,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.selectrecord { width: 50px; }
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.name { width: 180px; }
-
-/** allow certain fields to wrap mid-word */
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.name,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sourcefile,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sourcetype,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sourcelocation,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.configfile,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.configlocation { word-wrap: break-word; }
-
-/** hide unused legend */
-#page-mod-taskchain-edit-tasks legend.ftoggler { display: none; }
-
-/** adjust widths of pre/post condition columns */
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.preconditions,
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.postconditions { width: 180px; }
-
-/** align special checkboxes to right (and add margin-right) */
-#page-mod-taskchain-edit-tasks fieldset#selects div.fitem.selectrecord fieldset.fgroup { text-align: right; }
-#page-mod-taskchain-edit-tasks fieldset#selects div.fitem.selectrecord fieldset.fgroup input { margin-left: 3px; margin-right: 2px; }
-
-/** align sortorder center (but don't affect actionshdr first radio button) */
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sortorder div.felement { text-align: center; }
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.sortorder div.felement input { text-align: center; width: 2.0em; }
-
-/** align name field to left (but not top 3 rows) */
-#page-mod-taskchain-edit-tasks fieldset.clearfix div.fitem.name div.felement { text-align: left; }
-#page-mod-taskchain-edit-tasks fieldset#labels   div.fitem.name div.felement,
-#page-mod-taskchain-edit-tasks fieldset#defaults div.fitem.name div.felement,
-#page-mod-taskchain-edit-tasks fieldset#selects  div.fitem.name div.felement { text-align: center; }
-
-#page-mod-taskchain-edit-tasks span.reviewoptionsitems { white-space: nowrap; }
-
-#page-mod-taskchain-edit-tasks fieldset#filtershdr,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr {
-    background    : transparent;
-    border        : none;
-    margin-top    : 12px;
-    margin-bottom : 12px;
-    text-align    : left;
-    padding-left  : 2.0em;
+/* add dark grey stripes for default heading rows */
+.path-mod-taskchain-edit #defaultshdrcontainer.fcontainer > .fitem:nth-child(odd) {
+    background-color: #d8d8d8;
 }
-#page-mod-taskchain-edit-tasks fieldset#filtershdr legend {
-    display       : none;
-}
-#page-mod-taskchain-edit-tasks fieldset#actionshdr legend {
-    margin-bottom : 12px;
-}
-#page-mod-taskchain-edit-tasks fieldset#filtershdr div.fitem,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem {
-    border-right  : none;
-    clear         : both;
-    display       : block;
-    width         : auto;
-}
-#page-mod-taskchain-edit-tasks fieldset#filtershdr div.fitem div.fitemtitle,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem div.fitemtitle {
-    float        : left;
-}
-#page-mod-taskchain-edit-tasks fieldset#filtershdr div.felement,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.felement,
-#page-mod-taskchain-edit-tasks fieldset#filtershdr div.felement.fgroup,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.felement.fgroup,
-#page-mod-taskchain-edit-tasks fieldset#filtershdr fieldset.felement,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr fieldset.felement,
-#page-mod-taskchain-edit-tasks fieldset#filtershdr fieldset.felement.fgroup,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr fieldset.felement.fgroup {
-    float        : left;
-    text-align   : left;
+.path-mod-taskchain-edit #defaultshdrcontainer.fcontainer > .fitem:nth-child(even) {
+    background-color: #e8e8e8;
 }
 
-#page-mod-taskchain-edit-tasks input { margin-right : 8px; }
-
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortfield,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortdirection,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortincrement,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.addtasks,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.addtasksafter,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasks,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasksafter,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetaskschain,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtercoursename,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filteractivityname,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskname,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskposition,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcefile,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcetype {
-    background-color : #eeeebb;
-    border-left      : 1px solid #333333;
-    border-right     : 1px solid #333333;
-    margin-left      : 2.0em;
+/* add colored stripes for task/chain records */
+.path-mod-taskchain-edit .fcontainer[id^=record] > .fitem:nth-child(odd) {
+    background-color: #eeeeaa;
+}
+.path-mod-taskchain-edit .fcontainer[id^=record] > .fitem:nth-child(even) {
+    background-color: #ffffee;
 }
 
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortfield,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortdirection,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.reordertasks_sortincrement,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.addtasks,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.addtasksafter,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasks,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetasksafter,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.movetaskschain,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults { padding-left: 2.0em; width: 42.0em; } /* 12px 484px */
-
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtercoursename,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filteractivityname,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskname,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtertaskposition,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcefile,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.applydefaults_filtersourcetype { padding-left: 4.0em; width: 40.0em; } /* 48px 460px */
-
-/** Boost theme **/
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filtercoursename,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filteractivityname,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filtertaskname,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filtertaskposition,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filtersourcefile,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.form-group.fitem.applydefaults_filtersourcetype { padding-left: 4.0em; width: 42.0em; } /* 48px 460px */
-
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_reordertasks_sortfield,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_addtasks_start,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_movetasks_start,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_applydefaults_selectedtasks { border-top: 1px solid #333333; padding-top: 6px; }
-
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fitem_id_reordertasks_sortincrement,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fgroup_id_addtasksafter_elements,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fgroup_id_movetaskschain_elements,
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div#fgroup_id_applydefaults_filtersourcetype_elements { border-bottom: 1px solid #333333; padding-bottom: 6px; }
-
-#page-mod-taskchain-edit-tasks div.fitem#fitem_id_applydefaults_filtercoursename div.fitemtitle,
-#page-mod-taskchain-edit-tasks div.fitem#fgroup_id_applydefaults_filteractivityname_elements div.fitemtitle,
-#page-mod-taskchain-edit-tasks div.fitem#fgroup_id_applydefaults_filtertaskname_elements div.fitemtitle,
-#page-mod-taskchain-edit-tasks div.fitem#fitem_id_applydefaults_filtertaskposition div.fitemtitle,
-#page-mod-taskchain-edit-tasks div.fitem#fgroup_id_applydefaults_filtersourcefile_elements div.fitemtitle,
-#page-mod-taskchain-edit-tasks div.fitem#fgroup_id_applydefaults_filtersourcetype_elements div.fitemtitle {
-    min-width    : 8.0em;
-    text-align   : left;
-    _width:expression(
-        this.currentStyle.getAttribute('minWidth') ? /* ie7 */
-        this.currentStyle.getAttribute('minWidth') :
-        this.currentStyle.getAttribute('min-width') ? /* ie6 */
-        this.currentStyle.getAttribute('min-width') : null
-    )
+/* limit width of actions */
+.path-mod-taskchain-edit #actionshdrcontainer {
+    max-width: 640px;
 }
 
-#page-mod-taskchain-edit-tasks .form-check-input {
-    margin-left: 0px;
-    margin-top:  0px;
-    top:         0px;
+#page-mod-taskchain-edit-columnlists .col-form-label {
+    max-width: 40px;
 }
 
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div {
-    text-align: left;
-}
-#page-mod-taskchain-edit-tasks fieldset#actionshdr .form-check-input {
-    position: static;
-}
-#page-mod-taskchain-edit-tasks fieldset#actionshdr .form-group.fitem {
-    overflow: auto;
+.path-mod-taskchain-edit #filtershdrcontainer > .fitem > .col-form-label {
+    font-weight: bold;
+    max-width: 160px;
 }
 
-/** action buttons */
-#page-mod-taskchain-edit-tasks fieldset.hidden,
-#page-mod-taskchain-edit-tasks fieldset.hidden div,
-#page-mod-taskchain-edit-tasks fieldset.hidden div div.fitem,
-#page-mod-taskchain-edit-tasks fieldset.hidden div div.fitem div.felement {
-    text-align  : left;
-    width       : auto;
+/* remove labels for main actions */
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(1) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(5) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(8) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(11) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(20) .col-form-label,
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(1) .col-form-label {
+    display: none;
 }
 
-#page-mod-taskchain-edit-tasks fieldset#actionshdr div.fitem.actionjs { display:none; }
-
-#page-mod-taskchain-edit-tasks div.conditions { text-align: left; padding: 0px; }
-#page-mod-taskchain-edit-tasks div.conditions ul { margin: 0px; padding: 0px; white-space: nowrap; }
-#page-mod-taskchain-edit-tasks div.conditions ul li { margin: 0px; padding: 0px; list-style: disc inside; }
-#page-mod-taskchain-edit-tasks span.commands { font-size: 0.8em; }
-#page-mod-taskchain-edit-tasks p.taskchainconditionsintro { margin: 0px 0px 12px 0px; }
-#page-mod-taskchain-edit-tasks p.taskchainconditionsor { margin: 0px; }
-#page-mod-taskchain-edit-tasks p.taskchainconditionsor:after { content:" ---"; }
-#page-mod-taskchain-edit-tasks p.taskchainconditionsor:before { content:"--- "; }
-
-/** page-mod-taskchain-edit-chains **/
-
-/** hide unused legends */
-#page-mod-taskchain-edit-chains legend.ftoggler { display: none; }
-
-/** make overflow visible (because this is a w-i-d-e page) */
-#page-mod-taskchain-edit-chains div#page,
-#page-mod-taskchain-edit-chains div#page div#page-content,
-#page-mod-taskchain-edit-chains div#page div#page-content div#region-main-box,
-#page-mod-taskchain-edit-chains div#page div#page-content div#region-main-box div#region-pre-box,
-#page-mod-taskchain-edit-chains div#page div#page-content div#region-main-box div#region-pre-box div#region-main,
-#page-mod-taskchain-edit-chains div#page div#page-content div#region-main-box div#region-post-box,
-#page-mod-taskchain-edit-chains div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap,
-#page-mod-taskchain-edit-chains div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap div#region-main,
-#page-mod-taskchain-edit-chains div#page div#page-content div#region-main-box div#region-post-box div#region-main-wrap div#region-main div.region-content {
-    overflow   : visible;
-    /*
-    the following changes allow the fieldsets to be narrower than the full page width
-    but they will mess up the navigation and settings blocks when they are docked :-(
-    bottom     : 0px;
-    left       : 0px;
-    top        : 0px;
-    right      : 0px;
-    width      : auto;
-    */
+/* indent secondary actions settings */
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(6) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(7) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(9) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(10) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(12) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(13) .col-form-label,
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(2) .col-form-label,
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(3) .col-form-label {
+    max-width: 40px;
 }
 
-/** standardize */
-#page-mod-taskchain-edit-chains form.mform,
-#page-mod-taskchain-edit-chains fieldset,
-#page-mod-taskchain-edit-chains fieldset div,
-#page-mod-taskchain-edit-chains fieldset.clearfix,
-#page-mod-taskchain-edit-chains div.fcontainer,
-#page-mod-taskchain-edit-chains div.fitem,
-#page-mod-taskchain-edit-chains div.fitemtitle,
-#page-mod-taskchain-edit-chains div.felement,
-#page-mod-taskchain-edit-chains div.felement.fgroup,
-#page-mod-taskchain-edit-chains fieldset.felement,
-#page-mod-taskchain-edit-chains fieldset.felement.fgroup {
-    clear            : none;
-    /*float            : none; */
-    overflow         : visible;
-    margin           : 0px;
-    margin-bottom    : 0px;
-    margin-left      : 0px;
-    margin-right     : 0px;
-    margin-top       : 0px;
-    padding          : 0px;
-    padding-bottom   : 0px;
-    padding-left     : 0px;
-    padding-right    : 0px;
-    padding-top      : 0px;
-    text-align       : center;
-    vertical-align   : top;
-    width            : auto;
-}
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem {
-    padding-top      : 6px;
-}
-#page-mod-taskchain-edit-chains fieldset#labels div.fitem,
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem div.felement {
-    vertical-align   : bottom;
+/* indent tertiary actions settings */
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(14) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(15) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(16) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(17) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(18) .col-form-label,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(19) .col-form-label,
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(4) .col-form-label,
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(5) .col-form-label {
+    max-width: 120px;
+    padding-left: 64px;
+    font-size: 0.8em;
 }
 
-#page-mod-taskchain-edit-chains fieldset.clearfix,
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fcontainer {
-    white-space  : nowrap;
-    text-align   : left;
+/* add borders and background to groups of actions details */
+#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortfield,
+#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortdirection,
+#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortincrement,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(6),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(7),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(9),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(10),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(12),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(13),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(14),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(15),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(16),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(17),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(18),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(19),
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(2),
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(3),
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(4),
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(5) {
+    background-color: #eeeebb;
+    border-left: 1px solid #333333;
+    border-right: 1px solid #333333;
 }
-#page-mod-taskchain-edit-chains fieldset.clearfix {
-    min-width    : 600px;
-    _width:expression(
-        this.currentStyle.getAttribute('minWidth') ? /* ie7 */
-        this.currentStyle.getAttribute('minWidth') :
-        this.currentStyle.getAttribute('min-width') ? /* ie6 */
-        this.currentStyle.getAttribute('min-width') : null
-    )
+/* TOP action detail */
+#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortfield,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(6),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(9),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(12),
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(2) {
+    border-top: 1px solid #333333; 
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    margin-bottom: 0;
+    padding-top: 4px;;
 }
-
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem,
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem div.fitemtitle,
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem div.felement,
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem div.felement.fgroup,
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem fieldset.felement { white-space: normal; }
-
-/** fancy effects for top row (modern browsers only) */
-#page-mod-taskchain-edit-chains fieldset#labels {
-    /* cross-browser gradient (Note: Safari and Chrome use Webkit) */
-    /* non-css3 */ background: #eeeeee;
-    /* css3     */ background: linear-gradient(top,  #ffffff,  #dddddd);
-    /* Opera    */ background: -o-linear-gradient(top,  #ffffff,  #dddddd);
-    /* Firefox  */ background: -moz-linear-gradient(top,  #ffffff,  #dddddd);
-    /* Webkit   */ background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#dddddd));
-    /* IE 6,7,8 */ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd');
-    /* IE 8+    */ -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd')";
-
-    /* cross-browser rounded corners (Note: Safari and Chrome use Webkit) */
-    /* css3    */ border-top-left-radius: 12px; border-top-right-radius: 12px;
-    /* Opera   */ -o-border-top-left-radius: 12px; -o-border-top-right-radius: 12px;
-    /* Firefox */ -moz-border-radius-topleft: 12px; -moz-border-radius-topright: 12px;
-    /* Webkit  */ -webkit-border-top-left-radius: 12px; -webkit-border-top-right-radius: 12px;
+/* MIDDLE action detail */
+#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortdirection,
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(3),
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(4),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(13),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(14),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(15),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(16),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(17),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(18),
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(3),
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(4) {
+    margin-bottom: 0;
+    margin-top: 0;
 }
-
-#page-mod-taskchain-edit-chains fieldset#defaults,
-#page-mod-taskchain-edit-chains fieldset#selects {
-    background   : #ffffff;
-}
-
-/** disable clearfix:after element */
-#page-mod-taskchain-edit-chains div.clearfix:after,
-#page-mod-taskchain-edit-chains fieldset.clearfix:after { clear: none; content: ""; display: none; }
-
-#page-mod-taskchain-edit-chains div.advancedbutton { display: none; }
-#page-mod-taskchain-edit-chains div.fitem {
-    border-right  : 1px solid #999999;
-    min-height    : 24px;
-    padding-left  : 3px;
-    padding-right : 3px;
-    width         : 120px;
-    /** cross-browser inline block */
-    display       : -moz-inline-box;   /* FF2  */
-    display       : -moz-inline-stack; /* FF3  */
-    display       : inline-block;      /* CSS2 */
-    zoom          : 1;                 /* IE   */
-    *display      : inline;            /* IE   */
-}
-
-/** add horizontal zebra stribes to rows */
-#page-mod-taskchain-edit-chains fieldset.clearfix:nth-child(2n+6) { background-color: #eeeeaa; }
-#page-mod-taskchain-edit-chains fieldset.clearfix:nth-child(2n+7) { background-color: #ffffee; }
-
-#page-mod-taskchain-edit-chains span.headerfield  { font-size: 1.1em; font-weight: bold; }
-#page-mod-taskchain-edit-chains span.defaultfield { font-style: italic; }
-
-/** remove right border of last (=rightmost) cell */
-#page-mod-taskchain-edit-chains div.fitem:last-child { border-right: none; }
-
-/** adjust widths of main columns */
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem.sortorder,
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem.edit { width: 60px; }
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem.defaultrecord,
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem.selectrecord { width: 50px; }
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem.name { width: 180px; }
-
-/** adjust widths of pre/post condition columns */
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem.preconditions,
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem.postconditions { width: 180px; }
-
-/** align special checkboxes to right (and add margin-right) */
-#page-mod-taskchain-edit-chains fieldset#selects div.fitem.selectrecord fieldset.fgroup { text-align: right; }
-#page-mod-taskchain-edit-chains fieldset#selects div.fitem.selectrecord fieldset.fgroup input { margin-left: 3px; margin-right: 2px; }
-
-/** align sortorder center (but don't affect actionshdr first radio button) */
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem.sortorder div.felement { text-align: center; }
-#page-mod-taskchain-edit-chains fieldset.clearfix div.fitem.sortorder div.felement input { text-align: center; width: 2.0em; }
-
-/** align name field to left (but not top 3 rows) */
-#page-mod-taskchain-edit-chains fieldset.clearfix          div.fitem.name div.felement { text-align: left; }
-#page-mod-taskchain-edit-chains fieldset#labels   div.fitem.name div.felement,
-#page-mod-taskchain-edit-chains fieldset#defaults div.fitem.name div.felement,
-#page-mod-taskchain-edit-chains fieldset#selects  div.fitem.name div.felement { text-align: center; }
-
-#page-mod-taskchain-edit-chains fieldset#filtershdr,
-#page-mod-taskchain-edit-chains fieldset#actionshdr {
-    background    : transparent;
-    border        : none;
-    margin-top    : 12px;
-    margin-bottom : 12px;
-    text-align    : left;
-    padding-left  : 24px;
-}
-#page-mod-taskchain-edit-chains fieldset#filtershdr legend {
-    display       : none;
-}
-#page-mod-taskchain-edit-chains fieldset#actionshdr legend {
-    margin-bottom : 12px;
-}
-#page-mod-taskchain-edit-chains fieldset#filtershdr div.fitem,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem {
-    border-right  : none;
-    clear         : both;
-    display       : block;
-    width         : auto;
-}
-#page-mod-taskchain-edit-chains fieldset#filtershdr div.fitem div.fitemtitle,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem div.fitemtitle {
-    float        : left;
-}
-#page-mod-taskchain-edit-chains fieldset#filtershdr div.felement,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.felement,
-#page-mod-taskchain-edit-chains fieldset#filtershdr div.felement.fgroup,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.felement.fgroup,
-#page-mod-taskchain-edit-chains fieldset#filtershdr fieldset.felement,
-#page-mod-taskchain-edit-chains fieldset#actionshdr fieldset.felement,
-#page-mod-taskchain-edit-chains fieldset#filtershdr fieldset.felement.fgroup,
-#page-mod-taskchain-edit-chains fieldset#actionshdr fieldset.felement.fgroup {
-    float        : left;
-    text-align   : left;
+/* BOTTOM action detail */
+#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortincrement,
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(7),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(10),
+#page-mod-taskchain-edit-tasks #actionshdrcontainer > .fitem:nth-child(19),
+#page-mod-taskchain-edit-chains #actionshdrcontainer > .fitem:nth-child(5) {
+    border-bottom: 1px solid #333333; 
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    margin-top: 0;
+    padding-bottom: 4px;;
 }
 
-#page-mod-taskchain-edit-chains input { margin-right : 8px; }
-
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortfield,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortdirection,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortincrement,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.addchains,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.addchainsafter,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.movechains,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.movechainsafter,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults_filtercoursename,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults_filteractivityname {
-    background-color : #eeeebb;
-    border-left      : 1px solid #333333;
-    border-right     : 1px solid #333333;
-    margin-left      : 24px;
-    width            : 480px;
+/* standardize margins and padding on action items */ 
+.path-mod-taskchain-edit #actionshdrcontainer > .fitem {
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+}
+.path-mod-taskchain-edit #actionshdrcontainer > .fitem > .col-form-label {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+.path-mod-taskchain-edit #actionshdrcontainer > .fitem > .col-form-label label {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
 }
 
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortfield,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortdirection,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.reorderchains_sortincrement,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.addchains,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.addchainsafter,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.movechains,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.movechainsafter,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults { padding-left: 24px; width: 456px; }
-
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults_filtercoursename,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.applydefaults_filteractivityname { padding-left: 48px; width: 432px; }
-
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fitem_id_reorderchains_sortfield,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fitem_id_addchains_start,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fitem_id_movechains_start,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fitem_id_applydefaults_selectedchains { border-top: 1px solid #333333; padding-top: 6px; }
-
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fitem_id_reorderchains_sortincrement,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fgroup_id_addchainsafter_elements,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fgroup_id_movechainsafter_elements,
-#page-mod-taskchain-edit-chains fieldset#actionshdr div#fgroup_id_applydefaults_filteractivityname_elements { border-bottom: 1px solid #333333; padding-bottom: 6px; }
-
-#page-mod-taskchain-edit-chains div.fitem#fitem_id_applydefaults_filtercoursename div.fitemtitle,
-#page-mod-taskchain-edit-chains div.fitem#fgroup_id_applydefaults_filteractivityname_elements div.fitemtitle {
-    min-width    : 8.0em;
-    text-align   : left;
-    _width:expression(
-        this.currentStyle.getAttribute('minWidth') ? /* ie7 */
-        this.currentStyle.getAttribute('minWidth') :
-        this.currentStyle.getAttribute('min-width') ? /* ie6 */
-        this.currentStyle.getAttribute('min-width') : null
-    )
+/* smartphones */
+@media screen and (max-width: 767px) {
+    /* make col-md-3 behave as col-4 */
+    .path-mod-taskchain-edit  .fitem .col-md-3 {
+        flex: 0 0 34%;
+        max-width: 34%;
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+    /* make col-md-9 behave as col-8 */
+    .path-mod-taskchain-edit .fitem .col-md-9 {
+        flex: 0 0 66%;
+        max-width: 66%;
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+    /* fix vertical padding on labels */
+    .path-mod-taskchain-edit .col-md-3.col-form-label {
+        padding-top: 2px;
+    }
+    .path-mod-taskchain-edit .col-md-3.pb-0 {
+        padding-bottom: 2px;
+    }
+    .path-mod-taskchain-edit .col-md-9.align-items-start {
+        align-items: center !important;
+    }
 }
 
-/** action buttons */
-#page-mod-taskchain-edit-chains fieldset.hidden,
-#page-mod-taskchain-edit-chains fieldset.hidden div,
-#page-mod-taskchain-edit-chains fieldset.hidden div div.fitem,
-#page-mod-taskchain-edit-chains fieldset.hidden div div.fitem div.felement {
-    text-align  : left;
-    width       : auto;
+/* sm (tablets) */
+@media screen and (min-width: 768px) {
 }
 
-#page-mod-taskchain-edit-chains fieldset#actionshdr div.fitem.actionjs { display:none; }
+/* md (small laptops) */
+@media screen and (min-width: 992px) {
+    /* make the top headings visible */
+    .path-mod-taskchain-edit #labelshdr,
+    .path-mod-taskchain-edit #defaultshdr,
+    .path-mod-taskchain-edit #selectshdr {
+        display: block;
+    }
+    /* hide the section titles (these are in a DIV directly under FIELDSET) */
+    #page-mod-taskchain-edit-chains form > fieldset:not(#actionshdr) > div:not(.fcontainer),
+    #page-mod-taskchain-edit-tasks form > fieldset:not(#actionshdr) > div:not(.fcontainer) {
+        display: none !important;
+    }
+    /* add flex display to .fcontainer elements */
+    .path-mod-taskchain-edit .fcontainer:not(#filtershdrcontainer):not(#actionshdrcontainer) {
+        display: flex !important;
+    }
+    /* align headings to the bottom of their container */
+    .path-mod-taskchain-edit #labelshdrcontainer.fcontainer  {
+        align-items: flex-end;
+    }
+    /* set the display, and remove margins on a "row" */
+    .path-mod-taskchain-edit fieldset:not(#filtershdr):not(#actionshdr) .row {
+        display: block !important;
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+    /* remove flex display of form item (.fitem) */
+    .path-mod-taskchain-edit fieldset:not(#filtershdr):not(#actionshdr) .fitem {
+        display: block !important;
+    }
+    /* remove flex display of form item label */
+    .path-mod-taskchain-edit fieldset:not(#filtershdr):not(#actionshdr) .col-form-label {
+        display: none !important;
+    }
+    /* remove flex display of form item field (.felement) */
+    .path-mod-taskchain-edit fieldset:not(#filtershdr):not(#actionshdr) .form-inline {
+        display: block !important;
+    }
+    /* override default col-md-9 width (75%) */
+    .path-mod-taskchain-edit .col-md-9 {
+        max-width: initial;
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem {
+        width: 180px;
+    }
+    /* sortorder */
+    #page-mod-taskchain-edit-tasks form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(1) {
+        width: 80px;
+        text-align: center;
+    }
+    /* edit */
+    #page-mod-taskchain-edit-chains form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(1),
+    #page-mod-taskchain-edit-tasks form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(2) {
+        width: 100px;
+        text-align: center;
+    }
+    /* defaultrecord */
+    #page-mod-taskchain-edit-chains form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(2),
+    #page-mod-taskchain-edit-tasks form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(3) {
+        width: 80px;
+        text-align: center;
+    }
+    /* center the radio buttons for choosing default record */
+    #page-mod-taskchain-edit-chains form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(2) .checkbox > .d-flex,
+    #page-mod-taskchain-edit-tasks form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(3) .checkbox > .d-flex {
+        justify-content: center;
+    }
+    /* selectrecord */
+    #page-mod-taskchain-edit-chains form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(3),
+    #page-mod-taskchain-edit-tasks form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(4) {
+        width: 80px;
+        text-align: center;
+    }
+    /* make sure the checkboxes are centered */
+    .path-mod-taskchain-edit #selectshdrcontainer .checkbox > .d-flex {
+        justify-content: center;
+    }
+    .path-mod-taskchain-edit #selectshdrcontainer fieldset > .d-flex {
+        justify-content: left;
+    }
 
-/** edit-condition and edit-columnlists */
-
-#page-mod-taskchain-edit-condition fieldset.hidden,
-#page-mod-taskchain-edit-columnlists fieldset.hidden { margin: 0px; padding: 0px; text-align: center; }
-
-#page-mod-taskchain-edit-condition fieldset.hidden div.fitem h1,
-#page-mod-taskchain-edit-condition fieldset.hidden div.fitem h2,
-#page-mod-taskchain-edit-condition fieldset.hidden div.fitem h3,
-#page-mod-taskchain-edit-condition fieldset.hidden div.fitem h4,
-#page-mod-taskchain-edit-condition fieldset.hidden div.fitem h5,
-#page-mod-taskchain-edit-condition fieldset.hidden div.fitem h6,
-#page-mod-taskchain-edit-columnlists fieldset.hidden div.fitem h1,
-#page-mod-taskchain-edit-columnlists fieldset.hidden div.fitem h2,
-#page-mod-taskchain-edit-columnlists fieldset.hidden div.fitem h3,
-#page-mod-taskchain-edit-columnlists fieldset.hidden div.fitem h4,
-#page-mod-taskchain-edit-columnlists fieldset.hidden div.fitem h5,
-#page-mod-taskchain-edit-columnlists fieldset.hidden div.fitem h6 { margin: 0px; }
-
-#page-mod-taskchain-edit-condition div.fitem div.fitemtitle { width: 160px; }
-#page-mod-taskchain-edit-condition div.fitem div.felement,
-#page-mod-taskchain-edit-condition div.fitem fieldset.felement { width: auto; }
-
-#page-mod-taskchain-edit-columnlists div.advancedbutton { display: none; }
-#page-mod-taskchain-edit-columnlists fieldset.clearfix { width: 240px; margin-left: auto; margin-right: auto; }
-#page-mod-taskchain-edit-columnlists fieldset.clearfix legend { position: relative; }
-#page-mod-taskchain-edit-columnlists fieldset.clearfix legend input { position: absolute; right: 28px; top: 20px; }
-#page-mod-taskchain-edit-columnlists fieldset.clearfix legend small { font-size: x-small; }
-#page-mod-taskchain-edit-columnlists fieldset.clearfix legend .selectcommands { position: absolute; right: 28px; top: 0px; }
-
-#page-mod-taskchain-edit-columnlists .mform .fitem .fitemtitle { float: left; text-align: right; }
-#page-mod-taskchain-edit-columnlists .mform .fitem .felement { margin-left: 0px; }
-@media (max-width: 260px) {
-    #page-mod-taskchain-edit-columnlists .mform .fitem .fitemtitle { float: none; text-align: left; }
+    /* pre/post conditions */
+    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id^='fgroup_id_selectfield'][id$='conditions_elements'],
+    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id='fitem_id_header_preconditions'],
+    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id='fitem_id_header_postconditions'],
+    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id^='fgroup_id_preconditions'],
+    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id^='fgroup_id_postconditions'] {
+        width: 240px;
+    }
 }
-@media (max-width: 767px) {
-    #page-mod-taskchain-edit-columnlists .mform .fcontainer { line-height: 12px; }
-}
 
-#page-mod-taskchain-edit-columnlists fieldset.clearfix:not(#id_filtershdr) div.fitem div.fitemtitle { margin-right: 12px; min-width: 180px; width: 180px; }
-#page-mod-taskchain-edit-columnlists fieldset.clearfix:not(#id_filtershdr) div.fitem div.fitemtitle:after { content: ":"; }
-
-#page-mod-taskchain-edit-columnlists fieldset#actionshdr div,
-#page-mod-taskchain-edit-columnlists fieldset#actionshdr div.fitem#fgroup_id_action_buttons_elements,
-#page-mod-taskchain-edit-columnlists fieldset#actionshdr div.fitem#fgroup_id_action_buttons_elements div.felement.fgroup {
-    margin-bottom  : 0px;
-    margin-left    : 0px;
-    margin-right   : 0px;
-    margin-top     : 0px;
-    padding-bottom : 0px;
-    padding-left   : 0px;
-    padding-right  : 0px;
-    padding-top    : 0px;
-    text-align     : center;
-    width          : auto;
-}
-#page-mod-taskchain-edit-columnlists #fgroup_id_action_buttons_elements input { width: 90px; margin: 6px; }
-
-/* override "-31px" in "Boost" and "Classic" themes */
-.section .activity .activityinstance > a.taskchaingrade {
-    text-indent: initial;
-    padding-left: initial;
+/* lg (laptops and desktops) */
+@media screen and (min-width: 1200px) {
 }
 
 /**

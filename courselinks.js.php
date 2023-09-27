@@ -50,6 +50,9 @@ if (file_exists($CFG->dirroot.'/course/format/lib.php')) {
 function print_courselinks() {
     global $CFG, $DB, $PAGE, $USER;
 
+    $tab = str_repeat(' ', 4);
+    $nl = "\n"; // newline
+
     // sanity check
     if (! isset($USER->id)) {
         return false;
@@ -65,6 +68,9 @@ function print_courselinks() {
     if (! $course->context = mod_taskchain::context(CONTEXT_COURSE, $id)) {
         return false;
     }
+
+    require_login($course);
+    //$PAGE->set_context($course->context);
 
     $config = (object)array(
         'showgrades' => 0,
@@ -91,7 +97,9 @@ function print_courselinks() {
     // Add the editing switch
     $name = 'isediting';
     $value = ($PAGE->user_is_editing() ? 'true' : 'false');
-    echo "TC.$name = $value;\n";
+
+    echo $nl;
+    echo "{$tab}TC.$name = $value;{$nl}";
 
     // Add other config settings
     foreach ($config as $name => $value) {
@@ -102,7 +110,7 @@ function print_courselinks() {
         if ($name == 'gradelinewidth' && preg_match('/^[0-9]+$/', $value)) {
             $value += 'px';
         }
-        echo "TC.$name = '$value';\n";
+        echo "{$tab}TC.$name = '$value';{$nl}";
     }
 
     $numsections = 0;
@@ -294,6 +302,9 @@ function print_courselinks() {
                     }
                 }
             }
+            if ($result == false) {
+                echo $nl;
+            }
             if ($visible_for_user) {
                 // get this user's grade for this activity
                 if (! $zero_grade) {
@@ -303,7 +314,7 @@ function print_courselinks() {
                     }
                 }
                 if ($zero_grade) {
-                    echo '    TC.activityzerogrades["module-'.$cmid.'"] = 1;'."\n";
+                    echo $tab.'TC.activityzerogrades["module-'.$cmid.'"] = 1;'.$nl;
                 } else {
                     $count = 0;
                     $total = 0;
@@ -325,11 +336,11 @@ function print_courselinks() {
                         if ($showaverages) {
                             $percent = "$percent% ($count)";
                         }
-                        echo '    TC.activitygrades["module-'.$cmid.'"] = "'.$percent.'";'."\n";
+                        echo $tab.'TC.activitygrades["module-'.$cmid.'"] = "'.$percent.'";'.$nl;
                     }
                 }
             } else {
-                echo '    TC.activityunavailables["module-'.$cmid.'"] = 1;'."\n";
+                echo $tab.'TC.activityunavailables["module-'.$cmid.'"] = 1;'.$nl;
             }
             $result = true;
         }
@@ -346,6 +357,7 @@ function print_courselinks() {
 <?php
 if (print_courselinks()) {
 ?>
+
     TC.modify_taskchain_links = function(){
 
         document.querySelectorAll("li.activity").forEach(function(li){

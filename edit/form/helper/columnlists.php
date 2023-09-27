@@ -217,102 +217,32 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function add_section_filters($section, $fields) {
-        $this->mform->addElement('header', 'filtershdr', '');
+        global $PAGE;
 
+        //$this->mform->addElement('header', 'filtershdr', '');
         $type = $this->TC->get_columnlisttype();
         $lists = $this->TC->get_columnlists($type);
         $options = array('00' => get_string('add').' ...') + $lists;
-
-        // javascript to auto submit the form if a new columnlist is selected
-        $js = '';
-        $js .= '<script type="text/javascript">'."\n";
-        $js .= '//<![CDATA['."\n";
-        $js .= 'var obj = document.getElementById("id_columnlistid");'."\n";
-        $js .= 'if (obj) {'."\n";
-        $js .= '    obj.onchange = function () {'."\n";
-        $js .= '        var href = self.location.href.replace(new RegExp("columnlistid=\\\\w+&?"), "");'."\n";
-        $js .= '        var char = href.charAt(href.length-1);'."\n";
-        $js .= '        if (char!="?" && char!="&") {'."\n";
-        $js .= '            if (href.indexOf("?")<0) {'."\n";
-        $js .= '                href += "?";'."\n";
-        $js .= '            } else {'."\n";
-        $js .= '                href += "&";'."\n";
-        $js .= '            }'."\n";
-        $js .= '        }'."\n";
-        $js .= '        href += "columnlistid=" + this.options[this.selectedIndex].value;'."\n";
-        $js .= '        window.onbeforeunload = null;'."\n";
-        $js .= '        self.location.href = href;'."\n";
-        $js .= '    }'."\n";
-        $js .= '}'."\n";
-        $js .= '//]]>'."\n";
-        $js .= '</script>'."\n";
-
-        $elements = array();
-        $elements[] = $this->mform->createElement('select', 'columnlistid', '', $options);
-        $elements[] = $this->mform->createElement('text', 'columnlistname', '', array('size' => '10'));
-        $elements[] = $this->mform->createElement('static', 'onchangecolumnlistid', '', $js);
+        $elements = array(
+            $this->mform->createElement('select', 'columnlistid', '', $options),
+            $this->mform->createElement('text', 'columnlistname', '', array('size' => '10'))
+        );
         $this->mform->addGroup($elements, 'columnlists_elements', '', array(' '), false);
         if (count($lists)) {
             $this->mform->disabledIf('columnlists_elements', 'columnlistid', 'ne', '00');
         }
         $this->mform->setType('columnlistid', PARAM_ALPHANUM);
         $this->mform->setType('columnlistname', PARAM_TEXT);
-    }
 
-    /**
-     * get_sectionlabel
-     *
-     * @param string $section name of section
-     * @return xxx
-     * @todo Finish documenting this function
-     */
-    protected function get_sectionlabel($section) {
-        global $PAGE;
+        $M = 'M.mod_taskchain_edit_form_helper_columnlists';
+        $module = $this->get_module_js($M);
 
-        $method = 'get_sectionlabel_'.$section;
-        if (method_exists($this, $method)) {
-            $label = $this->$method();
-        } else {
-            $label = get_string($section.'hdr', 'mod_taskchain');
-        }
+        $strings = (object)array('all' => get_string('all'),
+                                 'reset' => get_string('reset'),
+                                 'none' => get_string('none'));
 
-        $commands = '';
-        if (method_exists($PAGE->requires, 'js_amd_inline')) {
-            // Moodle >= 3.3
-            $select = $section.'select';
-            $commands .= html_writer::tag('small', get_string('all'), array('id' => $select.'all'));
-            $commands .= html_writer::tag('small', ' / ');
-            $commands .= html_writer::tag('small', get_string('reset'), array('id' => $select.'reset'));
-            $commands .= html_writer::tag('small', ' / ');
-            $commands .= html_writer::tag('small', get_string('none'), array('id' => $select.'none'));
-            $PAGE->requires->js_amd_inline(
-                'require(["jquery"], function($) {'.
-                    '$("#'.$select.'all").click(function(e) {'.
-                        '$(this).closest("fieldset").find("input:checkbox").prop("checked", true);'.
-                    '});'.
-                    '$("#'.$select.'reset").click(function(e) {'.
-                        '$(this).closest("fieldset").find("input:checkbox").each(function(){'.
-                            '$(this).prop("checked", $(this).prop("defaultChecked"));'.
-                        '});'.
-                    '});'.
-                    '$("#'.$select.'none").click(function(e) {'.
-                        '$(this).closest("fieldset").find("input:checkbox").prop("checked", false);'.
-                    '});'.
-                '});'
-            );
-        } else {
-            // Moodle <= 3.2
-            $onclick = 'select_all_in_element_with_id("id_'.$section.'hdr", true); return false;';
-            $commands .= html_writer::tag('small', get_string('all'), array('onclick' => $onclick));
-            $commands .= html_writer::tag('small', ' / ');
-            $onclick = 'select_all_in_element_with_id("id_'.$section.'hdr", false); return false;';
-            $commands .= html_writer::tag('small', get_string('none'), array('onclick' => $onclick));
-        }
-
-        // wrap the commands in a DIV for styling purposes
-        $commands = html_writer::tag('div', $commands, array('class' => 'selectcommands'));
-
-        return $label.' '.$commands;
+        $PAGE->requires->js_init_call("$M.setup_columnlist", array("id_columnlistid"), false, $module);
+        $PAGE->requires->js_init_call("$M.setup_selectcommands", array($strings), false, $module);
     }
 
     /**
@@ -348,72 +278,5 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
                      'cancel' => '',
                      'delete' => '',
                      'deleteall' => '');
-    }
-
-    /////////////////////////////////////////////////////////
-    // get javascript
-    /////////////////////////////////////////////////////////
-
-    /**
-     * return javascript to be inserted in footer of "page_quick" page
-     *
-     * @param string $type
-     * @return string
-     */
-    public function get_js() {
-        $js = '';
-
-        if ($type = $this->TC->get_columnlisttype()) {
-            // add javascript to modify conditions in opening window
-            $js .= '<script type="text/javascript">'."\n";
-            $js .= '//<![CDATA['."\n";
-            $js .= '    if (window.opener) {'."\n";
-
-            // locate the list of columnlists on the opening window
-            $js .= '        var obj = opener.document.getElementById("id_columnlistid");'."\n";
-            $js .= '        if (obj) {'."\n";
-
-            // remove all user defined columnlists
-            $js .= '            var selectedValue = obj.options[obj.selectedIndex].value;'."\n";
-            $js .= '            var numericValue = new RegExp("^[0-9]+$");'."\n";
-            $js .= '            var i_max = obj.options.length - 1;'."\n";
-            $js .= '            for (var i=i_max; i>=0; i--) {'."\n";
-            $js .= '                if (obj.options[i].value.match(numericValue)) {;'."\n";
-            $js .= '                    if (obj.remove) {'."\n";
-            $js .= '                        obj.remove(i);'."\n";
-            $js .= '                    } else {'."\n";
-            $js .= '                        obj.options[i] = null;'."\n";
-            $js .= '                    }'."\n";
-            $js .= '                }'."\n";
-            $js .= '            }'."\n";
-
-            // prepare new columnlists
-            $lists = $this->TC->get_columnlists($type);
-            foreach ($lists as $id => $name) {
-                $lists[$id] = '"'.$id.'":"'.$name.'"'; // JSON
-            }
-            $lists = implode(',', array_values($lists));
-
-            // append new columnlists
-            $js .= '            var i_max = obj.options.length;'."\n";
-            $js .= '            var columnlists = {'.$lists.'};'."\n";
-            $js .= '            for (id in columnlists) {'."\n";
-            $js .= '                var option = document.createElement("option");'."\n";
-            $js .= '                option.setAttribute("value", id);'."\n";
-            $js .= '                option.setAttribute("label", columnlists[id]);'."\n";
-            $js .= '                if (id==selectedValue) {'."\n";
-            $js .= '                    option.setAttribute("selected", true);'."\n";
-            $js .= '                }'."\n";
-            $js .= '                obj.appendChild(option);'."\n";
-            $js .= '            }'."\n";
-
-            // close the javascript
-            $js .= '        }'."\n";
-            $js .= '        window.close()'."\n";
-            $js .= '    }'."\n";
-            $js .= '//]]>'."\n";
-            $js .= '</script>'."\n";
-        }
-        return $js;
     }
 }

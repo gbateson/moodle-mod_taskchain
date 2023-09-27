@@ -115,4 +115,25 @@ class mod_taskchain_edit_tasks_form extends moodleform {
     public function get_element($name, $count) {
         return $this->form_helper->get_element($name, $count);
     }
+
+    /**
+     * display the edit form for a single task record
+     *
+     * when displaying the form for just one field in a task record,
+     * as we do using ajax on the "edit tasks" page,
+     * then we strip the <form ...> ... </form> tags
+     *
+     * @return void, but will send html output to browser
+     */
+    public function display() {
+        ob_start();
+        parent::display();
+        $output = ob_get_contents();
+        ob_end_clean();
+        echo $output;
+
+        //$search = '/^\s*<form[^>]*>\s*(.*?)\s*<\/form>\s*$/s';
+        //$replace = '$1';
+        //echo preg_replace($search, $replace, $output);
+    }
 }
