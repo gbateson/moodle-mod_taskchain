@@ -1208,7 +1208,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             }
             if (count($li)) {
                 $or = '</ul><p class="taskchainconditionsor">'.get_string('or', 'mod_taskchain').'</p><ul>';
-                $str = '<ul class="mb-1 pl-3">'.implode($or, $li).'</ul>';
+                $str = '<ul class="ml-0 mb-1 pl-3">'.implode($or, $li).'</ul>';
             }
             unset($li);
         }

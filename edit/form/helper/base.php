@@ -1255,7 +1255,7 @@ abstract class taskchain_form_helper_base {
         if ($this->bootstrap) {
             return $this->get_fieldlabel($field);
         }
-        return ''; // Moodle <= 3.1
+        return $this->get_fieldlabel($field); // Moodle <= 3.1
     }
 
     /**

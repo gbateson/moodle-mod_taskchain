@@ -333,8 +333,8 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
             if (empty($this->bootstrap)) {
                 // add javascript to fix some dimensions and borders
-                $PAGE->requires->js_init_call("$M.set_fitem_heights_and_widths", null, false, $module);
-                $PAGE->requires->js_init_call("$M.set_bottom_borders", null, false, $module);
+                //$PAGE->requires->js_init_call("$M.set_fitem_heights_and_widths", null, false, $module);
+                //$PAGE->requires->js_init_call("$M.set_bottom_borders", null, false, $module);
             }
         }
     }
@@ -1004,11 +1004,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      */
     protected function add_field_sortfield($field, $nameprefix='') {
         $name = $this->get_fieldname($nameprefix.$field);
-        if ($this->bootstrap) {
-            $label = $this->get_fieldlabel($field);
-        } else {
-            $label = '';
-        }
+        $label = $this->get_bootstrap_fieldlabel($field);
         $list = $this->get_sortfield_fields();
         $this->mform->addElement('select', $name, $label, $list);
         $this->add_helpbutton($name, $field, 'taskchain');
