@@ -244,6 +244,7 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         ////////////////////////////////////////////////////////////////////////
 
         $taskchain->annotate_files('mod_taskchain', 'sourcefile', null);
+        $taskchain->annotate_files('mod_taskchain', 'configfile', null);
         $taskchain->annotate_files('mod_taskchain', 'entrytext',  null);
         $taskchain->annotate_files('mod_taskchain', 'exittext',   null);
 

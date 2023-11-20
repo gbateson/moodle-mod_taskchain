@@ -521,6 +521,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
 
         // restore files
         $this->add_related_files('mod_taskchain', 'sourcefile', null);
+        $this->add_related_files('mod_taskchain', 'configfile', null);
         $this->add_related_files('mod_taskchain', 'entrytext',  null);
         $this->add_related_files('mod_taskchain', 'exittext',   null);
 
