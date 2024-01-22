@@ -598,7 +598,13 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         );
 
         $options = array();
-        $str = get_string('grade', 'grades');
+        if (get_string_manager()->string_exists('modgrade', 'grades')) {
+            // Moodle >= 2.7.
+            $str = get_string('modgrade', 'grades');
+        } else {
+            // Moodle <= 2.6.
+            $str = get_string('grade', 'grades');
+        }
         for ($i=5; $i<=100; $i+=5) {
             $options[$i] = $str.' >= '.$i.'%';
         }

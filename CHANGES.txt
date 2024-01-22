@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2024-01-22 (04)
+ - small change to code layout for readability
+
 2023-09-27 (01)
  - improve compatability with old themes that not based on Boost or Bootstrap 4.
 

@@ -161,7 +161,10 @@ class mod_taskchain extends taskchain_base {
         // do TaskChain initialization if this is a TaskChain page
         // i.e. don't initalize for backup, restore or upgrade
 
-        if ($pageclass=='mod-taskchain' || $pageclass=='mod-taskchain-edit' || $pageclass=='mod-taskchain-edit-form' || $pageclass=='course' || $pageclass=='admin') {
+        if ($pageclass=='mod-taskchain' ||
+            $pageclass=='mod-taskchain-edit' ||
+            $pageclass=='mod-taskchain-edit-form' ||
+            $pageclass=='course' || $pageclass=='admin') {
 
             // get input params passed to this page
             $course         = optional_param('course',         0, PARAM_INT);
@@ -225,7 +228,6 @@ class mod_taskchain extends taskchain_base {
                         case 'taskattempt'  : $taskattemptid  = optional_param('id', 0, PARAM_INT); break;
                         case 'taskchain'    : $taskchainid    = optional_param('id', 0, PARAM_INT); break;
                         case 'taskscore'    : $taskscoreid    = optional_param('id', 0, PARAM_INT); break;
-                        //${$type.'id'} = optional_param('id', 0, PARAM_INT);
                     }
                     break;
                 case 'admin-index':
