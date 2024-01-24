@@ -45,6 +45,9 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/base.php');
  */
 abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
 
+    /** string suffix to add to the form's CSS class */
+    protected $formclasssuffix = 'record';
+
     /** should we remove user draft files (true) or not (false) */
     const DELETE_USER_DRAFT_FILES = false;
 

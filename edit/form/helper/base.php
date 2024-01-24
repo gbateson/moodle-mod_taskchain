@@ -193,6 +193,9 @@ abstract class taskchain_form_helper_base {
     /** integer value of Bootstrap version */
     protected $bootstrap = 0;
 
+    /** string suffix to add to the form's CSS class */
+    protected $formclasssuffix = '';
+
     /**
      * __construct
      *
@@ -209,10 +212,10 @@ abstract class taskchain_form_helper_base {
             $TC = new mod_taskchain();
         }
 
-        $this->TC       = &$TC;
-        $this->mform    = $mform;
-        $this->context  = $context;
-        $this->record   = $record;
+        $this->TC = &$TC;
+        $this->mform = $mform;
+        $this->context = $context;
+        $this->record = $record;
         $this->is_multiple = $is_multiple;
 
         // Themes in Moodle 2.5 to 3.6 use Bootstrap 2.3
@@ -244,6 +247,36 @@ abstract class taskchain_form_helper_base {
             $this->text_field_size = self::TEXT_FIELD_SIZE_LONG;
         }
 
+        // Set id and CSS class on main form.
+        if ($is_multiple == false) {
+            $attributes = $mform->getAttributes();
+
+            // Get pageid e.g. mod-taskchain-edit-tasks
+            $id = $TC->pageid;
+
+            // Get pageclass e.g. mod-taskchain-edit and
+            // append suffix e.g. "record" or "records"
+            $class = $TC->pageclass;
+            if ($this->formclasssuffix) {
+                $class .= '-'.$this->formclasssuffix;
+            }
+
+            // Append the id to the class to get something like ...
+            // "mod-taskchain-edit-records mod-taskchain-edit-tasks".
+            $class .= " $id";
+
+            // The default id for the form has usually been set already
+            // been set in "lib/formslib" e.g. mform1_WJhgH4JesX0DANB.
+            if (empty($attributes['id'])) {
+                $attributes['id'] = $id;
+            }
+            if (empty($attributes['class'])) {
+                $attributes['class'] = $class;
+            } else {
+                $attributes['class'] .= " $class";
+            }
+            $mform->setAttributes($attributes);
+        }
     }
 
     /////////////////////////////////////////////////////////

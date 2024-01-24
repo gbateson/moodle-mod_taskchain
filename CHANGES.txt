@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2024-01-24 (05)
+ - fix layout on form to edit singel task, chain or columnlist
+
 2024-01-22 (04)
  - small change to code layout for readability
 

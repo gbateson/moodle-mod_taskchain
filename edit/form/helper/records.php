@@ -42,6 +42,9 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/base.php');
  */
 abstract class taskchain_form_helper_records extends taskchain_form_helper_base {
 
+    /** string suffix to add to the form's CSS class */
+    protected $formclasssuffix = 'records';
+
     /** the default sortorder increment */
     const SORT_INCREMENT       = 10;
 

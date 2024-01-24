@@ -25,20 +25,21 @@
  * @since     Moodle 2.0
  */
 
-.path-mod-taskchain-edit .mform fieldset {
+.mform.mod-taskchain-edit-records fieldset {
     margin-top: 4px;
     margin-bottom: 4px;
     border-bottom: none;
 }
 
 /** override margins on non-Boost themes */
-.path-mod-taskchain-edit .mform .fitem {
+.mform.mod-taskchain-edit-records .fitem {
     margin-bottom: 0px;
 }
 
 /* remove vertical spacing on group elements */
-.path-mod-taskchain-edit .form-group {
-    margin-bottom: 0px;
+.mform.mod-taskchain-edit-columnlists .form-group,
+.mform.mod-taskchain-edit-records .form-group {
+    margin-bottom: 0rem;
 }
 
 /**
@@ -52,54 +53,54 @@
  */
 
 /* fancy title */
-.path-mod-taskchain-edit fieldset[id$=hdr] h3,
-.path-mod-taskchain-edit fieldset[id^=record] h3 {
+.mform.mod-taskchain-edit-records fieldset[id$=hdr] h3,
+.mform.mod-taskchain-edit-records fieldset[id^=record] h3 {
     font-size: x-large;
     font-weight: bold;
 }
 
 /* hide top headings on small screens */
-.path-mod-taskchain-edit #labelshdr,
-.path-mod-taskchain-edit #defaultshdr,
-.path-mod-taskchain-edit #selectshdr {
+.mform.mod-taskchain-edit-records #labelshdr,
+.mform.mod-taskchain-edit-records #defaultshdr,
+.mform.mod-taskchain-edit-records #selectshdr {
     display: none;
 }
 
-.path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:first-child {
+.mform.mod-taskchain-edit-records > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:first-child {
     border-top: 1px solid #ccc;
 }
-.path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem {
+.mform.mod-taskchain-edit-records > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem {
     border-bottom: 1px solid #ccc;
 }
 
 /* add grey stripes for heading rows */
-.path-mod-taskchain-edit #labelshdr > .fcontainer > .fitem:nth-child(odd),
-.path-mod-taskchain-edit #selectshdr > .fcontainer > .fitem:nth-child(odd) {
+.mform.mod-taskchain-edit-records #labelshdr > .fcontainer > .fitem:nth-child(odd),
+.mform.mod-taskchain-edit-records #selectshdr > .fcontainer > .fitem:nth-child(odd) {
     background-color: #dddddd;
 }
-.path-mod-taskchain-edit #labelshdr > .fcontainer > .fitem:nth-child(even),
-.path-mod-taskchain-edit #selectshdr > .fcontainer > .fitem:nth-child(even) {
+.mform.mod-taskchain-edit-records #labelshdr > .fcontainer > .fitem:nth-child(even),
+.mform.mod-taskchain-edit-records #selectshdr > .fcontainer > .fitem:nth-child(even) {
     background-color: #eeeeee;
 }
 
 /* add dark grey stripes for default heading rows */
-.path-mod-taskchain-edit #defaultshdr > .fcontainer > .fitem:nth-child(odd) {
+.mform.mod-taskchain-edit-records #defaultshdr > .fcontainer > .fitem:nth-child(odd) {
     background-color: #d8d8d8;
 }
-.path-mod-taskchain-edit #defaultshdr > .fcontainer > .fitem:nth-child(even) {
+.mform.mod-taskchain-edit-records #defaultshdr > .fcontainer > .fitem:nth-child(even) {
     background-color: #e8e8e8;
 }
 
 /* add colored stripes for task/chain records */
-.path-mod-taskchain-edit fieldset[id^=record] > .fcontainer > .fitem:nth-child(odd) {
+.mform.mod-taskchain-edit-records fieldset[id^=record] > .fcontainer > .fitem:nth-child(odd) {
     background-color: #eeeeaa;
 }
-.path-mod-taskchain-edit fieldset[id^=record] > .fcontainer > .fitem:nth-child(even) {
+.mform.mod-taskchain-edit-records fieldset[id^=record] > .fcontainer > .fitem:nth-child(even) {
     background-color: #ffffee;
 }
 
 /* limit width of actions */
-.path-mod-taskchain-edit #actionshdrcontainer {
+.mform.mod-taskchain-edit-records #actionshdrcontainer {
     max-width: 640px;
 }
 
@@ -107,77 +108,82 @@
     max-width: 40px;
 }
 
-.path-mod-taskchain-edit #filtershdr > .fcontainer > .fitem > .fitemtitle {
+.mform.mod-taskchain-edit-records #filtershdr > .fcontainer > .fitem > .fitemtitle {
     font-weight: bold;
     max-width: 160px;
 }
 
+.mform.mod-taskchain-edit-tasks input[type=text][name^=sortorder] {
+    width: 3rem; /* 3rem = 22px */ 
+    text-align: center;
+}
+
 /* remove labels for main actions */
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(1) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(5) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(8) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(11) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(20) .fitemtitle,
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(1) .fitemtitle {
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(1) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(5) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(8) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(11) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(20) .fitemtitle,
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(1) .fitemtitle {
     display: none;
 }
 
 /* indent secondary actions settings */
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(6) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(7) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(9) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(10) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(12) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(13) .fitemtitle,
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(2) .fitemtitle,
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(3) .fitemtitle {
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(6) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(7) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(9) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(10) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(12) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(13) .fitemtitle,
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(2) .fitemtitle,
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(3) .fitemtitle {
     max-width: 40px;
 }
 
 /* indent tertiary actions settings */
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(14) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(15) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(16) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(17) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(18) .fitemtitle,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(19) .fitemtitle,
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(4) .fitemtitle,
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(5) .fitemtitle {
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(14) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(15) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(16) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(17) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(18) .fitemtitle,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(19) .fitemtitle,
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(4) .fitemtitle,
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(5) .fitemtitle {
     max-width: 120px;
     padding-left: 64px;
     font-size: 0.8em;
 }
 
 /* add borders and background to groups of actions details */
-#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortfield,
-#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortdirection,
-#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortincrement,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(6),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(7),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(9),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(10),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(12),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(13),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(14),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(15),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(16),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(17),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(18),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(19),
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(2),
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(3),
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(4),
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(5) {
+.mform.mod-taskchain-edit-tasks #fitem_id_reordertasks_sortfield,
+.mform.mod-taskchain-edit-tasks #fitem_id_reordertasks_sortdirection,
+.mform.mod-taskchain-edit-tasks #fitem_id_reordertasks_sortincrement,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(6),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(7),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(9),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(10),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(12),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(13),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(14),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(15),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(16),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(17),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(18),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(19),
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(2),
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(3),
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(4),
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(5) {
     background-color: #eeeebb;
     border-left: 1px solid #333333;
     border-right: 1px solid #333333;
 }
 /* TOP action detail */
-#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortfield,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(6),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(9),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(12),
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(2) {
+.mform.mod-taskchain-edit-tasks #fitem_id_reordertasks_sortfield,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(6),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(9),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(12),
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(2) {
     border-top: 1px solid #333333; 
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
@@ -185,26 +191,26 @@
     padding-top: 4px;;
 }
 /* MIDDLE action detail */
-#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortdirection,
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(3),
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(4),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(13),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(14),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(15),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(16),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(17),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(18),
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(3),
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(4) {
+.mform.mod-taskchain-edit-tasks #fitem_id_reordertasks_sortdirection,
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(3),
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(4),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(13),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(14),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(15),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(16),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(17),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(18),
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(3),
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(4) {
     margin-bottom: 0;
     margin-top: 0;
 }
 /* BOTTOM action detail */
-#page-mod-taskchain-edit-tasks #fitem_id_reordertasks_sortincrement,
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(7),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(10),
-#page-mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(19),
-#page-mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(5) {
+.mform.mod-taskchain-edit-tasks #fitem_id_reordertasks_sortincrement,
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(7),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(10),
+.mform.mod-taskchain-edit-tasks #actionshdr > .fcontainer > .fitem:nth-child(19),
+.mform.mod-taskchain-edit-chains #actionshdr > .fcontainer > .fitem:nth-child(5) {
     border-bottom: 1px solid #333333; 
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -213,47 +219,47 @@
 }
 
 /* standardize margins and padding on action items */ 
-.path-mod-taskchain-edit #actionshdr > .fcontainer > .fitem {
+.mform.mod-taskchain-edit-records #actionshdr > .fcontainer > .fitem {
     padding-top: 0.25rem !important;
     padding-bottom: 0.25rem !important;
 }
-.path-mod-taskchain-edit #actionshdr > .fcontainer > .fitem > .fitemtitle {
+.mform.mod-taskchain-edit-records #actionshdr > .fcontainer > .fitem > .fitemtitle {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
 }
-.path-mod-taskchain-edit #actionshdr > .fcontainer > .fitem > .fitemtitle label {
+.mform.mod-taskchain-edit-records #actionshdr > .fcontainer > .fitem > .fitemtitle label {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
 }
 
-.path-mod-taskchain-edit .conditions ul {
+.mform.mod-taskchain-edit-records .conditions ul {
     
 }
 
 /* smartphones */
 @media screen and (max-width: 767px) {
     /* make col-md-3 behave as col-4 */
-    .path-mod-taskchain-edit  .fitem .col-md-3 {
+    .mform.mod-taskchain-edit-records  .fitem .col-md-3 {
         flex: 0 0 34%;
         max-width: 34%;
         padding-left: 6px;
         padding-right: 6px;
     }
     /* make col-md-9 behave as col-8 */
-    .path-mod-taskchain-edit .fitem .col-md-9 {
+    .mform.mod-taskchain-edit-records .fitem .col-md-9 {
         flex: 0 0 66%;
         max-width: 66%;
         padding-left: 6px;
         padding-right: 6px;
     }
     /* fix vertical padding on labels */
-    .path-mod-taskchain-edit .col-md-3.fitemtitle {
+    .mform.mod-taskchain-edit-records .col-md-3.fitemtitle {
         padding-top: 2px;
     }
-    .path-mod-taskchain-edit .col-md-3.pb-0 {
+    .mform.mod-taskchain-edit-records .col-md-3.pb-0 {
         padding-bottom: 2px;
     }
-    .path-mod-taskchain-edit .col-md-9.align-items-start {
+    .mform.mod-taskchain-edit-records .col-md-9.align-items-start {
         align-items: center !important;
     }
 }
@@ -265,116 +271,114 @@
 /* md (small laptops) */
 @media screen and (min-width: 992px) {
 
-    .path-mod-taskchain-edit .mform fieldset {
+    .mform.mod-taskchain-edit-records fieldset {
         margin-top: 0px;
         margin-bottom: 0px;
     }
 
     /* make the top headings visible */
-    .path-mod-taskchain-edit #labelshdr,
-    .path-mod-taskchain-edit #defaultshdr,
-    .path-mod-taskchain-edit #selectshdr {
+    .mform.mod-taskchain-edit-records #labelshdr,
+    .mform.mod-taskchain-edit-records #defaultshdr,
+    .mform.mod-taskchain-edit-records #selectshdr {
         display: block;
     }
     /* hide the section titles in non-Boost themes */
-    #page-mod-taskchain-edit-tasks form > fieldset:not(#actionshdr) > legend,
-    #page-mod-taskchain-edit-chains form > fieldset:not(#actionshdr) > legend {
+    .mform.mod-taskchain-edit-records > fieldset:not(#actionshdr) > legend {
         display: none !important;
     }
 
     /* hide the section titles in non-Boost themes */
-    #page-mod-taskchain-edit-tasks form > fieldset#actionshdr > legend,
-    #page-mod-taskchain-edit-chains form > fieldset#actionshdr > legend {
+    .mform.mod-taskchain-edit-records > fieldset#actionshdr > legend {
         margin-bottom: 0px;
     }
 
     /* hide the section titles (these are in a DIV directly under FIELDSET) */
-    #page-mod-taskchain-edit-tasks form > fieldset:not(#actionshdr) > div:not(.fcontainer),
-    #page-mod-taskchain-edit-chains form > fieldset:not(#actionshdr) > div:not(.fcontainer) {
+    .mform.mod-taskchain-edit-records > fieldset:not(#actionshdr) > div:not(.fcontainer) {
         display: none !important;
     }
     /* add flex display to .fcontainer elements */
-    .path-mod-taskchain-edit fieldset:not(#filtershdr):not(#actionshdr) .fcontainer {
+    .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .fcontainer {
         display: flex !important;
     }
     /* align headings to the bottom of their container */
-    .path-mod-taskchain-edit #labelshdr > .fcontainer  {
+    .mform.mod-taskchain-edit-records #labelshdr > .fcontainer  {
         align-items: flex-end;
     }
     /* set the display, and remove margins on a "row" */
-    .path-mod-taskchain-edit fieldset:not(#filtershdr):not(#actionshdr) .row {
+    .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .row {
         display: block !important;
         margin-right: 0px;
         margin-left: 0px;
     }
     /* remove flex display of form item (.fitem) */
-    .path-mod-taskchain-edit fieldset:not(#filtershdr):not(#actionshdr) .fitem {
+    .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .fitem {
         display: block !important;
     }
     /* remove flex display of form item label */
-    .path-mod-taskchain-edit fieldset:not(#filtershdr):not(#actionshdr) .fitemtitle {
+    .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .fitemtitle {
         display: none !important;
     }
     /* remove flex display of form item field (.felement) */
-    .path-mod-taskchain-edit fieldset:not(#filtershdr):not(#actionshdr) .form-inline {
+    .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .form-inline {
         display: block !important;
     }
     /* override default col-md-9 width (75%) */
-    .path-mod-taskchain-edit .col-md-9 {
+    .mform.mod-taskchain-edit-records .col-md-9 {
         max-width: initial;
         padding-left: 6px;
         padding-right: 6px;
     }
-    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem {
+    /** reduce column with on page to edit tasks or chains */
+    .mform.mod-taskchain-edit-records > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem {
         width: 180px;
     }
-    /* sortorder */
-    #page-mod-taskchain-edit-tasks form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(1) {
+    /* sortorder ("Edit tasks") */
+    .mform.mod-taskchain-edit-tasks > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(1) {
         width: 80px;
         text-align: center;
     }
     /* edit */
-    #page-mod-taskchain-edit-chains form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(1),
-    #page-mod-taskchain-edit-tasks form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(2) {
+    .mform.mod-taskchain-edit-chains > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(1),
+    .mform.mod-taskchain-edit-tasks > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(2) {
         width: 100px;
         text-align: center;
     }
     /* defaultrecord */
-    #page-mod-taskchain-edit-chains form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(2),
-    #page-mod-taskchain-edit-tasks form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(3) {
+    .mform.mod-taskchain-edit-chains > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(2),
+    .mform.mod-taskchain-edit-tasks > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(3) {
         width: 80px;
         text-align: center;
     }
     /* center the radio buttons for choosing default record */
-    #page-mod-taskchain-edit-chains form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(2) .checkbox > .d-flex,
-    #page-mod-taskchain-edit-tasks form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(3) .checkbox > .d-flex {
+    .mform.mod-taskchain-edit-chains > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(2) .checkbox > .d-flex,
+    .mform.mod-taskchain-edit-tasks > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(3) .checkbox > .d-flex {
         justify-content: center;
     }
     /* selectrecord */
-    #page-mod-taskchain-edit-chains form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(3),
-    #page-mod-taskchain-edit-tasks form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(4) {
+    .mform.mod-taskchain-edit-chains > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(3),
+    .mform.mod-taskchain-edit-tasks > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem:nth-child(4) {
         width: 80px;
         text-align: center;
     }
     /* make sure the checkboxes are centered */
-    .path-mod-taskchain-edit #selectshdr .fcontainer .checkbox > .d-flex {
+    .mform.mod-taskchain-edit-records #selectshdr .fcontainer .checkbox > .d-flex {
         justify-content: center;
     }
-    .path-mod-taskchain-edit #selectshdr .fcontainer fieldset > .d-flex {
+    .mform.mod-taskchain-edit-records #selectshdr .fcontainer fieldset > .d-flex {
         justify-content: left;
     }
 
     /* pre/post conditions */
-    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id^='fgroup_id_selectfield'][id$='conditions_elements'],
-    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id='fitem_id_header_preconditions'],
-    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id='fitem_id_header_postconditions'],
-    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id^='fgroup_id_preconditions'],
-    .path-mod-taskchain-edit form > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id^='fgroup_id_postconditions'] {
+    .mform.mod-taskchain-edit-records > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id^='fgroup_id_selectfield'][id$='conditions_elements'],
+    .mform.mod-taskchain-edit-records > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id='fitem_id_header_preconditions'],
+    .mform.mod-taskchain-edit-records > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id='fitem_id_header_postconditions'],
+    .mform.mod-taskchain-edit-records > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id^='fgroup_id_preconditions'],
+    .mform.mod-taskchain-edit-records > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem[id^='fgroup_id_postconditions'] {
         width: 240px;
     }
 
     /** set left/right margins on non-Boost themes */
-    .path-mod-taskchain-edit .mform .fitem .felement:not(.col-md-9) {
+    .mform.mod-taskchain-edit-records .fitem .felement:not(.col-md-9) {
         margin-left: 6px;
         margin-right: 6px;
     }
