@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2024-01-24 (07)
+ - improve layout on form to forms to edit tasks and chains on non-Boost themes
+
 2024-01-24 (05)
  - fix layout on form to edit singel task, chain or columnlist
 
