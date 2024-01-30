@@ -18,7 +18,7 @@
 /**
  * static heading element
  *
- * Contains class for static heading type element
+ * Contains class for static type element
  *
  * @package   core_form
  * @author    Gordon Bateson <gordonbateson@gmail.com> (based on "warning" by Jamie Pratt)
@@ -37,6 +37,7 @@ require_once('HTML/QuickForm/static.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class MoodleQuickForm_heading extends HTML_QuickForm_static{
+
     /** @var string Form element type */
     var $_elementTemplateType='warning'; // defined in lib/forms
 
@@ -61,7 +62,7 @@ class MoodleQuickForm_heading extends HTML_QuickForm_static{
      * @param string $cssid heading css id (optional, default=null)
      */
     function __construct($text=null, $level=null, $class=null, $cssid=null) {
-        parent::__construct(null, null, $text); // name=null, label=null
+        parent::__construct('', null, $text); // name='', label=null
         $this->_type  = 'heading';
         $this->_level = $level;
         $this->_class = $class;

@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2024-01-30 (08)
+ - fix errors about null name in form headings
+
 2024-01-24 (07)
  - improve layout on form to forms to edit tasks and chains on non-Boost themes
 
