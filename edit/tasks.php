@@ -44,6 +44,11 @@ $PAGE->set_url($TC->url->edit('tasks', array('id' => $TC->coursemodule->id)));
 $PAGE->set_title($TC->taskchain->name);
 $PAGE->set_heading($TC->taskchain->name);
 
+if (class_exists('\\core\\output\\activity_header')) {
+    // Moodle >= 4.x shows completion by default, so hide it.
+    $PAGE->activityheader->set_attrs(['hidecompletion' => true]);
+}
+
 $output = $PAGE->get_renderer('mod_taskchain');
 
 $mform = new mod_taskchain_edit_tasks_form();

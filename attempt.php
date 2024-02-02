@@ -42,6 +42,11 @@ $PAGE->set_url($TC->url->attempt());
 $PAGE->set_title($TC->taskchain->name);
 $PAGE->set_heading($TC->course->fullname);
 
+if (class_exists('\\core\\output\\activity_header')) {
+    // Moodle >= 4.x shows completion by default, so hide it.
+    $PAGE->activityheader->set_attrs(['hidecompletion' => true]);
+}
+
 // check chain visibility, network address, password and popup
 if ($error = $TC->require_chain_access()) {
     $TC->print_error($error);

@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2024-02-02 (09)
+ - fix duplicated headers in pages on Moodle >= 4.x
+
 2024-01-30 (08)
  - fix errors about null name in form headings
 

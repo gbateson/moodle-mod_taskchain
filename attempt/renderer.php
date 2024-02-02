@@ -42,6 +42,9 @@ require_once($CFG->dirroot.'/mod/taskchain/renderer.php');
  */
 class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
+    /** flag denoting whether or not to hide the heading that is normally embedded within the header */
+    const SHOW_HEADING = false;
+
     /**
      * most outputformats use the taskchain cache
      * but those that don't can switch this flag off
@@ -706,7 +709,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             return false; // cache not enabled
         }
 
-        if (! self::USE_CACHE) {
+        if (! static::USE_CACHE) {
             return false; // this renderer doesn't use a cache
         }
 

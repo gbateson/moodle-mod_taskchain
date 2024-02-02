@@ -40,6 +40,11 @@ $PAGE->set_title($TC->taskchain->name);
 $PAGE->set_heading($TC->course->shortname);
 $PAGE->navbar->add(get_string('report'));
 
+if (class_exists('\\core\\output\\activity_header')) {
+    // Moodle >= 4.x shows completion by default, so hide it.
+    $PAGE->activityheader->set_attrs(['hidecompletion' => true]);
+}
+
 $text = '';
 if ($TC->get_chaingrade()) {
 
@@ -83,8 +88,6 @@ $TC->load_class($subtype, 'review.php');
 ////////////////////////////////////////////////////////////////////////////////
 
 echo $output->header();
-
-echo $output->heading();
 
 echo $output->box_start('generalbox boxaligncenter boxwidthwide');
 

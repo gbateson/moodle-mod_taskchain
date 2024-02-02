@@ -44,6 +44,11 @@ $PAGE->set_title($TC->taskchain->name);
 $PAGE->set_heading($TC->course->shortname);
 $PAGE->navbar->add(get_string('report'), $TC->url->report('chaingrades', array('id' => $TC->coursemodule->id)));
 
+if (class_exists('\\core\\output\\activity_header')) {
+    // Moodle >= 4.x shows completion by default, so hide it.
+    $PAGE->activityheader->set_attrs(['hidecompletion' => true]);
+}
+
 $text = '';
 if ($TC->get_chaingrade()) {
 

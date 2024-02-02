@@ -47,7 +47,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
 
     /** sections and fields in this form **/
     protected $sections = array(
-        'headings'  => array('taskheading', 'conditionheading'),
+        'headings'  => array('conditionheading'), // 'taskheading', 
         'condition' => array('groupid', 'sortorder', 'conditiontaskid', 'conditionscore',
                              'attemptcount', 'attempttype', 'attemptduration', 'attemptdelay', 'nexttaskid'),
         'hidden'    => array('id')

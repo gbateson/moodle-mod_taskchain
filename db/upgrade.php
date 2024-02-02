@@ -573,6 +573,15 @@ function xmldb_taskchain_upgrade($oldversion) {
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
 
+    $newversion = 2024020209;
+    if ($oldversion < $newversion) {
+        // Empty the cache because the page headings
+        // are probably duplicated in all the tasks.
+        if (version_compare($CFG->release, '4.0', '>=')) {
+            $empty_cache = true;
+        }
+    }
+
     if ($empty_cache) {
         $DB->delete_records('taskchain_cache');
     }
