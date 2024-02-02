@@ -200,7 +200,7 @@
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     margin-bottom: 0;
-    padding-top: 4px;;
+    padding-top: 4px;
 }
 /* MIDDLE action detail */
 .mform.mod-taskchain-edit-tasks #fitem_id_reordertasks_sortdirection,
@@ -227,7 +227,7 @@
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     margin-top: 0;
-    padding-bottom: 4px;;
+    padding-bottom: 4px;
 }
 
 /* standardize margins and padding on action items */ 

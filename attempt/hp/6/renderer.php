@@ -52,6 +52,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     const FILTER_ACTION_REMOVE = -1;
     /**#@-*/
 
+    /** string ID of the navigation bar */
+    protected $navbarid = '';
+
+    /** List of images to preload */
+    protected $PreloadImageList;
+
     /**
      * constructor function
      *
@@ -3470,6 +3476,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     }
                 }
                 $gap .= '</span>';
+            }
+            if ($text === null) {
+                $text = '';
             }
             if (strlen($text) || strlen($gap)) {
                 if ($startwithgap) {

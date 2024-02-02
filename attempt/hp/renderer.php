@@ -78,7 +78,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
     /** names of javascript array variables which can be passed through Glossary autolinking filter, if enabled */
     protected $headcontent_arrays = '';
 
-    // HP tasks have a SubmissionTimeout variable, but TexToys do not
+    /** Submission timeout for HP tasks (TexToys do not have this) */
     protected $hasSubmissionTimeout = true;
 
     // basic initialization

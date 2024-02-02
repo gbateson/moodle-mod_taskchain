@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2024-02-03 (10)
+ - hide egacy event methods that cause an error in Moodle >= 4.2
+
 2024-02-02 (09)
  - fix duplicated headers in pages on Moodle >= 4.x
 

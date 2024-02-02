@@ -66,6 +66,12 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
     /** head content */
     public $headcontent;
 
+    /** CSS styles */
+    protected $styles;
+
+    /** Javascripts */
+    protected $scripts;
+
     /** body tag attributes */
     protected $bodyattributes;
 

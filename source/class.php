@@ -41,6 +41,9 @@ require_once($CFG->dirroot.'/lib/xmlize.php');
  * @subpackage taskchain
  */
 class taskchain_source {
+    /** @var tarskchain object reference to th main Taskchain object  */
+    public $TC;
+
     /** @var stored_file object representing stored file */
     public $file;
 
@@ -74,9 +77,14 @@ class taskchain_source {
     /** @var string the base url for this file */
     public $baseurl = '';
 
+    /** @var string the legacy (Moodle 1.x) base url for this file */
+    public $legacy_baseurl = '';
+
     /** @var string the contents of the source file */
     public $filecontents;
 
+    /** @var object settings from the config file associated with this source file */
+    public $config;
     /*
      * properties for efficiently fetching remotely hosted files using Conditional GET
      */
