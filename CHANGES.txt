@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2024-02-10 (12)
+ - mod_hotpot fix link to user on function to 'get_recent_mod_activity()'
+
 2024-02-10 (11)
  - more efficient code to fetch 'modgrade' string in Moodle >= 2.8 and 'grade' string in Moodle <= 2.7.
 
