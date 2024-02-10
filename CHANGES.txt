@@ -2,6 +2,9 @@
 Change log for mod_taskchain
 ========================================
 
+2024-02-10 (11)
+ - more efficient code to fetch 'modgrade' string in Moodle >= 2.8 and 'grade' string in Moodle <= 2.7.
+
 2024-02-03 (10)
  - hide egacy event methods that cause an error in Moodle >= 4.2
 
