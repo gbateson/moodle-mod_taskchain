@@ -114,7 +114,7 @@ function print_courselinks() {
     }
 
     $numsections = 0;
-    if ($course->format=='topics' || $course->format=='weekly') {
+    if ($course->format == 'topics' || $course->format == 'weekly') {
         if (function_exists('course_get_format')) {
             $format = course_get_format($course);
             if (method_exists($format, 'get_last_section_number')) {
@@ -156,7 +156,7 @@ function print_courselinks() {
     $show_modules = optional_param('mods', '', PARAM_CLEAN);
     $show_modules = preg_replace('/[^a-z,]/', '', strtolower($show_modules));
     if ($show_modules) {
-        if ($show_modules=='all') {
+        if ($show_modules == 'all') {
             // do nothing
         } else {
             $show_modules = explode(',', $show_modules); // convert to array
@@ -186,19 +186,19 @@ function print_courselinks() {
         // a teacher - or at least someone who can view all users' grades
         $userids = array();
 
-        // get the current group for this course
-        $groupid = groups_get_course_group($course);
-
         // get groupmode: 0=NOGROUPS, 1=VISIBLEGROUPS, 2=SEPARATEGROUPS
         $groupmode = groups_get_course_groupmode($course);
 
-        if ($groupmode==NOGROUPS || $groupmode==VISIBLEGROUPS || has_capability('moodle/site:accessallgroups', $course->context)) {
+        // Get the current group and grouping for this course.
+        list($groupid, $groupingid) = get_groupid_groupingid($course, $groupmode);
+
+        if ($groupmode == NOGROUPS || $groupmode == VISIBLEGROUPS || has_capability('moodle/site:accessallgroups', $course->context)) {
             $accessallgroups = true;
         } else {
             $accessallgroups = false;
         }
 
-        if ($groupid==0 && $accessallgroups) {
+        if ($groupingid == 0 && $groupid == 0 && $accessallgroups) {
             // user can access all student users in the course
             $select = 'ra.id, ra.userid';
             $from   = '{role_assignments} ra JOIN {role} r ON ra.roleid = r.id';
@@ -214,11 +214,15 @@ function print_courselinks() {
             $groupids = 'SELECT id FROM {groups} WHERE courseid = :courseid';
             $params = array('courseid' => $course->id);
             if ($groupid) {
-                // a specified group
+                // a specific group
                 $groupids .= ' AND id = :groupid';
                 $params['groupid'] = $groupid;
+            } else if ($groupingid) {
+                // a specific grouping
+                $groupids .= ' AND id IN (SELECT id FROM {groupings_groups} WHERE groupingid = :groupingid)';
+                $params['groupingid'] = $groupingid;
             }
-            if ($accessallgroups==false) {
+            if ($accessallgroups == false) {
                 // user can only see members in groups to which (s)he belongs
                 // (e.g. non-editing teacher when groups are separate)
                 $groupids = 'SELECT groupid FROM {groups_members} WHERE userid = :userid AND groupid IN ('.$groupids.')';
@@ -239,7 +243,7 @@ function print_courselinks() {
 
     // resource mods are always hidden
     $hide_modules = array('label', 'book', 'folder', 'imscp', 'page', 'resource', 'url');
-    // (plugin_supports('mod', $cm->modname, FEATURE_MOD_ARCHETYPE, MOD_ARCHETYPE_OTHER)==MOD_ARCHETYPE_RESOURCE);
+    // (plugin_supports('mod', $cm->modname, FEATURE_MOD_ARCHETYPE, MOD_ARCHETYPE_OTHER) == MOD_ARCHETYPE_RESOURCE);
 
     $result = false;
 
@@ -247,11 +251,11 @@ function print_courselinks() {
         $show_grade = false;
         $zero_grade = false;
 
-        if ($sectionnum==0 || $cm->sectionnum==0 || $sectionnum==$cm->sectionnum) {
+        if ($sectionnum == 0 || $cm->sectionnum == 0 || $sectionnum == $cm->sectionnum) {
             $show_grade = true;
             if (in_array($cm->modname, $hide_modules)) {
                 $zero_grade = true;
-            } else if ($show_modules==='all') {
+            } else if ($show_modules === 'all') {
                 // do nothing
             } else if (in_array($cm->modname, $show_modules)) {
                 // do nothing
@@ -268,7 +272,7 @@ function print_courselinks() {
                 // Moodle <= 2.6
                 $visible_for_user = coursemodule_visible_for_user($cm);
             }
-            if ($showaverages || $zero_grade || $visible_for_user==false) {
+            if ($showaverages || $zero_grade || $visible_for_user == false) {
                  // do nothing
             } else {
                 // check activity-specific capabilities
@@ -309,7 +313,7 @@ function print_courselinks() {
                 // get this user's grade for this activity
                 if (! $zero_grade) {
                     $grades = grade_get_grades($course->id, 'mod', $cm->modname, $cm->instance, $userids);
-                    if (empty($grades->items[0]->grademax) || floatval($grades->items[0]->grademax)==0) {
+                    if (empty($grades->items[0]->grademax) || floatval($grades->items[0]->grademax) == 0) {
                         $zero_grade = true;
                     }
                 }
@@ -346,6 +350,37 @@ function print_courselinks() {
         }
     }
     return $result;
+}
+
+function get_groupid_groupingid($course, $groupmode) {
+    global $SESSION;
+    if (class_exists('block_taskchain_navigation')) {
+        $courseid = (int)$course->id;
+        if (isset($SESSION->activegrouping[$courseid][$groupmode])) {
+            $groupingid = $SESSION->activegrouping[$courseid][$groupmode];
+        } else {
+            $groupingid = $course->defaultgroupingid;
+            $preferencename = "taskchain_navigation_groupingid_{$courseid}_{$groupmode}";
+            $groupingid = get_user_preferences($preferencename, $groupingid);
+        }
+        if (is_array($groupingid)) {
+            $groupingid = reset($groupingid);
+        }
+        if (isset($SESSION->activegroup[$courseid][$groupmode][$groupingid])) {
+            $groupid = $SESSION->activegroup[$courseid][$groupmode][$groupingid];
+        } else {
+            $preferencename = "taskchain_navigation_groupid_{$courseid}_{$groupmode}_{$groupingid}";
+            $groupid = get_user_preferences($preferencename, 0);
+        }
+        if (is_array($groupid)) {
+            $groupid = reset($groupid);
+        }
+    } else {
+        // Use the standard Moodle method in grouplib.php.
+        $groupid = groups_get_course_group($course);
+        $groupingid = 0;
+    }
+    return [(int)$groupid, (int)$groupingid];
 }
 ?>
 (function() {
@@ -448,3 +483,4 @@ if (print_courselinks()) {
 
 <?php
 } // end if print_courselinks()
+
