@@ -179,34 +179,40 @@ class mod_taskchain_storage {
             switch (self::can_continue($TC)) {
                 case mod_taskchain::CONTINUE_ABANDONCHAIN:
                     $TC->chaingrade->status = mod_taskchain::STATUS_ABANDONED;
-                    if (! $DB->set_field(
+                    if (
+                        ! $DB->set_field(
                         'taskchain_chain_grades',
                         'status',
                         mod_taskchain::STATUS_ABANDONED,
                         array('id' => $TC->chaingrade->id)
-                    )) {
+                        )
+                    ) {
                         throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_chain_grades');
                     }
                     // Fall through.
                 case mod_taskchain::CONTINUE_RESTARTCHAIN:
                     $TC->chainattempt->status = mod_taskchain::STATUS_ABANDONED;
-                    if (! $DB->set_field(
+                    if (
+                        ! $DB->set_field(
                         'taskchain_chain_attempts',
                         'status',
                         mod_taskchain::STATUS_ABANDONED,
                         array('id' => $TC->chainattempt->id)
-                    )) {
+                        )
+                    ) {
                         throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_chain_attempts');
                     }
                     // Fall through.
                 case mod_taskchain::CONTINUE_RESTARTTASK:
                     $TC->taskscore->status = mod_taskchain::STATUS_ABANDONED;
-                    if (! $DB->set_field(
+                    if (
+                        ! $DB->set_field(
                         'taskchain_task_scores',
                         'status',
                         mod_taskchain::STATUS_ABANDONED,
                         array('id' => $TC->taskscore->id)
-                    )) {
+                        )
+                    ) {
                         throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_task_scores');
                     }
                     // Fall through.
@@ -364,11 +370,13 @@ class mod_taskchain_storage {
         $looping = true;
         while ($looping) {
             $question->md5key = md5($question->name);
-            if (! $question->id = $DB->get_field(
+            if (
+                ! $question->id = $DB->get_field(
                 'taskchain_questions',
                 'id',
                 array('taskid' => $attempt->taskid, 'md5key' => $question->md5key)
-            )) {
+                )
+            ) {
                 // Add question record.
                 if (! $question->id = $DB->insert_record('taskchain_questions', $question)) {
                     throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_questions');

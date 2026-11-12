@@ -121,8 +121,10 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                     if ($this->TC->tasks[$taskid]->scorelimit && $this->TC->tasks[$taskid]->scoreweighting) {
                         $score_column = true;
                     }
-                    if ($this->TC->tasks[$taskid]->taskscore->status == taskchain::STATUS_INPROGRESS &&
-                        $this->TC->tasks[$taskid]->allowresume) {
+                    if (
+                        $this->TC->tasks[$taskid]->taskscore->status == taskchain::STATUS_INPROGRESS &&
+                        $this->TC->tasks[$taskid]->allowresume
+                    ) {
                         // $resume_column = true;
                     }
                     $counttaskscores++;
@@ -1456,8 +1458,10 @@ class mod_taskchain_renderer extends plugin_renderer_base {
         $exitoptions = $this->TC->chain->exitoptions;
 
         if ($this->TC->chain->gradeweighting == 0) {
-            if ($exitoptions & mod_taskchain::EXITOPTIONS_ATTEMPTSCORE ||
-                $exitoptions & mod_taskchain::EXITOPTIONS_TASKCHAINGRADE) {
+            if (
+                $exitoptions & mod_taskchain::EXITOPTIONS_ATTEMPTSCORE ||
+                $exitoptions & mod_taskchain::EXITOPTIONS_TASKCHAINGRADE
+            ) {
                 $text = get_string('exit_nograde', 'mod_taskchain');
                 $feedback[] = html_writer::tag('li', $text);
             }
@@ -1577,8 +1581,10 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
         if ($this->TC->chain->exitoptions & mod_taskchain::EXITOPTIONS_RETRY) {
             // Retry this taskchain, if allowed.
-            if ($this->TC->chain->attemptlimit == 0 || empty($this->TC->chainattempts) ||
-                $this->TC->chain->attemptlimit < count($this->TC->chainattempts)) {
+            if (
+                $this->TC->chain->attemptlimit == 0 || empty($this->TC->chainattempts) ||
+                $this->TC->chain->attemptlimit < count($this->TC->chainattempts)
+            ) {
                 $table->data[] = new html_table_row(array(
                     new html_table_cell(html_writer::link($this->TC->url->view(), get_string('exit_retry', 'mod_taskchain'))),
                     new html_table_cell(html_writer::link($this->TC->url->view(), format_string($this->TC->taskchain->name))),

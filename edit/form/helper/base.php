@@ -2140,8 +2140,10 @@ abstract class taskchain_form_helper_base {
                 // so we get the coursemodule for each chain from its parent TaskChain.
                 if (isset($this->TC->coursemodule->id)) {
                     $cmid = $this->TC->coursemodule->id;
-                } else if ($this->get_fieldvalue('parenttype') == mod_taskchain::PARENTTYPE_ACTIVITY &&
-                    ($cm = get_coursemodule_from_instance('taskchain', $this->get_fieldvalue('parentid')))) {
+                } else if (
+                    $this->get_fieldvalue('parenttype') == mod_taskchain::PARENTTYPE_ACTIVITY &&
+                    ($cm = get_coursemodule_from_instance('taskchain', $this->get_fieldvalue('parentid')))
+                ) {
                     $cmid = $cm->id;
                 } else {
                     $cmid = 0; // Shouldn't happen !!

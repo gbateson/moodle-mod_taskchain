@@ -523,8 +523,15 @@ class taskchain_source {
      * @param boolean $recursive
      * @return void, but may append items to $sources
      */
-    public static function get_sources_from_chainfolder_external(&$data, $context, $component, $filearea, &$sources, $mainfile,
-        $recursive) {
+    public static function get_sources_from_chainfolder_external(
+        &$data,
+        $context,
+        $component,
+        $filearea,
+        &$sources,
+        $mainfile,
+        $recursive
+) {
         global $DB;
 
         // get repository - cautiously :-)
@@ -677,14 +684,16 @@ class taskchain_source {
             $file_record['filepath'] = preg_replace($search, $replace, $file_record['filepath'], 1);
 
             // Skip files that have already been fetched from the repository to this $filearea.
-            if ($fs->get_file(
+            if (
+                $fs->get_file(
                 $file_record['contextid'],
                 $component,
                 $filearea,
                 0,
                 $file_record['filepath'],
                 $file_record['filename']
-            )) {
+                )
+            ) {
                 continue; // File is already in $filearea.
             }
 

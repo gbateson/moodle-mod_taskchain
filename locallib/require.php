@@ -243,8 +243,10 @@ class taskchain_require extends taskchain_base {
         }
 
         if ($cnumber == 0) {
-            if (($this->TC->tab == 'info' || $this->TC->tab == 'preview' || $this->TC->tab == 'attempt') &&
-                $this->TC->can->preview()) {
+            if (
+                ($this->TC->tab == 'info' || $this->TC->tab == 'preview' || $this->TC->tab == 'attempt') &&
+                $this->TC->can->preview()
+            ) {
                 // Teacher can always view the entry page.
                 return false;
             }
@@ -675,8 +677,10 @@ class taskchain_require extends taskchain_base {
      * @return xxx
      */
     public function chain_availability() {
-        if (($this->TC->tab == 'info' || $this->TC->tab == 'preview' || $this->TC->tab == 'attempt' || $this->TC->tab == 'submit') &&
-            $this->TC->can->preview()) {
+        if (
+            ($this->TC->tab == 'info' || $this->TC->tab == 'preview' || $this->TC->tab == 'attempt' || $this->TC->tab == 'submit') &&
+            $this->TC->can->preview()
+        ) {
             // Teacher can always view the entry page.
             return false;
         }

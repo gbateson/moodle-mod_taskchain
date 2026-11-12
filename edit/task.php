@@ -163,8 +163,10 @@ switch ($TC->action) {
             $aftertaskid = optional_param('aftertaskid', 0, PARAM_INT);
             taskchain_add_tasks($newdata, $mform, $TC->chain, $aftertaskid);
         } else {
-            if ($TC->task->scoremethod == $newdata->scoremethod && $TC->task->scorelimit == $newdata->scorelimit &&
-                $TC->task->scoreweighting == $newdata->scoreweighting) {
+            if (
+                $TC->task->scoremethod == $newdata->scoremethod && $TC->task->scorelimit == $newdata->scorelimit &&
+                $TC->task->scoreweighting == $newdata->scoreweighting
+            ) {
                 $regrade = false;
             } else {
                 $regrade = true;
@@ -193,12 +195,14 @@ switch ($TC->action) {
 
             // Regrade task, if necessary.
             if ($regrade) {
-                if ($taskscores = $DB->get_records(
+                if (
+                    $taskscores = $DB->get_records(
                     'taskchain_task_scores',
                     array('taskid' => $TC->task->id),
                     '',
                     'id,cnumber,userid'
-                )) {
+                    )
+                ) {
                     $userids = array();
                     foreach ($taskscores as $id => $taskscore) {
                         // Set task score from task attempts.

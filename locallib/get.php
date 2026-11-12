@@ -73,8 +73,10 @@ class taskchain_get extends taskchain_base {
             if ($cmid == self::ACTIVITY_COURSE_TASKCHAIN || $cmid == self::ACTIVITY_SECTION_TASKCHAIN) {
                 $modname = 'taskchain';
             }
-            if ($cmid == self::ACTIVITY_SECTION_ANY || $cmid == self::ACTIVITY_SECTION_GRADED ||
-                $cmid == self::ACTIVITY_SECTION_TASKCHAIN) {
+            if (
+                $cmid == self::ACTIVITY_SECTION_ANY || $cmid == self::ACTIVITY_SECTION_GRADED ||
+                $cmid == self::ACTIVITY_SECTION_TASKCHAIN
+            ) {
                 $sectionnum = $cm->sectionnum;
             }
         }
@@ -1247,11 +1249,13 @@ class taskchain_get extends taskchain_base {
                 $groups = $allgroups;
             } else {
                 // Groups in this course/grouping to which this user belongs.
-                if ($groups = groups_get_all_groups(
+                if (
+                    $groups = groups_get_all_groups(
                     $this->TC->course->id,
                     $this->TC->userid,
                     $this->TC->coursemodule->groupingid
-                )) {
+                    )
+                ) {
                     $groups = implode(',', array_keys($groups));
                 }
             }
@@ -1285,12 +1289,14 @@ class taskchain_get extends taskchain_base {
             // conditionscore > 0 : the maximum score at which this condition is satisfied
             // The post-conditions will be ordered by conditionscore:
             // -100 (highest min) ... (lowest min) 0 (lowest max) ... (highest max) 100.
-            if (! $conditions[$taskid] = $DB->get_records_select(
+            if (
+                ! $conditions[$taskid] = $DB->get_records_select(
                 'taskchain_conditions',
                 $select,
                 null,
                 'conditiontaskid,sortorder,conditionscore,attemptcount,attemptduration,attemptdelay'
-            )) {
+                )
+            ) {
                 $conditions[$taskid] = array();
             }
             // Store absolute values for settings which can be negative.

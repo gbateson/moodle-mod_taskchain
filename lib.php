@@ -369,12 +369,14 @@ function taskchain_process_formdata(stdclass $data, $mform) {
 
             // Regrade chain attempts.
             if ($regrade_chainattempts) {
-                if ($records = $DB->get_records(
+                if (
+                    $records = $DB->get_records(
                     'taskchain_chain_attempts',
                     array('chainid' => $chain->id),
                     '',
                     'id,cnumber,userid'
-                )) {
+                    )
+                ) {
                     foreach ($records as $record) {
                         $TC->regrade_chainattempt($chain, $record->cnumber, $record->userid);
                     }
@@ -383,12 +385,14 @@ function taskchain_process_formdata(stdclass $data, $mform) {
             }
 
             // Regrade chain grades.
-            if ($records = $DB->get_records(
+            if (
+                $records = $DB->get_records(
                 'taskchain_chain_grades',
                 array('parenttype' => $chain->parenttype, 'parentid' => $chain->parentid),
                 '',
                 'id,userid'
-            )) {
+                )
+            ) {
                 foreach ($records as $record) {
                     $TC->regrade_attempts('chain', $chain, 0, $record->userid);
                 }
@@ -464,9 +468,11 @@ function taskchain_add_tasks(&$data, &$mform, &$chain, $aftertaskid = 0) {
             $chainfield = 'chain' . $field;
             $fieldsource = $field . 'source';
             if (isset($data->$fieldsource) && isset($data->$chainfield)) {
-                if ($data->$fieldsource == mod_taskchain::TEXTSOURCE_FILE ||
+                if (
+                    $data->$fieldsource == mod_taskchain::TEXTSOURCE_FILE ||
                     $data->$fieldsource == mod_taskchain::TEXTSOURCE_FILEPATH ||
-                    $data->$fieldsource == mod_taskchain::TEXTSOURCE_FILENAME) {
+                    $data->$fieldsource == mod_taskchain::TEXTSOURCE_FILENAME
+                ) {
                     $data->$field = clean_param($data->$chainfield, $PARAM);
                 }
             }
@@ -640,10 +646,12 @@ function taskchain_delete_instance($id) {
     }
 
     // Get associated $chain activity.
-    if (! $chain = $DB->get_record(
+    if (
+        ! $chain = $DB->get_record(
         'taskchain_chains',
         array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY, 'parentid' => $taskchain->id)
-    )) {
+        )
+    ) {
         return false;
     }
 
@@ -730,10 +738,12 @@ function taskchain_get_coursemodule_info($cm) {
     if (! $taskchain = $DB->get_record('taskchain', array('id' => $cm->instance))) {
         return false; // Shouldn't happen !!
     }
-    if (! $chain = $DB->get_record(
+    if (
+        ! $chain = $DB->get_record(
         'taskchain_chains',
         array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY, 'parentid' => $taskchain->id)
-    )) {
+        )
+    ) {
         return false; // Shouldn't happen !!
     }
 
@@ -810,13 +820,15 @@ function taskchain_user_outline($course, $user, $mod, $taskchain) {
 
     $select = 'parenttype = ? AND parentid = ? AND userid = ?';
     $params = array(mod_taskchain::PARENTTYPE_ACTIVITY, $taskchain->id, $user->id);
-    if ($grade = $DB->get_records_select(
+    if (
+        $grade = $DB->get_records_select(
         'taskchain_chain_grades',
         $select,
         $params,
         'timemodified DESC',
         'id,grade,timemodified'
-    )) {
+        )
+    ) {
         $grade = reset($grade);
         $grade = (object)array(
             'time' => $grade->timemodified,
@@ -902,8 +914,10 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
             }
             $sortorder = array_search($cmid, $cmids);
             if (! array_key_exists($sortorder, $stats)) {
-                if (has_capability('mod/taskchain:reviewmyattempts', $cm->context) ||
-                    has_capability('mod/taskchain:reviewallattempts', $cm->context)) {
+                if (
+                    has_capability('mod/taskchain:reviewmyattempts', $cm->context) ||
+                    has_capability('mod/taskchain:reviewallattempts', $cm->context)
+                ) {
                     $viewreport = true;
                 } else {
                     $viewreport = false;
@@ -1037,8 +1051,15 @@ function taskchain_print_recent_activity($course, $viewfullnames, $timestart) {
  *         $activity->user->picture : $record->picture;
  *     $activity->timestamp : the time that the content was recorded in the database
  */
-function taskchain_get_recent_mod_activity(&$activities, &$index, $date, $courseid, $coursemoduleid = 0, $userid = 0,
-    $groupid = 0) {
+function taskchain_get_recent_mod_activity(
+    &$activities,
+    &$index,
+    $date,
+    $courseid,
+    $coursemoduleid = 0,
+    $userid = 0,
+    $groupid = 0
+) {
     global $CFG, $DB, $OUTPUT, $USER;
     require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
@@ -1416,7 +1437,8 @@ function taskchain_print_overview($courses, &$htmlarray) {
         if (has_capability('mod/taskchain:reviewallattempts', $modulecontext)) {
             // Manager: show class grades stats
             // attempted: 99/99, completed: 99/99.
-            if ($students = get_users_by_capability(
+            if (
+                $students = get_users_by_capability(
                 $modulecontext,
                 'mod/taskchain:attempt',
                 'u.id,u.id',
@@ -1426,7 +1448,8 @@ function taskchain_print_overview($courses, &$htmlarray) {
                 0,
                 '',
                 false
-            )) {
+                )
+            ) {
                 $count = count($students);
                 $attempted = 0;
                 $completed = 0;

@@ -3093,8 +3093,10 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      */
     public function expand_Keypad() {
         $str = '';
-        if ($this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
-            $this->TC->task->source->hbs_tasktype . ',include-keypad')) {
+        if (
+            $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',include-keypad')
+        ) {
             // These characters must always be in the keypad.
             $chars = array();
             $this->add_keypad_chars(
@@ -3335,16 +3337,20 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     $gap .= '<select id="Gap' . $i . '"><option value=""></option>' . $dropdownlist . '</select>';
                 } else {
                     // Minimum gap size.
-                    if (! $gapsize = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software .
+                    if (
+                        ! $gapsize = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software .
                         '-config-file,' . $this->TC->task->source->hbs_tasktype .
-                        ',minimum-gap-size')) {
+                        ',minimum-gap-size')
+                    ) {
                         $gapsize = 6;
                     }
 
                     // Increase gap size to length of longest answer for this gap.
                     $a = 0;
-                    while (($answer = $item . "['answer'][$a]['#']") &&
-                        $this->TC->task->source->xml_value($question_record, $answer)) {
+                    while (
+                        ($answer = $item . "['answer'][$a]['#']") &&
+                        $this->TC->task->source->xml_value($question_record, $answer)
+                    ) {
                         $answertext = $this->TC->task->source->xml_value($question_record, $answer . "['text'][0]['#']");
                         $answertext = preg_replace('/&[#a-zA-Z0-9]+;/', 'x', $answertext);
                         $gapsize = max($gapsize, strlen($answertext));
@@ -4357,9 +4363,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
         $q = 0;
         $tags = 'data,questions,question-record';
-        while (($question = "[$q]['#']") && $this->TC->task->source->xml_value($tags, $question) &&
+        while (
+            ($question = "[$q]['#']") && $this->TC->task->source->xml_value($tags, $question) &&
             ($answers = $question . "['answers'][0]['#']") &&
-            $this->TC->task->source->xml_value($tags, $answers)) {
+            $this->TC->task->source->xml_value($tags, $answers)
+        ) {
             // Get question.
             $question_text = $this->TC->task->source->xml_value($tags, $question . "['question'][0]['#']");
             $question_type = $this->TC->task->source->xml_value_int($tags, $question . "['question-type'][0]['#']");

@@ -44,8 +44,14 @@ class taskchain_create extends taskchain_base {
      * @param xxx $userid (optional, default=0)
      * @return xxx
      */
-    public function chaingrade($grade = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $chainid = 0, $cnumber = 0,
-        $userid = 0) {
+    public function chaingrade(
+        $grade = 0,
+        $status = self::STATUS_INPROGRESS,
+        $duration = 0,
+        $chainid = 0,
+        $cnumber = 0,
+        $userid = 0
+) {
         global $DB;
 
         if ($userid == 0 && $this->TC->get_chaingrade()) {
@@ -100,8 +106,14 @@ class taskchain_create extends taskchain_base {
      * @param xxx $userid (optional, default=0)
      * @return xxx
      */
-    public function chainattempt($grade = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $chainid = 0, $cnumber = 0,
-        $userid = 0) {
+    public function chainattempt(
+        $grade = 0,
+        $status = self::STATUS_INPROGRESS,
+        $duration = 0,
+        $chainid = 0,
+        $cnumber = 0,
+        $userid = 0
+) {
         global $DB;
 
         if ($userid == 0 && $this->TC->get_chainattempt()) {
@@ -192,8 +204,14 @@ class taskchain_create extends taskchain_base {
      * @param xxx $userid (optional, default=0)
      * @return xxx
      */
-    public function taskscore($score = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $taskid = 0, $cnumber = 0,
-        $userid = 0) {
+    public function taskscore(
+        $score = 0,
+        $status = self::STATUS_INPROGRESS,
+        $duration = 0,
+        $taskid = 0,
+        $cnumber = 0,
+        $userid = 0
+) {
         global $DB;
 
         if ($userid == 0 && $this->TC->get_taskscore()) {

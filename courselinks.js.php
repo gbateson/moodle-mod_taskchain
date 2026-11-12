@@ -189,8 +189,10 @@ function print_courselinks() {
         // Get the current group and grouping for this course.
         list($groupid, $groupingid) = get_groupid_groupingid($course, $groupmode);
 
-        if ($groupmode == NOGROUPS || $groupmode == VISIBLEGROUPS ||
-            has_capability('moodle/site:accessallgroups', $course->context)) {
+        if (
+            $groupmode == NOGROUPS || $groupmode == VISIBLEGROUPS ||
+            has_capability('moodle/site:accessallgroups', $course->context)
+        ) {
             $accessallgroups = true;
         } else {
             $accessallgroups = false;
@@ -225,13 +227,15 @@ function print_courselinks() {
                 $groupids = 'SELECT groupid FROM {groups_members} WHERE userid = :userid AND groupid IN (' . $groupids . ')';
                 $params['userid'] = $USER->id;
             }
-            if ($records = $DB->get_records_select_menu(
+            if (
+                $records = $DB->get_records_select_menu(
                 'groups_members',
                 'groupid IN (' . $groupids . ')',
                 $params,
                 '',
                 'id,userid'
-            )) {
+                )
+            ) {
                 $userids = array_values($records);
             }
         }
