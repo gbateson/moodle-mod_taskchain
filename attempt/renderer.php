@@ -868,7 +868,13 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 $title = ltrim($this->TC->task->sourcefile, '/');
                 break;
             case mod_taskchain::TEXTSOURCE_SPECIFIC:
-                $title = format_string($this->TC->task->titletext);
+                if (trim($this->TC->task->titletext) == '') {
+                    // No specific text, so use the task name (this is what
+                    // TEXTSOURCE_SPECIFIC meant before TEXTSOURCE_TASKNAME was added).
+                    $title = format_string($this->TC->task->name);
+                } else {
+                    $title = format_string($this->TC->task->titletext);
+                }
                 break;
             case mod_taskchain::TEXTSOURCE_TASKNAME:
                 $title = format_string($this->TC->task->name);

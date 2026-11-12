@@ -557,7 +557,7 @@ function taskchain_add_tasks(&$data, &$mform, &$chain, $aftertaskid = 0) {
         // set default field values (for this teacher)
         $task->outputformat = get_user_preferences('taskchain_task_outputformat_' . $task->sourcetype, '');
         $task->navigation   = get_user_preferences('taskchain_task_navigation', mod_taskchain::NAVIGATION_MOODLE);
-        $task->title        = get_user_preferences('taskchain_task_title', mod_taskchain::TEXTSOURCE_SPECIFIC);
+        $task->title        = get_user_preferences('taskchain_task_title', mod_taskchain::TEXTSOURCE_TASKNAME);
         $task->stopbutton   = get_user_preferences('taskchain_task_stopbutton', mod_taskchain::STOPBUTTON_NONE);
         $task->stoptext     = get_user_preferences('taskchain_task_stoptext', '');
         $task->usefilters   = get_user_preferences('taskchain_task_usefilters', mod_taskchain::NO);

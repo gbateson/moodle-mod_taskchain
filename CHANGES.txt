@@ -2,6 +2,13 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-12 (26)
+ - show task names in the task menu and on task pages, when the task title is
+   set to 'specific text' but no text has been given (new tasks were created
+   like this, so their titles were blank)
+ - use the task name as the default title for new tasks
+ - add README.md with screenshots, and .github/FUNDING.yml; simplify README.txt
+
 2026-11-12 (25)
  - add support for Hot Potatoes 7 (HP7) tasks: JCloze, JCross, JMatch (including
    drag-and-drop and flashcards), JMix (including drag-and-drop) and JQuiz, from

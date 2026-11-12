@@ -311,7 +311,13 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                 $title = ltrim($task->sourcefile, '/');
                 break;
             case mod_taskchain::TEXTSOURCE_SPECIFIC:
-                $title = format_string($task->titletext);
+                if (trim($task->titletext) == '') {
+                    // No specific text, so use the task name (this is what
+                    // TEXTSOURCE_SPECIFIC meant before TEXTSOURCE_TASKNAME was added).
+                    $title = format_string($task->name);
+                } else {
+                    $title = format_string($task->titletext);
+                }
                 break;
             case mod_taskchain::TEXTSOURCE_TASKNAME:
                 $title = format_string($task->name);
