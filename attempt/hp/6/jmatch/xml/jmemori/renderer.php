@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmatch/xml/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/xml/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmatch/xml/renderer.php'
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskchain_attempt_hp_6_jmatch_xml_renderer {
-
     public $js_object_type = 'JMemori';
     public $templatefile = 'djmatch6.ht_';
 
@@ -50,7 +48,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
         // prepend templates for this output format
@@ -66,7 +64,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    public static function sourcetypes() {
         return array('hp_6_jmatch_xml');
     }
 
@@ -75,7 +73,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      *
      * @todo Finish documenting this function
      */
-    public function fix_headcontent()  {
+    public function fix_headcontent() {
         $this->fix_headcontent_rottmeier('jmemori');
     }
 
@@ -84,7 +82,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      *
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent()  {
+    public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier();
         parent::fix_bodycontent();
     }
@@ -94,7 +92,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      *
      * @todo Finish documenting this function
      */
-    public function fix_title()  {
+    public function fix_title() {
         $this->fix_title_rottmeier_JMemori();
     }
 
@@ -104,10 +102,10 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_js_functionnames()  {
+    public function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'ShowSolution,CheckPair,WriteFeedback';
+        $names .= ($names ? ',' : '') . 'ShowSolution,CheckPair,WriteFeedback';
         return $names;
     }
 
@@ -119,7 +117,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_WriteFeedback(&$str, $start, $length)  {
+    public function fix_js_WriteFeedback(&$str, $start, $length) {
         $this->fix_js_WriteFeedback_JMemori($str, $start, $length);
     }
 
@@ -131,7 +129,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_HideFeedback(&$str, $start, $length)  {
+    public function fix_js_HideFeedback(&$str, $start, $length) {
         $this->fix_js_HideFeedback_JMemori($str, $start, $length);
     }
 
@@ -143,7 +141,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_ShowSolution(&$str, $start, $length)  {
+    public function fix_js_ShowSolution(&$str, $start, $length) {
         $this->fix_js_ShowSolution_JMemori($str, $start, $length);
     }
 
@@ -155,7 +153,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_CheckPair(&$str, $start, $length)  {
+    public function fix_js_CheckPair(&$str, $start, $length) {
         $this->fix_js_CheckPair_JMemori($str, $start, $length);
     }
 
@@ -165,7 +163,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CheckPair';
     }
 
@@ -175,7 +173,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_search()  {
+    public function get_stop_function_search() {
         return '/\s*if \((Pairs == F\.length)\)({.*?)setTimeout.*?}/s';
     }
 
@@ -185,9 +183,9 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_args()  {
+    public function get_stop_function_args() {
         // the arguments required by CheckPair
-        return '-1,'.mod_taskchain::STATUS_ABANDONED;
+        return '-1,' . mod_taskchain::STATUS_ABANDONED;
     }
 
     /**
@@ -196,11 +194,10 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_intercept()  {
+    public function get_stop_function_intercept() {
         return "\n"
-            ."	// intercept this Check\n"
-            ."	if (id>=0) HP.onclickCheck(id);\n"
-        ;
+            . "	// intercept this Check\n"
+            . "	if (id>=0) HP.onclickCheck(id);\n";
     }
 
     /**
@@ -208,7 +205,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      *
      * @return xxx
      */
-    function expand_BackCaption()  {
+    function expand_BackCaption() {
         return $this->expand_CaptionJS('Back');
     }
 
@@ -217,7 +214,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      *
      * @return xxx
      */
-    function expand_ContentsCaption()  {
+    function expand_ContentsCaption() {
         return $this->expand_CaptionJS('Contents');
     }
 
@@ -226,7 +223,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      *
      * @return xxx
      */
-    function expand_NextExCaption()  {
+    function expand_NextExCaption() {
         return $this->expand_CaptionJS('NextEx');
     }
 
@@ -235,7 +232,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      *
      * @return xxx
      */
-    function expand_CheckCaption()  {
+    function expand_CheckCaption() {
         return $this->expand_CaptionJS('Check');
     }
 
@@ -246,8 +243,8 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      * @param string suffix (optional, default="Caption") to be appended $name
      * @return string
      */
-    function expand_CaptionJS($name, $suffix='Caption')  {
-        $method = 'expand_'.$name.$suffix;
+    function expand_CaptionJS($name, $suffix = 'Caption') {
+        $method = 'expand_' . $name . $suffix;
         // Note: call_user_func(array($this, 'parent::'.$method)) is deprecated in PHP >= 8.2
         $caption = parent::$method();
         return $this->TC->task->source->js_value_safe($caption, true);

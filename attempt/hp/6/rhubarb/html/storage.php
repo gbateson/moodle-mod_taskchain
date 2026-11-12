@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/rhubarb/storage.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/rhubarb/storage.php');
 
 /**
  * mod_taskchain_attempt_hp_6_rhubarb_html_storage

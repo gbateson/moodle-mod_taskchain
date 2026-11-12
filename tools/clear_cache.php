@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,8 +24,8 @@
  */
 
 /** Include required files */
-require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
 require_login(SITEID);
 if (class_exists('context_system')) {
@@ -38,7 +37,7 @@ require_capability('moodle/site:config', $context);
 
 // $SCRIPT is set by initialise_fullme() in "lib/setuplib.php"
 // it is the path below $CFG->wwwroot of this script
-$PAGE->set_url($CFG->wwwroot.$SCRIPT);
+$PAGE->set_url($CFG->wwwroot . $SCRIPT);
 
 $title = get_string('clearcache', 'mod_taskchain');
 $PAGE->set_title($title);
@@ -58,22 +57,22 @@ $count_tasks = $DB->count_records('taskchain');
 
 echo $OUTPUT->box_start();
 
-echo '<table style="margin:auto"><tbody>'."\n";
-echo '<tr><th style="text-align:right;">'.get_string('tasks', 'mod_taskchain').':</th><td>'.$count_tasks.'</td></tr>'."\n";
-echo '<tr><th style="text-align:right;">'.get_string('cacherecords', 'mod_taskchain').':</th><td>'.$count_cache.'</td></tr>'."\n";
+echo '<table style="margin:auto"><tbody>' . "\n";
+echo '<tr><th style="text-align:right;">' . get_string('tasks', 'mod_taskchain') . ':</th><td>' . $count_tasks . '</td></tr>' . "\n";
+echo '<tr><th style="text-align:right;">' . get_string('cacherecords', 'mod_taskchain') . ':</th><td>' . $count_cache . '</td></tr>' . "\n";
 if ($count_cache) {
     echo '<tr><td colspan="2" style="text-align:center;">';
-    echo '<form action="'.$CFG->wwwroot.$SCRIPT.'" method="post">';
+    echo '<form action="' . $CFG->wwwroot . $SCRIPT . '" method="post">';
     echo '<fieldset>';
     echo '<input type="hidden" value="1" name="confirm" />';
-    echo '<input type="hidden" value="'.sesskey().'" name="sesskey" />';
-    echo '<input type="submit" value="'.get_string('confirm').'" />';
+    echo '<input type="hidden" value="' . sesskey() . '" name="sesskey" />';
+    echo '<input type="submit" value="' . get_string('confirm') . '" />';
     echo '</fieldset>';
-    echo '</td></tr>'."\n";
+    echo '</td></tr>' . "\n";
 } else {
-    echo '<tr><td colspan="2" style="text-align:center;">'.get_string('clearedcache', 'mod_taskchain').'</td></tr>'."\n";
+    echo '<tr><td colspan="2" style="text-align:center;">' . get_string('clearedcache', 'mod_taskchain') . '</td></tr>' . "\n";
 }
-echo '</tbody></table>'."\n";
+echo '</tbody></table>' . "\n";
 
 echo $OUTPUT->box_end();
 

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -33,9 +32,9 @@ $capabilities = array(
         'contextlevel' => CONTEXT_COURSE,
         'archetypes'   => array(
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
+            'manager'  => CAP_ALLOW,
         ),
-        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+        'clonepermissionsfrom' => 'moodle/course:manageactivities',
     ),
 
     // ability to attempt TaskChain as a student (and submit results)
@@ -47,8 +46,8 @@ $capabilities = array(
             'student'  => CAP_ALLOW,
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
     // ability to delete anyone's attempts at a TaskChain
@@ -59,8 +58,8 @@ $capabilities = array(
         'archetypes'   => array(
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
     // ability to delete one's own attempts at a TaskChain
@@ -71,16 +70,16 @@ $capabilities = array(
         'archetypes'   => array(
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
     // ability to ignore time limits (used for accessibility legislation compliance)
-    //'mod/taskchain:ignoretimelimits' => array(
-    //    'captype'      => 'read',
-    //    'contextlevel' => CONTEXT_MODULE,
-    //    'archetypes'   => array()
-    //),
+    // 'mod/taskchain:ignoretimelimits' => array(
+    // 'captype'      => 'read',
+    // 'contextlevel' => CONTEXT_MODULE,
+    // 'archetypes'   => array()
+    // ),
 
     // ability to edit the TaskChain settings
     'mod/taskchain:manage' => array(
@@ -89,8 +88,8 @@ $capabilities = array(
         'contextlevel' => CONTEXT_MODULE,
         'archetypes'   => array(
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
     // ability to preview a TaskChain as a teacher (and submit results)
@@ -101,8 +100,8 @@ $capabilities = array(
         'archetypes'   => array(
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
     // ability to regrade attempts at a TaskChain
@@ -113,8 +112,8 @@ $capabilities = array(
         'archetypes'   => array(
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
     // ability to view anyone's attempts at a TaskChain
@@ -125,8 +124,8 @@ $capabilities = array(
         'archetypes'   => array(
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
     // ability to view one's own attempts at a TaskChain
@@ -138,8 +137,8 @@ $capabilities = array(
             'student'  => CAP_ALLOW,
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 
     // ability to view the entry page for a TaskChain
@@ -151,7 +150,7 @@ $capabilities = array(
             'student'  => CAP_ALLOW,
             'teacher'  => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'  => CAP_ALLOW
-        )
+            'manager'  => CAP_ALLOW,
+        ),
     ),
 );

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/html/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/html/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jcloze_html_dropdown_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/html/renderer.php
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_taskchain_attempt_hp_6_jcloze_html_renderer {
-
     public $js_object_type = 'JClozeDropDown';
 
     /**
@@ -49,7 +47,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_taskc
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
         // replace standard jcloze.js with dropdown.js
@@ -62,7 +60,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_taskc
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    public static function sourcetypes() {
         return array('hp_6_jcloze_html_dropdown');
     }
 
@@ -72,10 +70,10 @@ class mod_taskchain_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_taskc
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_js_functionnames()  {
+    public function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'Show_Solution,Build_GapText';
+        $names .= ($names ? ',' : '') . 'Show_Solution,Build_GapText';
         return $names;
     }
 
@@ -84,7 +82,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_taskc
      *
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent()  {
+    public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier(true);
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jcross_renderer
@@ -50,11 +49,11 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
     public $headcontent_arrays = '';
 
     public $response_text_fields = array(
-        'correct', 'wrong' // remove: ignored
+        'correct', 'wrong', // remove: ignored
     );
 
     public $response_num_fields = array(
-        'score', 'hints', 'clues', 'checks' // remove: weighting
+        'score', 'hints', 'clues', 'checks', // remove: weighting
     );
 
     /**
@@ -64,7 +63,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
         array_push($this->javascripts, 'mod/taskchain/attempt/hp/6/jcross/jcross.js');
     }
@@ -75,7 +74,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function filter_text_headcontent_search_array()  {
+    public function filter_text_headcontent_search_array() {
         return ''; // disable search for array names
     }
 
@@ -84,7 +83,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      *
      * @todo Finish documenting this function
      */
-    public function fix_headcontent()  {
+    public function fix_headcontent() {
         // switch off auto complete on answer text boxes
         $search = '/(?<=<form method="post" action="" onsubmit="return false;")(?=>)/';
         $replace = ' autocomplete="off"';
@@ -99,9 +98,9 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent()  {
+    public function fix_bodycontent() {
         // we must add a false return value to clue links in order not to trigger the onbeforeunload event handler
-        $search = '/(?<='.'<a href="javascript:void\(0\);" class="GridNum" onclick="'.')'.'ShowClue\([^)]*\)'.'(?='.'">'.')/';
+        $search = '/(?<=' . '<a href="javascript:void\(0\);" class="GridNum" onclick="' . ')' . 'ShowClue\([^)]*\)' . '(?=' . '">' . ')/';
         $replace = '$0; return false;';
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent);
 
@@ -114,10 +113,10 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_js_functionnames()  {
+    public function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'TypeChars,ShowHint,ShowClue,CheckAnswers';
+        $names .= ($names ? ',' : '') . 'TypeChars,ShowHint,ShowClue,CheckAnswers';
         return $names;
     }
 
@@ -129,7 +128,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_Finish(&$str, $start, $length)  {
+    public function fix_js_Finish(&$str, $start, $length) {
         $name = 'Finish';
 
         // remove the first occurrence of this function
@@ -146,8 +145,8 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
 
         // remove all delayed calls to this function
         // don't put this into hp/6/class.php because it breaks JQuiz !!
-        //$search = "/\s*"."setTimeout\('$name\([^)]*\)', .*?\);/s";
-        //$str = preg_replace($search, '', $str);
+        // $search = "/\s*"."setTimeout\('$name\([^)]*\)', .*?\);/s";
+        // $str = preg_replace($search, '', $str);
     }
 
     /**
@@ -156,23 +155,22 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function fix_js_TypeChars_init()  {
+    public function fix_js_TypeChars_init() {
         return ''
-            ."	if (CurrentBox && (CurrentBox.parentNode==null || CurrentBox.parentNode.parentNode==null)) {\n"
-            ."		CurrentBox = null;\n"
-            ."	}\n"
-            ."	if (CurrentBox==null) {\n"
-            ."		var ClueEntry = document.getElementById('ClueEntry');\n"
-            ."		if (ClueEntry) {\n"
-            ."			var InputTags = ClueEntry.getElementsByTagName('input');\n"
-            ."			if (InputTags && InputTags.length) {\n"
-            ."				CurrentBox = InputTags[0];\n"
-            ."			}\n"
-            ."			InputTags = null;\n"
-            ."		}\n"
-            ."		ClueEntry = null;\n"
-            ."	}\n"
-        ;
+            . "	if (CurrentBox && (CurrentBox.parentNode==null || CurrentBox.parentNode.parentNode==null)) {\n"
+            . "		CurrentBox = null;\n"
+            . "	}\n"
+            . "	if (CurrentBox==null) {\n"
+            . "		var ClueEntry = document.getElementById('ClueEntry');\n"
+            . "		if (ClueEntry) {\n"
+            . "			var InputTags = ClueEntry.getElementsByTagName('input');\n"
+            . "			if (InputTags && InputTags.length) {\n"
+            . "				CurrentBox = InputTags[0];\n"
+            . "			}\n"
+            . "			InputTags = null;\n"
+            . "		}\n"
+            . "		ClueEntry = null;\n"
+            . "	}\n";
     }
 
     /**
@@ -181,7 +179,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function fix_js_TypeChars_obj()  {
+    public function fix_js_TypeChars_obj() {
         return 'CurrentBox';
     }
 
@@ -193,17 +191,16 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_ShowHint(&$str, $start, $length)  {
+    public function fix_js_ShowHint(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         // intercept Hints
         if ($pos = strrpos($substr, '}')) {
             $append = "\n"
-                ."	if (OutString.length) {\n"
-                ."		// intercept this Hint\n"
-                ."		HP.onclickHint(HP.getQuestionName(ClueNum, (Across ? 'A' : 'D')));\n"
-                ."	}\n"
-            ;
+                . "	if (OutString.length) {\n"
+                . "		// intercept this Hint\n"
+                . "		HP.onclickHint(HP.getQuestionName(ClueNum, (Across ? 'A' : 'D')));\n"
+                . "	}\n";
             $substr = substr_replace($substr, $append, $pos, 0);
         }
 
@@ -218,26 +215,25 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_ShowClue(&$str, $start, $length)  {
+    public function fix_js_ShowClue(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         // intercept Clues
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
-                ."	// intercept this Clue\n"
-                ."	if(document.getElementById('Clue_A_' + ClueNum)) {\n"
-                ."		HP.onclickClue(HP.getQuestionName(ClueNum, 'A'));\n"
-                ."	}\n"
-                ."	if(document.getElementById('Clue_D_' + ClueNum)) {\n"
-                ."		HP.onclickClue(HP.getQuestionName(ClueNum, 'D'));\n"
-                ."	}\n"
-            ;
-            $substr = substr_replace($substr, $insert, $pos+1, 0);
+                . "	// intercept this Clue\n"
+                . "	if(document.getElementById('Clue_A_' + ClueNum)) {\n"
+                . "		HP.onclickClue(HP.getQuestionName(ClueNum, 'A'));\n"
+                . "	}\n"
+                . "	if(document.getElementById('Clue_D_' + ClueNum)) {\n"
+                . "		HP.onclickClue(HP.getQuestionName(ClueNum, 'D'));\n"
+                . "	}\n";
+            $substr = substr_replace($substr, $insert, $pos + 1, 0);
         }
 
         // stretch the canvas vertically down to cover the content, if any
         if ($pos = strrpos($substr, '}')) {
-            $substr = substr_replace($substr, '	StretchCanvasToCoverContent(true);'."\n", $pos, 0);
+            $substr = substr_replace($substr, '	StretchCanvasToCoverContent(true);' . "\n", $pos, 0);
         }
 
         $str = substr_replace($str, $substr, $start, $length);
@@ -249,7 +245,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CheckAnswers';
     }
 
@@ -258,7 +254,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      *
      * @return xxx
      */
-    function expand_EnterCaption()  {
+    function expand_EnterCaption() {
         $caption = parent::expand_EnterCaption();
         return $this->TC->task->source->js_value_safe($caption, true);
     }
@@ -268,7 +264,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      *
      * @return xxx
      */
-    function expand_HintCaption()  {
+    function expand_HintCaption() {
         $caption = parent::expand_HintCaption();
         return $this->TC->task->source->js_value_safe($caption, true);
     }

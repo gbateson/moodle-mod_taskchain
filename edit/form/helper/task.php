@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/record.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/record.php');
 
 /**
  * taskchain_form_helper_task
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/record.php');
  * @package    mod_taskchain
  */
 class taskchain_form_helper_task extends taskchain_form_helper_record {
-
     /** type of record **/
     protected $recordtype = 'task';
 
@@ -54,7 +52,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'assessment' => array('scoremethod', 'scoreignore', 'scorelimit', 'scoreweighting', 'clickreporting', 'discarddetails'),
         'reviewoptions'  => array('reviewoptions'),
         'conditions'  => array('preconditions', 'postconditions'),
-        'hidden'     => array('id', 'aftertaskid')
+        'hidden'     => array('id', 'aftertaskid'),
     );
 
     /** the default sections/fields shown on forms for multiple task records */
@@ -62,7 +60,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'tasks'      => array('sourcefile'),
         'time'       => array('timeopen', 'timeclose'),
         'conditions' => array('preconditions', 'postconditions'),
-        'hidden'     => array('id', 'aftertaskid')
+        'hidden'     => array('id', 'aftertaskid'),
     );
 
     /** default values in a task record (includes form fields not stored in the database ) */
@@ -110,7 +108,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'addtype'         => mod_taskchain::ADDTYPE_AUTO,
         'tasknames'       => mod_taskchain::TEXTSOURCE_FILE,
         'preconditions'   => '',
-        'postconditions'  => ''
+        'postconditions'  => '',
     );
 
     /** fields that are only used when adding a new record */
@@ -126,17 +124,17 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $field = 'title';
         $value = intval($this->get_fieldvalue($field));
 
-        $name = $this->get_fieldname($field.'source');
+        $name = $this->get_fieldname($field . 'source');
         $data[$name] = ($value & mod_taskchain::TITLE_SOURCE);
 
-        $name = $this->get_fieldname($field.'prependchainname');
+        $name = $this->get_fieldname($field . 'prependchainname');
         if ($value & mod_taskchain::TITLE_CHAINNAME) {
             $data[$name] = 1;
         } else {
             $data[$name] = 0;
         }
 
-        $name = $this->get_fieldname($field.'appendsortorder');
+        $name = $this->get_fieldname($field . 'appendsortorder');
         if ($value & mod_taskchain::TITLE_SORTORDER) {
             $data[$name] = 1;
         } else {
@@ -159,7 +157,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         foreach ($times as $timename => $timevalue) {
             foreach ($items as $itemname => $itemvalue) {
-                $data[$name.$timename.$itemname] = min(1, $value & $timevalue & $itemvalue);
+                $data[$name . $timename . $itemname] = min(1, $value & $timevalue & $itemvalue);
             }
         }
     }
@@ -174,8 +172,8 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     protected function prepare_field_stopbutton(&$data) {
         $field = 'stopbutton';
         $name = $this->get_fieldname($field);
-        $name_yesno = $this->get_fieldname($field.'yesno');
-        $name_type  = $this->get_fieldname($field.'type');
+        $name_yesno = $this->get_fieldname($field . 'yesno');
+        $name_type  = $this->get_fieldname($field . 'type');
         $name_text  = $this->get_fieldname('stoptext');
 
         if (empty($data[$name])) {
@@ -184,9 +182,9 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
             $data[$name_text] = '';
         } else {
             $data[$name_yesno] = 1; // YES
-            if ($data[$name]==mod_taskchain::STOPBUTTON_SPECIFIC) {
+            if ($data[$name] == mod_taskchain::STOPBUTTON_SPECIFIC) {
                 $data[$name_type] = 'specific';
-            } else if ($data[$name_text]=='taskchain_giveup') {
+            } else if ($data[$name_text] == 'taskchain_giveup') {
                 $data[$name_type] = 'taskchain_giveup';
                 $data[$name_text] = '';
             } else {
@@ -224,7 +222,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function prepare_template_timelist(&$data, $field) {
         $name = $this->get_fieldname($field);
-        $name_options = $this->get_fieldname($field.'options');
+        $name_options = $this->get_fieldname($field . 'options');
         if ($data[$name] < 0) {
             $data[$name_options] = $data[$name];
             $data[$name] = 0;
@@ -258,7 +256,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $options = taskchain_available::outputformats_list($sourcetype);
         $this->mform->addElement('select', $name, $label, $options);
         $this->add_helpbutton($name, $field, 'taskchain');
-        //$this->mform->setAdvanced($name);
+        // $this->mform->setAdvanced($name);
     }
 
     /**
@@ -281,39 +279,38 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name = $this->get_fieldname($field);
         $label = get_string($field, 'mod_taskchain');
 
-        $field_text    = $field.'text';
-        $field_source  = $field.'source';
-        $field_prepend = $field.'prependchainname';
-        $field_append  = $field.'appendsortorder';
+        $field_text    = $field . 'text';
+        $field_source  = $field . 'source';
+        $field_prepend = $field . 'prependchainname';
+        $field_append  = $field . 'appendsortorder';
 
         $name_text     = $this->get_fieldname($field_text);
         $name_source   = $this->get_fieldname($field_source);
         $name_prepend  = $this->get_fieldname($field_prepend);
         $name_append   = $this->get_fieldname($field_append);
-        $name_elements = $this->get_fieldname($field.'_elements');
+        $name_elements = $this->get_fieldname($field . '_elements');
 
         $elements = array();
-        $elements[] = $this->mform->createElement('select',   $name_source,  '', taskchain_available::titles_list());
-        $elements[] = $this->mform->createElement('text',     $name_text,    '', array('size' => '20'));
-        $elements[] = $this->mform->createElement('static',   '',            '', html_writer::empty_tag('br'));
+        $elements[] = $this->mform->createElement('select', $name_source, '', taskchain_available::titles_list());
+        $elements[] = $this->mform->createElement('text', $name_text, '', array('size' => '20'));
+        $elements[] = $this->mform->createElement('static', '', '', html_writer::empty_tag('br'));
         $elements[] = $this->mform->createElement('checkbox', $name_prepend, '', get_string($field_prepend, 'mod_taskchain'));
-        $elements[] = $this->mform->createElement('static',   '',            '', html_writer::empty_tag('br'));
-        $elements[] = $this->mform->createElement('checkbox', $name_append,  '', get_string($field_append,  'mod_taskchain'));
-        
+        $elements[] = $this->mform->createElement('static', '', '', html_writer::empty_tag('br'));
+        $elements[] = $this->mform->createElement('checkbox', $name_append, '', get_string($field_append, 'mod_taskchain'));
 
         $this->mform->addGroup($elements, $name_elements, $label, ' ', false);
         $this->add_helpbutton($name_elements, $field, 'mod_taskchain');
         $this->mform->setAdvanced($name_elements);
 
-        $this->mform->setType($name_text,   PARAM_TEXT);
-        $this->mform->setType($name_source,  PARAM_INT);
+        $this->mform->setType($name_text, PARAM_TEXT);
+        $this->mform->setType($name_source, PARAM_INT);
         $this->mform->setType($name_prepend, PARAM_INT);
-        $this->mform->setType($name_append,  PARAM_INT);
+        $this->mform->setType($name_append, PARAM_INT);
 
-        $this->mform->setDefault($name_text,    $this->get_defaultvalue($field_text));
-        $this->mform->setDefault($name_source,  $this->get_defaultvalue($field_source));
+        $this->mform->setDefault($name_text, $this->get_defaultvalue($field_text));
+        $this->mform->setDefault($name_source, $this->get_defaultvalue($field_source));
         $this->mform->setDefault($name_prepend, $this->get_defaultvalue($field_prepend));
-        $this->mform->setDefault($name_append,  $this->get_defaultvalue($field_append));
+        $this->mform->setDefault($name_append, $this->get_defaultvalue($field_append));
 
         $this->mform->disabledIf($name_text, $name_source, 'neq', mod_taskchain::TEXTSOURCE_SPECIFIC);
     }
@@ -338,10 +335,10 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
 
-        $name_yesno = $this->get_fieldname($field.'yesno');
-        $name_type  = $this->get_fieldname($field.'type');
+        $name_yesno = $this->get_fieldname($field . 'yesno');
+        $name_type  = $this->get_fieldname($field . 'type');
         $name_text  = $this->get_fieldname('stoptext');
-        $name_elements = $this->get_fieldname($field.'_elements');
+        $name_elements = $this->get_fieldname($field . '_elements');
 
         $elements = array();
         $elements[] = $this->mform->createElement('selectyesno', $name_yesno, '');
@@ -353,11 +350,11 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $this->mform->setAdvanced($name_elements);
 
         $this->mform->setType($name_yesno, PARAM_INT);
-        $this->mform->setType($name_type,  PARAM_ALPHAEXT);
-        $this->mform->setType($name_text,  PARAM_TEXT);
+        $this->mform->setType($name_type, PARAM_ALPHAEXT);
+        $this->mform->setType($name_text, PARAM_TEXT);
 
         $this->mform->disabledIf($name_elements, $name_yesno, 'ne', '1');
-        $this->mform->disabledIf($name_text,     $name_type,  'eq', 'taskchain_giveup');
+        $this->mform->disabledIf($name_text, $name_type, 'eq', 'taskchain_giveup');
     }
 
     /**
@@ -425,12 +422,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
 
-        $name_url = $this->get_fieldname($field.'url');
-        $name_elements = $this->get_fieldname($field.'_elements');
+        $name_url = $this->get_fieldname($field . 'url');
+        $name_elements = $this->get_fieldname($field . '_elements');
 
         $elements = array();
         $elements[] = $this->mform->createElement('select', $name, '', taskchain_available::feedbacks_list());
-        $elements[] = $this->mform->createElement('text', $name_url, '', array('size'=>$this->text_field_size));
+        $elements[] = $this->mform->createElement('text', $name_url, '', array('size' => $this->text_field_size));
         $this->mform->addGroup($elements, $name_elements, $label, array(' '), false);
 
         $this->mform->disabledIf($name_url, $name, 'eq', mod_taskchain::FEEDBACK_NONE);
@@ -482,11 +479,11 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function add_template_timelist($field) {
         $name = $this->get_fieldname($field);
-        $name_options = $this->get_fieldname($field.'options');
-        $options = call_user_func(array('taskchain_available', $field.'s_list'));
+        $name_options = $this->get_fieldname($field . 'options');
+        $options = call_user_func(array('taskchain_available', $field . 's_list'));
         $this->add_template_timer($field, true, array('options' => $options));
-        $this->mform->disabledIf($name.'[number]',   $name_options, 'ne', mod_taskchain::TIME_SPECIFIC);
-        $this->mform->disabledIf($name.'[timeunit]', $name_options, 'ne', mod_taskchain::TIME_SPECIFIC);
+        $this->mform->disabledIf($name . '[number]', $name_options, 'ne', mod_taskchain::TIME_SPECIFIC);
+        $this->mform->disabledIf($name . '[timeunit]', $name_options, 'ne', mod_taskchain::TIME_SPECIFIC);
     }
 
     /**
@@ -568,56 +565,55 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $js_amd_inline = method_exists($PAGE->requires, 'js_amd_inline');
 
         foreach ($times as $timename => $timevalue) {
-
             // set groupname and id
-            $groupname = $name.$timename.'_elements';
-            $groupid = 'fgroup_id_'.$groupname;
+            $groupname = $name . $timename . '_elements';
+            $groupid = 'fgroup_id_' . $groupname;
 
             // set All/None links
             $allnone = '';
             if ($js_amd_inline) {
                 // Moodle >= 3.3
-                $select = $name.$timename.'select';
-                $allnone .= html_writer::tag('a', get_string('all'), array('href' => '#', 'id' => $select.'all'));
+                $select = $name . $timename . 'select';
+                $allnone .= html_writer::tag('a', get_string('all'), array('href' => '#', 'id' => $select . 'all'));
                 $allnone .= ' / ';
-                $allnone .= html_writer::tag('a', get_string('reset'), array('href' => '#', 'id' => $select.'reset'));
+                $allnone .= html_writer::tag('a', get_string('reset'), array('href' => '#', 'id' => $select . 'reset'));
                 $allnone .= ' / ';
-                $allnone .= html_writer::tag('a', get_string('none'), array('href' => '#', 'id' => $select.'none'));
+                $allnone .= html_writer::tag('a', get_string('none'), array('href' => '#', 'id' => $select . 'none'));
                 $PAGE->requires->js_amd_inline(
-                    'require(["jquery"], function($) {'.
-                        '$("#'.$select.'all").click(function(e) {'.
-                            '$(this).closest("div.fitem").find("input:checkbox").prop("checked", true);'.
-                            'e.preventDefault();'.
-                        '});'.
-                        '$("#'.$select.'reset").click(function(e) {'.
-                            '$(this).closest("div.fitem").find("input:checkbox").each(function(){'.
-                                '$(this).prop("checked", $(this).prop("defaultChecked"));'.
-                            '});'.
-                            'e.preventDefault();'.
-                        '});'.
-                        '$("#'.$select.'none").click(function(e) {'.
-                            '$(this).closest("div.fitem").find("input:checkbox").prop("checked", false);'.
-                            'e.preventDefault();'.
-                        '});'.
+                    'require(["jquery"], function($) {' .
+                        '$("#' . $select . 'all").click(function(e) {' .
+                            '$(this).closest("div.fitem").find("input:checkbox").prop("checked", true);' .
+                            'e.preventDefault();' .
+                        '});' .
+                        '$("#' . $select . 'reset").click(function(e) {' .
+                            '$(this).closest("div.fitem").find("input:checkbox").each(function(){' .
+                                '$(this).prop("checked", $(this).prop("defaultChecked"));' .
+                            '});' .
+                            'e.preventDefault();' .
+                        '});' .
+                        '$("#' . $select . 'none").click(function(e) {' .
+                            '$(this).closest("div.fitem").find("input:checkbox").prop("checked", false);' .
+                            'e.preventDefault();' .
+                        '});' .
                     '});'
                 );
             } else {
                 // Moodle <= 3.2
-                $allnone .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in("DIV", "fitem", "'.$groupid.'")'));
+                $allnone .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in("DIV", "fitem", "' . $groupid . '")'));
                 $allnone .= ' / ';
-                $allnone .= html_writer::tag('a', get_string('none'), array('onclick' => 'deselect_all_in("DIV", "fitem", "'.$groupid.'")'));
+                $allnone .= html_writer::tag('a', get_string('none'), array('onclick' => 'deselect_all_in("DIV", "fitem", "' . $groupid . '")'));
             }
 
             $elements = array();
             foreach ($items as $itemname => $itemvalue) {
-                $fieldname = $name.$timename.$itemname; // e.g. duringattemptresponses
+                $fieldname = $name . $timename . $itemname; // e.g. duringattemptresponses
                 $elements[] = &$this->mform->createElement('checkbox', $fieldname, '', get_string($itemname, 'quiz'));
                 $this->mform->setType($fieldname, PARAM_INT);
             }
             $elements[] = &$this->mform->createElement('static', '', '', html_writer::tag('span', $allnone));
 
-            $this->mform->addGroup($elements, $groupname, get_string('review'.$timename, 'mod_taskchain'), null, false);
-            if ($timename=='afterclose') {
+            $this->mform->addGroup($elements, $groupname, get_string('review' . $timename, 'mod_taskchain'), null, false);
+            if ($timename == 'afterclose') {
                 $this->mform->disabledIf('afterclose_elements', 'timeclose[off]', 'checked');
             }
         }
@@ -687,12 +683,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     protected function validate_field_studentfeedbackurl(&$errors, &$data, &$files) {
         $field = 'studentfeedback';
         $name  = $this->get_fieldname($field);
-        $name_url = $this->get_fieldname($field.'url');
-        $name_elements = $this->get_fieldname($field.'_elements');
+        $name_url = $this->get_fieldname($field . 'url');
+        $name_elements = $this->get_fieldname($field . '_elements');
 
         if (empty($data[$name])) {
             // do nothing
-        } else if ($data[$name]==mod_taskchain::FEEDBACK_WEBPAGE || $data[$name]==mod_taskchain::FEEDBACK_FORMMAIL) {
+        } else if ($data[$name] == mod_taskchain::FEEDBACK_WEBPAGE || $data[$name] == mod_taskchain::FEEDBACK_FORMMAIL) {
             if (empty($data[$name_url]) || ! preg_match('/^https?:\/\/.+/', $data[$name_url])) {
                 // empty or invalid url
                 $errors[$name_elements] = get_string('invalidurl', 'error');
@@ -711,13 +707,13 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     protected function fix_field_title($data, $field) {
         $value = 0;
 
-        $name = $this->get_fieldname($field.'source');
+        $name = $this->get_fieldname($field . 'source');
         if (isset($data->$name)) {
             $value |= ($data->$name & mod_taskchain::TITLE_SOURCE); // 1st-3rd bits
             unset($data->$name);
         }
 
-        $name = $this->get_fieldname($field.'prependchainname');
+        $name = $this->get_fieldname($field . 'prependchainname');
         if (isset($data->$name)) {
             if ($data->$name) {
                 $value |= mod_taskchain::TITLE_CHAINNAME; // 4th bit
@@ -725,7 +721,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
             unset($data->$name);
         }
 
-        $name = $this->get_fieldname($field.'appendsortorder');
+        $name = $this->get_fieldname($field . 'appendsortorder');
         if (isset($data->$name)) {
             if ($data->$name) {
                 $value |= mod_taskchain::TITLE_SORTORDER; // 5th bit
@@ -747,8 +743,8 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function fix_field_stopbutton($data, $field) {
         $name  = $this->get_fieldname($field);
-        $name_yesno = $this->get_fieldname($field.'yesno');
-        $name_type  = $this->get_fieldname($field.'type');
+        $name_yesno = $this->get_fieldname($field . 'yesno');
+        $name_type  = $this->get_fieldname($field . 'type');
         $name_text  = $this->get_fieldname('stoptext');
 
         switch (true) {
@@ -757,11 +753,11 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
                 $data->$name_text = '';
                 break;
 
-            case $data->$name_type=='specific' && $data->$name_text:
+            case $data->$name_type == 'specific' && $data->$name_text:
                 $data->$name = mod_taskchain::STOPBUTTON_SPECIFIC;
                 break;
 
-            case $data->$name_type=='langpack' && $data->$name_text:
+            case $data->$name_type == 'langpack' && $data->$name_text:
                 $data->$name = mod_taskchain::STOPBUTTON_LANGPACK;
                 break;
 
@@ -770,8 +766,10 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
                 $data->$name_text = 'taskchain_giveup';
         }
 
-        unset($data->$name_yesno,
-              $data->$name_type);
+        unset(
+            $data->$name_yesno,
+            $data->$name_type
+        );
     }
 
     /**
@@ -808,7 +806,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function fix_template_timelist($data, $field) {
         $name = $this->get_fieldname($field);
-        $name_options = $this->get_fieldname($field.'options');
+        $name_options = $this->get_fieldname($field . 'options');
         switch ($data->$name_options) {
             case mod_taskchain::TIME_TEMPLATE: // -1
             case mod_taskchain::TIME_AFTEROK:  // -2
@@ -839,7 +837,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         foreach ($times as $timename => $timevalue) {
             foreach ($items as $itemname => $itemvalue) {
-                $fieldname = $name.$timename.$itemname; // e.g. duringattemptresponses
+                $fieldname = $name . $timename . $itemname; // e.g. duringattemptresponses
                 if (isset($data->$fieldname)) {
                     if ($data->$fieldname) {
                         $data->$name += ($timevalue & $itemvalue);
@@ -909,10 +907,10 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $title = ($value & mod_taskchain::TITLE_SOURCE);
         $title = $this->format_templatevalue_list($field, $title);
         if ($value & mod_taskchain::TITLE_CHAINNAME) {
-            $title = get_string('taskchainname', 'mod_taskchain').': '.$title;
+            $title = get_string('taskchainname', 'mod_taskchain') . ': ' . $title;
         }
         if ($value & mod_taskchain::TITLE_SORTORDER) {
-            $title = $title.' ('.get_string('sortorder', 'mod_taskchain').')';
+            $title = $title . ' (' . get_string('sortorder', 'mod_taskchain') . ')';
         }
         return $title;
     }
@@ -1102,11 +1100,11 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
             $stritems = array();
             foreach ($items as $itemname => $itemvalue) {
                 if ($value & $timevalue & $itemvalue) {
-                    $stritems[] = get_string($itemname.'short', 'mod_taskchain');
+                    $stritems[] = get_string($itemname . 'short', 'mod_taskchain');
                 }
             }
             if ($stritems = implode(', ', $stritems)) {
-                $stritems = get_string($timename, 'mod_taskchain').': '.$stritems;
+                $stritems = get_string($timename, 'mod_taskchain') . ': ' . $stritems;
                 $strtimes[] = html_writer::tag('span', $stritems, array('class' => 'reviewoptionsitems'));
             }
         }
@@ -1147,7 +1145,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $return_intro = ($this->is_multiple ? false : true);
         $text = $this->format_conditions($taskid, $type, $return_intro);
         $elements[] = $this->mform->createElement('static', '', '', $text);
-        $name_elements = $this->get_fieldname($field.'_elements');
+        $name_elements = $this->get_fieldname($field . '_elements');
         $label = $this->get_bootstrap_fieldlabel($field);
         $this->mform->addGroup($elements, $name_elements, $label, html_writer::empty_tag('br'));
     }
@@ -1159,7 +1157,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @param string name of required user preference $field
      * @todo Finish documenting this function
      */
-    protected function get_datavalue_preconditions($data, $field, $default=0) {
+    protected function get_datavalue_preconditions($data, $field, $default = 0) {
         return (empty($data->id) ? 0 : $data->id);
     }
 
@@ -1170,7 +1168,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @param string name of required user preference $field
      * @todo Finish documenting this function
      */
-    protected function get_datavalue_postconditions($data, $field, $default=0) {
+    protected function get_datavalue_postconditions($data, $field, $default = 0) {
         return (isset($data->id) ? $data->id : $default);
     }
 
@@ -1224,7 +1222,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function format_defaultfield_conditions($field, $type) {
-        $name = 'defaultfield_'.$field;
+        $name = 'defaultfield_' . $field;
         $taskid = $this->get_defaultvalue($field);
 
         if (empty($taskid)) {
@@ -1237,7 +1235,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         $elements[] = $this->mform->createElement('static', '', '', $text);
 
-        $name_elements = $this->get_fieldname($field.'_elements');
+        $name_elements = $this->get_fieldname($field . '_elements');
         // $name_elements = $field.'_elements'.($this->is_multiple ? '[0]' : '');
         $this->mform->addGroup($elements, $name_elements, '', html_writer::empty_tag('br'));
     }
@@ -1256,6 +1254,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     public function get_helpicon_studentfeedbackurl() {
         global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('studentfeedback', 'taskchain');
+        return ' ' . $OUTPUT->help_icon('studentfeedback', 'taskchain');
     }
 }

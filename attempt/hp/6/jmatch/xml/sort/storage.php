@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 // get parent class
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmatch/xml/storage.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/xml/storage.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jmatch_xml_sort_storage

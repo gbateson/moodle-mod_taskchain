@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jquiz/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jquiz/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jquiz_xml_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jquiz/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jquiz_xml_renderer extends mod_taskchain_attempt_hp_6_jquiz_renderer {
-
     /**
      * expand_ItemArray
      *
@@ -49,29 +47,28 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_renderer extends mod_taskchain_attemp
     public function expand_ItemArray() {
         $q = 0;
         $qq = 0;
-        $str = 'I=new Array();'."\n";
+        $str = 'I=new Array();' . "\n";
         $tags = 'data,questions,question-record';
-        while (($question="[$q]['#']") && $this->TC->task->source->xml_value($tags, $question) && ($answers = $question."['answers'][0]['#']") && $this->TC->task->source->xml_value($tags, $answers)) {
-
-            $question_type = $this->TC->task->source->xml_value_int($tags, $question."['question-type'][0]['#']");
-            $weighting = $this->TC->task->source->xml_value_int($tags, $question."['weighting'][0]['#']");
-            $clue = $this->TC->task->source->xml_value_js($tags, $question."['clue'][0]['#']");
+        while (($question = "[$q]['#']") && $this->TC->task->source->xml_value($tags, $question) && ($answers = $question . "['answers'][0]['#']") && $this->TC->task->source->xml_value($tags, $answers)) {
+            $question_type = $this->TC->task->source->xml_value_int($tags, $question . "['question-type'][0]['#']");
+            $weighting = $this->TC->task->source->xml_value_int($tags, $question . "['weighting'][0]['#']");
+            $clue = $this->TC->task->source->xml_value_js($tags, $question . "['clue'][0]['#']");
 
             $a = 0;
             $aa = 0;
-            while (($answer = $answers."['answer'][$a]['#']") && $this->TC->task->source->xml_value($tags, $answer)) {
-                $text     = $this->expand_ItemArray_answertext($tags,  $answer, $a);
-                $feedback = $this->TC->task->source->xml_value_js($tags,  $answer."['feedback'][0]['#']");
-                $correct  = $this->TC->task->source->xml_value_int($tags, $answer."['correct'][0]['#']");
-                $percent  = $this->TC->task->source->xml_value_int($tags, $answer."['percent-correct'][0]['#']");
-                $include  = $this->TC->task->source->xml_value_int($tags, $answer."['include-in-mc-options'][0]['#']");
+            while (($answer = $answers . "['answer'][$a]['#']") && $this->TC->task->source->xml_value($tags, $answer)) {
+                $text     = $this->expand_ItemArray_answertext($tags, $answer, $a);
+                $feedback = $this->TC->task->source->xml_value_js($tags, $answer . "['feedback'][0]['#']");
+                $correct  = $this->TC->task->source->xml_value_int($tags, $answer . "['correct'][0]['#']");
+                $percent  = $this->TC->task->source->xml_value_int($tags, $answer . "['percent-correct'][0]['#']");
+                $include  = $this->TC->task->source->xml_value_int($tags, $answer . "['include-in-mc-options'][0]['#']");
                 if (strlen((string)$text)) {
-                    if ($aa==0) { // first time only
+                    if ($aa == 0) { // first time only
                         $str .= "\n";
                         $str .= "I[$qq] = new Array();\n";
                         $str .= "I[$qq][0] = $weighting;\n";
                         $str .= "I[$qq][1] = '$clue';\n";
-                        $str .= "I[$qq][2] = '".($question_type-1)."';\n";
+                        $str .= "I[$qq][2] = '" . ($question_type - 1) . "';\n";
                         $str .= "I[$qq][3] = new Array();\n";
                     }
                     $text = $this->TC->task->source->single_line($text, '');
@@ -97,7 +94,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_renderer extends mod_taskchain_attemp
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function expand_ItemArray_answertext($tags,  $answer, $a) {
-        return $this->TC->task->source->xml_value_js($tags,  $answer."['text'][0]['#']");
+    public function expand_ItemArray_answertext($tags, $answer, $a) {
+        return $this->TC->task->source->xml_value_js($tags, $answer . "['text'][0]['#']");
     }
 }

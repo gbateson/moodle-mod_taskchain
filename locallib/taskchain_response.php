@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -36,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_response extends taskchain_base {
-
     /** db field: id (primary key, default=null) */
     private $id                  = null;
 
@@ -268,4 +266,3 @@ class taskchain_response extends taskchain_base {
         $this->ignored = $value;
     }
 }
-

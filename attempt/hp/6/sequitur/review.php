@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/review.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/review.php');
 
 /**
  * mod_taskchain_attempt_hp_6_sequitur_review
@@ -39,14 +38,13 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/review.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_sequitur_review extends mod_taskchain_attempt_hp_6_review {
-
     /**
      * attempt_fields
      *
      * @return xxx
      * @todo Finish documenting this function
      */
-    static function attempt_fields()   {
+    static function attempt_fields() {
         return array('tnumber', 'score', 'status', 'duration', 'timestart');
     }
 
@@ -56,7 +54,7 @@ class mod_taskchain_attempt_hp_6_sequitur_review extends mod_taskchain_attempt_h
      * @return xxx
      * @todo Finish documenting this function
      */
-    static function response_text_fields()   {
+    static function response_text_fields() {
         return array('correct', 'wrong');
     }
 
@@ -66,7 +64,7 @@ class mod_taskchain_attempt_hp_6_sequitur_review extends mod_taskchain_attempt_h
      * @return xxx
      * @todo Finish documenting this function
      */
-    static function response_num_fields()   {
+    static function response_num_fields() {
         return array('checks');
     }
 }

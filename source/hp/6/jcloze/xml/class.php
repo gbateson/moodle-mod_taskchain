@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/source/hp/6/jcloze/class.php');
+require_once($CFG->dirroot . '/mod/taskchain/source/hp/6/jcloze/class.php');
 
 /**
  * taskchain_source_hp_6_jcloze_xml
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/source/hp/6/jcloze/class.php');
  * @package    mod_taskchain
  */
 class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
-
     /**
      * is_taskfile
      *
@@ -61,7 +59,7 @@ class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
      * @param array $tags (optional, default=null) specific tags to remove comments from
      * @todo Finish documenting this function
      */
-    public function compact_filecontents($tags=null) {
+    public function compact_filecontents($tags = null) {
         // remove white space within tags
         parent::compact_filecontents($tags);
 
@@ -70,7 +68,7 @@ class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
         // Note: when testing this code, be aware that
         // xmlize() behaves differently in PHP4 and PHP5
 
-        $search = '/(?<=<gap-fill)'.'>.*?<'.'(?=\/gap-fill>)/s';
+        $search = '/(?<=<gap-fill)' . '>.*?<' . '(?=\/gap-fill>)/s';
         if (preg_match($search, $this->filecontents, $matches, PREG_OFFSET_CAPTURE)) {
             $match = $matches[0][0];
             $start = $matches[0][1];
@@ -112,7 +110,7 @@ class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function compact_filecontents_opentext($match)  {
+    public function compact_filecontents_opentext($match) {
         $search = '/&[a-zA-Z0-9#;]*;/';
         $callback = array($this, 'compact_filecontents_entities');
         return preg_replace_callback($search, $callback, $match[0]);
@@ -125,15 +123,15 @@ class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function compact_filecontents_entities($match)  {
+    public function compact_filecontents_entities($match) {
         // these html entities are coverted back to plain text
         static $html_entities = array(
             '&apos;' => "'",
             '&quot;' => '"',
             '&lt;'   => '<',
             '&gt;'   => '>',
-            '&amp;'  => '&'
+            '&amp;'  => '&',
         );
-        return '<![CDATA['.strtr($match[0], $html_entities).']]>';
+        return '<![CDATA[' . strtr($match[0], $html_entities) . ']]>';
     }
 }

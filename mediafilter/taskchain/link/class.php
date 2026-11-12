@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -39,7 +38,7 @@ class taskchain_mediaplayer_link extends taskchain_mediaplayer {
     public $aliases = array('a');
     public $options = array(
         'width' => 0, 'height' => 0, 'build' => 0,
-        'quality' => '', 'majorversion' => '', 'flashvars' => ''
+        'quality' => '', 'majorversion' => '', 'flashvars' => '',
     );
     public $spantext = '';
     public $removelink = false;
@@ -55,13 +54,13 @@ class taskchain_mediaplayer_link extends taskchain_mediaplayer {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function generate($filetype, $link, $mediaurl, $options)  {
-        $a = '<a href="'.$mediaurl.'"';
+    public function generate($filetype, $link, $mediaurl, $options) {
+        $a = '<a href="' . $mediaurl . '"';
         if (array_key_exists('player', $options)) {
             unset($options['player']);
         }
         if (array_key_exists('onclick', $options)) {
-            $a .= ' onclick="'.$options['onclick'].'"';
+            $a .= ' onclick="' . $options['onclick'] . '"';
             unset($options['onclick']);
         } else {
             $a .= ' target="_blank"';
@@ -74,9 +73,9 @@ class taskchain_mediaplayer_link extends taskchain_mediaplayer {
         }
         foreach ($options as $name => $value) {
             if ($value) {
-                $a .= ' '.$name.'="'.$value.'"';
+                $a .= ' ' . $name . '="' . $value . '"';
             }
         }
-        return $a.'>'.$text.'</a>';
+        return $a . '>' . $text . '</a>';
     }
 }

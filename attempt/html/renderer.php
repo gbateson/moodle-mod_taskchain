@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/renderer.php');
 
 /**
  * mod_taskchain_attempt_html_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer {
-
     /** @var string the HTML content of the source file */
     public $htmlcontent;
 
@@ -98,21 +96,21 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
             $this->headcontent = preg_replace($this->tagpattern('title'), '', $this->headcontent);
         } else {
             // replace <title> with current name of this task
-            $title = '<title>'.$this->get_title().'</title>'."\n";
+            $title = '<title>' . $this->get_title() . '</title>' . "\n";
             $this->headcontent = preg_replace($this->tagpattern('title'), $title, $this->headcontent);
 
             // extract details needed to rebuild page later in $this->view()
-            if (preg_match($this->tagpattern('\?xml','',false), $this->htmlcontent, $matches)) {
-                $this->xmldeclaration = $matches[0]."\n";
+            if (preg_match($this->tagpattern('\?xml', '', false), $this->htmlcontent, $matches)) {
+                $this->xmldeclaration = $matches[0] . "\n";
             }
-            if (preg_match($this->tagpattern('!DOCTYPE','',false,'(?:<!--\s*)?','(?:\s*-->)?'), $this->htmlcontent, $matches)) {
-                $this->doctype = $this->single_line($matches[0])."\n";
+            if (preg_match($this->tagpattern('!DOCTYPE', '', false, '(?:<!--\s*)?', '(?:\s*-->)?'), $this->htmlcontent, $matches)) {
+                $this->doctype = $this->single_line($matches[0]) . "\n";
             }
-            if (preg_match($this->tagpattern('html','',false), $this->htmlcontent, $matches)) {
-                $this->htmlattributes = ' '.$this->single_line($matches[1])."\n";
+            if (preg_match($this->tagpattern('html', '', false), $this->htmlcontent, $matches)) {
+                $this->htmlattributes = ' ' . $this->single_line($matches[1]) . "\n";
             }
-            if (preg_match($this->tagpattern('head','',false), $this->htmlcontent, $matches)) {
-                $this->headattributes = ' '.$this->single_line($matches[1]);
+            if (preg_match($this->tagpattern('head', '', false), $this->htmlcontent, $matches)) {
+                $this->headattributes = ' ' . $this->single_line($matches[1]);
             }
         }
 
@@ -121,7 +119,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         if (preg_match_all($this->tagpattern('style'), $this->headcontent, $matches, PREG_OFFSET_CAPTURE)) {
             foreach (array_reverse($matches[0]) as $match) {
                 // $match: [0] = matched string, [1] = offset to start of string
-                $this->styles = $match[0]."\n".$this->styles;
+                $this->styles = $match[0] . "\n" . $this->styles;
                 $this->headcontent = substr_replace($this->headcontent, '', $match[1], strlen($match[0]));
             }
             if ($this->usemoodletheme) {
@@ -141,7 +139,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         if (preg_match_all($this->tagpattern('script'), $this->headcontent, $matches, PREG_OFFSET_CAPTURE)) {
             foreach (array_reverse($matches[0]) as $match) {
                 // $match: [0] = matched string, [1] = offset to start of string
-                $this->scripts = $match[0]."\n".$this->scripts;
+                $this->scripts = $match[0] . "\n" . $this->scripts;
                 $this->headcontent = substr_replace($this->headcontent, '', $match[1], strlen($match[0]));
             }
             // remove block and single-line comments - except <![CDATA[ + ]]> and  <!-- + --> and http(s)://
@@ -161,10 +159,10 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         $this->headcontent = $this->remove_blank_lines($this->headcontent);
 
         // put each <meta> tag on its own line
-        $this->headcontent = preg_replace('/'.'([^\n])'.'(<\w+)'.'/', '$1'."\n".'$2', $this->headcontent);
+        $this->headcontent = preg_replace('/' . '([^\n])' . '(<\w+)' . '/', '$1' . "\n" . '$2', $this->headcontent);
 
         // append styles and scripts to the end of the $this->headcontent
-        $this->headcontent .= $this->styles.$this->scripts;
+        $this->headcontent .= $this->styles . $this->scripts;
 
         // extract <body> tag
         if (! preg_match($this->tagpattern('body'), $this->htmlcontent, $matches)) {
@@ -200,7 +198,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function fix_js_comment($match)  {
+    public function fix_js_comment($match) {
         $comment = $match[0];
         if (isset($match[1]) && strlen($match[1])) {
             return $comment; // $match is a URL
@@ -219,12 +217,12 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function fix_links($quickfix=false)  {
+    public function fix_links($quickfix = false) {
         global $DB;
 
         if ($quickfix) {
-            //$search = '/(?<=sesskey=)\w+/';
-            //$this->bodycontent = preg_replace($search, sesskey(), $this->bodycontent);
+            // $search = '/(?<=sesskey=)\w+/';
+            // $this->bodycontent = preg_replace($search, sesskey(), $this->bodycontent);
             $search = '/(?<=["\/]attempt\.php\?id=)[0-9]+/';
             $this->bodycontent = preg_replace($search, $this->TC->create->attempt('task'), $this->bodycontent);
             return true;
@@ -236,7 +234,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         // [0] : the complete <a ...>...</a> tag
         // [1] : the link href
         if (preg_match_all($search, $this->bodycontent, $match, PREG_OFFSET_CAPTURE)) {
-            for ($i=0; $i<count($match); $i++) {
+            for ($i = 0; $i < count($match); $i++) {
                 if (empty($matches[$i])) {
                     $matches[$i] = $match[$i];
                 } else {
@@ -249,7 +247,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         // [0] : the complete location="..." match
         // [1] : the location href
         if (preg_match_all($search, $this->bodycontent, $match, PREG_OFFSET_CAPTURE)) {
-            for ($i=0; $i<count($match); $i++) {
+            for ($i = 0; $i < count($match); $i++) {
                 if (empty($matches[$i])) {
                     $matches[$i] = $match[$i];
                 } else {
@@ -265,9 +263,9 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         $urls = array();
         $strlen = strlen($this->TC->task->source->baseurl);
 
-        foreach ($matches[1] as $i=>$match) {
+        foreach ($matches[1] as $i => $match) {
             $url = $this->convert_url_relative($this->TC->task->source->baseurl, $this->TC->task->source->filepath, '', $match[0], '', '');
-            if (strpos($url, $this->TC->task->source->baseurl.'/')===0) {
+            if (strpos($url, $this->TC->task->source->baseurl . '/') === 0) {
                 $urls[$i] = substr($url, $strlen + 1);
             }
         }
@@ -291,7 +289,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
                     // it used to be possible to send the id of the next task back as the "redirect" parameter
                     // but that doesn't work any more bacuse of changes to view.php
                     // $params = array('taskattemptid'=>$this->TC->taskattemptid, 'redirect'=>$match[2]);
-                    $params = array('id'=>$this->TC->attempt->id, 'status'=>STATUS_COMPLETED, 'redirect'=>$match[2]);
+                    $params = array('id' => $this->TC->attempt->id, 'status' => STATUS_COMPLETED, 'redirect' => $match[2]);
                     $newurl = $this->format_url('view.php', '', $params);
                     $this->bodycontent = substr_replace($this->bodycontent, $newurl, $match[1], strlen($match[0]));
                 }
@@ -304,7 +302,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
      *
      * @todo Finish documenting this function
      */
-    public function postprocessing()  {
+    public function postprocessing() {
         $this->fix_title_icons();
         $this->fix_submissionform();
         // fix_onload() adds javascript that uses HP_send_results(),
@@ -318,10 +316,10 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
      *
      * @todo Finish documenting this function
      */
-    public function fix_submissionform()  {
+    public function fix_submissionform() {
 
         // remove previous submission form, if any
-        $search = '/\s*('.$this->BeginSubmissionForm.')\s*(.*?)\s*('.$this->EndSubmissionForm.')/s';
+        $search = '/\s*(' . $this->BeginSubmissionForm . ')\s*(.*?)\s*(' . $this->EndSubmissionForm . ')/s';
         $this->bodycontent = preg_replace($search, '', $this->bodycontent);
 
         // prepare form parameters and attributes
@@ -335,12 +333,12 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         }
 
         // add scorefield to params, if necessary (usually it is necessary)
-        if (! preg_match('/<(input|select)[^>]*name="'.$this->scorefield.'"[^>]*>/is', $this->bodycontent)) {
+        if (! preg_match('/<(input|select)[^>]*name="' . $this->scorefield . '"[^>]*>/is', $this->bodycontent)) {
             $params[$this->scorefield] = 100;
         }
 
         $attributes = array(
-            'id' => $this->formid, 'autocomplete' => 'off'
+            'id' => $this->formid, 'autocomplete' => 'off',
         );
 
         // create submit button, if necessary
@@ -349,24 +347,23 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
             $continuebutton = '';
         } else {
             // prepare continue button
-            $continuebutton = html_writer::empty_tag('input', array('type'=>'submit', 'value'=>get_string('continue')));
+            $continuebutton = html_writer::empty_tag('input', array('type' => 'submit', 'value' => get_string('continue')));
             if ($this->usemoodletheme) {
-                $continuebutton = html_writer::tag('div', $continuebutton, array('class'=>'continuebutton'));
+                $continuebutton = html_writer::tag('div', $continuebutton, array('class' => 'continuebutton'));
             } else {
-                $continuebutton = html_writer::tag('div', $continuebutton, array('align'=>'center'));
+                $continuebutton = html_writer::tag('div', $continuebutton, array('align' => 'center'));
             }
         }
 
         // wrap submission form around main content
         $this->bodycontent = ''
-            .$this->BeginSubmissionForm."\n"
-            .$this->form_start('submit.php', $params, $attributes)
-            .$this->EndSubmissionForm."\n"
-            .$this->bodycontent."\n"
-            .$this->BeginSubmissionForm."\n"
-            .$continuebutton."\n"
-            .$this->form_end()."\n"
-            .$this->EndSubmissionForm."\n"
-        ;
+            . $this->BeginSubmissionForm . "\n"
+            . $this->form_start('submit.php', $params, $attributes)
+            . $this->EndSubmissionForm . "\n"
+            . $this->bodycontent . "\n"
+            . $this->BeginSubmissionForm . "\n"
+            . $continuebutton . "\n"
+            . $this->form_end() . "\n"
+            . $this->EndSubmissionForm . "\n";
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -36,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_regrade extends taskchain_base {
-
     /**
      * selected_attempts
      *
@@ -92,7 +90,7 @@ class taskchain_regrade extends taskchain_base {
                                         $this->TC->get_cnumbers($chains, $tasks, $userfilter);
                                         $get_cnumbers = false;
                                     }
-                                    foreach(array_keys($tasks[$taskid]->userids[$userid]->cnumbers) as $cnumber) {
+                                    foreach (array_keys($tasks[$taskid]->userids[$userid]->cnumbers) as $cnumber) {
                                         $this->attempts('task', $tasks[$taskid], $cnumber, $userid);
                                     }
                                     $cnumber = 0;
@@ -106,7 +104,7 @@ class taskchain_regrade extends taskchain_base {
                                 $this->get_cnumbers($chains, $tasks, $userfilter);
                                 $get_cnumbers = false;
                             }
-                            foreach(array_keys($chains[$chainid]->userids[$userid]->cnumbers) as $cnumber) {
+                            foreach (array_keys($chains[$chainid]->userids[$userid]->cnumbers) as $cnumber) {
                                 $this->chainattempt($chains[$chainid], $cnumber, $userid, $tasks);
                             }
                             $cnumber = 0;
@@ -132,14 +130,14 @@ class taskchain_regrade extends taskchain_base {
     public function get_cnumbers(&$chains, &$tasks, &$userfilter) {
         global $CFG, $DB;
         list($select, $params) = $DB->get_in_or_equal(array_keys($chains));
-        $select = 'taskid IN (SELECT id FROM {taskchain_tasks} WHERE chainid '.$select;
+        $select = 'taskid IN (SELECT id FROM {taskchain_tasks} WHERE chainid ' . $select;
         if ($userfilter) {
             $select .= " AND $userfilter";
         }
         $sort = 'userid,cnumber,taskid,tnumber';
         $fields = 'id,userid,cnumber,taskid,tnumber';
         if ($taskattempts = $DB->get_records_select('taskchain_task_attempts', $select, null, $sort, $fields)) {
-            foreach ($taskattempts as $id=>$taskattempt) {
+            foreach ($taskattempts as $id => $taskattempt) {
                 if (empty($tasks[$taskattempt->taskid])) {
                     continue; // shouldn't happen !!
                 }
@@ -149,13 +147,13 @@ class taskchain_regrade extends taskchain_base {
                 $chainid = $tasks[$taskid]->chainid;
 
                 if (empty($tasks[$taskid]->userids[$userid])) {
-                    $tasks[$taskid]->userids[$userid] = new stdClass;
+                    $tasks[$taskid]->userids[$userid] = new stdClass();
                     $tasks[$taskid]->userids[$userid]->cnumbers = array();
                 }
                 $tasks[$taskid]->userids[$userid]->cnumbers[$cnumber] = true;
 
                 if (empty($chains[$chainid]->userids[$userid])) {
-                    $chains[$chainid]->userids[$userid] = new stdClass;
+                    $chains[$chainid]->userids[$userid] = new stdClass();
                     $chains[$chainid]->userids[$userid]->cnumbers = array();
                 }
                 $chains[$chainid]->userids[$userid]->cnumbers[$cnumber] = true;
@@ -174,19 +172,19 @@ class taskchain_regrade extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function attempts($type, $record=null, $cnumber=null, $userid=null) {
+    public function attempts($type, $record = null, $cnumber = null, $userid = null) {
         // combine task attempts into a single task score
         // combine chain attempts into a single chain grade
         global $DB;
 
-        if ($type=='chain') {
+        if ($type == 'chain') {
             $grade = 'grade';
         } else {
             $grade = 'score';
         }
-        $grademethod = $grade.'method';
-        $gradeignore = $grade.'ignore';
-        $gradelimit = $grade.'limit';
+        $grademethod = $grade . 'method';
+        $gradeignore = $grade . 'ignore';
+        $gradelimit = $grade . 'limit';
 
         if (is_null($record)) {
             $record = &$this->TC->$type;
@@ -199,7 +197,7 @@ class taskchain_regrade extends taskchain_base {
         }
 
         // prepare sql
-        if ($type=='chain') {
+        if ($type == 'chain') {
             $attemptselect = "chainid = $record->id";
             $gradeselect = "parenttype = $record->parenttype AND parentid = $record->parentid";
             $timefield = 'timemodified';
@@ -217,10 +215,10 @@ class taskchain_regrade extends taskchain_base {
         }
 
         if ($gradeignore) {
-            $attemptselect .= " AND NOT ($grade = 0 AND status = ".self::STATUS_ABANDONED.")";
+            $attemptselect .= " AND NOT ($grade = 0 AND status = " . self::STATUS_ABANDONED . ")";
         }
 
-        if ($record->$grademethod==self::GRADEMETHOD_AVERAGE || $record->$gradelimit<100) {
+        if ($record->$grademethod == self::GRADEMETHOD_AVERAGE || $record->$gradelimit < 100) {
             $precision = 1;
         } else {
             $precision = 0;
@@ -237,62 +235,60 @@ class taskchain_regrade extends taskchain_base {
                 $usergrade = "ROUND(AVG($grade) * $multiplier, $precision)";
                 break;
             case self::GRADEMETHOD_FIRST:
-                $usergrade = 'MIN('.$DB->sql_concat($timefield, "'_'", "ROUND($grade * $multiplier, $precision)").')';
+                $usergrade = 'MIN(' . $DB->sql_concat($timefield, "'_'", "ROUND($grade * $multiplier, $precision)") . ')';
                 break;
             case self::GRADEMETHOD_LAST:
-                $usergrade = 'MAX('.$DB->sql_concat($timefield, "'_'", "ROUND($grade * $multiplier, $precision)").')';
+                $usergrade = 'MAX(' . $DB->sql_concat($timefield, "'_'", "ROUND($grade * $multiplier, $precision)") . ')';
                 break;
             default:
                 return false; // invalid score/grade mathod
         }
 
         $fields = "userid AS id, $usergrade AS $grade, COUNT($grade) AS countattempts, MAX(status) AS maxstatus, MIN(status) AS minstatus, SUM(duration) AS duration";
-        $table = '{taskchain_'.$type.'_attempts}';
+        $table = '{taskchain_' . $type . '_attempts}';
 
         if ($aggregates = $DB->get_records_sql("SELECT $fields FROM $table WHERE $attemptselect GROUP BY userid")) {
-
-            if ($record->$grademethod==self::GRADEMETHOD_FIRST || $record->$grademethod==self::GRADEMETHOD_LAST) {
+            if ($record->$grademethod == self::GRADEMETHOD_FIRST || $record->$grademethod == self::GRADEMETHOD_LAST) {
                 // remove left hand characters in $usergrade (up to and including the underscore)
-                foreach ($aggregates as $userid=>$aggregate) {
+                foreach ($aggregates as $userid => $aggregate) {
                     $pos = strpos($aggregate->$grade, '_') + 1;
                     $aggregates[$userid]->$grade = substr($aggregate->$grade, $pos);
                 }
             }
 
-            $gradetable = 'taskchain_'.$type.'_'.$grade.'s';
-            foreach ($aggregates as $userid=>$aggregate) {
-
+            $gradetable = 'taskchain_' . $type . '_' . $grade . 's';
+            foreach ($aggregates as $userid => $aggregate) {
                 // set status of task score or chain grade
                 $status = 0;
 
                 // if current user has just completed a task attempt
                 // try to set task score status from post-conditions
-                if ($thisuser && $type=='task' && $this->TC->get_lastattempt('task')) {
+                if ($thisuser && $type == 'task' && $this->TC->get_lastattempt('task')) {
                     $nexttaskid = $this->TC->get_available_task($this->TC->lasttaskattempt->taskid);
-                    if ($nexttaskid==self::CONDITIONTASKID_ENDOFCHAIN) {
+                    if ($nexttaskid == self::CONDITIONTASKID_ENDOFCHAIN) {
                         // post condition for last task attempt specifies end of chain
                         $status = self::STATUS_COMPLETED;
                         $this->TC->chainattempt->status = $status;
                         if (! $DB->set_field('taskchain_chain_attempts', 'status', $status, array('id' => $this->TC->chainattempt->id))) {
                             throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_chain_attempts');
                         }
-                    } else if ($nexttaskid==$record->id) {
+                    } else if ($nexttaskid == $record->id) {
                         // post conditions specify this task is to be repeated
                         $status = self::STATUS_INPROGRESS;
                     }
                 }
 
-                if ($status==0) {
-                    if ($aggregate->maxstatus==self::STATUS_COMPLETED || $aggregate->maxstatus==self::STATUS_PENDING) {
+                if ($status == 0) {
+                    if ($aggregate->maxstatus == self::STATUS_COMPLETED || $aggregate->maxstatus == self::STATUS_PENDING) {
                         // at least one attempt is completed OR pending completion
                         $status = $aggregate->maxstatus;
-                    } else if ($aggregate->minstatus==self::STATUS_INPROGRESS && $record->allowresume) {
+                    } else if ($aggregate->minstatus == self::STATUS_INPROGRESS && $record->allowresume) {
                         // at least one attempt can be resumed
                         $status = self::STATUS_INPROGRESS;
-                    } else if ($record->attemptlimit==0 || $aggregate->countattempts < $record->attemptlimit) {
+                    } else if ($record->attemptlimit == 0 || $aggregate->countattempts < $record->attemptlimit) {
                         // new attempt can be started
                         $status = self::STATUS_INPROGRESS;
-                    } else if ($aggregate->minstatus==self::STATUS_TIMEDOUT && $aggregate->maxstatus==self::STATUS_TIMEDOUT) {
+                    } else if ($aggregate->minstatus == self::STATUS_TIMEDOUT && $aggregate->maxstatus == self::STATUS_TIMEDOUT) {
                         // all attempts are timed out and no new attempts can be started
                         $status = self::STATUS_TIMEDOUT;
                     } else {
@@ -305,7 +301,7 @@ class taskchain_regrade extends taskchain_base {
                 $typegrade = "$type$grade"; // taskscore or chaingrade
 
                 // update/add grade record
-                if ($graderecord = $DB->get_record_select($gradetable, $gradeselect." AND userid = $userid")) {
+                if ($graderecord = $DB->get_record_select($gradetable, $gradeselect . " AND userid = $userid")) {
                     $graderecord->$grade = round($aggregate->$grade);
                     $graderecord->status = $status;
                     $graderecord->duration = $aggregate->duration;
@@ -317,7 +313,7 @@ class taskchain_regrade extends taskchain_base {
                     }
                 } else {
                     // grade record not found - should not happen !
-                    $create_grade = 'create_'.$typegrade;
+                    $create_grade = 'create_' . $typegrade;
                     $this->TC->$create_grade($aggregate->$grade, $status, $aggregate->duration, $record->id, $cnumber, $userid);
                 }
             }
@@ -334,7 +330,7 @@ class taskchain_regrade extends taskchain_base {
      * @param xxx $tasks (optional, default=null)
      * @todo Finish documenting this function
      */
-    public function chainattempt($chain=null, $cnumber=null, $userid=null, $tasks=null) {
+    public function chainattempt($chain = null, $cnumber = null, $userid = null, $tasks = null) {
         // combine task scores into a single chain attempt score
 
         // Note: $tasks contains only the tasks that are to be regraded
@@ -369,7 +365,7 @@ class taskchain_regrade extends taskchain_base {
             $use_this_tasks = false;
         }
         if (empty($tasks)) {
-        //    return; // no tasks to regrade
+            // return; // no tasks to regrade
         }
 
         if ($get_chain_tasks) {
@@ -377,16 +373,16 @@ class taskchain_regrade extends taskchain_base {
                 'taskgroups' => array(),
                 'equalweighting' => array(),
                 'totalweighting' => 0,
-                'counttasks' => 0
+                'counttasks' => 0,
             );
             if ($use_this_tasks) {
                 $chains[$chain->id]->tasks = &$this->TC->tasks;
             } else {
-                $chains[$chain->id]->tasks = $DB->get_records('taskchain_tasks', array('chainid'=>$chain->id), 'sortorder', 'id,scoreweighting');
+                $chains[$chain->id]->tasks = $DB->get_records('taskchain_tasks', array('chainid' => $chain->id), 'sortorder', 'id,scoreweighting');
             }
             if ($chains[$chain->id]->tasks) {
                 foreach ($chains[$chain->id]->tasks as $task) {
-                    if ($task->scoreweighting<0) {
+                    if ($task->scoreweighting < 0) {
                         $taskgroup = $task->scoreweighting;
                     } else {
                         $taskgroup = 'default';
@@ -398,10 +394,10 @@ class taskchain_regrade extends taskchain_base {
                     $chains[$chain->id]->taskgroups[$taskgroup][] = $task->id;
                 }
                 foreach ($chains[$chain->id]->taskgroups as $taskgroup => $ids) {
-                    if ($taskgroup=='default') {
+                    if ($taskgroup == 'default') {
                         continue;
                     }
-                    if ($chains[$chain->id]->totalweighting<100) {
+                    if ($chains[$chain->id]->totalweighting < 100) {
                         $chains[$chain->id]->equalweighting[$taskgroup] = (100 - $chains[$chain->id]->totalweighting) / count($ids);
                     } else {
                         $chains[$chain->id]->equalweighting[$taskgroup] = 0;
@@ -411,11 +407,11 @@ class taskchain_regrade extends taskchain_base {
                     $chains[$chain->id]->totalweighting = max(100, $chains[$chain->id]->totalweighting);
                 }
                 // Note: totalweighting may not be exactly 100, in the following cases:
-                //     (1) no "equalweighting" tasks exist and the sum of task weightings is not equal to 100
-                //     (2) "equalweighting" tasks exist, but the sum of other task weightings is more than 100
+                // (1) no "equalweighting" tasks exist and the sum of task weightings is not equal to 100
+                // (2) "equalweighting" tasks exist, but the sum of other task weightings is more than 100
                 // in case (2), the equalweighting is set to zero, i.e. "equalweighting" tasks have no effect on grade
             }
-            if (count($chains[$chain->id]->taskgroups)==1) {
+            if (count($chains[$chain->id]->taskgroups) == 1) {
                 // this chain only has only one equalweighting group
                 $taskgroup = reset($chains[$chain->id]->taskgroups);
                 $chains[$chain->id]->counttasks = count($taskgroup);
@@ -459,7 +455,7 @@ class taskchain_regrade extends taskchain_base {
                     continue;
                 }
                 $taskgroup = $tasks[$taskscore->taskid]->scoreweighting;
-                if ($taskgroup>=0) {
+                if ($taskgroup >= 0) {
                     $taskgroup = 'default';
                 }
                 if (! array_key_exists($taskgroup, $taskgroups)) {
@@ -470,7 +466,7 @@ class taskchain_regrade extends taskchain_base {
             $counttasks = 0;
             $maintaskgroup = 0;
             foreach ($taskgroups as $taskgroup => $ids) {
-                if ($taskgroup=='default') {
+                if ($taskgroup == 'default') {
                     continue;
                 }
                 $count = count($ids);
@@ -489,14 +485,13 @@ class taskchain_regrade extends taskchain_base {
             }
             $taskids = implode(',', $validtaskids);
 
-            if ($chain->attemptgrademethod==self::GRADEMETHOD_TOTAL) {
+            if ($chain->attemptgrademethod == self::GRADEMETHOD_TOTAL) {
                 $totalweighting = $chains[$chain->id]->totalweighting;
             } else {
                 $totalweighting = 100;
             }
 
             foreach ($taskscores as $taskscore) {
-
                 if (! in_array($taskscore->taskid, $validtaskids)) {
                     // we are not interested in this task
                     continue;
@@ -504,7 +499,7 @@ class taskchain_regrade extends taskchain_base {
 
                 if ($totalweighting) {
                     $weighting = $tasks[$taskscore->taskid]->scoreweighting;
-                    if ($weighting<0) {
+                    if ($weighting < 0) {
                         $weighting = $chains[$chain->id]->equalweighting[$weighting];
                     }
                     $weightedscore = ($taskscore->score * ($weighting / $totalweighting));
@@ -523,17 +518,17 @@ class taskchain_regrade extends taskchain_base {
                             }
                             break;
                         case self::GRADEMETHOD_LASTCOMPLETED:
-                            if ($timemodified < $taskscore->timemodified && ($taskscore->status==self::STATUS_COMPLETED)) {
+                            if ($timemodified < $taskscore->timemodified && ($taskscore->status == self::STATUS_COMPLETED)) {
                                 $grade = $weightedscore;
                             }
                             break;
                         case self::GRADEMETHOD_LASTTIMEDOUT:
-                            if ($timemodified < $taskscore->timemodified && ($taskscore->status==self::STATUS_COMPLETED || $taskscore->status==self::STATUS_TIMEDOUT)) {
+                            if ($timemodified < $taskscore->timemodified && ($taskscore->status == self::STATUS_COMPLETED || $taskscore->status == self::STATUS_TIMEDOUT)) {
                                 $grade = $weightedscore;
                             }
                             break;
                         case self::GRADEMETHOD_LASTABANDONED:
-                            if ($timemodified < $taskscore->timemodified && ($taskscore->status==self::STATUS_COMPLETED || $taskscore->status==self::STATUS_TIMEDOUT || $taskscore->status==self::STATUS_ABANDONED)) {
+                            if ($timemodified < $taskscore->timemodified && ($taskscore->status == self::STATUS_COMPLETED || $taskscore->status == self::STATUS_TIMEDOUT || $taskscore->status == self::STATUS_ABANDONED)) {
                                 $grade = $weightedscore;
                             }
                             break;
@@ -541,16 +536,16 @@ class taskchain_regrade extends taskchain_base {
                 }
 
                 if ($taskscore->status) {
-                    if ($minstatus==0 || $minstatus>$taskscore->status) {
+                    if ($minstatus == 0 || $minstatus > $taskscore->status) {
                         $minstatus = $taskscore->status;
                     }
-                    if ($maxstatus==0 || $maxstatus<$taskscore->status) {
+                    if ($maxstatus == 0 || $maxstatus < $taskscore->status) {
                         $maxstatus = $taskscore->status;
                     }
 
-                    if ($taskscore->status==self::STATUS_COMPLETED) {
+                    if ($taskscore->status == self::STATUS_COMPLETED) {
                         // do nothing - cannot resume or restart
-                    } else if ($taskscore->status==self::STATUS_INPROGRESS) {
+                    } else if ($taskscore->status == self::STATUS_INPROGRESS) {
                         if ($tasks[$taskscore->taskid]->allowresume) {
                             $canresume = true;
                         }
@@ -569,7 +564,6 @@ class taskchain_regrade extends taskchain_base {
 
             // don't let grade go above gradelimit
             $grade = min($grade, $chain->gradelimit);
-
         } // end if $taskscores
 
         if ($use_this_tasks && $this->TC->chainattempt) {
@@ -577,7 +571,7 @@ class taskchain_regrade extends taskchain_base {
             $chainattempt = &$this->TC->chainattempt;
         } else {
             // teacher is deleting attempts or regrading
-            $params = array('chainid'=>$chain->id, 'cnumber'=>$cnumber, 'userid'=>$userid);
+            $params = array('chainid' => $chain->id, 'cnumber' => $cnumber, 'userid' => $userid);
             $chainattempt = $DB->get_record('taskchain_chain_attempts', $params);
         }
         if ($chainattempt) {
@@ -588,28 +582,28 @@ class taskchain_regrade extends taskchain_base {
             $status = self::STATUS_INPROGRESS;
         }
 
-        if ($status==self::STATUS_INPROGRESS && $thisuser && $this->TC->get_lastattempt('task')) {
+        if ($status == self::STATUS_INPROGRESS && $thisuser && $this->TC->get_lastattempt('task')) {
             $nexttaskid = $this->TC->get_available_task($this->TC->lasttaskattempt->taskid);
         } else {
             $nexttaskid = 0;
         }
 
-        if ($nexttaskid==self::CONDITIONTASKID_ENDOFCHAIN) {
+        if ($nexttaskid == self::CONDITIONTASKID_ENDOFCHAIN) {
             // post-conditions specify end of task
             $status = self::STATUS_COMPLETED;
         } else if ($nexttaskid) {
             // post-conditions specify different task (or menu)
             $status = self::STATUS_INPROGRESS;
-        } else if ($status==self::STATUS_INPROGRESS || $status==self::STATUS_PENDING) {
+        } else if ($status == self::STATUS_INPROGRESS || $status == self::STATUS_PENDING) {
             $counttasks = $chains[$chain->id]->counttasks;
             if ($chain->timelimit && $duration > $chain->timelimit) {
                 // total time on tasks exceeds chain time limit
-                if ($status==self::STATUS_PENDING) {
+                if ($status == self::STATUS_PENDING) {
                     $status = self::STATUS_COMPLETED;
                 } else {
                     $status = self::STATUS_TIMEDOUT;
                 }
-            } else if ($counttasks && $counttasks==$counttaskscores && $minstatus==self::STATUS_COMPLETED && $maxstatus==self::STATUS_COMPLETED) {
+            } else if ($counttasks && $counttasks == $counttaskscores && $minstatus == self::STATUS_COMPLETED && $maxstatus == self::STATUS_COMPLETED) {
                 // all tasks are completed
                 if ($chain->manualcompletion) {
                     $status = self::STATUS_PENDING;
@@ -617,19 +611,19 @@ class taskchain_regrade extends taskchain_base {
                     $status = self::STATUS_COMPLETED;
                 }
             } else if ($thisuser) {
-                if ($chain->allowresume==self::ALLOWRESUME_NO && $this->TC->get_lastattempt('task') && $this->TC->lasttaskattempt->status==self::STATUS_ABANDONED) {
+                if ($chain->allowresume == self::ALLOWRESUME_NO && $this->TC->get_lastattempt('task') && $this->TC->lasttaskattempt->status == self::STATUS_ABANDONED) {
                     // chain may not be resumed and last task attempt was abandoned
                     $status = self::STATUS_ABANDONED;
-                } else if ($counttasks && $counttasks==$counttaskscores) {
+                } else if ($counttasks && $counttasks == $counttaskscores) {
                     // all tasks have been attempted
-                    if ($canresume==false && $canrestart==false && count($restarttaskids)) {
+                    if ($canresume == false && $canrestart == false && count($restarttaskids)) {
                         // check to see if any of tasks can be (re)started
                         $table = '{taskchain_task_attempts}';
                         $fields = "taskid AS id, COUNT(*) AS countattempts";
-                        $select = "userid=$userid AND cnumber=$cnumber AND taskid IN (".implode(',', $restarttaskids).')';
+                        $select = "userid=$userid AND cnumber=$cnumber AND taskid IN (" . implode(',', $restarttaskids) . ')';
                         $sql = "SELECT $fields FROM $table WHERE $select GROUP BY taskid";
                         if ($aggregates = $DB->get_records_sql($sql)) {
-                            foreach ($aggregates as $taskid=>$aggregate) {
+                            foreach ($aggregates as $taskid => $aggregate) {
                                 if ($aggregate->countattempts < $tasks[$taskid]->attemptlimit) {
                                     $canrestart = true;
                                     break;
@@ -639,7 +633,7 @@ class taskchain_regrade extends taskchain_base {
                     }
                     if ($canresume || $canrestart) {
                         // do nothing - at least one task can be resumed or restarted
-                    } else if ($minstatus==self::STATUS_TIMEDOUT && $maxstatus==self::STATUS_TIMEDOUT) {
+                    } else if ($minstatus == self::STATUS_TIMEDOUT && $maxstatus == self::STATUS_TIMEDOUT) {
                         // tasks are all timed out (and cannot be restarted)
                         $status = self::STATUS_TIMEDOUT;
                     } else {

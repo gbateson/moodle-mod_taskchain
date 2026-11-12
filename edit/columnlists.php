@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,15 +24,16 @@
  */
 
 /** Include required files */
-require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/columnlists.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/columnlists.php');
 
 // create object to represent this TaskChain activity
-$TC = new mod_taskchain();;
+$TC = new mod_taskchain();
+;
 
 $url = $TC->url->edit('columnlists');
-//mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editcolumnlists', $url, $TC->columnlisttype, $TC->columnlistid);
+// mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editcolumnlists', $url, $TC->columnlisttype, $TC->columnlistid);
 
 // Set editing mode
 mod_taskchain::set_user_editing();
@@ -60,7 +60,7 @@ $mform = new mod_taskchain_edit_columnlists_form();
 if ($mform->is_cancelled()) {
     $TC->action = 'editcancelled';
 }
-if ($TC->action=='submit') {
+if ($TC->action == 'submit') {
     if ($mform->is_submitted() && $mform->is_validated()) {
         $newdata = $mform->get_data();
     } else {
@@ -74,10 +74,8 @@ if ($TC->action=='submit') {
 }
 
 switch ($TC->action) {
-
     case 'datasubmitted':
     case 'submit':
-
         $id = $TC->get_columnlistid();
         $type = $TC->get_columnlisttype();
         $name = $TC->get_columnlistname();
@@ -95,7 +93,7 @@ switch ($TC->action) {
             }
         }
 
-        if ($id=='' || $id=='0' || $id=='00') {
+        if ($id == '' || $id == '0' || $id == '00') {
             if (count($lists)) {
                 // new columnlist id required
                 $id = array_keys($lists);
@@ -113,8 +111,8 @@ switch ($TC->action) {
         }
         $newdata->columnlistname = $name;
 
-        $name = 'taskchain_'.$type.'_columnlist_'.$id;
-        $value = $newdata->columnlistname.':'.implode(',', $newdata->columnlist);
+        $name = 'taskchain_' . $type . '_columnlist_' . $id;
+        $value = $newdata->columnlistname . ':' . implode(',', $newdata->columnlist);
         set_user_preference($name, $value);
 
         if ($TC->inpopup) {
@@ -124,9 +122,9 @@ switch ($TC->action) {
         }
         break;
 
-    case 'delete' :
+    case 'delete':
         $type = $TC->get_columnlisttype();
-        $text = get_string('confirmdelete'.$type.'columnlist', 'mod_taskchain', $TC->get_columnlist($type));
+        $text = get_string('confirmdelete' . $type . 'columnlist', 'mod_taskchain', $TC->get_columnlist($type));
         $params = array('inpopup'        => $TC->inpopup,
                         'chainid'        => $TC->get_chainid(),
                         'columnlistid'   => $TC->get_columnlistid(),
@@ -134,9 +132,9 @@ switch ($TC->action) {
         echo $output->page_delete($text, 'edit/columnlists.php', $params);
         break;
 
-    case 'deleteall' :
+    case 'deleteall':
         $type = $TC->get_columnlisttype();
-        $text = get_string('confirmdelete'.$type.'columnlists', 'mod_taskchain');
+        $text = get_string('confirmdelete' . $type . 'columnlists', 'mod_taskchain');
         $params = array('inpopup'        => $TC->inpopup,
                         'chainid'        => $TC->get_chainid(),
                         'columnlistid'   => '00', // i.e. all
@@ -144,23 +142,23 @@ switch ($TC->action) {
         echo $output->page_delete($text, 'edit/columnlists.php', $params);
         break;
 
-    case 'deleteconfirmed' :
+    case 'deleteconfirmed':
         $text = '';
         $id = $TC->get_columnlistid();
         $type = $TC->get_columnlisttype();
         $lists = $TC->get_columnlists($type);
-        if (is_numeric($id) && $id>0) {
+        if (is_numeric($id) && $id > 0) {
             if (array_key_exists($id, $lists)) {
                 // delete a single columnlist
-                unset_user_preference('taskchain_'.$type.'_columnlist_'.$id);
+                unset_user_preference('taskchain_' . $type . '_columnlist_' . $id);
                 $text = get_string('columnlist', 'mod_taskchain', $lists[$id]);
             }
         } else {
             // delete all user defined column lists
             foreach ($lists as $id => $name) {
-                unset_user_preference('taskchain_'.$type.'_columnlist_'.$id);
-                if ($text=='') {
-                    $text = get_string('columnlists'.$type, 'mod_taskchain');
+                unset_user_preference('taskchain_' . $type . '_columnlist_' . $id);
+                if ($text == '') {
+                    $text = get_string('columnlists' . $type, 'mod_taskchain');
                 }
             }
         }

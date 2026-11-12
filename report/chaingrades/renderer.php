@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/report/chaingrade/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/report/chaingrade/renderer.php');
 
 /**
  * mod_taskchain_report_chaingrades_renderer
@@ -44,11 +43,11 @@ class mod_taskchain_report_chaingrades_renderer extends mod_taskchain_report_cha
     protected $headerfields = array();
 
     public $tablecolumns = array(
-        'chaingradegrade',      'chaingradestatus',
-        'chaingradeduration',   'chaingradetimemodified',
-        'chainattemptcnumber',   'selected',
-        'chainattemptgrade',    'chainattemptstatus',
-        'chainattemptduration', 'chainattempttimemodified'
+        'chaingradegrade', 'chaingradestatus',
+        'chaingradeduration', 'chaingradetimemodified',
+        'chainattemptcnumber', 'selected',
+        'chainattemptgrade', 'chainattemptstatus',
+        'chainattemptduration', 'chainattempttimemodified',
     );
     public $has_usercolumns = true;
 
@@ -68,11 +67,11 @@ class mod_taskchain_report_chaingrades_renderer extends mod_taskchain_report_cha
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function select_sql_record(&$select, &$from, &$where, &$params, $userid=0, $record=null) {
-        $from   = '{taskchain_chain_attempts} tc_chn_att '.
-                  ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_chn_att.chainid'.
-                  ' JOIN {taskchain_chain_grades} tc_chn_grd ON (tc_chn.parenttype  = tc_chn_grd.parenttype AND '.
-                                                                'tc_chn.parentid    = tc_chn_grd.parentid AND '.
+    public function select_sql_record(&$select, &$from, &$where, &$params, $userid = 0, $record = null) {
+        $from   = '{taskchain_chain_attempts} tc_chn_att ' .
+                  ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_chn_att.chainid' .
+                  ' JOIN {taskchain_chain_grades} tc_chn_grd ON (tc_chn.parenttype  = tc_chn_grd.parenttype AND ' .
+                                                                'tc_chn.parentid    = tc_chn_grd.parentid AND ' .
                                                                 'tc_chn_att.userid  = tc_chn_grd.userid)';
         // restrict sql to a specific chaingrade /user
         if ($record) {

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -43,27 +42,26 @@ function xmldb_taskchain_install() {
     // On Moodle 2.0, 2.1 and 2.2, we need to force the text fields to be "longtext"
     // if we add LENGTH="long" to install.xml, then we get an error in Moodle 2.3+
     if (floatval($CFG->release) <= 2.2) {
-
         // get db manager
         $dbman = $DB->get_manager();
 
         $tables = array(
             'taskchain_chains' => array(
                 new xmldb_field('entrytext', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
-                new xmldb_field('exittext', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('exittext', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             'taskchain_cache' => array(
-                new xmldb_field('content', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('content', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             'taskchain_details' => array(
-                new xmldb_field('details', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('details', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             'taskchain_questions' => array(
-                new xmldb_field('name', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('name', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             'taskchain_strings' => array(
-                new xmldb_field('string', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
-            )
+                new xmldb_field('string', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
+            ),
         );
 
         foreach ($tables as $tablename => $fields) {

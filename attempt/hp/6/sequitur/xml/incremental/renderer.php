@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/sequitur/xml/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/sequitur/xml/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_sequitur_xml_incremental_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/sequitur/xml/renderer.ph
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_sequitur_xml_incremental_renderer extends mod_taskchain_attempt_hp_6_sequitur_xml_renderer {
-
     /**
      * get_js_functionnames
      *
@@ -48,7 +46,7 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_incremental_renderer extends mod_t
      */
     public function get_js_functionnames() {
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'CalculateScore';
+        $names .= ($names ? ',' : '') . 'CalculateScore';
         return $names;
     }
 }

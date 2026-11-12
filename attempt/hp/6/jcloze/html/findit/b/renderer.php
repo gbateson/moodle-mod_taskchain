@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/html/findit/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/html/findit/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jcloze_html_findit_b_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/html/findit/rende
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_html_findit_b_renderer extends mod_taskchain_attempt_hp_6_jcloze_html_findit_renderer {
-
     public $js_object_type = 'JClozeFindItB';
 
     /**
@@ -49,7 +47,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_findit_b_renderer extends mod_taskc
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
         // replace standard jcloze.js with findit.b.js
@@ -62,7 +60,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_findit_b_renderer extends mod_taskc
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    public static function sourcetypes() {
         return array('hp_6_jcloze_html_findit_b');
     }
 
@@ -74,7 +72,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_findit_b_renderer extends mod_taskc
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_CheckAnswers(&$str, $start, $length)  {
+    public function fix_js_CheckAnswers(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         // do several search and replace actions at once
@@ -82,13 +80,13 @@ class mod_taskchain_attempt_hp_6_jcloze_html_findit_b_renderer extends mod_taskc
             '/if \(NumOfVisibleGaps < 1\)\{return;\}/',
             "/(\s+)Output = '';/s",
             '/Output \+= MissingMistakes \+ Get_NumMissingErr\(\);/',
-            '/CalculateScore\(\);/' // last occurrence
+            '/CalculateScore\(\);/', // last occurrence
         );
         $replace = array(
             'if (NumOfVisibleGaps){',
             '$1}$0',
             'if (NumOfVisibleGaps) $0',
-            'if (NumOfVisibleGaps) $0'
+            'if (NumOfVisibleGaps) $0',
         );
         $substr = preg_replace($search, $replace, $substr, 1);
 

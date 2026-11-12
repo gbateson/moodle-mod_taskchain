@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -37,14 +36,13 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class restore_taskchain_activity_structure_step extends restore_activity_structure_step {
-
     /**
      * define_structure
      *
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function define_structure()  {
+    protected function define_structure() {
 
         $paths = array();
 
@@ -54,9 +52,9 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
         // XML interesting paths - non-user data
         ////////////////////////////////////////////////////////////////////////
 
-        $paths[] = new restore_path_element('taskchain',           '/activity/taskchain');
-        $paths[] = new restore_path_element('taskchain_chain',     '/activity/taskchain/chain');
-        $paths[] = new restore_path_element('taskchain_task',      '/activity/taskchain/chain/tasks/task');
+        $paths[] = new restore_path_element('taskchain', '/activity/taskchain');
+        $paths[] = new restore_path_element('taskchain_chain', '/activity/taskchain/chain');
+        $paths[] = new restore_path_element('taskchain_task', '/activity/taskchain/chain/tasks/task');
         $paths[] = new restore_path_element('taskchain_condition', '/activity/taskchain/chain/tasks/task/conditions/condition');
 
         ////////////////////////////////////////////////////////////////////////
@@ -64,13 +62,13 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
         ////////////////////////////////////////////////////////////////////////
 
         if ($userinfo) {
-            $paths[] = new restore_path_element('taskchain_string',       '/activity/taskchain/strings/string');
-            $paths[] = new restore_path_element('taskchain_chaingrade',   '/activity/taskchain/chain/chaingrades/chaingrade');
+            $paths[] = new restore_path_element('taskchain_string', '/activity/taskchain/strings/string');
+            $paths[] = new restore_path_element('taskchain_chaingrade', '/activity/taskchain/chain/chaingrades/chaingrade');
             $paths[] = new restore_path_element('taskchain_chainattempt', '/activity/taskchain/chain/chainattempts/chainattempt');
-            $paths[] = new restore_path_element('taskchain_taskscore',    '/activity/taskchain/chain/tasks/task/taskscores/taskscore');
-            $paths[] = new restore_path_element('taskchain_taskattempt',  '/activity/taskchain/chain/tasks/task/taskattempts/taskattempt');
-            $paths[] = new restore_path_element('taskchain_question',     '/activity/taskchain/chain/tasks/task/questions/question');
-            $paths[] = new restore_path_element('taskchain_response',     '/activity/taskchain/chain/tasks/task/questions/question/responses/response');
+            $paths[] = new restore_path_element('taskchain_taskscore', '/activity/taskchain/chain/tasks/task/taskscores/taskscore');
+            $paths[] = new restore_path_element('taskchain_taskattempt', '/activity/taskchain/chain/tasks/task/taskattempts/taskattempt');
+            $paths[] = new restore_path_element('taskchain_question', '/activity/taskchain/chain/tasks/task/questions/question');
+            $paths[] = new restore_path_element('taskchain_response', '/activity/taskchain/chain/tasks/task/questions/question/responses/response');
         }
 
         // Return the paths wrapped into standard activity structure
@@ -84,10 +82,10 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function define_decode_contents() {
+    public static function define_decode_contents() {
         return array(
             new restore_decode_content('taskchain', array('entrytext'), 'entrytext'),
-            new restore_decode_content('taskchain', array('exittext'),  'exittext')
+            new restore_decode_content('taskchain', array('exittext'), 'exittext'),
         );
     }
 
@@ -99,7 +97,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function process_taskchain($data)  {
+    protected function process_taskchain($data) {
         global $DB;
 
         // convert $data to object
@@ -130,7 +128,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function process_taskchain_chain($data)  {
+    protected function process_taskchain_chain($data) {
         global $DB;
 
         // convert $data to object
@@ -162,7 +160,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function process_taskchain_task($data)  {
+    protected function process_taskchain_task($data) {
         global $CFG, $DB;
 
         // convert $data to object
@@ -177,7 +175,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
         $data->timeclose = $this->apply_date_offset($data->timeclose);
 
         if ($this->task->get_old_moduleversion() < 2017031738) {
-            require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+            require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
             $data->titletext = '';
             // shift CHAINNAME and SORTORDER bits to the left (i.e. multiply by 2)
             $title = 0;
@@ -185,7 +183,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
             $title += ($data->title & (mod_taskchain::TITLE_CHAINNAME >> 1));
             $title *= 2;
             $title += ($data->title & (mod_taskchain::TITLE_SOURCE >> 1));
-            if (($title & mod_taskchain::TITLE_SOURCE)==mod_taskchain::TEXTSOURCE_SPECIFIC) {
+            if (($title & mod_taskchain::TITLE_SOURCE) == mod_taskchain::TEXTSOURCE_SPECIFIC) {
                 // replace SPECIFIC with TASKNAME
                 $data->title = 0;
                 $data->title += ($title & mod_taskchain::TITLE_SORTORDER);
@@ -213,7 +211,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function process_taskchain_condition($data)  {
+    protected function process_taskchain_condition($data) {
         global $DB;
 
         // convert $data to object
@@ -244,7 +242,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function process_taskchain_chaingrade($data)  {
+    protected function process_taskchain_chaingrade($data) {
         global $DB;
 
         // convert $data to object
@@ -276,7 +274,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function process_taskchain_chainattempt($data)  {
+    protected function process_taskchain_chainattempt($data) {
         global $DB;
 
         // convert $data to object
@@ -307,7 +305,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function process_taskchain_taskscore($data)  {
+    protected function process_taskchain_taskscore($data) {
         global $DB;
 
         // convert $data to object
@@ -338,7 +336,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function process_taskchain_taskattempt($data)  {
+    protected function process_taskchain_taskattempt($data) {
         global $DB;
 
         // convert $data to object
@@ -364,7 +362,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
         $this->set_mapping('taskchain_taskattempt', $oldid, $newid);
 
         // reset clickreportid to point to parent attempt
-        if (empty($data->clickreportid) || $data->clickreportid==$oldid) {
+        if (empty($data->clickreportid) || $data->clickreportid == $oldid) {
             // clickreporting is not enabled (this is the usual case)
             $clickreportid = $newid;
         } else {
@@ -385,7 +383,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function process_taskchain_question($data)   {
+    protected function process_taskchain_question($data) {
         global $DB;
 
         // convert $data to object
@@ -418,7 +416,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function process_taskchain_response($data)   {
+    protected function process_taskchain_response($data) {
         global $DB;
 
         // convert $data to object
@@ -452,7 +450,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @param xxx $data
      * @todo Finish documenting this function
      */
-    protected function process_taskchain_string($data)   {
+    protected function process_taskchain_string($data) {
         global $DB;
 
         // convert $data to object
@@ -484,10 +482,9 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @param xxx $default (optional, default='')
      * @todo Finish documenting this function
      */
-    protected function set_string_ids(&$data, $fieldnames, $default='')  {
+    protected function set_string_ids(&$data, $fieldnames, $default = '') {
 
         foreach ($fieldnames as $fieldname) {
-
             $newids = array();
             if (isset($data->$fieldname)) {
                 $oldids = explode(',', $data->$fieldname);
@@ -514,14 +511,14 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      *
      * @uses $DB
      */
-    protected function after_execute()  {
+    protected function after_execute() {
         global $DB;
 
         // restore files
         $this->add_related_files('mod_taskchain', 'sourcefile', null);
         $this->add_related_files('mod_taskchain', 'configfile', null);
-        $this->add_related_files('mod_taskchain', 'entrytext',  null);
-        $this->add_related_files('mod_taskchain', 'exittext',   null);
+        $this->add_related_files('mod_taskchain', 'entrytext', null);
+        $this->add_related_files('mod_taskchain', 'exittext', null);
 
         // get most recently restored taskchain chain record (there should only be one)
         $params = array('parenttype' => 0, 'parentid' => $this->task->get_activityid());
@@ -555,13 +552,13 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @return void, but may update $record and DB tables
      * @todo Finish documenting this function
      */
-    protected function after_execute_foreignkeys(&$record, $table, $keys, $default=0)  {
+    protected function after_execute_foreignkeys(&$record, $table, $keys, $default = 0) {
         global $DB;
         $update = false;
         foreach ($keys as $field => $itemname) {
             if ($record->$field > 0) {
                 $record->$field = $this->get_mappingid($itemname, $record->$field);
-                if ($record->$field===false || $record->$field===null) {
+                if ($record->$field === false || $record->$field === null) {
                     $record->$field = $default; // shouldn't happen !!
                 }
                 $update = true;

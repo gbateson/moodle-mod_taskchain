@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 // get parent class
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmatch/xml/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/xml/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jmatch_xml_sort_renderer
@@ -37,8 +36,7 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmatch/xml/renderer.php'
  * @since     Moodle 2.0
  */
 class mod_taskchain_attempt_hp_6_jmatch_xml_sort_renderer extends mod_taskchain_attempt_hp_6_jmatch_xml_renderer {
-
-    //public $js_object_type = 'JMatchSort';
+    // public $js_object_type = 'JMatchSort';
     public $templatefile = 'djmatch6.ht_';
 
     /**
@@ -48,7 +46,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_sort_renderer extends mod_taskchain_
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
         // prepend templates for this output format
@@ -60,7 +58,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_sort_renderer extends mod_taskchain_
      *
      * @return array of strings
      */
-    public static function sourcetypes()  {
+    public static function sourcetypes() {
         return array('hp_6_jmatch_xml');
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/xml/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/xml/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jcloze_xml_findit_renderer
@@ -39,13 +38,12 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/xml/renderer.php'
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_xml_findit_renderer extends mod_taskchain_attempt_hp_6_jcloze_xml_renderer {
-
     /**
      * List of source types which this renderer can handle
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    public static function sourcetypes() {
         return array();
     }
 
@@ -55,10 +53,10 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_findit_renderer extends mod_taskchai
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_js_functionnames()  {
+    public function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'Markup_Text,CheckText,Build_GapText,ShowSolution,Get_WrongGapContent,TimesUp';
+        $names .= ($names ? ',' : '') . 'Markup_Text,CheckText,Build_GapText,ShowSolution,Get_WrongGapContent,TimesUp';
         return $names;
     }
 
@@ -68,7 +66,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_findit_renderer extends mod_taskchai
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_search()  {
+    public function get_stop_function_search() {
         return '/\s*if \((CheckExStatus\(\)) == true\)({.*?)setTimeout.*?}/s';
     }
 
@@ -77,7 +75,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_findit_renderer extends mod_taskchai
      *
      * @todo Finish documenting this function
      */
-    public function fix_headcontent()  {
+    public function fix_headcontent() {
         $this->fix_headcontent_rottmeier('findit');
     }
 
@@ -86,7 +84,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_findit_renderer extends mod_taskchai
      *
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent()  {
+    public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier(true);
     }
 }

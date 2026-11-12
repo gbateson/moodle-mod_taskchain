@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,18 +26,18 @@
 // set $TC object
 
 /** Include required files */
-require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/chains.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/chains.php');
 
 // create object to represent this TaskChain activity
 $TC = new mod_taskchain();
 
 // get rebuild_course_cache() from "course/lib.php"
 // (needed if "showpopup" or "popupoptions" change)
-require_once($CFG->dirroot.'/course/lib.php');
+require_once($CFG->dirroot . '/course/lib.php');
 
-mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editchains', 'edit/chains.php?id='.$TC->course->id);
+mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editchains', 'edit/chains.php?id=' . $TC->course->id);
 
 // Set editing mode
 mod_taskchain::set_user_editing();

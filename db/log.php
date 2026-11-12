@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -26,21 +25,21 @@
 
 $logs = array(
     // standard mod actions
-    array('module'=>'taskchain', 'action'=>'add', 'mtable'=>'taskchain', 'field'=>'name'),
-    array('module'=>'taskchain', 'action'=>'update', 'mtable'=>'taskchain', 'field'=>'name'),
-    array('module'=>'taskchain', 'action'=>'view', 'mtable'=>'taskchain', 'field'=>'name'),
+    array('module' => 'taskchain', 'action' => 'add', 'mtable' => 'taskchain', 'field' => 'name'),
+    array('module' => 'taskchain', 'action' => 'update', 'mtable' => 'taskchain', 'field' => 'name'),
+    array('module' => 'taskchain', 'action' => 'view', 'mtable' => 'taskchain', 'field' => 'name'),
 
     // attempt actions
-    array('module'=>'taskchain', 'action'=>'attempt', 'mtable'=>'taskchain', 'field'=>'name'),
-    array('module'=>'taskchain', 'action'=>'submit', 'mtable'=>'taskchain', 'field'=>'name'),
+    array('module' => 'taskchain', 'action' => 'attempt', 'mtable' => 'taskchain', 'field' => 'name'),
+    array('module' => 'taskchain', 'action' => 'submit', 'mtable' => 'taskchain', 'field' => 'name'),
 
     // report actions
-    array('module'=>'taskchain', 'action'=>'report', 'mtable'=>'taskchain', 'field'=>'name'),
-    array('module'=>'taskchain', 'action'=>'review', 'mtable'=>'taskchain', 'field'=>'name'),
+    array('module' => 'taskchain', 'action' => 'report', 'mtable' => 'taskchain', 'field' => 'name'),
+    array('module' => 'taskchain', 'action' => 'review', 'mtable' => 'taskchain', 'field' => 'name'),
 
     // edit actions
-    array('module'=>'taskchain', 'action'=>'editcolumnlists', 'mtable'=>'taskchain', 'field'=>'name'),
-    array('module'=>'taskchain', 'action'=>'editcondition', 'mtable'=>'taskchain', 'field'=>'name'),
-    array('module'=>'taskchain', 'action'=>'edittask', 'mtable'=>'taskchain', 'field'=>'name'),
-    array('module'=>'taskchain', 'action'=>'edittasks', 'mtable'=>'taskchain', 'field'=>'name'),
+    array('module' => 'taskchain', 'action' => 'editcolumnlists', 'mtable' => 'taskchain', 'field' => 'name'),
+    array('module' => 'taskchain', 'action' => 'editcondition', 'mtable' => 'taskchain', 'field' => 'name'),
+    array('module' => 'taskchain', 'action' => 'edittask', 'mtable' => 'taskchain', 'field' => 'name'),
+    array('module' => 'taskchain', 'action' => 'edittasks', 'mtable' => 'taskchain', 'field' => 'name'),
 );

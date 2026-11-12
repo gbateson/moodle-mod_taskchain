@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -36,44 +35,43 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_can extends taskchain_base {
-
-    /** @var boolean cache of the "mod/taskchain:addinstance" capability */
+    /** @var bool cache of the "mod/taskchain:addinstance" capability */
     private $canaddinstance         = null;
 
-    /** @var boolean cache of the "mod/taskchain:attempt" capability */
+    /** @var bool cache of the "mod/taskchain:attempt" capability */
     private $canattempt             = null;
 
-    /** @var boolean cache of the "mod/taskchain:deleteallattempts" capability */
+    /** @var bool cache of the "mod/taskchain:deleteallattempts" capability */
     private $candeleteallattempts   = null;
 
-    /** @var boolean cache of the "mod/taskchain:deletemyattempts" capability */
+    /** @var bool cache of the "mod/taskchain:deletemyattempts" capability */
     private $candeletemyattempts    = null;
 
-    /** @var boolean cache of the "mod/taskchain:manage" capability */
+    /** @var bool cache of the "mod/taskchain:manage" capability */
     private $canmanage              = null;
 
-    /** @var boolean cache of the "mod/taskchain:preview" capability */
+    /** @var bool cache of the "mod/taskchain:preview" capability */
     private $canpreview             = null;
 
-    /** @var boolean cache of the "mod/taskchain:regrade" capability */
+    /** @var bool cache of the "mod/taskchain:regrade" capability */
     private $canregrade             = null;
 
-    /** @var boolean cache of the "mod/taskchain:reviewallattempts" capability */
+    /** @var bool cache of the "mod/taskchain:reviewallattempts" capability */
     private $canreviewallattempts   = null;
 
-    /** @var boolean cache of the "mod/taskchain:reviewmyattempts" capability */
+    /** @var bool cache of the "mod/taskchain:reviewmyattempts" capability */
     private $canreviewmyattempts    = null;
 
-    /** @var boolean cache of the "mod/taskchain:view" capability */
+    /** @var bool cache of the "mod/taskchain:view" capability */
     private $canview                = null;
 
-    /** @var boolean cache of the "moodle/course:manageactivities" capability */
+    /** @var bool cache of the "moodle/course:manageactivities" capability */
     private $manageactivities       = null;
 
-    /** @var boolean cache of the "moodle/site:accessallgroups" capability */
+    /** @var bool cache of the "moodle/site:accessallgroups" capability */
     private $accessallgroups        = null;
 
-    /** @var boolean cache of the "moodle/site:accessallgroups" capability */
+    /** @var bool cache of the "moodle/site:accessallgroups" capability */
     private $canmoodlesiteaccessallgroups     = null;
 
     /** switches to cache user's ability to start or resume an attempt */
@@ -98,16 +96,22 @@ class taskchain_can extends taskchain_base {
      * @param context object (optional, default=null)
      * @return void, will update the $context property
      */
-    public function __construct($dbrecord=null, $objects=null) {
+    public function __construct($dbrecord = null, $objects = null) {
         global $PAGE;
 
         // do standard setup - this should initialize $this->TC
         parent::__construct($dbrecord, $objects);
 
         switch (true) {
-            case isset($this->TC->coursemodule->context) : $this->context = $this->TC->coursemodule->context; break;
-            case isset($this->TC->course->context)       : $this->context = $this->TC->course->context; break;
-            case isset($PAGE->context)                   : $this->context = $PAGE->context; break;
+            case isset($this->TC->coursemodule->context):
+                $this->context = $this->TC->coursemodule->context;
+                break;
+            case isset($this->TC->course->context):
+                $this->context = $this->TC->course->context;
+                break;
+            case isset($PAGE->context):
+                $this->context = $PAGE->context;
+                break;
         }
     }
 
@@ -129,7 +133,7 @@ class taskchain_can extends taskchain_base {
      * @todo Finish documenting this function
      */
     public function __call($name, $params) {
-        $propertyname = 'can'.$name;
+        $propertyname = 'can' . $name;
         if (property_exists($this, $propertyname)) {
             $require = array_shift($params);
             return $this->can($name, $require);
@@ -148,12 +152,12 @@ class taskchain_can extends taskchain_base {
      * @require boolean true if capability is required, false otherwise
      * @return boolean true of user has required capability, otherwise false
      */
-    public function can($type, $require=false, $context=null) {
-        if (strpos($type, ':')===false) {
-            $field = 'can'.$type;
-            $capability = self::PREFIX.':'.$type;
+    public function can($type, $require = false, $context = null) {
+        if (strpos($type, ':') === false) {
+            $field = 'can' . $type;
+            $capability = self::PREFIX . ':' . $type;
         } else {
-            $field = 'can'.str_replace(array('/', ':'), '', $type);
+            $field = 'can' . str_replace(array('/', ':'), '', $type);
             $capability = $type;
         }
 
@@ -169,7 +173,7 @@ class taskchain_can extends taskchain_base {
             $this->$field = has_capability($capability, $this->context);
         }
 
-        if ($require && $this->$field==false) {
+        if ($require && $this->$field == false) {
             throw new required_capability_exception($context, $capability, 'nopermissions', '');
         }
 
@@ -182,7 +186,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user has "mod/taskchain:addinstance" capability; false otherwise
      */
-    public function addinstance($require=false, $context=null) {
+    public function addinstance($require = false, $context = null) {
         return $this->can('addinstance', $require, $context);
     }
 
@@ -191,7 +195,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user has "mod/taskchain:attempt" capability; false otherwise
      */
-    public function attempt($require=false, $context=null) {
+    public function attempt($require = false, $context = null) {
         return $this->can('attempt', $require, $context);
     }
 
@@ -200,7 +204,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user has "mod/taskchain:deleteallattempts" capability; false otherwise
      */
-    public function deleteallattempts($require=false, $context=null) {
+    public function deleteallattempts($require = false, $context = null) {
         return $this->can('deleteallattempts', $require, $context);
     }
 
@@ -209,7 +213,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user has "mod/taskchain:deletemyattempts" capability; false otherwise
      */
-    public function deletemyattempts($require=false, $context=null) {
+    public function deletemyattempts($require = false, $context = null) {
         return $this->can('deletemyattempts', $require, $context);
     }
 
@@ -218,7 +222,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user can delete attempts; false otherwise
      */
-    function deleteattempts($require=false, $context=null) {
+    function deleteattempts($require = false, $context = null) {
         return ($this->deleteallattempts(false, $context) || $this->deletemyattempts($require, $context));
     }
 
@@ -227,7 +231,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user has "mod/taskchain:manage" capability; false otherwise
      */
-    public function manage($require=false, $context=null) {
+    public function manage($require = false, $context = null) {
         return $this->can('manage', $require, $context);
     }
 
@@ -236,7 +240,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user has "mod/taskchain:preview" capability; false otherwise
      */
-    public function preview($require=false, $context=null) {
+    public function preview($require = false, $context = null) {
         return $this->can('preview', $require, $context);
     }
 
@@ -245,7 +249,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user has "mod/taskchain:regrade" capability; false otherwise
      */
-    public function regrade($require=false, $context=null) {
+    public function regrade($require = false, $context = null) {
         return $this->can('regrade', $require, $context);
     }
 
@@ -254,7 +258,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user has "mod/taskchain:reviewallattempts" capability; false otherwise
      */
-    public function reviewallattempts($require=false, $context=null) {
+    public function reviewallattempts($require = false, $context = null) {
         return $this->can('reviewallattempts', $require, $context);
     }
 
@@ -263,7 +267,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user has "mod/taskchain:reviewmyattempts" capability; false otherwise
      */
-    public function reviewmyattempts($require=false, $context=null) {
+    public function reviewmyattempts($require = false, $context = null) {
         return $this->can('reviewmyattempts', $require, $context);
     }
 
@@ -272,7 +276,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return xxx
      */
-    function reviewattempts($require=false, $context=null) {
+    function reviewattempts($require = false, $context = null) {
         return ($this->reviewallattempts(false, $context) || $this->reviewmyattempts($require, $context));
     }
 
@@ -281,7 +285,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user has "mod/taskchain:view" capability; false otherwise
      */
-    public function view($require=false, $context=null) {
+    public function view($require = false, $context = null) {
         return $this->can('view', $require, $context);
     }
 
@@ -293,8 +297,8 @@ class taskchain_can extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function attempts($type, $value=null) {
-        $field = 'can'.$type.'attempts';
+    public function attempts($type, $value = null) {
+        $field = 'can' . $type . 'attempts';
         if (is_null($value)) {
             return $this->$field; // get
         } else {
@@ -310,7 +314,7 @@ class taskchain_can extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    function manageactivities($require=false, $context=null) {
+    function manageactivities($require = false, $context = null) {
         return $this->can('moodle/course:manageactivities', $require, $context);
     }
 
@@ -321,13 +325,13 @@ class taskchain_can extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    function accessallgroups($context=null) {
+    function accessallgroups($context = null) {
         // get groupmode: 0=NOGROUPS, 1=VISIBLEGROUPS, 2=SEPARATEGROUPS
         if (empty($this->TC->coursemodule)) {
             $groupmode = groups_get_course_groupmode($this->TC->course);
         } else {
             $groupmode = groups_get_activity_groupmode($this->TC->coursemodule);
         }
-        return ($groupmode==NOGROUPS || $groupmode==VISIBLEGROUPS || $this->can('moodle/site:accessallgroups', false, $context));
+        return ($groupmode == NOGROUPS || $groupmode == VISIBLEGROUPS || $this->can('moodle/site:accessallgroups', false, $context));
     }
 }

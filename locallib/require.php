@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -36,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_require extends taskchain_base {
-
     /**
      * access
      *
@@ -69,7 +67,7 @@ class taskchain_require extends taskchain_base {
             return false;
         }
         // user's IP address is missing or does not match required subnet mask
-        return get_string($type.'subneterror', 'mod_taskchain');
+        return get_string($type . 'subneterror', 'mod_taskchain');
     }
 
     /**
@@ -87,26 +85,23 @@ class taskchain_require extends taskchain_base {
         // does this chain /task require a password?
         $record = $this->TC->$type;
         if ($record->password) {
-
-            $taskchain_passwordchecked = 'taskchain_'.$type.'_passwordchecked';
+            $taskchain_passwordchecked = 'taskchain_' . $type . '_passwordchecked';
 
             // has password not already been given?
             if (empty($SESSION->$taskchain_passwordchecked[$record->id])) {
-
                 // get password, if any, that was entered
                 $password = optional_param('taskchainpassword', '', PARAM_TEXT);
                 if (strcmp($record->password, $password)) {
-
                     // password is missing or invalid
-                    $error = html_writer::start_tag('form', array('id'=>'taskchainpasswordform', 'method'=>'post', 'action'=>$this->TC->url->attempt()))."\n";
-                    $error .= html_writer::tag('p', get_string($type.'requirepasswordmessage', 'mod_taskchain'));
-                    $error .= html_writer::tag('b', get_string('password')).': ';
-                    $error .= html_writer::empty_tag('input', array('name'=>'taskchainpassword', 'type'=>'password', 'value'=>''));
-                    $error .= html_writer::empty_tag('input', array('type'=>'submit', 'value'=>get_string('ok')));
-                    $error .= html_writer::end_tag('form')."\n";
+                    $error = html_writer::start_tag('form', array('id' => 'taskchainpasswordform', 'method' => 'post', 'action' => $this->TC->url->attempt())) . "\n";
+                    $error .= html_writer::tag('p', get_string($type . 'requirepasswordmessage', 'mod_taskchain'));
+                    $error .= html_writer::tag('b', get_string('password')) . ': ';
+                    $error .= html_writer::empty_tag('input', array('name' => 'taskchainpassword', 'type' => 'password', 'value' => ''));
+                    $error .= html_writer::empty_tag('input', array('type' => 'submit', 'value' => get_string('ok')));
+                    $error .= html_writer::end_tag('form') . "\n";
                     if ($password) {
                         // previously entered password was invalid
-                        $error .= html_writer::tag('p', get_string('passworderror', 'mod_taskchain'), array('class'=>'red'));
+                        $error .= html_writer::tag('p', get_string('passworderror', 'mod_taskchain'), array('class' => 'red'));
                     }
                 } else {
                     // newly entered password was correct
@@ -152,7 +147,7 @@ class taskchain_require extends taskchain_base {
         $record = $this->TC->$type;
         if ($record->timeopen && $record->timeopen > $this->TC->time) {
             // chain/task is not yet open
-            return get_string($type.'notavailable', 'mod_taskchain', userdate($record->timeopen));
+            return get_string($type . 'notavailable', 'mod_taskchain', userdate($record->timeopen));
         }
         return false;
     }
@@ -168,7 +163,7 @@ class taskchain_require extends taskchain_base {
         $record = $this->TC->$type;
         if ($record->timeclose && $record->timeclose < $this->TC->time) {
             // chain/task is already closed
-            return get_string($type.'closed', 'mod_taskchain', userdate($record->timeclose));
+            return get_string($type . 'closed', 'mod_taskchain', userdate($record->timeclose));
         }
         return false;
     }
@@ -183,12 +178,11 @@ class taskchain_require extends taskchain_base {
 
         // if possible, find a previous chain attempt that can be resumed
         if ($this->TC->chain->allowresume && $this->TC->get_chainattempts()) {
-
-            if ($this->TC->chain->allowresume==self::ALLOWRESUME_FORCE) {
+            if ($this->TC->chain->allowresume == self::ALLOWRESUME_FORCE) {
                 $force_resume = true;
             } else if ($error = $this->moreattempts('chain')) {
                 $force_resume = true;
-            } else if ($this->TC->show_entrypage()==false) {
+            } else if ($this->TC->show_entrypage() == false) {
                 $force_resume = true;
             } else {
                 $force_resume = false;
@@ -239,7 +233,7 @@ class taskchain_require extends taskchain_base {
     function valid_cnumber() {
         $cnumber = $this->TC->get_cnumber();
 
-        if ($cnumber>0) {
+        if ($cnumber > 0) {
             if ($error = $this->attempt('chain')) {
                 // cnumber is not valid - either this chain attempt was deleted
                 // or someone is making up cnumbers for the fun of it
@@ -255,8 +249,8 @@ class taskchain_require extends taskchain_base {
             return false;
         }
 
-        if ($cnumber==0) {
-            if (($this->TC->tab=='info' || $this->TC->tab=='preview' || $this->TC->tab=='attempt') && $this->TC->can->preview()) {
+        if ($cnumber == 0) {
+            if (($this->TC->tab == 'info' || $this->TC->tab == 'preview' || $this->TC->tab == 'attempt') && $this->TC->can->preview()) {
                 // teacher can always view the entry page
                 return false;
             }
@@ -352,9 +346,14 @@ class taskchain_require extends taskchain_base {
 
             $attempts = "{$type}attempts";
             switch ($delay) {
-                case 'delay1': $require_delay = (count($this->TC->$attempts)==1); break;
-                case 'delay2': $require_delay = (count($this->TC->$attempts)>=2); break;
-                default:       $require_delay = false; // shouldn't happen !!
+                case 'delay1':
+                    $require_delay = (count($this->TC->$attempts) == 1);
+                    break;
+                case 'delay2':
+                    $require_delay = (count($this->TC->$attempts) >= 2);
+                    break;
+                default:
+                    $require_delay = false; // shouldn't happen !!
             }
 
             if ($require_delay) {
@@ -364,7 +363,7 @@ class taskchain_require extends taskchain_base {
                 if ($this->TC->time < $nextattempttime) {
                     // $delay has not expired yet
                     $time = html_writer::tag('strong', userdate($nextattempttime));
-                    $error = get_string('temporaryblocked', 'quiz').' '.$time;
+                    $error = get_string('temporaryblocked', 'quiz') . ' ' . $time;
                 }
             }
         }
@@ -380,23 +379,23 @@ class taskchain_require extends taskchain_base {
      * @return mixed, false if moreattempts are available, otherwise error message
      * @todo Finish documenting this function
      */
-    function moreattempts($type, $shorterror=false) {
+    function moreattempts($type, $shorterror = false) {
         $error = false;
         $record = $this->TC->$type;
         if ($this->TC->get_attempts($type)) {
             $attempts = "{$type}attempts";
             if ($record->attemptlimit && $record->attemptlimit <= count($this->TC->$attempts)) {
                 // maximum number of chain/task attempts reached
-                $error = get_string('nomore'.$type.'attempts', 'mod_taskchain');
-                if ($shorterror==false) {
-                    if ($type=='chain') {
+                $error = get_string('nomore' . $type . 'attempts', 'mod_taskchain');
+                if ($shorterror == false) {
+                    if ($type == 'chain') {
                         $name = $this->TC->taskchain->get_name();
                     } else {
                         $name = $record->get_name(); // task
                     }
                     $attemptlimitstr = mod_taskchain::textlib('strtolower', get_string('attemptlimit', 'mod_taskchain'));
-                    $msg = html_writer::tag('b', format_string($name))." ($attemptlimitstr = $record->attemptlimit)";
-                    $error = html_writer::tag('p', $error).html_writer::tag('p', $msg);
+                    $msg = html_writer::tag('b', format_string($name)) . " ($attemptlimitstr = $record->attemptlimit)";
+                    $error = html_writer::tag('p', $error) . html_writer::tag('p', $msg);
                 }
             }
         }
@@ -464,7 +463,7 @@ class taskchain_require extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    function preconditions($attempt='') {
+    function preconditions($attempt = '') {
         $ok = false;
         if ($attempt) {
             $taskid = $this->$attempt->id;
@@ -475,7 +474,7 @@ class taskchain_require extends taskchain_base {
         $this->TC->get_tasks();
         foreach ($this->TC->tasks as $task) {
             // check only the preconditions of the task we are interested in (skip other tasks)
-            if ($task->id==$taskid) {
+            if ($task->id == $taskid) {
                 $ok = $this->TC->check_conditions(self::CONDITIONTYPE_PRE, $taskid, $previoustaskid);
                 break;
             }
@@ -501,12 +500,12 @@ class taskchain_require extends taskchain_base {
         $get_attempt = "get_{$type}attempt";
         $create_attempt = "create_{$type}attempt";
         if (! $this->TC->$get_attempt() && ! $this->TC->$create_attempt()) {
-            if ($type=='chain') {
+            if ($type == 'chain') {
                 $a = "chainid=$this->TC->chainid AND cnumber=$this->TC->cnumber userid=$this->userid";
             } else {
                 $a = "taskid=$this->taskid AND cnumber=$this->TC->cnumber AND tnumber=$this->tnumber AND userid=$this->userid";
             }
-            return get_string($type.'attemptnotfound', 'mod_taskchain', $a);
+            return get_string($type . 'attemptnotfound', 'mod_taskchain', $a);
         }
         return false;
     }
@@ -519,17 +518,17 @@ class taskchain_require extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    function inprogress($type, $attempt='') {
+    function inprogress($type, $attempt = '') {
         if (is_string($attempt)) {
-            if ($attempt=='') {
+            if ($attempt == '') {
                 $attempt = "{$type}attempt";
             }
             $attempt = &$this->TC->$attempt;
         }
         $status = $attempt->status;
-        if ($status==self::STATUS_TIMEDOUT || $status==self::STATUS_ABANDONED || $status==self::STATUS_COMPLETED) {
+        if ($status == self::STATUS_TIMEDOUT || $status == self::STATUS_ABANDONED || $status == self::STATUS_COMPLETED) {
             $status = $this->TC->format_status($status);
-            return get_string($type.'attemptnotinprogress', 'mod_taskchain')." ($status)";
+            return get_string($type . 'attemptnotinprogress', 'mod_taskchain') . " ($status)";
         }
         return false; // allow 0, STATUS_INPROGRESS, STATUS_PENDING
     }
@@ -542,10 +541,10 @@ class taskchain_require extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    function moretime($type, $attempt='') {
+    function moretime($type, $attempt = '') {
         $record = $this->TC->$type;
         if (is_string($attempt)) {
-            if ($attempt=='') {
+            if ($attempt == '') {
                 $attempt = "{$type}attempt";
             }
             $attempt = &$this->TC->$attempt;
@@ -604,7 +603,7 @@ class taskchain_require extends taskchain_base {
      * @todo Finish documenting this function
      */
     function chain_access() {
-        if ($this->TC->tab=='info' && $this->TC->can->preview()) {
+        if ($this->TC->tab == 'info' && $this->TC->can->preview()) {
             // teacher can always view the entry page
             return false;
         }
@@ -681,13 +680,13 @@ class taskchain_require extends taskchain_base {
      */
     function chain_inpopup() {
         if ($this->TC->chain->showpopup && ! $this->TC->inpopup) {
-            $target = 'taskchain'.$this->TC->chain->parentid;
-            $params = $this->TC->merge_params(array('inpopup'=>1), null, 'coursemoduleid');
+            $target = 'taskchain' . $this->TC->chain->parentid;
+            $params = $this->TC->merge_params(array('inpopup' => 1), null, 'coursemoduleid');
             $url = new moodle_url('/mod/taskchain/view.php', $params);
             $options = implode(',', preg_grep('/^moodle/i', explode(',', $this->TC->chain->get_popupoptions()), PREG_GREP_INVERT));
             $onclick = "this.target='$target'; return window.open('$url','$target','$options');";
-            $link = "\n".'<a href="'.$url.'" onclick="'.$onclick.'">'.format_string($this->TC->taskchain->name).'</a>'."\n";
-            return get_string('popupresource', 'resource').'<br />'.get_string('popupresourcelink', 'resource', $link);
+            $link = "\n" . '<a href="' . $url . '" onclick="' . $onclick . '">' . format_string($this->TC->taskchain->name) . '</a>' . "\n";
+            return get_string('popupresource', 'resource') . '<br />' . get_string('popupresourcelink', 'resource', $link);
         }
         return false; // popup link not required
     }
@@ -700,7 +699,7 @@ class taskchain_require extends taskchain_base {
      * @todo Finish documenting this function
      */
     function chain_availability() {
-        if (($this->TC->tab=='info' || $this->TC->tab=='preview' || $this->TC->tab=='attempt' || $this->TC->tab=='submit') && $this->TC->can->preview()) {
+        if (($this->TC->tab == 'info' || $this->TC->tab == 'preview' || $this->TC->tab == 'attempt' || $this->TC->tab == 'submit') && $this->TC->can->preview()) {
             // teacher can always view the entry page
             return false;
         }
@@ -739,7 +738,7 @@ class taskchain_require extends taskchain_base {
      */
     public function entrycm() {
         global $CFG, $DB, $USER;
-        require_once($CFG->dirroot.'/lib/gradelib.php');
+        require_once($CFG->dirroot . '/lib/gradelib.php');
 
         if (! $cm = $this->TC->get_cm('entry')) {
             return false;
@@ -747,13 +746,13 @@ class taskchain_require extends taskchain_base {
 
         // set up url to view this activity
         $params = array('id' => $cm->id);
-        if ($cm->modname=='taskchain') {
+        if ($cm->modname == 'taskchain') {
             $params['tab'] = $this->TC->tab;
             if ($this->TC->inpopup) {
                 $params['inpopup'] = $this->TC->inpopup;
             }
         }
-        $href = new moodle_url('/mod/'.$cm->modname.'/view.php', $params);
+        $href = new moodle_url('/mod/' . $cm->modname . '/view.php', $params);
 
         if ($this->TC->chain->entrygrade) {
             if ($grades = grade_get_grades($cm->course, 'mod', $cm->modname, $cm->instance, $USER->id)) {
@@ -771,7 +770,7 @@ class taskchain_require extends taskchain_base {
                         $a = (object)array(
                             'usergrade' => intval($grade),
                             'entrygrade' => $this->TC->chain->entrygrade,
-                            'entryactivity' => html_writer::tag('a', format_string(urldecode($cm->name)), array('href' => $href))
+                            'entryactivity' => html_writer::tag('a', format_string(urldecode($cm->name)), array('href' => $href)),
                         );
                         return get_string('entrygradewarning', 'mod_taskchain', $a);
                     }
@@ -812,7 +811,7 @@ class taskchain_require extends taskchain_base {
      * @todo Finish documenting this function
      */
     public function exitgrade() {
-        if ($this->TC->chain->get_exitcm()==0 || $this->TC->chain->get_exitgrade()==0 || empty($this->TC->chainattempt)) {
+        if ($this->TC->chain->get_exitcm() == 0 || $this->TC->chain->get_exitgrade() == 0 || empty($this->TC->chainattempt)) {
             return false;
         } else {
             return true;
@@ -856,33 +855,28 @@ class taskchain_require extends taskchain_base {
         }
 
         // this should be somewhere else, shouldn't it?
-        //switch ($this->TC->action) {
-        //    case 'regrade':
-        //        $this->TC->regrade_selected_attempts();
-        //        break;
-        //    case 'deleteall':
-        //    case 'deleteselected':
-        //        $this->TC->delete_selected_attempts();
-        //}
+        // switch ($this->TC->action) {
+        // case 'regrade':
+        // $this->TC->regrade_selected_attempts();
+        // break;
+        // case 'deleteall':
+        // case 'deleteselected':
+        // $this->TC->delete_selected_attempts();
+        // }
 
         if ($this->TC->get_cnumber()) {
-
-            if ($this->TC->get_taskid()==0) {
+            if ($this->TC->get_taskid() == 0) {
                 // no task specified, so try and decide what to do by looking at the last task attempt, if any
 
                 // try to get the last task attempt (within this chain attempt)
                 if ($trylasttaskattempt && ! $error = $this->lastattempt('task')) {
-
                     // check whether the last task attempt is in progress
                     if (! $error = $this->inprogress('task', 'lasttaskattempt')) {
-
                         // previous task attempt is in progress, so resume from there
                         $this->TC->force_taskid($this->TC->lasttaskattempt->taskid);
                         $this->TC->force_tnumber($this->TC->lasttaskattempt->tnumber);
                         $this->TC->taskattempt = &$this->TC->lasttaskattempt;
-
                     } else {
-
                         // previous task attempt is completed (or timedout or abandoned)
                         // get id of next task that is available for this user (using post conditions)
                         // Note : $taskid may be 0, if the postconditions did not specify what to do next
@@ -892,7 +886,7 @@ class taskchain_require extends taskchain_base {
                     }
                 }
 
-                if ($this->TC->get_taskid()==0) {
+                if ($this->TC->get_taskid() == 0) {
                     // either there is no last task attempt, i.e. this is the start of a new chain attempt
                     // or the post-conditions for the task of the last attempt do not specify a next task
                     // get ids of tasks that are available to this user (using pre-conditions)

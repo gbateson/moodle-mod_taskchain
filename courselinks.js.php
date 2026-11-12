@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -30,11 +29,11 @@ if (! headers_sent()) {
 
 /** Include required files */
 require_once('../../config.php');
-require_once($CFG->dirroot.'/mod/taskchain/lib.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
-require_once($CFG->dirroot.'/lib/gradelib.php');
-if (file_exists($CFG->dirroot.'/course/format/lib.php')) {
-    require_once($CFG->dirroot.'/course/lib.php');
+require_once($CFG->dirroot . '/mod/taskchain/lib.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
+require_once($CFG->dirroot . '/lib/gradelib.php');
+if (file_exists($CFG->dirroot . '/course/format/lib.php')) {
+    require_once($CFG->dirroot . '/course/lib.php');
 }
 
 /**
@@ -61,7 +60,7 @@ function print_courselinks() {
     if (! $id = optional_param('id', 0, PARAM_INT)) {
         return false;
     }
-    if (! $course = $DB->get_record('course', array('id'=>$id))) {
+    if (! $course = $DB->get_record('course', array('id' => $id))) {
         return false;
     }
     if (! $course->context = mod_taskchain::context(CONTEXT_COURSE, $id)) {
@@ -69,7 +68,7 @@ function print_courselinks() {
     }
 
     require_login($course);
-    //$PAGE->set_context($course->context);
+    // $PAGE->set_context($course->context);
 
     $config = (object)array(
         'showgrades' => 0,
@@ -79,7 +78,7 @@ function print_courselinks() {
         'highgrade' => '90',
         'gradelinecolor' => '666',
         'gradelinestyle' => 'dashed',
-        'gradelinewidth' => '640px'
+        'gradelinewidth' => '640px',
     );
 
     $params = array('blockname' => 'taskchain_navigation',
@@ -117,14 +116,14 @@ function print_courselinks() {
         if (function_exists('course_get_format')) {
             $format = course_get_format($course);
             if (method_exists($format, 'get_last_section_number')) {
-            	// Moodle >= 3.3
-            	$numsections = $format->get_last_section_number();
+                // Moodle >= 3.3
+                $numsections = $format->get_last_section_number();
             } else {
-            	// Moodle 2.3 to 3.2
-				$options = $format->get_format_options();
-				if (isset($options['numsections'])) {
-					$numsections = $options['numsections'];
-				}
+                // Moodle 2.3 to 3.2
+                $options = $format->get_format_options();
+                if (isset($options['numsections'])) {
+                    $numsections = $options['numsections'];
+                }
             }
         } else {
             // Moodle <= 2.2
@@ -141,7 +140,7 @@ function print_courselinks() {
         $sectionnum = $USER->display[$course->id];
     } else {
         // Moodle >= 2.3
-        $name = 'taskchain_navigation_'.$course->id;
+        $name = 'taskchain_navigation_' . $course->id;
         $sectionnum = get_user_preferences($name, 0);
     }
 
@@ -206,7 +205,6 @@ function print_courselinks() {
             if ($records = $DB->get_records_sql_menu("SELECT $select FROM $from WHERE $where", $params)) {
                 $userids = array_values($records);
             }
-
         } else {
             // user can only see members in groups to which (s)he belongs
             // (e.g. non-editing teacher when groups are separate)
@@ -224,10 +222,10 @@ function print_courselinks() {
             if ($accessallgroups == false) {
                 // user can only see members in groups to which (s)he belongs
                 // (e.g. non-editing teacher when groups are separate)
-                $groupids = 'SELECT groupid FROM {groups_members} WHERE userid = :userid AND groupid IN ('.$groupids.')';
+                $groupids = 'SELECT groupid FROM {groups_members} WHERE userid = :userid AND groupid IN (' . $groupids . ')';
                 $params['userid'] = $USER->id;
             }
-            if ($records = $DB->get_records_select_menu('groups_members', 'groupid IN ('.$groupids.')', $params, '', 'id,userid')) {
+            if ($records = $DB->get_records_select_menu('groups_members', 'groupid IN (' . $groupids . ')', $params, '', 'id,userid')) {
                 $userids = array_values($records);
             }
         }
@@ -278,16 +276,39 @@ function print_courselinks() {
                 $assessed = '';
                 $capability = '';
                 switch ($cm->modname) {
-                    case 'assignment':  $capability = 'submit';      break;
-                    case 'attendance':  $capability = 'view';        break;
-                    case 'data':        $capability = 'writeentry';  $assessed = 'assessed'; break;
-                    case 'forum':       $capability = 'replypost';   $assessed = 'assessed'; break;
-                    case 'glossary':    $capability = 'write';       $assessed = 'assessed'; break;
-                    case 'quiz':        $capability = 'attempt';     break;
-                    case 'hotpot':      $capability = 'attempt';     break;
-                    case 'taskchain':   $capability = 'attempt';     break;
-                    case 'survey':      $capability = 'participate'; break;
-                    case 'workshop':    $capability = 'submit';      break;
+                    case 'assignment':
+                        $capability = 'submit';
+                        break;
+                    case 'attendance':
+                        $capability = 'view';
+                        break;
+                    case 'data':
+                        $capability = 'writeentry';
+                        $assessed = 'assessed';
+                        break;
+                    case 'forum':
+                        $capability = 'replypost';
+                        $assessed = 'assessed';
+                        break;
+                    case 'glossary':
+                        $capability = 'write';
+                        $assessed = 'assessed';
+                        break;
+                    case 'quiz':
+                        $capability = 'attempt';
+                        break;
+                    case 'hotpot':
+                        $capability = 'attempt';
+                        break;
+                    case 'taskchain':
+                        $capability = 'attempt';
+                        break;
+                    case 'survey':
+                        $capability = 'participate';
+                        break;
+                    case 'workshop':
+                        $capability = 'submit';
+                        break;
                     case 'lesson':      // do nothing
                     case 'scorm':       // do nothing
                     default:            // do nothing
@@ -317,12 +338,12 @@ function print_courselinks() {
                     }
                 }
                 if ($zero_grade) {
-                    echo $tab.'TC.activityzerogrades["module-'.$cmid.'"] = 1;'.$nl;
+                    echo $tab . 'TC.activityzerogrades["module-' . $cmid . '"] = 1;' . $nl;
                 } else {
                     $count = 0;
                     $total = 0;
                     foreach ($userids as $userid) {
-                        if (isset($grades->items[0]->grades[$userid]->grade))  {
+                        if (isset($grades->items[0]->grades[$userid]->grade)) {
                             $percent = $grades->items[0]->grades[$userid]->grade;
                             if ($grades->items[0]->grademax > 0) {
                                 if (isset($grades->items[0]->grademin)) {
@@ -330,20 +351,20 @@ function print_courselinks() {
                                 }
                                 $percent /= $grades->items[0]->grademax;
                             }
-                            $count ++;
+                            $count++;
                             $total += $percent;
                         }
                     }
                     if ($count) {
-                        $percent = round($total/$count * 100);
+                        $percent = round($total / $count * 100);
                         if ($showaverages) {
                             $percent = "$percent% ($count)";
                         }
-                        echo $tab.'TC.activitygrades["module-'.$cmid.'"] = "'.$percent.'";'.$nl;
+                        echo $tab . 'TC.activitygrades["module-' . $cmid . '"] = "' . $percent . '";' . $nl;
                     }
                 }
             } else {
-                echo $tab.'TC.activityunavailables["module-'.$cmid.'"] = 1;'.$nl;
+                echo $tab . 'TC.activityunavailables["module-' . $cmid . '"] = 1;' . $nl;
             }
             $result = true;
         }

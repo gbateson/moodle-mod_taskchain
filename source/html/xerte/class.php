@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/source/html/class.php');
+require_once($CFG->dirroot . '/mod/taskchain/source/html/class.php');
 
 /**
  * taskchain_source_html_xerte
@@ -102,13 +101,13 @@ class taskchain_source_html_xerte extends taskchain_source_html {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_template_value($tags, $default=null) {
+    public function get_template_value($tags, $default = null) {
         $value = $this->get_template_xml();
-        foreach($tags as $tag) {
+        foreach ($tags as $tag) {
             if (! is_array($value)) {
                 return $default;
             }
-            if(! array_key_exists($tag, $value)) {
+            if (! array_key_exists($tag, $value)) {
                 return $default;
             }
             $value = $value[$tag];

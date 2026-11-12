@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,9 +27,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/renderer.php');
-require_once($CFG->dirroot.'/mod/taskchain/report/tablelib.php');
-require_once($CFG->dirroot.'/mod/taskchain/report/userfiltering.php');
+require_once($CFG->dirroot . '/mod/taskchain/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/report/tablelib.php');
+require_once($CFG->dirroot . '/mod/taskchain/report/userfiltering.php');
 
 /**
  * mod_taskchain_report_renderer
@@ -41,7 +40,6 @@ require_once($CFG->dirroot.'/mod/taskchain/report/userfiltering.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_report_renderer extends mod_taskchain_renderer {
-
     /** names of columns in this table */
     protected $tablecolumns = array();
 
@@ -80,7 +78,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $taskchain
      * @todo Finish documenting this function
      */
-    public function init($TC)   {
+    public function init($TC) {
         global $DB;
 
         // save a reference to the $taskchain record
@@ -97,7 +95,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
                 $this->questions = array_values($records);
             }
         }
-
     }
 
     /**
@@ -106,7 +103,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $taskchain
      * @todo Finish documenting this function
      */
-    public function render_report($TC)  {
+    public function render_report($TC) {
         $this->init($TC);
         echo $this->header();
         echo $this->reportheader();
@@ -121,14 +118,14 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @return string containing HTML table
      * @todo Finish documenting this function
      */
-    public function reportheader()  {
+    public function reportheader() {
         global $DB;
         $table = '';
         if ($this->TC->chaingrade) {
-            $params = array('id'=> 'reportheader'.$this->mode, 'class' => 'reportheader');
+            $params = array('id' => 'reportheader' . $this->mode, 'class' => 'reportheader');
             $table .= html_writer::start_tag('table', $params);
             foreach ($this->headerfields as $field) {
-                if ($field=='user') {
+                if ($field == 'user') {
                     $text = get_string('user');
                     $data = fullname($DB->get_record('user', array('id' => $this->TC->chaingrade->userid)));
                 } else {
@@ -152,21 +149,29 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @return string
      * @todo Finish documenting this function
      */
-    public function reportheaderdata($type)  {
+    public function reportheaderdata($type) {
         $data = array();
         if (property_exists($this->TC, $type) && $this->TC->$type) {
             $record = &$this->TC->$type;
             switch ($type) {
-                case 'taskattempt' : $data[] = '('.$record->tnumber.')';
-                case 'taskscore'   : $data[] = $record->score.'%'; break;
-                case 'task'        : $data[] = $record->name; break;
-                case 'chainattempt': $data[] = '('.$record->cnumber.')';
-                case 'chaingrade'  : $data[] = $record->grade.'%'; break;
+                case 'taskattempt':
+                    $data[] = '(' . $record->tnumber . ')';
+                case 'taskscore':
+                    $data[] = $record->score . '%';
+                    break;
+                case 'task':
+                    $data[] = $record->name;
+                    break;
+                case 'chainattempt':
+                    $data[] = '(' . $record->cnumber . ')';
+                case 'chaingrade':
+                    $data[] = $record->grade . '%';
+                    break;
             }
             if (property_exists($record, 'status')) {
-                $data[] = '('.mod_taskchain::format_status($record->status).')';
+                $data[] = '(' . mod_taskchain::format_status($record->status) . ')';
                 $data[] = userdate($record->timemodified, get_string('strftimerecentfull'));
-                $data[]= '('.mod_taskchain::format_time($record->duration).')';
+                $data[] = '(' . mod_taskchain::format_time($record->duration) . ')';
             }
             unset($record);
         }
@@ -181,7 +186,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function reportcontent()  {
+    public function reportcontent() {
         global $DB, $USER;
 
         // get userid and recordid
@@ -192,7 +197,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         } else if ($this->TC->can_reviewmyattempts()) {
             // student users can only see their own data
             $userid = $USER->id;
-            if ($record && $record->userid==$userid) {
+            if ($record && $record->userid == $userid) {
                 // do nothing
             } else {
                 $record = null; // shoudn't happen !!
@@ -205,7 +210,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
 
         // set baseurl for this page (used for filters and pagination links)
         if ($name = $this->id_param_name) {
-            $method = 'get_'.$this->id_param_name;
+            $method = 'get_' . $this->id_param_name;
             $params = array($name => $this->TC->$method());
         } else {
             $params = array('id' => $this->TC->get_coursemoduleid());
@@ -213,10 +218,10 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         $baseurl = $this->TC->url->report($this->mode, $params)->out();
 
         // display user and attempt filters
-        //$this->display_filters($baseurl);
+        // $this->display_filters($baseurl);
 
         // create report table
-        $uniqueid = $this->page->pagetype.'-'.$this->mode;
+        $uniqueid = $this->page->pagetype . '-' . $this->mode;
         $table = new taskchain_report_table($uniqueid, $this, $this->TC);
 
         // set the table columns
@@ -230,10 +235,10 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         }
         if ($this->has_questioncolumns) {
             $i = array_search('penalties', $tablecolumns);
-            if ($i===false) {
+            if ($i === false) {
                 $i = array_search('score', $tablecolumns);
             }
-            if ($i===false) {
+            if ($i === false) {
                 $i = count($tablecolumns);
             }
             array_splice($tablecolumns, $i, 0, $this->get_question_columns());
@@ -241,7 +246,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
 
         if ($this->suppressprefix) {
             foreach ($tablecolumns as $tablecolumn) {
-                if (strpos($tablecolumn, $this->suppressprefix)===0) {
+                if (strpos($tablecolumn, $this->suppressprefix) === 0) {
                     $this->suppresscolumns[] = $tablecolumn;
                 }
             }
@@ -319,8 +324,8 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      */
     public function select_sql_user(&$select, &$from, $tablealias) {
         if (in_array('fullname', $this->tablecolumns)) {
-            $select .= ', '.$this->get_userfields('u', null, 'userid');
-            $from   .= ' JOIN {user} u ON '.$tablealias.'.userid = u.id';
+            $select .= ', ' . $this->get_userfields('u', null, 'userid');
+            $from   .= ' JOIN {user} u ON ' . $tablealias . '.userid = u.id';
         }
     }
 
@@ -332,7 +337,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function count_sql($userid=0, $record=null) {
+    public function count_sql($userid = 0, $record = null) {
         $select = 'COUNT(1)';
         $from   = '';
         $where  = '';
@@ -352,7 +357,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      */
     public function display_filters($baseurl) {
         if (count($this->filterfields) && $this->TC->can_reviewattempts()) {
-
             $user_filtering = new taskchain_user_filtering($this->filterfields, $baseurl);
 
             $this->userfilter = $user_filtering->get_sql_filter();
@@ -371,7 +375,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function select_sql($userid=0, $attemptid=0) {
+    public function select_sql($userid = 0, $attemptid = 0) {
         $select  = '';
         $from    = '';
         $where   = '';
@@ -388,7 +392,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function add_responses_to_rawdata(&$table)   {
+    public function add_responses_to_rawdata(&$table) {
         global $DB;
 
         if (empty($table->rawdata) || empty($this->questions)) {
@@ -445,7 +449,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $response
      * @todo Finish documenting this function
      */
-    public function add_response_to_rawdata(&$table, $attemptid, $column, $response)  {
+    public function add_response_to_rawdata(&$table, $attemptid, $column, $response) {
         // $table->rawdata[$attemptid]->$column = $response->somefield;
     }
 
@@ -456,7 +460,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_question_columns($index_by_id=false)  {
+    public function get_question_columns($index_by_id = false) {
         $question_columns = array();
         foreach ($this->questions as $i => $question) {
             if ($index_by_id) {
@@ -477,7 +481,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $table (passed by reference)
      * @return xxx
      */
-    function fix_suppresscolumns_in_rawdata(&$table)   {
+    function fix_suppresscolumns_in_rawdata(&$table) {
         if (empty($table->rawdata)) {
             return false; // no records
         }
@@ -498,12 +502,12 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
                     } else {
                         $prefixes[$column] = '';
                     }
-                    $values[$column] = $prefixes[$column].$record->$column;
+                    $values[$column] = $prefixes[$column] . $record->$column;
                 }
             }
             foreach ($this->suppresscolumns as $column) {
                 if ($prefixes[$column]) {
-                    $table->rawdata[$id]->$column = $prefixes[$column].$table->rawdata[$id]->$column;
+                    $table->rawdata[$id]->$column = $prefixes[$column] . $table->rawdata[$id]->$column;
                 }
             }
         }
@@ -517,12 +521,12 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $prefixes
      * @return xxx
      */
-     function show_suppressed_columns($record, $values, $prefixes) {
+    function show_suppressed_columns($record, $values, $prefixes) {
         if (empty($prefixes) || empty($values)) {
             return true; // always show first row
         }
         foreach ($this->suppresscolumns as $column) {
-             if ($values[$column] != $prefixes[$column].$record->$column) {
+            if ($values[$column] != $prefixes[$column] . $record->$column) {
                 return true; // at least one column has a new value
             }
         }
@@ -538,7 +542,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param string $fieldprefix prefix to add to all columns in their aliases, does not apply to 'id'
      * @return string
      */
-     function get_userfields($tableprefix = '', array $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
+    function get_userfields($tableprefix = '', array $extrafields = null, $idalias = 'id', $fieldprefix = '') {
 
         // Ensure $tableprefix is a string.
         if ($tableprefix === null) {
@@ -580,10 +584,10 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
                 $fieldprefix = " AS $fieldprefix";
             }
             foreach ($fields as $i => $field) {
-                $fields[$i] = "$tableprefix$field".($field=='id' ? $idalias : ($fieldprefix=='' ? '' : "$fieldprefix$field"));
+                $fields[$i] = "$tableprefix$field" . ($field == 'id' ? $idalias : ($fieldprefix == '' ? '' : "$fieldprefix$field"));
             }
         }
         return implode(',', $fields);
-        //return 'u.id AS userid, u.username, u.firstname, u.lastname, u.picture, u.imagealt, u.email';
+        // return 'u.id AS userid, u.username, u.firstname, u.lastname, u.picture, u.imagealt, u.email';
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,17 +24,18 @@
  */
 
 /** Include required files */
-require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/condition.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/condition.php');
 
 // create object to represent this TaskChain activity
-$TC = new mod_taskchain();;
+$TC = new mod_taskchain();
+;
 
 if (isset($TC->condition->id)) {
-    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editcondition', 'edit/condition.php?id='.$TC->condition->id, $TC->taskchain->id, $TC->coursemodule->id);
+    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editcondition', 'edit/condition.php?id=' . $TC->condition->id, $TC->taskchain->id, $TC->coursemodule->id);
 } else {
-    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editcondition', 'edit/condition.php?cm='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editcondition', 'edit/condition.php?cm=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 }
 
 // Set editing mode
@@ -67,53 +67,63 @@ if ($mform->is_cancelled()) {
 }
 
 switch ($TC->action) {
-
-    case 'deleteconfirmed' :
-
+    case 'deleteconfirmed':
             $type = '';
-            switch ($TC->get_conditiontype()) {
-                case mod_taskchain::CONDITIONTYPE_PRE:  $type = 'precondition'; break;
-                case mod_taskchain::CONDITIONTYPE_POST: $type = 'postcondition'; break;
-            }
+        switch ($TC->get_conditiontype()) {
+            case mod_taskchain::CONDITIONTYPE_PRE:
+                    $type = 'precondition';
+                break;
+            case mod_taskchain::CONDITIONTYPE_POST:
+                    $type = 'postcondition';
+                break;
+        }
 
-            if ($TC->get_conditionid()) {
-                // delete a single condition ($TC->condition)
-                $select = 'id='.$TC->get_conditionid();
-            } else {
-                // delete all pre/post conditions
-                $select = 'taskid='.$TC->get_taskid().' AND conditiontype='.$TC->get_conditiontype();
-                $type   = 'all'.$type.'s';
-            }
+        if ($TC->get_conditionid()) {
+            // delete a single condition ($TC->condition)
+            $select = 'id=' . $TC->get_conditionid();
+        } else {
+            // delete all pre/post conditions
+            $select = 'taskid=' . $TC->get_taskid() . ' AND conditiontype=' . $TC->get_conditiontype();
+            $type   = 'all' . $type . 's';
+        }
 
-            if ($DB->delete_records_select('taskchain_conditions', $select)) {
-                // success
-                $text = get_string($type, 'mod_taskchain');
-                $text = mod_taskchain::textlib('strtolower', $text);
-                $text = get_string('deletedactivity', '', $text);
-                echo $output->page_quick($text, 'close');
-            } else {
-                throw new moodle_exception('error_deleterecords', 'taskchain', '', 'taskchain_conditions');
-            }
+        if ($DB->delete_records_select('taskchain_conditions', $select)) {
+            // success
+            $text = get_string($type, 'mod_taskchain');
+            $text = mod_taskchain::textlib('strtolower', $text);
+            $text = get_string('deletedactivity', '', $text);
+            echo $output->page_quick($text, 'close');
+        } else {
+            throw new moodle_exception('error_deleterecords', 'taskchain', '', 'taskchain_conditions');
+        }
         break;
 
-    case 'delete' :
+    case 'delete':
         $type = '';
         switch ($TC->get_conditiontype()) {
-            case mod_taskchain::CONDITIONTYPE_PRE:  $type = 'precondition'; break;
-            case mod_taskchain::CONDITIONTYPE_POST: $type = 'postcondition'; break;
+            case mod_taskchain::CONDITIONTYPE_PRE:
+                $type = 'precondition';
+                break;
+            case mod_taskchain::CONDITIONTYPE_POST:
+                $type = 'postcondition';
+                break;
         }
-        $text = get_string('confirmdelete'.$type, 'mod_taskchain');
-        $params = array('id'=>$TC->get_conditionid());
+        $text = get_string('confirmdelete' . $type, 'mod_taskchain');
+        $params = array('id' => $TC->get_conditionid());
         echo $output->page_delete($text, 'edit/condition.php', $params);
         break;
 
-    case 'deleteall' :
+    case 'deleteall':
         $type = '';
         switch ($TC->get_conditiontype()) {
-            case mod_taskchain::CONDITIONTYPE_PRE:  $type = 'preconditions'; break;
-            case mod_taskchain::CONDITIONTYPE_POST: $type = 'postconditions'; break;
+            case mod_taskchain::CONDITIONTYPE_PRE:
+                $type = 'preconditions';
+                break;
+            case mod_taskchain::CONDITIONTYPE_POST:
+                $type = 'postconditions';
+                break;
         }
-        $text = get_string('confirmdeleteall'.$type, 'mod_taskchain');
+        $text = get_string('confirmdeleteall' . $type, 'mod_taskchain');
         $params = array('taskid' => $TC->get_taskid(), 'conditiontype' => $TC->get_conditiontype());
         echo $output->page_delete($text, 'edit/condition.php', $params);
         break;
@@ -135,7 +145,7 @@ switch ($TC->action) {
             // adding a new TaskChain task condition
             if (! $newdata->id = $DB->insert_record('taskchain_conditions', $newdata)) {
                 throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_conditions');
-             }
+            }
         }
 
         if ($TC->inpopup) {
@@ -148,14 +158,13 @@ switch ($TC->action) {
 
     case 'update':
     default:
-
         // initizialize data in form
         if ($TC->get_conditionid()) {
             // editing a condition
             $defaults = (array)$TC->condition->to_stdclass();
         } else {
             // adding a new condition to this task
-            $defaults = array('taskid'=>$TC->get_taskid());
+            $defaults = array('taskid' => $TC->get_taskid());
         }
         $mform->data_preprocessing($defaults);
         $mform->set_data($defaults);

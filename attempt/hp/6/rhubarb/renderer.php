@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_rhubarb_renderer
@@ -58,7 +57,7 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
         array_push($this->javascripts, 'mod/taskchain/attempt/hp/6/rhubarb/rhubarb.js');
     }
@@ -68,14 +67,14 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      *
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent()  {
+    public function fix_bodycontent() {
         // switch off auto complete on Rhubarb text boxes
         $search = '/<form id="Rhubarb"([^>]*)>/';
         if (preg_match($search, $this->bodycontent, $matches, PREG_OFFSET_CAPTURE)) {
             $match = $matches[1][0];
             $start = $matches[1][1];
-            if (strpos($match, 'autocomplete')===false) {
-                $this->bodycontent = substr_replace($this->bodycontent, $match.' autocomplete="off"', $start, strlen($match));
+            if (strpos($match, 'autocomplete') === false) {
+                $this->bodycontent = substr_replace($this->bodycontent, $match . ' autocomplete="off"', $start, strlen($match));
             }
         }
         parent::fix_bodycontent();
@@ -87,10 +86,10 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_js_functionnames()  {
+    public function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'TypeChars,Hint,CheckWord,CheckFinished,TimesUp';
+        $names .= ($names ? ',' : '') . 'TypeChars,Hint,CheckWord,CheckFinished,TimesUp';
         return $names;
     }
 
@@ -102,14 +101,13 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_TimesUp(&$str, $start, $length)  {
+    public function fix_js_TimesUp(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         if ($pos = strpos($substr, '	ShowMessage')) {
             $insert = ''
-                ."	Finished = true;\n"
-                ."	HP_send_results(HP.EVENT_TIMEDOUT);\n"
-            ;
+                . "	Finished = true;\n"
+                . "	HP_send_results(HP.EVENT_TIMEDOUT);\n";
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
@@ -122,7 +120,7 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function fix_js_TypeChars_init()  {
+    public function fix_js_TypeChars_init() {
         return "	var obj = document.getElementById('Guess');\n";
     }
 
@@ -132,7 +130,7 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function fix_js_TypeChars_obj()  {
+    public function fix_js_TypeChars_obj() {
         return 'obj';
     }
 
@@ -144,18 +142,17 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_Hint(&$str, $start, $length)  {
+    public function fix_js_Hint(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         // intercept Hints
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
-                ."	if (! AllDone) {\n"
-                ."		// intercept this Hint\n"
-                ."		HP.onclickHint(0);\n"
-                ."	}\n"
-            ;
-            $substr = substr_replace($substr, $insert, $pos+1, 0);
+                . "	if (! AllDone) {\n"
+                . "		// intercept this Hint\n"
+                . "		HP.onclickHint(0);\n"
+                . "	}\n";
+            $substr = substr_replace($substr, $insert, $pos + 1, 0);
         }
 
         $str = substr_replace($str, $substr, $start, $length);
@@ -169,18 +166,17 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_CheckWord(&$str, $start, $length)  {
+    public function fix_js_CheckWord(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         // intercept Hints
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
-                ."	if (! AllDone && InputWord.length) {\n"
-                ."		// intercept this Check\n"
-                ."		HP.onclickCheck(InputWord);\n"
-                ."	}"
-            ;
-            $substr = substr_replace($substr, $insert, $pos+1, 0);
+                . "	if (! AllDone && InputWord.length) {\n"
+                . "		// intercept this Check\n"
+                . "		HP.onclickCheck(InputWord);\n"
+                . "	}";
+            $substr = substr_replace($substr, $insert, $pos + 1, 0);
         }
 
         $str = substr_replace($str, $substr, $start, $length);
@@ -194,7 +190,7 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_CheckFinished(&$str, $start, $length)  {
+    public function fix_js_CheckFinished(&$str, $start, $length) {
         parent::fix_js_CheckAnswers($str, $start, $length);
     }
 
@@ -204,7 +200,7 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_intercept()  {
+    public function get_stop_function_intercept() {
         // intercept is not required in the giveup function of Rhubarb
         // because the checks are intercepted by CheckFinished (see above)
         return '';
@@ -216,7 +212,7 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CheckFinished';
     }
 
@@ -226,7 +222,7 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_args()  {
+    public function get_stop_function_args() {
         return 'HP.EVENT_ABANDONED';
     }
 
@@ -236,7 +232,7 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_search()  {
+    public function get_stop_function_search() {
         return '/\s*if \((Done) == true\)(\{.*?)\}/s';
     }
 }

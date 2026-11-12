@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmix/xml/v6/plus/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmix/xml/v6/plus/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmix/xml/v6/plus/rendere
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_renderer {
-
     /**
      * constructor function
      *
@@ -47,7 +45,7 @@ class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_ta
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
         // prepend templates for this output format
@@ -59,7 +57,7 @@ class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_ta
      *
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent_DragAndDrop($prefix='', $suffix='') {
+    public function fix_bodycontent_DragAndDrop($prefix = '', $suffix = '') {
         // user-string-1: prefix (optional)
         // user-string-2: suffix (optional)
         $prefix = trim($this->expand_UserDefined1());
@@ -73,7 +71,7 @@ class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_ta
       * @param xxx $substr (passed by reference)
       * @todo Finish documenting this function
       */
-     public function fix_js_StartUp_DragAndDrop_DragArea(&$substr) {
+    public function fix_js_StartUp_DragAndDrop_DragArea(&$substr) {
         // fix LeftCol (=left side of drag area)
         $search = '/LeftColPos = [^;]+;/';
         $replace = "LeftColPos = getOffset(document.getElementById('CheckButtonDiv'),'Left') + 20;";
@@ -96,13 +94,13 @@ class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_ta
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function expand_SegmentArray($more_values=array()) {
+    public function expand_SegmentArray($more_values = array()) {
         // user-string-3: (optional)
-        //   distractor words: words, delimited, by, commas, like, this
-        //   phrases: (one phrase) [another phrase] {yet another phrase}
+        // distractor words: words, delimited, by, commas, like, this
+        // phrases: (one phrase) [another phrase] {yet another phrase}
         if ($value = $this->expand_UserDefined3()) {
             if (preg_match('/^(\()|(\[)|(\{).*(?(1)\)|(?(2)\]|(?(3)\})))$/', $value)) {
-                $search = '/\s*\\'.substr($value, -1).'\s*\\'.substr($value, 0, 1).'\s*/';
+                $search = '/\s*\\' . substr($value, -1) . '\s*\\' . substr($value, 0, 1) . '\s*/';
                 $more_values = preg_split($search, substr($value, 1, -1));
             } else {
                 $more_values = preg_split('/\s*,\s*/', trim($value));

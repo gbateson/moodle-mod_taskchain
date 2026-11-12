@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,14 +24,14 @@
  */
 
 /** Include required files */
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
 // create object to represent this TaskChain activity
 $TC = new mod_taskchain();
 
 // Log this request
-mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'view', 'view.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'view', 'view.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
 $completion = new completion_info($TC->course);
 $completion->set_module_viewed($TC->coursemodule);

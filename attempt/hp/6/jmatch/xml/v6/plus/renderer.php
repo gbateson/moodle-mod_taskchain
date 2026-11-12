@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmatch/xml/v6/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/xml/v6/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_renderer
@@ -46,7 +45,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_renderer extends mod_taskcha
      *
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent()  {
+    public function fix_bodycontent() {
         $this->fix_bodycontent_DragAndDrop();
         parent::fix_bodycontent();
     }

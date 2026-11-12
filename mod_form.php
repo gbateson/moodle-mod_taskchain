@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,8 +27,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/course/moodleform_mod.php');
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/chain.php');
+require_once($CFG->dirroot . '/course/moodleform_mod.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/chain.php');
 
 /**
  * mod_taskchain_mod_form
@@ -40,7 +39,6 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/chain.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_mod_form extends moodleform_mod {
-
     /** TaskChain form helper - see mod/taskchain/form/base.php **/
     private $form_helper;
 
@@ -115,7 +113,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function validation($data, $files)  {
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
         $this->form_helper->validate_sections($errors, $data, $files);
         return $errors;
@@ -150,7 +148,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
         $names = array();
 
         // these fields will be disabled if gradelimit x gradeweighting = 0
-        $disablednames = array('completionusegrade'.$suffix);
+        $disablednames = array('completionusegrade' . $suffix);
 
         // add "minimum grade" completion condition
         $name = 'completionmingrade';
@@ -160,9 +158,9 @@ class mod_taskchain_mod_form extends moodleform_mod {
         } else {
             $value = floatval($this->current->$name);
         }
-        $enabled = $name.'enabled'.$suffix;
-        $groupname = $name.'group'.$suffix;
-        $space = $name.'space'.$suffix;
+        $enabled = $name . 'enabled' . $suffix;
+        $groupname = $name . 'group' . $suffix;
+        $space = $name . 'space' . $suffix;
         $name .= $suffix;
         $group = array();
         $group[] = &$mform->createElement('checkbox', $enabled, '', $label);
@@ -221,8 +219,8 @@ class mod_taskchain_mod_form extends moodleform_mod {
      */
     public function completion_rule_enabled($data) {
         $suffix = $this->get_completion_suffix();
-        if (empty($data['completionmingradeenabled'.$suffix]) || empty($data['completionmingrade'.$suffix])) {
-            if (empty($data['completionpass'.$suffix]) && empty($data['completioncompleted'.$suffix])) {
+        if (empty($data['completionmingradeenabled' . $suffix]) || empty($data['completionmingrade' . $suffix])) {
+            if (empty($data['completionpass' . $suffix]) && empty($data['completioncompleted' . $suffix])) {
                 return false;
             }
         }
@@ -266,13 +264,13 @@ class mod_taskchain_mod_form extends moodleform_mod {
         }
 
         $suffix = $this->get_completion_suffix();
-        $completion = 'completion'.$suffix;
-        $automatic = (isset($data->$completion) && $data->$completion==COMPLETION_TRACKING_AUTOMATIC);
+        $completion = 'completion' . $suffix;
+        $automatic = (isset($data->$completion) && $data->$completion == COMPLETION_TRACKING_AUTOMATIC);
 
         // Remove completionmingrade, if it is not enabled and greater than 0.0
-        $enabled = 'completionmingradeenabled'.$suffix;
-        $name = 'completionmingrade'.$suffix;
-        if ($automatic==false || empty($data->$enabled) || empty($data->$name) || floatval($data->$name)==0.0) {
+        $enabled = 'completionmingradeenabled' . $suffix;
+        $name = 'completionmingrade' . $suffix;
+        if ($automatic == false || empty($data->$enabled) || empty($data->$name) || floatval($data->$name) == 0.0) {
             $data->$enabled = 0;
             $data->$name = 0.0;
         } else {
@@ -282,7 +280,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
         // Unchecked checkboxes are not submitted, so set them to 0 explicitly.
         foreach (array('completionpass', 'completioncompleted') as $name) {
             $name .= $suffix;
-            if ($automatic==false || empty($data->$name)) {
+            if ($automatic == false || empty($data->$name)) {
                 $data->$name = 0;
             } else {
                 $data->$name = 1;

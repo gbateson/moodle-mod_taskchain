@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_sequitur_renderer
@@ -52,11 +51,11 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
     public $hasSubmissionTimeout = false;
 
     public $response_text_fields = array(
-        'correct', 'wrong' // remove: ignored
+        'correct', 'wrong', // remove: ignored
     );
 
     public $response_num_fields = array(
-        'checks' // remove: score, weighting, hints, clues
+        'checks', // remove: score, weighting, hints, clues
     );
 
     /**
@@ -66,7 +65,7 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
         array_push($this->javascripts, 'mod/taskchain/attempt/hp/6/sequitur/sequitur.js');
     }
@@ -77,10 +76,10 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_js_functionnames()  {
+    public function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'CheckAnswer,TimesUp';
+        $names .= ($names ? ',' : '') . 'CheckAnswer,TimesUp';
         return $names;
     }
 
@@ -92,19 +91,18 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_TimesUp(&$str, $start, $length)  {
+    public function fix_js_TimesUp(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         if ($pos = strpos($substr, '	ShowMessage')) {
-            if ($this->TC->task->delay3==mod_taskchain::TIME_AFTEROK) {
+            if ($this->TC->task->delay3 == mod_taskchain::TIME_AFTEROK) {
                 $flag = 1; // set form values only
             } else {
                 $flag = 0; // set form values and send form
             }
             $insert = ''
-                ."	Finished = true;\n"
-                ."	HP.onunload(".mod_taskchain::STATUS_TIMEDOUT.",$flag);\n"
-            ;
+                . "	Finished = true;\n"
+                . "	HP.onunload(" . mod_taskchain::STATUS_TIMEDOUT . ",$flag);\n";
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
@@ -124,26 +122,25 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
         // original function was simply this:
         // return Math.floor(100*ScoredPoints/TotalPoints);
         $substr = ''
-            ."function CalculateScore(){\n"
-            ."	if (typeof(window.TotalPointsAvailable)=='undefined') {\n"
-            ."\n"
-            ."		// initialize TotalPointsAvailable\n"
-            ."		window.TotalPointsAvailable = 0;\n"
-            ."\n"
-            ."		// add points for questions with complete number of distractors\n"
-            ."		TotalPointsAvailable += (TotalSegments - NumberOfOptions) * (NumberOfOptions - 1);\n"
-            ."\n"
-            ."		// add points for questions with less than the total number of distractors\n"
-            ."		TotalPointsAvailable += (NumberOfOptions - 1) * NumberOfOptions / 2;\n"
-            ."	}\n"
-            ."\n"
-            ."	if (TotalPointsAvailable==0) {\n"
-            ."		return 0;\n"
-            ."	} else {\n"
-            ."		return Math.floor(100*ScoredPoints/TotalPointsAvailable);\n"
-            ."	}\n"
-            ."}"
-        ;
+            . "function CalculateScore(){\n"
+            . "	if (typeof(window.TotalPointsAvailable)=='undefined') {\n"
+            . "\n"
+            . "		// initialize TotalPointsAvailable\n"
+            . "		window.TotalPointsAvailable = 0;\n"
+            . "\n"
+            . "		// add points for questions with complete number of distractors\n"
+            . "		TotalPointsAvailable += (TotalSegments - NumberOfOptions) * (NumberOfOptions - 1);\n"
+            . "\n"
+            . "		// add points for questions with less than the total number of distractors\n"
+            . "		TotalPointsAvailable += (NumberOfOptions - 1) * NumberOfOptions / 2;\n"
+            . "	}\n"
+            . "\n"
+            . "	if (TotalPointsAvailable==0) {\n"
+            . "		return 0;\n"
+            . "	} else {\n"
+            . "		return Math.floor(100*ScoredPoints/TotalPointsAvailable);\n"
+            . "	}\n"
+            . "}";
         $str = substr_replace($str, $substr, $start, $length);
     }
 
@@ -155,7 +152,7 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_CheckAnswer(&$str, $start, $length)  {
+    public function fix_js_CheckAnswer(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         // add extra argument to this function, so it can be called from stop button
@@ -175,49 +172,46 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
         // intercept checks
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
-                ."	if (CurrentNumber!=TotalSegments && !AllDone && Btn && Btn.innerHTML!=IncorrectIndicator){\n"
-                ."		HP.onclickCheck(Chosen);\n"
-                ."	}"
-            ;
-            $substr = substr_replace($substr, $insert, $pos+1, 0);
+                . "	if (CurrentNumber!=TotalSegments && !AllDone && Btn && Btn.innerHTML!=IncorrectIndicator){\n"
+                . "		HP.onclickCheck(Chosen);\n"
+                . "	}";
+            $substr = substr_replace($substr, $insert, $pos + 1, 0);
         }
 
         // set task status
         if ($pos = strpos($substr, 'if (CurrentCorrect == Chosen)')) {
             $event = $this->get_send_results_event();
             $insert = ''
-                ."if (CurrentCorrect==Chosen && CurrentNumber>=(TotalSegments-2)){\n"
-                ."		var TaskEvent = $event;\n" // COMPLETED or SETVALUES
-                ."	} else if (ForceTaskEvent){\n"
-                ."		var TaskEvent = ForceTaskEvent;\n"
-                ."	} else if (TimeOver){\n"
-                ."		var TaskEvent = HP.EVENT_TIMEDOUT;\n"
-                ."	} else {\n"
-                ."		var TaskEvent = HP.EVENT_CHECK;\n"
-                ."	}\n"
-                ."	"
-            ;
+                . "if (CurrentCorrect==Chosen && CurrentNumber>=(TotalSegments-2)){\n"
+                . "		var TaskEvent = $event;\n" // COMPLETED or SETVALUES
+                . "	} else if (ForceTaskEvent){\n"
+                . "		var TaskEvent = ForceTaskEvent;\n"
+                . "	} else if (TimeOver){\n"
+                . "		var TaskEvent = HP.EVENT_TIMEDOUT;\n"
+                . "	} else {\n"
+                . "		var TaskEvent = HP.EVENT_CHECK;\n"
+                . "	}\n"
+                . "	";
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
         // send results to Moodle, if necessary
         if ($pos = strrpos($substr, '}')) {
             $insert = "\n"
-                ."	if (HP.end_of_quiz(TaskEvent)) {\n"
-                ."		TimeOver = true;\n"
-                ."		Locked = true;\n"
-                ."		Finished = true;\n"
-                ."	}\n"
-                ."	if (Finished || HP.sendallclicks){\n"
-                ."		if (TaskEvent==HP.EVENT_COMPLETED){\n"
-                ."			// send results after delay (quiz completed as expected)\n"
-                ."			setTimeout('HP_send_results('+TaskEvent+')', SubmissionTimeout);\n"
-                ."		} else {\n"
-                ."			// send results immediately (quiz finished unexpectedly)\n"
-                ."			HP_send_results(TaskEvent);\n"
-                ."		}\n"
-                ."	}\n"
-            ;
+                . "	if (HP.end_of_quiz(TaskEvent)) {\n"
+                . "		TimeOver = true;\n"
+                . "		Locked = true;\n"
+                . "		Finished = true;\n"
+                . "	}\n"
+                . "	if (Finished || HP.sendallclicks){\n"
+                . "		if (TaskEvent==HP.EVENT_COMPLETED){\n"
+                . "			// send results after delay (quiz completed as expected)\n"
+                . "			setTimeout('HP_send_results('+TaskEvent+')', SubmissionTimeout);\n"
+                . "		} else {\n"
+                . "			// send results immediately (quiz finished unexpectedly)\n"
+                . "			HP_send_results(TaskEvent);\n"
+                . "		}\n"
+                . "	}\n";
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
@@ -230,7 +224,7 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CheckAnswer';
     }
 
@@ -240,7 +234,7 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_args()  {
+    public function get_stop_function_args() {
         return '0,null,HP.EVENT_ABANDONED';
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/html/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/html/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/html/renderer.php
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskchain_attempt_hp_6_jcloze_html_renderer {
-
     public $js_object_type = 'JClozeJGloss';
 
     /** Glossary autolinking settings (override standard JCloze - (?:I\[\d+\]\[1\]\[\d+\]\[2\])) */
@@ -53,7 +51,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
         // replace standard jcloze.js with jgloss.js
@@ -66,7 +64,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    public static function sourcetypes() {
         return array('hp_6_jcloze_html_jgloss');
     }
 
@@ -75,7 +73,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
      *
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent()  {
+    public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier();
     }
 
@@ -85,10 +83,10 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_js_functionnames()  {
+    public function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'Show_GlossContent,ShowElements,Add_GlossFunctionality';
+        $names .= ($names ? ',' : '') . 'Show_GlossContent,ShowElements,Add_GlossFunctionality';
         return $names;
     }
 
@@ -98,7 +96,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'HP_send_results';
     }
 
@@ -108,7 +106,7 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_args()  {
+    public function get_stop_function_args() {
         return 'HP.EVENT_COMPLETED';
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/lib.php');
+require_once($CFG->dirroot . '/mod/taskchain/lib.php');
 
 /**
  * mod_taskchain_storage
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/lib.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_storage {
-
     /**
      * the name of the $_POST fields holding the score and details
      * and the xml tag within the details that holds the results
@@ -66,7 +64,7 @@ class mod_taskchain_storage {
      * @param xxx $TC
      * @todo Finish documenting this function
      */
-    static public function store($TC)  {
+    public static function store($TC) {
         global $CFG, $DB;
 
         if (empty($TC->taskattempt)) {
@@ -87,10 +85,8 @@ class mod_taskchain_storage {
         // need to be converted to numeric date stamps
         $timefields = array('starttime', 'endtime');
         foreach ($timefields as $timefield) {
-
             $TC->taskattempt->$timefield = 0; // default
             if ($time = optional_param($timefield, '', PARAM_RAW)) {
-
                 // make sure the timezone has a "+" sign
                 // Note: sometimes it gets stripped (by optional_param?)
                 $time = preg_replace('/(?<= )\d{4}$/', '+$0', trim($time));
@@ -99,7 +95,7 @@ class mod_taskchain_storage {
                 // PHP4 gives -1 on error, whereas PHP5 give false
                 $time = strtotime($time);
 
-                if ($time && $time>0) {
+                if ($time && $time > 0) {
                     $TC->taskattempt->$timefield = $time;
                 }
             }
@@ -124,9 +120,9 @@ class mod_taskchain_storage {
 
         // check if there are any previous results stored for this attempt
         // this could happen if ...
-        //     - the task has been resumed
-        //     - clickreporting is enabled for this task
-        if ($DB->get_field('taskchain_task_attempts', 'timefinish', array('id'=>$TC->taskattempt->id))) {
+        // - the task has been resumed
+        // - clickreporting is enabled for this task
+        if ($DB->get_field('taskchain_task_attempts', 'timefinish', array('id' => $TC->taskattempt->id))) {
             if (self::can_clickreport($TC)) {
                 // add task attempt record for each form submission
                 // records are linked via the "clickreportid" field
@@ -141,7 +137,6 @@ class mod_taskchain_storage {
                 if (! $TC->taskattempt->id = $DB->insert_record('taskchain_task_attempts', $TC->taskattempt->to_stdclass())) {
                     throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_task_attempts');
                 }
-
             } else {
                 // remove previous responses for this attempt, if required
                 // (N.B. this does NOT remove the attempt record, just the responses)
@@ -154,7 +149,6 @@ class mod_taskchain_storage {
         // "taskchain_storedetails" is set by administrator
         // Site Admin -> Modules -> Activities -> TaskChain
         if ($CFG->taskchain_storedetails) {
-
             // delete/update/add the details record
             $params = array('attemptid' => $TC->taskattempt->id);
             if ($DB->record_exists('taskchain_details', $params)) {
@@ -162,7 +156,7 @@ class mod_taskchain_storage {
             } else {
                 $details = (object)array(
                     'attemptid' => $TC->taskattempt->id,
-                    'details' => $TC->taskattempt->details
+                    'details' => $TC->taskattempt->details,
                 );
                 if (! $DB->insert_record('taskchain_details', $details, false)) {
                     throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_details');
@@ -179,21 +173,21 @@ class mod_taskchain_storage {
             throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_task_attempts');
         }
 
-        if ($TC->taskattempt->status==mod_taskchain::STATUS_ABANDONED) {
+        if ($TC->taskattempt->status == mod_taskchain::STATUS_ABANDONED) {
             switch (self::can_continue($TC)) {
                 case mod_taskchain::CONTINUE_ABANDONCHAIN:
-                    $TC->chaingrade->status==mod_taskchain::STATUS_ABANDONED;
-                    if (! $DB->set_field('taskchain_chain_grades', 'status', mod_taskchain::STATUS_ABANDONED, array('id'=>$TC->chaingrade->id))) {
+                    $TC->chaingrade->status == mod_taskchain::STATUS_ABANDONED;
+                    if (! $DB->set_field('taskchain_chain_grades', 'status', mod_taskchain::STATUS_ABANDONED, array('id' => $TC->chaingrade->id))) {
                         throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_chain_grades');
                     }
                 case mod_taskchain::CONTINUE_RESTARTCHAIN:
-                    $TC->chainattempt->status==mod_taskchain::STATUS_ABANDONED;
-                    if (! $DB->set_field('taskchain_chain_attempts', 'status', mod_taskchain::STATUS_ABANDONED, array('id'=>$TC->chainattempt->id))) {
+                    $TC->chainattempt->status == mod_taskchain::STATUS_ABANDONED;
+                    if (! $DB->set_field('taskchain_chain_attempts', 'status', mod_taskchain::STATUS_ABANDONED, array('id' => $TC->chainattempt->id))) {
                         throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_chain_attempts');
                     }
                 case mod_taskchain::CONTINUE_RESTARTTASK:
-                    $TC->taskscore->status==mod_taskchain::STATUS_ABANDONED;
-                    if (! $DB->set_field('taskchain_task_scores', 'status', mod_taskchain::STATUS_ABANDONED, array('id'=>$TC->taskscore->id))) {
+                    $TC->taskscore->status == mod_taskchain::STATUS_ABANDONED;
+                    if (! $DB->set_field('taskchain_task_scores', 'status', mod_taskchain::STATUS_ABANDONED, array('id' => $TC->taskscore->id))) {
                         throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_task_scores');
                     }
                 case mod_taskchain::CONTINUE_RESUMETASK:
@@ -212,7 +206,7 @@ class mod_taskchain_storage {
      * @param xxx $attempt
      * @todo Finish documenting this function
      */
-    static public function store_details($attempt)  {
+    public static function store_details($attempt) {
 
         // parse the attempt details as xml
         $details = taskchain_xmlize($attempt->details);
@@ -222,7 +216,6 @@ class mod_taskchain_storage {
 
         $i = 0;
         while (isset($details[self::xmlresultstag]['#']['fields']['0']['#']['field'][$i]['#'])) {
-
             // shortcut to field
             $field = &$details[self::xmlresultstag]['#']['fields']['0']['#']['field'][$i]['#'];
 
@@ -239,15 +232,15 @@ class mod_taskchain_storage {
             }
 
             // parse the field name into $matches
-            //  [1] task type
-            //  [2] attempt detail name
+            // [1] task type
+            // [2] attempt detail name
             if (preg_match('/^(\w+?)_(\w+)$/', $name, $matches)) {
                 $tasktype = strtolower($matches[1]);
                 $name = strtolower($matches[2]);
 
                 // parse the attempt detail $name into $matches
-                //  [1] question number
-                //  [2] question detail name
+                // [1] question number
+                // [2] question detail name
                 if (preg_match('/^q(\d+)_(\w+)$/', $name, $matches)) {
                     $num = $matches[1];
                     $name = strtolower($matches[2]);
@@ -256,14 +249,14 @@ class mod_taskchain_storage {
 
                     // adjust JCross question numbers
                     if (preg_match('/^(across|down)(.*)$/', $name, $matches)) {
-                        $num .= '_'.$matches[1]; // e.g. 01_across, 02_down
+                        $num .= '_' . $matches[1]; // e.g. 01_across, 02_down
                         $name = $matches[2];
-                        if (substr($name, 0, 1)=='_') {
+                        if (substr($name, 0, 1) == '_') {
                             $name = substr($name, 1); // remove leading '_'
                         }
                     }
 
-                    if (isset($question_number) && $question_number==$num) {
+                    if (isset($question_number) && $question_number == $num) {
                         // do nothing - this response is for the same question as the previous response
                     } else {
                         // store previous question / response (if any)
@@ -311,14 +304,12 @@ class mod_taskchain_storage {
                             $response->$name = intval($data);
                             break;
                     }
-
                 } else { // attempt details
-
                     // adjust field name and value
-                    //taskchain_adjust_response_field($tasktype, $question, $num='', $name, $data);
+                    // taskchain_adjust_response_field($tasktype, $question, $num='', $name, $data);
 
                     // add $data to the attempt details
-                    if ($name=='penalties') {
+                    if ($name == 'penalties') {
                         $attempt->$name = intval($data);
                     }
                 }
@@ -340,7 +331,7 @@ class mod_taskchain_storage {
      * @param xxx $response (passed by reference)
      * @todo Finish documenting this function
      */
-    static public function add_response(&$attempt, &$question, &$response)  {
+    public static function add_response(&$attempt, &$question, &$response) {
         global $DB;
 
         if (! $question || ! $response || ! isset($question->name)) {
@@ -354,22 +345,21 @@ class mod_taskchain_storage {
         // loop until we are able to add the response record
         $looping = true;
         while ($looping) {
-
             $question->md5key = md5($question->name);
-            if (! $question->id = $DB->get_field('taskchain_questions', 'id', array('taskid'=>$attempt->taskid, 'md5key'=>$question->md5key))) {
+            if (! $question->id = $DB->get_field('taskchain_questions', 'id', array('taskid' => $attempt->taskid, 'md5key' => $question->md5key))) {
                 // add question record
                 if (! $question->id = $DB->insert_record('taskchain_questions', $question)) {
                     throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_questions');
                 }
             }
 
-            if ($DB->record_exists('taskchain_responses', array('attemptid'=>$attempt->id, 'questionid'=>$question->id))) {
+            if ($DB->record_exists('taskchain_responses', array('attemptid' => $attempt->id, 'questionid' => $question->id))) {
                 // there is already a response to this question for this attempt
                 // probably because this task has two questions with the same text
-                //  e.g. Which one of these answers is correct?
+                // e.g. Which one of these answers is correct?
 
                 // To workaround this, we create new question names
-                //  e.g. Which one of these answers is correct? (2)
+                // e.g. Which one of these answers is correct? (2)
                 // until we get a question name for which there is no response yet on this attempt
 
                 $loopcount++;
@@ -378,19 +368,17 @@ class mod_taskchain_storage {
                 // This method fails to correctly identify questions in
                 // tasks which allow questions to be shuffled or omitted.
                 // As yet, there is no workaround for such cases.
-
             } else {
                 // no response found to this question in this attempt
                 // so we can proceed
                 $response->questionid = $question->id;
 
                 // add response record
-                if(! $response->id = $DB->insert_record('taskchain_responses', $response)) {
+                if (! $response->id = $DB->insert_record('taskchain_responses', $response)) {
                     throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_responses');
                 }
                 $looping = false;
             }
-
         } // end while
     }
 
@@ -401,7 +389,7 @@ class mod_taskchain_storage {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function provide_review() {
+    public static function provide_review() {
         return false;
     }
 
@@ -412,7 +400,7 @@ class mod_taskchain_storage {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function provide_resume() {
+    public static function provide_resume() {
         return false;
     }
 
@@ -424,7 +412,7 @@ class mod_taskchain_storage {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function provide_clickreport() {
+    public static function provide_clickreport() {
         return false;
     }
 
@@ -436,24 +424,24 @@ class mod_taskchain_storage {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function can_review($TC) {
+    public static function can_review($TC) {
         if (self::provide_review() && $TC->task->reviewoptions) {
             if ($attempt = $TC->get_taskattempt()) {
                 if ($TC->task->reviewoptions & mod_taskchain::REVIEW_DURINGATTEMPT) {
                     // during attempt
-                    if ($attempt->status==mod_taskchain::STATUS_INPROGRESS) {
+                    if ($attempt->status == mod_taskchain::STATUS_INPROGRESS) {
                         return true;
                     }
                 }
                 if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT) {
                     // after attempt (but before task closes)
-                    if ($attempt->status==mod_taskchain::STATUS_COMPLETED) {
+                    if ($attempt->status == mod_taskchain::STATUS_COMPLETED) {
                         return true;
                     }
-                    if ($attempt->status==mod_taskchain::STATUS_ABANDONED) {
+                    if ($attempt->status == mod_taskchain::STATUS_ABANDONED) {
                         return true;
                     }
-                    if ($attempt->status==mod_taskchain::STATUS_TIMEDOUT) {
+                    if ($attempt->status == mod_taskchain::STATUS_TIMEDOUT) {
                         return true;
                     }
                 }
@@ -477,8 +465,8 @@ class mod_taskchain_storage {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function can_resume($TC, $type) {
-        if ($type=='chain' || ($type=='task' && self::provide_resume())) {
+    public static function can_resume($TC, $type) {
+        if ($type == 'chain' || ($type == 'task' && self::provide_resume())) {
             if (isset($TC->$type) && $TC->$type->allowresume) {
                 return true;
             }
@@ -495,7 +483,7 @@ class mod_taskchain_storage {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function can_restart($TC, $type) {
+    public static function can_restart($TC, $type) {
         if (isset($TC->$type) && $TC->$type->attemptlimit) {
             if ($attempts = $TC->get_attempts($type)) {
                 if (count($attempts) >= $TC->$type->attemptlimit) {
@@ -513,7 +501,7 @@ class mod_taskchain_storage {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function can_continue($TC) {
+    public static function can_continue($TC) {
         if (self::can_resume($TC, 'chain')) {
             if (self::can_resume($TC, 'task')) {
                 return mod_taskchain::CONTINUE_RESUMETASK;
@@ -535,7 +523,7 @@ class mod_taskchain_storage {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function can_clickreport($TC) {
+    public static function can_clickreport($TC) {
         if (self::provide_clickreport() && isset($TC->task) && $TC->task->clickreporting) {
             return true;
         } else {

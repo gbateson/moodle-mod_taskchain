@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/sequitur/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/sequitur/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_sequitur_xml_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/sequitur/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_attempt_hp_6_sequitur_renderer {
-
     /**
      * expand_JSSequitur6
      *
@@ -56,8 +54,8 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function expand_NumberOfOptions()  {
-        $tags = $this->TC->task->source->hbs_software.'-config-file,'.$this->TC->task->source->hbs_tasktype.',number-of-options';
+    public function expand_NumberOfOptions() {
+        $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',number-of-options';
         return $this->TC->task->source->xml_value_int($tags);
     }
 
@@ -67,8 +65,8 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function expand_PartText()  {
-        $tags = $this->TC->task->source->hbs_software.'-config-file,'.$this->TC->task->source->hbs_tasktype.',show-part-text';
+    public function expand_PartText() {
+        $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',show-part-text';
         return $this->TC->task->source->xml_value($tags);
     }
 
@@ -78,8 +76,8 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function expand_Solution()  {
-        $tags = $this->TC->task->source->hbs_software.'-config-file,'.$this->TC->task->source->hbs_tasktype.',include-solution';
+    public function expand_Solution() {
+        $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-solution';
         return $this->TC->task->source->xml_value_int($tags);
     }
 
@@ -90,7 +88,7 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * @todo Finish documenting this function
      */
     public function expand_SolutionCaption() {
-        $tags = $this->TC->task->source->hbs_software.'-config-file,global,solution-caption';
+        $tags = $this->TC->task->source->hbs_software . '-config-file,global,solution-caption';
         return $this->TC->task->source->xml_value($tags);
     }
 
@@ -100,8 +98,8 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function expand_Score()  {
-        $tags = $this->TC->task->source->hbs_software.'-config-file,global,your-score-is';
+    public function expand_Score() {
+        $tags = $this->TC->task->source->hbs_software . '-config-file,global,your-score-is';
         return $this->TC->task->source->xml_value_js($tags);
     }
 
@@ -111,8 +109,8 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function expand_WholeText()  {
-        $tags = $this->TC->task->source->hbs_software.'-config-file,'.$this->TC->task->source->hbs_tasktype.',show-whole-text';
+    public function expand_WholeText() {
+        $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',show-whole-text';
         return $this->TC->task->source->xml_value($tags);
     }
 
@@ -138,9 +136,9 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
         $str = '';
         $tags = 'data,segments,segment';
 
-        $i =0 ;
-        $ii =0 ;
-        while ($i<$i_max) {
+        $i = 0;
+        $ii = 0;
+        while ($i < $i_max) {
             if ($segment = $this->TC->task->source->xml_value_js($tags, "[$i]['#']")) {
                 $str .= "Segments[$ii]='$segment';\n";
                 $ii++;
@@ -157,7 +155,7 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function expand_StyleSheet()  {
+    public function expand_StyleSheet() {
         return $this->expand_template('tt3.cs_');
     }
 }

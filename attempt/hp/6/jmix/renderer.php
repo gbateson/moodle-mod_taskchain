@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jmix_renderer
@@ -50,7 +49,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
     public $headcontent_arrays = '';
 
     public $response_num_fields = array(
-        'score', 'hints', 'checks' // remove: weighting, clues
+        'score', 'hints', 'checks', // remove: weighting, clues
     );
 
     /**
@@ -60,7 +59,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
         array_push($this->javascripts, 'mod/taskchain/attempt/hp/6/jmix/jmix.js');
     }
@@ -71,7 +70,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function fix_headcontent()  {
+    public function fix_headcontent() {
         $this->fix_headcontent_DragAndDrop();
 
         // change number of drop lines if required (there is no setting for
@@ -82,8 +81,8 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
 
         // we must add a false return value to segment links in order not to trigger the onbeforeunload event handler
         // (this is only really required on v6 output format)
-        $search = '/(?<='.'onclick="'.')'.'AddSegment\(\[SegmentNumber\]\)'.'(?='.'"'.')/';
-        $replace = '$0'.'; return false;';
+        $search = '/(?<=' . 'onclick="' . ')' . 'AddSegment\(\[SegmentNumber\]\)' . '(?=' . '"' . ')/';
+        $replace = '$0' . '; return false;';
         $this->headcontent = preg_replace($search, $replace, $this->headcontent);
     }
 
@@ -94,68 +93,67 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @param xxx $suffix (optional, default='')
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent_DragAndDrop($prefix='', $suffix='') {
+    public function fix_bodycontent_DragAndDrop($prefix = '', $suffix = '') {
         $search = '/for \(var i=0; i<DropTotal; i\+\+\)\{.*?\}/s';
         $replace = ''
-            ."var myParentNode = null;\n"
-            ."var myNextNode = null;\n"
-            ."if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
-            ."	// IE8+ (compatible mode) IE7, IE6, IE5 ...\n"
-            ."} else {\n"
-            ."	// Firefox, Safari, Opera, IE8+\n"
-            ."	var obj = document.getElementsByTagName('div');\n"
-            ."	if (obj && obj.length) {\n"
-            ."		myParentNode = obj[obj.length - 1].parentNode;\n"
+            . "var myParentNode = null;\n"
+            . "var myNextNode = null;\n"
+            . "if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
+            . "	// IE8+ (compatible mode) IE7, IE6, IE5 ...\n"
+            . "} else {\n"
+            . "	// Firefox, Safari, Opera, IE8+\n"
+            . "	var obj = document.getElementsByTagName('div');\n"
+            . "	if (obj && obj.length) {\n"
+            . "		myParentNode = obj[obj.length - 1].parentNode;\n"
                     // handle situation where script is running after page has loaded (e.g. Boost theme)
-            ."		if (myParentNode.tagName.toLowerCase()=='body') {\n"
+            . "		if (myParentNode.tagName.toLowerCase()=='body') {\n"
                         // locate Check Buttons of Feedback div
-            ."			myNextNode = document.getElementById('CheckButtonDiv');\n"
-            ."			if (myNextNode) {\n"
-            ."				myNextNode = myNextNode.nextSibling;\n"
-            ."			} else {\n"
-            ."				myNextNode = document.getElementById('FeedbackDiv');\n"
-            ."			}\n"
-            ."			if (myNextNode) {\n"
-            ."				myParentNode = myNextNode.parentNode;\n"
-            ."			} else {\n"
+            . "			myNextNode = document.getElementById('CheckButtonDiv');\n"
+            . "			if (myNextNode) {\n"
+            . "				myNextNode = myNextNode.nextSibling;\n"
+            . "			} else {\n"
+            . "				myNextNode = document.getElementById('FeedbackDiv');\n"
+            . "			}\n"
+            . "			if (myNextNode) {\n"
+            . "				myParentNode = myNextNode.parentNode;\n"
+            . "			} else {\n"
                             // desperate search for other expected elements !!
-            ."				myParentNode = document.getElementById('InstructionsDiv');\n"
-            ."				if (myParentNode) {\n"
-            ."					myParentNode = myParentNode.parentNode;\n"
-            ."				} else {\n"
-            ."					myParentNode = document.querySelector('.Titles').parentNode;\n"
-            ."				}\n"
-            ."			}\n"
-            ."		}\n"
-            ."		var css_prefix = new Array('webkit', 'khtml', 'moz', 'ms', 'o', '');\n"
-            ."		for (var i=0; i<css_prefix.length; i++) {\n"
-            ."			if (css_prefix[i]=='') {\n"
-            ."				var userSelect = 'userSelect';\n"
-            ."			} else {\n"
-            ."				var userSelect = css_prefix[i] + 'UserSelect';\n"
-            ."			}\n"
-            ."			if (typeof(myParentNode.style[userSelect]) != 'undefined') {\n"
-            ."				myParentNode.style[userSelect] = 'none';\n"
-            ."				break;\n"
-            ."			}\n"
-            ."		}\n"
-            ."		userSelect = null;\n"
-            ."		css_prefix = null;\n"
-            ."	}\n"
-            ."}\n"
-            ."for (var i=0; i<DropTotal; i++){\n"
-            ."	if (myParentNode){\n"
-            ."		var div = document.createElement('div');\n"
-            ."		div.setAttribute('id', 'Drop' + i);\n"
-            ."		div.setAttribute('class', 'DropLine');\n"
-            ."		div.setAttribute('align', 'center');\n"
-            ."		div.innerHTML = '&nbsp;<br />&nbsp;';\n"
-            ."		myParentNode.insertBefore(div, myNextNode);\n"
-            ."	} else {\n"
-            ."		document.write('".'<div id="'."Drop' + i + '".'" class="DropLine" align="center"'.">&nbsp;<br />&nbsp;</div>');\n"
-            ."	}\n"
-            ."}"
-        ;
+            . "				myParentNode = document.getElementById('InstructionsDiv');\n"
+            . "				if (myParentNode) {\n"
+            . "					myParentNode = myParentNode.parentNode;\n"
+            . "				} else {\n"
+            . "					myParentNode = document.querySelector('.Titles').parentNode;\n"
+            . "				}\n"
+            . "			}\n"
+            . "		}\n"
+            . "		var css_prefix = new Array('webkit', 'khtml', 'moz', 'ms', 'o', '');\n"
+            . "		for (var i=0; i<css_prefix.length; i++) {\n"
+            . "			if (css_prefix[i]=='') {\n"
+            . "				var userSelect = 'userSelect';\n"
+            . "			} else {\n"
+            . "				var userSelect = css_prefix[i] + 'UserSelect';\n"
+            . "			}\n"
+            . "			if (typeof(myParentNode.style[userSelect]) != 'undefined') {\n"
+            . "				myParentNode.style[userSelect] = 'none';\n"
+            . "				break;\n"
+            . "			}\n"
+            . "		}\n"
+            . "		userSelect = null;\n"
+            . "		css_prefix = null;\n"
+            . "	}\n"
+            . "}\n"
+            . "for (var i=0; i<DropTotal; i++){\n"
+            . "	if (myParentNode){\n"
+            . "		var div = document.createElement('div');\n"
+            . "		div.setAttribute('id', 'Drop' + i);\n"
+            . "		div.setAttribute('class', 'DropLine');\n"
+            . "		div.setAttribute('align', 'center');\n"
+            . "		div.innerHTML = '&nbsp;<br />&nbsp;';\n"
+            . "		myParentNode.insertBefore(div, myNextNode);\n"
+            . "	} else {\n"
+            . "		document.write('" . '<div id="' . "Drop' + i + '" . '" class="DropLine" align="center"' . ">&nbsp;<br />&nbsp;</div>');\n"
+            . "	}\n"
+            . "}";
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent, 1);
 
         $search = '/for \(var i=0; i<Segments\.length; i\+\+\)\{.*?\}/s';
@@ -163,47 +161,43 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
         if ($prefix) {
             $prefix = $this->TC->task->source->js_value_safe($prefix);
             $replace .= ''
-                ."if (myParentNode){\n"
-                ."	var div = document.createElement('div');\n"
-                ."	div.setAttribute('id', 'JMixPrefix');\n"
-                ."	div.setAttribute('class', 'CardStyle');\n"
-                ."	div.innerHTML = '$prefix';\n"
-                ."	myParentNode.insertBefore(div, myNextNode);\n"
-                ."} else {\n"
-                ."	document.write('".'<div id="JMixPrefix" class="CardStyle"'.">$prefix</div>');\n"
-                ."}\n"
-            ;
+                . "if (myParentNode){\n"
+                . "	var div = document.createElement('div');\n"
+                . "	div.setAttribute('id', 'JMixPrefix');\n"
+                . "	div.setAttribute('class', 'CardStyle');\n"
+                . "	div.innerHTML = '$prefix';\n"
+                . "	myParentNode.insertBefore(div, myNextNode);\n"
+                . "} else {\n"
+                . "	document.write('" . '<div id="JMixPrefix" class="CardStyle"' . ">$prefix</div>');\n"
+                . "}\n";
         }
         $replace .= ''
-            ."for (var i=0; i<Segments.length; i++){\n"
-            ."	if (myParentNode){\n"
-            ."		var div = document.createElement('div');\n"
-            ."		div.setAttribute('id', 'D' + i);\n"
-            ."		div.setAttribute('class', 'CardStyle');\n"
-            ."		div = myParentNode.insertBefore(div, myNextNode);\n"
-            ."		HP_add_listener(div, 'mousedown', 'beginDrag(event, ' + i + ')');\n"
-            ."	} else {\n"
-            ."		document.write('".'<div id="'."D' + i + '".'" class="CardStyle" onmousedown="'."beginDrag(event, ' + i + ')".'"'."></div>');\n"
-            ."	}\n"
-            ."}\n"
-        ;
+            . "for (var i=0; i<Segments.length; i++){\n"
+            . "	if (myParentNode){\n"
+            . "		var div = document.createElement('div');\n"
+            . "		div.setAttribute('id', 'D' + i);\n"
+            . "		div.setAttribute('class', 'CardStyle');\n"
+            . "		div = myParentNode.insertBefore(div, myNextNode);\n"
+            . "		HP_add_listener(div, 'mousedown', 'beginDrag(event, ' + i + ')');\n"
+            . "	} else {\n"
+            . "		document.write('" . '<div id="' . "D' + i + '" . '" class="CardStyle" onmousedown="' . "beginDrag(event, ' + i + ')" . '"' . "></div>');\n"
+            . "	}\n"
+            . "}\n";
         if ($suffix) {
             $suffix = $this->TC->task->source->js_value_safe($suffix);
             $replace .= ''
-                ."if (myParentNode){\n"
-                ."	var div = document.createElement('div');\n"
-                ."	div.setAttribute('id', 'JMixSuffix');\n"
-                ."	div.setAttribute('class', 'CardStyle');\n"
-                ."	div.innerHTML = '$suffix';\n"
-                ."	myParentNode.insertBefore(div, myNextNode);\n"
-                ."} else {\n"
-                ."	document.write('".'<div id="JMixsuffix" class="CardStyle"'.">$suffix</div>');\n"
-                ."}\n"
-            ;
+                . "if (myParentNode){\n"
+                . "	var div = document.createElement('div');\n"
+                . "	div.setAttribute('id', 'JMixSuffix');\n"
+                . "	div.setAttribute('class', 'CardStyle');\n"
+                . "	div.innerHTML = '$suffix';\n"
+                . "	myParentNode.insertBefore(div, myNextNode);\n"
+                . "} else {\n"
+                . "	document.write('" . '<div id="JMixsuffix" class="CardStyle"' . ">$suffix</div>');\n"
+                . "}\n";
         }
         $replace .= ''
-            ."myParentNode = myNextNode = div = null;"
-        ;
+            . "myParentNode = myNextNode = div = null;";
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent, 1);
     }
 
@@ -212,22 +206,22 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      *
      * @return xxx
      */
-    function fix_navigation_buttons()  {
+    function fix_navigation_buttons() {
         parent::fix_navigation_buttons();
 
         // replace location.reload() in <button class="FuncButton" ... onclick="location.reload()" ...">
         // with javascript code to return all tiles/segments to their starting positions
-        $search = '/(?<='.'onclick=")location.reload\(\);?'.'(?=")/';
+        $search = '/(?<=' . 'onclick=")location.reload\(\);?' . '(?=")/';
         if (strpos(get_class($this), '_plus_')) {
             // Drag and Drop
             $replace = 'for (var i=0; i<Cds.length; i++) Cds[i].GoHome(); return false;';
         } else {
             // clickety-click
-            $replace = 'GuessSequence = new Array();'.
-                       'BuildCurrGuess();'.
-                       'BuildExercise();'.
-                       'DisplayExercise(Exercise);'.
-                       "WriteToGuess('<span class=&quot;Answer&quot;>' + Output + '</span>');".
+            $replace = 'GuessSequence = new Array();' .
+                       'BuildCurrGuess();' .
+                       'BuildExercise();' .
+                       'DisplayExercise(Exercise);' .
+                       "WriteToGuess('<span class=&quot;Answer&quot;>' + Output + '</span>');" .
                        'return false;';
         }
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent);
@@ -239,7 +233,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_js_functionnames()  {
+    public function get_js_functionnames() {
         // Note that the drag functions get added twice to the html
         // once from hp6card.js_ (this is actually the JMatch version)
         // and once from djmix6.js_. Consequently, we need to process
@@ -247,7 +241,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
         $drag = 'beginDrag,doDrag,endDrag';
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '')."CardSetHTML,$drag,CheckAnswer,TimesUp,WriteToGuess,$drag,SetInitialPositions";
+        $names .= ($names ? ',' : '') . "CardSetHTML,$drag,CheckAnswer,TimesUp,WriteToGuess,$drag,SetInitialPositions";
         return $names;
     }
 
@@ -270,18 +264,17 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_TimesUp(&$str, $start, $length)  {
+    public function fix_js_TimesUp(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         // make sure we get the latest GuessSequence
         $search = '	CheckAnswer(0);';
         if ($pos = strpos($substr, $search)) {
             $insert = ''
-                ."	if (window.GetGuessSequence){\n"
-                ."		GetGuessSequence();\n"
-                ."		CompiledOutput = CompileString(GuessSequence);\n"
-                ."	}\n"
-            ;
+                . "	if (window.GetGuessSequence){\n"
+                . "		GetGuessSequence();\n"
+                . "		CompiledOutput = CompileString(GuessSequence);\n"
+                . "	}\n";
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
@@ -295,10 +288,9 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
 
         if ($pos = strrpos($substr, '}')) {
             $insert = ''
-                ."	Finished = true;\n"
-                ."	HP_send_results(HP.EVENT_TIMEDOUT);\n"
-                ."	ShowMessage('$msg');\n"
-            ;
+                . "	Finished = true;\n"
+                . "	HP_send_results(HP.EVENT_TIMEDOUT);\n"
+                . "	ShowMessage('$msg');\n";
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
@@ -314,35 +306,32 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function fix_js_CheckAnswer(&$str, $start, $length)  {
+    public function fix_js_CheckAnswer(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         // remove the premature "return" if there is no guesses, because this function
         // is also called for the "Give Up" button and the onbeforeunload() event handler
         // and in those cases we need to continue and return the results to Moodle
         $search = ''
-            .'/(if \(GuessSequence\.length < 1\)\{)' // $1
-            .'(.*?)' // $2
-            .'\s*return;'
-            .'(\s*\})' // $3
-            .'/s'
-        ;
+            . '/(if \(GuessSequence\.length < 1\)\{)' // $1
+            . '(.*?)' // $2
+            . '\s*return;'
+            . '(\s*\})' // $3
+            . '/s';
         $substr = preg_replace($search, '$1$2$3', $substr, 1);
 
         // encapsulate the main body of the function code in an "if" block
         $search = ''
-            .'/(?<=var AllDone = false;)' // look behind
-            .'(.*?)'
-            .'(\s*)'
-            .'(?=if \(\(AllDone == true\)\|\|\(TimeOver == true\)\)\{)' // look ahead
-            .'/s'
-        ;
+            . '/(?<=var AllDone = false;)' // look behind
+            . '(.*?)'
+            . '(\s*)'
+            . '(?=if \(\(AllDone == true\)\|\|\(TimeOver == true\)\)\{)' // look ahead
+            . '/s';
         if (preg_match($search, $substr, $matches, PREG_OFFSET_CAPTURE)) {
             $replace = "\n"
-                .'	if (GuessSequence.length){'
-                .preg_replace('/[\\n\\r]+/', '$0	', $matches[1][0])."\n"
-                ."	}\n"
-            ;
+                . '	if (GuessSequence.length){'
+                . preg_replace('/[\\n\\r]+/', '$0	', $matches[1][0]) . "\n"
+                . "	}\n";
             $substr = substr_replace($substr, $replace, $matches[1][1], strlen($matches[1][0]));
         }
 
@@ -352,7 +341,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
         // this must come after call to $this->fix_js_CheckAnswers()
         $search = 'TimeOver == true';
         if ($pos = strpos($substr, $search)) {
-            $replace = $search.' || ForceTaskEvent';
+            $replace = $search . ' || ForceTaskEvent';
             $substr = substr_replace($substr, $replace, $pos, strlen($search));
         }
 
@@ -367,11 +356,11 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_WriteToGuess(&$str, $start, $length)  {
+    public function fix_js_WriteToGuess(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         if ($pos = strrpos($substr, '}')) {
-            $insert = '	StretchCanvasToCoverContent(true);'."\n";
+            $insert = '	StretchCanvasToCoverContent(true);' . "\n";
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
@@ -384,7 +373,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @param xxx $substr (passed by reference)
      * @todo Finish documenting this function
      */
-    public function fix_js_StartUp_DragAndDrop(&$substr)  {
+    public function fix_js_StartUp_DragAndDrop(&$substr) {
 
         // fix top and left of drag area
         $this->fix_js_StartUp_DragAndDrop_DragArea($substr);
@@ -392,7 +381,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
         // restrict width of drop lines
         $search = 'L[i].SetL(LeftColPos);';
         if ($pos = strpos($substr, $search)) {
-            $insert = "\n\t\t".'L[i].SetW(DivWidth - 40);';
+            $insert = "\n\t\t" . 'L[i].SetW(DivWidth - 40);';
             $substr = substr_replace($substr, $insert, $pos + strlen($search), 0);
         }
 
@@ -401,86 +390,84 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
         $search = 'SetInitialPositions();';
         if ($pos = strpos($substr, $search)) {
             $insert = "\n"
-                ."	var JMixPrefix = document.getElementById('JMixPrefix');\n"
-                ."	if (JMixPrefix) {\n"
-                ."		var t = L[0].GetB() - getOffset(JMixPrefix, 'Height') - 2;\n"
-                ."		var l = L[0].GetL() + 2;\n"
-                ."		var l = Math.max(l, (Cds[0].GetL() - getOffset(JMixPrefix, 'Width') - 10));\n"
-                ."		setOffset(JMixPrefix, 'Top', t);\n"
-                ."		setOffset(JMixPrefix, 'Left', l);\n"
-                ."		JMixPrefix.style.color = Cds[0].css.color;\n"
-                ."		JMixPrefix.style.backgroundColor = Cds[0].css.backgroundColor;\n"
-                ."		JMixPrefix.style.zIndex = ++topZ;\n"
-                ."	}\n"
-                ."	var JMixSuffix = document.getElementById('JMixSuffix');\n"
-                ."	if (JMixSuffix) {\n"
-                ."		var l_min = Cds[0].GetL();\n"
-                ."		if (JMixPrefix) {\n"
-                ."			l_min -= getOffset(JMixPrefix, 'Width') - 10;\n"
-                ."		}\n"
-                ."		var l_max = L[0].GetR();\n"
-                ."		var l = l_min;\n"
-                ."		if (JMixPrefix) {\n"
-                ."			l += getOffset(JMixPrefix, 'Width') + 5;\n"
-                ."		}\n"
-                ."		var x = 0;\n"
-                ."		var i_max = Cds.length;\n"
-                ."		for (var i=0; i<i_max; i++) {\n"
-                ."			var w = Cds[i].GetW() + 5;\n"
-                ."			if ((l + w) > l_max) {\n"
-                ."				l = l_min;\n"
-                ."				x++;\n"
-                ."			}\n"
-                ."			l += w;\n"
-                ."		}\n"
-                ."		var w = getOffset(JMixSuffix, 'Width') + 5;\n"
-                ."		if ((l + w) > l_max) {\n"
-                ."			l = l_min;\n"
-                ."			x++;\n"
-                ."		}\n"
-                ."		var x = Math.min(L.length - 1, x);\n"
-                ."		var t = L[x].GetB() - getOffset(JMixSuffix, 'Height') - 2;\n"
-                ."		setOffset(JMixSuffix, 'Top', t);\n"
-                ."		setOffset(JMixSuffix, 'Left', l);\n"
-                ."		JMixSuffix.style.color = Cds[0].css.color;\n"
-                ."		JMixSuffix.style.backgroundColor = Cds[0].css.backgroundColor;\n"
-                ."		JMixSuffix.style.zIndex = ++topZ;\n"
-                ."	}\n"
-                ."	JMixPrefix = null;\n"
-                ."	JMixSuffix = null;\n"
-            ;
+                . "	var JMixPrefix = document.getElementById('JMixPrefix');\n"
+                . "	if (JMixPrefix) {\n"
+                . "		var t = L[0].GetB() - getOffset(JMixPrefix, 'Height') - 2;\n"
+                . "		var l = L[0].GetL() + 2;\n"
+                . "		var l = Math.max(l, (Cds[0].GetL() - getOffset(JMixPrefix, 'Width') - 10));\n"
+                . "		setOffset(JMixPrefix, 'Top', t);\n"
+                . "		setOffset(JMixPrefix, 'Left', l);\n"
+                . "		JMixPrefix.style.color = Cds[0].css.color;\n"
+                . "		JMixPrefix.style.backgroundColor = Cds[0].css.backgroundColor;\n"
+                . "		JMixPrefix.style.zIndex = ++topZ;\n"
+                . "	}\n"
+                . "	var JMixSuffix = document.getElementById('JMixSuffix');\n"
+                . "	if (JMixSuffix) {\n"
+                . "		var l_min = Cds[0].GetL();\n"
+                . "		if (JMixPrefix) {\n"
+                . "			l_min -= getOffset(JMixPrefix, 'Width') - 10;\n"
+                . "		}\n"
+                . "		var l_max = L[0].GetR();\n"
+                . "		var l = l_min;\n"
+                . "		if (JMixPrefix) {\n"
+                . "			l += getOffset(JMixPrefix, 'Width') + 5;\n"
+                . "		}\n"
+                . "		var x = 0;\n"
+                . "		var i_max = Cds.length;\n"
+                . "		for (var i=0; i<i_max; i++) {\n"
+                . "			var w = Cds[i].GetW() + 5;\n"
+                . "			if ((l + w) > l_max) {\n"
+                . "				l = l_min;\n"
+                . "				x++;\n"
+                . "			}\n"
+                . "			l += w;\n"
+                . "		}\n"
+                . "		var w = getOffset(JMixSuffix, 'Width') + 5;\n"
+                . "		if ((l + w) > l_max) {\n"
+                . "			l = l_min;\n"
+                . "			x++;\n"
+                . "		}\n"
+                . "		var x = Math.min(L.length - 1, x);\n"
+                . "		var t = L[x].GetB() - getOffset(JMixSuffix, 'Height') - 2;\n"
+                . "		setOffset(JMixSuffix, 'Top', t);\n"
+                . "		setOffset(JMixSuffix, 'Left', l);\n"
+                . "		JMixSuffix.style.color = Cds[0].css.color;\n"
+                . "		JMixSuffix.style.backgroundColor = Cds[0].css.backgroundColor;\n"
+                . "		JMixSuffix.style.zIndex = ++topZ;\n"
+                . "	}\n"
+                . "	JMixPrefix = null;\n"
+                . "	JMixSuffix = null;\n";
             $substr = substr_replace($substr, $insert, $pos + strlen($search), 0);
         }
 
         // stretch the canvas vertically down
         if ($pos = strrpos($substr, '}')) {
             $insert = ''
-            ."	var b = 0;\n"
-            ."	var objParentNode = null;\n"
-            ."	if (window.Segments) {\n"
-            ."		var obj = document.getElementById('D'+(Segments.length-1));\n"
-            ."		if (obj) {\n"
-            ."			b = Math.max(b, getOffset(obj,'Bottom'));\n"
-            ."			objParentNode = objParentNode || obj.parentNode;\n"
-            ."		}\n"
-            ."	}\n"
-            ."	if (b) {\n"
-            ."		// stretch parentNodes down vertically, if necessary\n"
-            ."		var canvas = document.getElementById('$this->themecontainer');\n"
-            ."		while (objParentNode) {\n"
-            ."			var more_height = Math.max(0, b - getOffset(objParentNode, 'Bottom'));\n"
-            ."			if (more_height) {\n"
-            ."				setOffset(objParentNode, 'Height', getOffset(objParentNode, 'Height') + more_height + 4);\n"
-            ."			}\n"
-            ."			if (canvas && objParentNode==canvas) {\n"
-            ."				objParentNode = null;\n"
-            ."			} else {\n"
-            ."				objParentNode = objParentNode.parentNode;\n"
-            ."			}\n"
-            ."		}\n"
-            ."	}\n"
-            ;
-            //$substr = substr_replace($substr, $insert, $pos, 0);
+            . "	var b = 0;\n"
+            . "	var objParentNode = null;\n"
+            . "	if (window.Segments) {\n"
+            . "		var obj = document.getElementById('D'+(Segments.length-1));\n"
+            . "		if (obj) {\n"
+            . "			b = Math.max(b, getOffset(obj,'Bottom'));\n"
+            . "			objParentNode = objParentNode || obj.parentNode;\n"
+            . "		}\n"
+            . "	}\n"
+            . "	if (b) {\n"
+            . "		// stretch parentNodes down vertically, if necessary\n"
+            . "		var canvas = document.getElementById('$this->themecontainer');\n"
+            . "		while (objParentNode) {\n"
+            . "			var more_height = Math.max(0, b - getOffset(objParentNode, 'Bottom'));\n"
+            . "			if (more_height) {\n"
+            . "				setOffset(objParentNode, 'Height', getOffset(objParentNode, 'Height') + more_height + 4);\n"
+            . "			}\n"
+            . "			if (canvas && objParentNode==canvas) {\n"
+            . "				objParentNode = null;\n"
+            . "			} else {\n"
+            . "				objParentNode = objParentNode.parentNode;\n"
+            . "			}\n"
+            . "		}\n"
+            . "	}\n";
+            // $substr = substr_replace($substr, $insert, $pos, 0);
         }
     }
 
@@ -491,7 +478,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_SetInitialPositions(&$str, $start, $length)  {
+    function fix_js_SetInitialPositions(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         // prevent error on Boost-based themes
@@ -511,14 +498,13 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      */
     public function get_stop_onclick() {
         return ''
-            .'if('.$this->get_stop_function_confirm().'){'
-                .'if (window.GetGuessSequence){'
-                    .'GetGuessSequence();'
-                    .'CompiledOutput=CompileString(GuessSequence);'
-                .'}'
-                .$this->get_stop_function_name().'('.$this->get_stop_function_args().')'
-            .'}'
-        ;
+            . 'if(' . $this->get_stop_function_confirm() . '){'
+                . 'if (window.GetGuessSequence){'
+                    . 'GetGuessSequence();'
+                    . 'CompiledOutput=CompileString(GuessSequence);'
+                . '}'
+                . $this->get_stop_function_name() . '(' . $this->get_stop_function_args() . ')'
+            . '}';
     }
 
     /**
@@ -527,7 +513,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CheckAnswer';
     }
 
@@ -537,7 +523,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_args()  {
+    public function get_stop_function_args() {
         return 'HP.EVENT_ABANDONED';
     }
 
@@ -547,10 +533,9 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_intercept()  {
+    public function get_stop_function_intercept() {
         return "\n"
-            ."	if (CheckType==0) HP.onclickCheck(); // intercept Checks\n"
-            ."	if (CheckType==1) HP.onclickHint(0); // intercept Hints\n"
-        ;
+            . "	if (CheckType==0) HP.onclickCheck(); // intercept Checks\n"
+            . "	if (CheckType==1) HP.onclickHint(0); // intercept Hints\n";
     }
 }

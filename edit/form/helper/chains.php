@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/records.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/records.php');
 
 /**
  * taskchain_form_helper_chains
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/records.php');
  * @package    mod_taskchain
  */
 class taskchain_form_helper_chains extends taskchain_form_helper_records {
-
     protected $recordtype = 'course';
     protected $recordstype = 'chain';
     protected $actions = array('applydefaults' => true);
@@ -61,37 +59,37 @@ class taskchain_form_helper_chains extends taskchain_form_helper_records {
         $this->mform->disabledIf($name, 'action', 'ne', $field);
 
         $filterlist = array(
-            self::FILTER_CONTAINS       => get_string('contains',       'filters'),
+            self::FILTER_CONTAINS       => get_string('contains', 'filters'),
             self::FILTER_NOT_CONTAINS   => get_string('doesnotcontain', 'filters'),
-            self::FILTER_EQUALS         => get_string('isequalto',      'filters'),
-            self::FILTER_NOT_EQUALS     => get_string('notisequalto',   'mod_taskchain'),
-            self::FILTER_STARTSWITH     => get_string('startswith',     'filters'),
-            self::FILTER_NOT_STARTSWITH => get_string('notstartswith',  'mod_taskchain'),
-            self::FILTER_ENDSWITH       => get_string('endswith',       'filters'),
-            self::FILTER_NOT_ENDSWITH   => get_string('notendswith',    'mod_taskchain'),
-            self::FILTER_EMPTY          => get_string('isempty',        'filters'),
-            self::FILTER_NOT_EMPTY      => get_string('notisempty',     'mod_taskchain')
+            self::FILTER_EQUALS         => get_string('isequalto', 'filters'),
+            self::FILTER_NOT_EQUALS     => get_string('notisequalto', 'mod_taskchain'),
+            self::FILTER_STARTSWITH     => get_string('startswith', 'filters'),
+            self::FILTER_NOT_STARTSWITH => get_string('notstartswith', 'mod_taskchain'),
+            self::FILTER_ENDSWITH       => get_string('endswith', 'filters'),
+            self::FILTER_NOT_ENDSWITH   => get_string('notendswith', 'mod_taskchain'),
+            self::FILTER_EMPTY          => get_string('isempty', 'filters'),
+            self::FILTER_NOT_EMPTY      => get_string('notisempty', 'mod_taskchain'),
         );
         $filters = array(
-            'coursename', 'activityname'
+            'coursename', 'activityname',
         );
         foreach ($filters as $filter) {
-            $filtername = 'filter'.$filter;
+            $filtername = 'filter' . $filter;
             $filterlabel = $this->get_fieldlabel($filter);
-            $name_filter = $this->get_fieldname($field.'_'.$filtername);
+            $name_filter = $this->get_fieldname($field . '_' . $filtername);
             $name_disabled = ''; // may be set below
 
-            if ($filter=='coursename') {
+            if ($filter == 'coursename') {
                 $courseid = $this->TC->get_courseid();
                 if ($mycourses = $this->TC->get_mycourses()) {
                     $list = array();
-                    if (count($mycourses)>1) {
+                    if (count($mycourses) > 1) {
                         $list[0] = get_string('all');
                     }
                     foreach ($mycourses as $mycourse) {
                         $shortname = format_string($mycourse->shortname);
-                        if ($mycourse->id==SITEID) {
-                            $shortname = get_string('frontpage', 'admin').': '.$shortname;
+                        if ($mycourse->id == SITEID) {
+                            $shortname = get_string('frontpage', 'admin') . ': ' . $shortname;
                         }
                         $list[$mycourse->id] = $shortname;
                     }
@@ -102,16 +100,14 @@ class taskchain_form_helper_chains extends taskchain_form_helper_records {
                 $this->mform->setDefault($name_filter, $courseid);
                 $this->mform->setType($name_filter, PARAM_INT);
                 $name_disabled = $name_filter;
-
             } else { // activityname (and any others)
-
-                $name_type   = $this->get_fieldname($field.'_'.$filtername.'type');
-                $name_value  = $this->get_fieldname($field.'_'.$filtername.'value');
-                $name_elements = $this->get_fieldname($field.'_'.$filtername.'_elements');
+                $name_type   = $this->get_fieldname($field . '_' . $filtername . 'type');
+                $name_value  = $this->get_fieldname($field . '_' . $filtername . 'value');
+                $name_elements = $this->get_fieldname($field . '_' . $filtername . '_elements');
 
                 $elements = array();
-                $elements[] = $this->mform->createElement('select', $name_type,   '', $filterlist);
-                $elements[] = $this->mform->createElement('text',   $name_value,  '', array('size', $this->text_field_size));
+                $elements[] = $this->mform->createElement('select', $name_type, '', $filterlist);
+                $elements[] = $this->mform->createElement('text', $name_value, '', array('size', $this->text_field_size));
                 $this->mform->addGroup($elements, $name_elements, $filterlabel, ' ', false);
 
                 $this->mform->setType($name_type, PARAM_INT);
@@ -138,10 +134,10 @@ class taskchain_form_helper_chains extends taskchain_form_helper_records {
         global $DB;
         list($where, $params) = $DB->get_in_or_equal($ids);
         $select = 'tc_chn.*';
-        $from   = "{taskchain} tc,".
+        $from   = "{taskchain} tc," .
                   "{taskchain_chains} tc_chn";
-        $where  = 'tc.id '.$where.' '.
-                  'AND tc.id = tc_chn.parentid '.
+        $where  = 'tc.id ' . $where . ' ' .
+                  'AND tc.id = tc_chn.parentid ' .
                   'AND tc_chn.parenttype = ?';
         $params[] = mod_taskchain::PARENTTYPE_ACTIVITY;
         return array($select, $from, $where, $params);
@@ -154,6 +150,6 @@ class taskchain_form_helper_chains extends taskchain_form_helper_records {
      * @todo Finish documenting this function
      */
     function get_filter_params($field) {
-        return array($field.'_filteractivityname' => 'tc.name');
+        return array($field . '_filteractivityname' => 'tc.name');
     }
 }

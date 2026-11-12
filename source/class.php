@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/lib.php');
+require_once($CFG->dirroot . '/mod/taskchain/lib.php');
 
 /**
  * taskchain_source
@@ -170,13 +169,13 @@ class taskchain_source {
         global $CFG, $TC;
 
         if (empty($TC)) {
-            require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+            require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
             $TC = new mod_taskchain();
         }
         $this->TC = &$TC;
 
         if ($this->file = $file) {
-            $this->filepath = $this->file->get_filepath().$this->file->get_filename();
+            $this->filepath = $this->file->get_filepath() . $this->file->get_filename();
         }
 
         if (is_object($TC->course)) {
@@ -191,7 +190,7 @@ class taskchain_source {
         } else {
             $this->location = 0; // LOCATION_COURSEFILES
         }
-        if ($this->location==1) {
+        if ($this->location == 1) {
             // 1=LOCATION_SITEFILES
             // only used on TaskChains upgraded from Moodle 1.9
             // and even then, it would be unusual on most sites
@@ -199,8 +198,8 @@ class taskchain_source {
         } else {
             $this->coursefolder = $this->courseid;
         }
-        $this->basepath = $CFG->dataroot.'/'.$this->coursefolder;
-        $this->fullpath = $this->basepath.'/'.$this->filepath;
+        $this->basepath = $CFG->dataroot . '/' . $this->coursefolder;
+        $this->fullpath = $this->basepath . '/' . $this->filepath;
 
         $this->dirname  = dirname($this->fullpath);
         $this->filename = basename($this->fullpath);
@@ -210,17 +209,17 @@ class taskchain_source {
         } else {
             $file_php = 'file.php?file=';
         }
-        $pluginfile_php = 'plugin'.$file_php;
+        $pluginfile_php = 'plugin' . $file_php;
 
         if (isset($TC->coursemodule->context)) {
             $contextid = $TC->coursemodule->context->id;
-            $this->baseurl = $CFG->wwwroot.'/'.$pluginfile_php.'/'.$contextid.'/mod_taskchain/sourcefile';
+            $this->baseurl = $CFG->wwwroot . '/' . $pluginfile_php . '/' . $contextid . '/mod_taskchain/sourcefile';
         } else {
             // no context - shouldn't happen !!
             $this->baseurl = '';
         }
 
-        $this->legacy_baseurl = $CFG->wwwroot.'/'.$file_php.'/'.$this->coursefolder;
+        $this->legacy_baseurl = $CFG->wwwroot . '/' . $file_php . '/' . $this->coursefolder;
     }
 
     /*
@@ -232,14 +231,14 @@ class taskchain_source {
      * @param string $filearea typically 'configfile'
      * @return stdclass $config
      */
-    static public function get_config(&$data, $context, $component, $filearea) {
+    public static function get_config(&$data, $context, $component, $filearea) {
         $config = (object)array(
             'url' => '',
             'filepath' => '',
             'location' => '',
         );
         if ($mainfile = taskchain_pluginfile_mainfile($context, $component, $filearea)) {
-            $config->filepath = $mainfile->get_filepath().$mainfile->get_filename();
+            $config->filepath = $mainfile->get_filepath() . $mainfile->get_filename();
             $config->location = 0; // LOCATION_COURSEFILES
         }
         return $config;
@@ -260,10 +259,9 @@ class taskchain_source {
      * @param int $type see "available_addtypes_list()" in locallib.php
      * @return array $sources array of recognized TaskChain files
      */
-    static public function get_sources(&$data, $context, $component, $filearea, $type) {
+    public static function get_sources(&$data, $context, $component, $filearea, $type) {
 
         switch ($type) {
-
             case mod_taskchain::ADDTYPE_TASKFILE:
                 return self::get_sources_from_taskfile($data, $context, $component, $filearea);
 
@@ -299,7 +297,7 @@ class taskchain_source {
      *
      * @return an array of sources if any are found, or false otherwise
      */
-    static public function get_sources_from_taskfile(&$data, $context, $component, $filearea) {
+    public static function get_sources_from_taskfile(&$data, $context, $component, $filearea) {
         if (! $mainfile = taskchain_pluginfile_mainfile($context, $component, $filearea)) {
             return false;
         }
@@ -320,7 +318,7 @@ class taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function get_sources_from_taskchain(&$data, $context, $component, $filearea, $gettaskchain)  {
+    public static function get_sources_from_taskchain(&$data, $context, $component, $filearea, $gettaskchain) {
         $sources = array();
 
         if (! $file = taskchain_pluginfile_mainfile($context, $component, $filearea)) {
@@ -328,7 +326,6 @@ class taskchain_source {
         }
 
         while ($file && ($task = self::is('is_taskfile', $file, $data))) {
-
             // add this task
             $sources[] = $task;
 
@@ -338,7 +335,7 @@ class taskchain_source {
                     // to prevent infinite loops on chains, we check that
                     // the next task is not one of the earlier tasks
                     foreach ($sources as $source) {
-                        if ($source->filepath==$file->filepath) {
+                        if ($source->filepath == $file->filepath) {
                             $file = false;
                         }
                     }
@@ -362,7 +359,7 @@ class taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function get_sources_from_chainfile(&$data, $context, $component, $filearea)  {
+    public static function get_sources_from_chainfile(&$data, $context, $component, $filearea) {
         $sources = array();
 
         if (! $mainfile = taskchain_pluginfile_mainfile($context, $component, $filearea)) {
@@ -394,7 +391,7 @@ class taskchain_source {
      * array $sources TaskChain task files in this folder
      * boolean : false : no task files found
      */
-    static public function get_sources_from_chainfolder(&$data, $context, $component, $filearea, $recursive=false) {
+    public static function get_sources_from_chainfolder(&$data, $context, $component, $filearea, $recursive = false) {
 
         if (! $mainfile = taskchain_pluginfile_mainfile($context, $component, $filearea)) {
             return false;
@@ -402,12 +399,14 @@ class taskchain_source {
 
         // if the $mainfile was a zip or tgz file, unpack it
         if ($mimetype = self::get_file_packer_mimetype($mainfile)) {
-            $mainfile->extract_to_storage(get_file_packer($mimetype),
-                                          $mainfile->get_contextid(),
-                                          $mainfile->get_component(),
-                                          $mainfile->get_filearea(),
-                                          $mainfile->get_itemid(),
-                                          $mainfile->get_filepath());
+            $mainfile->extract_to_storage(
+                get_file_packer($mimetype),
+                $mainfile->get_contextid(),
+                $mainfile->get_component(),
+                $mainfile->get_filearea(),
+                $mainfile->get_itemid(),
+                $mainfile->get_filepath()
+            );
             $recursive = true;
         }
 
@@ -416,13 +415,15 @@ class taskchain_source {
         }
 
         $fs = get_file_storage();
-        $files = $fs->get_directory_files($directory->get_contextid(),
-                                          $directory->get_component(),
-                                          $directory->get_filearea(),
-                                          $directory->get_itemid(),
-                                          $directory->get_filepath(),
-                                          $recursive,
-                                          false); // i.e. exclude dirs
+        $files = $fs->get_directory_files(
+            $directory->get_contextid(),
+            $directory->get_component(),
+            $directory->get_filearea(),
+            $directory->get_itemid(),
+            $directory->get_filepath(),
+            $recursive,
+            false
+        ); // i.e. exclude dirs
 
         if (empty($files)) {
             return false;
@@ -430,14 +431,14 @@ class taskchain_source {
 
         // TODO: we need a way to find out if we are updating
         // 2015-09-13 this boolean flag doesn't appear to be necessary because
-        //            we never come this way when updating a TaskChain or task
+        // we never come this way when updating a TaskChain or task
         // $is_update = (false);
 
         $sources = array();
         foreach ($files as $file) {
             // 2015-09-13 this if-block doesn't appear to be necessary
             // if ($is_update && $mainfile->get_source()==$file->get_source()) {
-            //     continue; // this is the $mainfile
+            // continue; // this is the $mainfile
             // }
             if ($result = self::is('is_taskfile', $file, $data)) {
                 $sources[] = $result;
@@ -460,13 +461,15 @@ class taskchain_source {
      *
      * @return string
      */
-    static public function get_file_packer_mimetype($file) {
+    public static function get_file_packer_mimetype($file) {
         $filetype = $file->get_filename();
         $filetype = substr($filetype, -4);
         $filetype = strtolower($filetype);
         switch ($filetype) {
-            case '.zip': return 'application/zip';
-            case '.tgz': return 'application/x-tgz';
+            case '.zip':
+                return 'application/zip';
+            case '.tgz':
+                return 'application/x-tgz';
         }
         return ''; // not recognized as a packed file
     }
@@ -479,7 +482,7 @@ class taskchain_source {
      * @param boolean $recursive
      * @return void, but may append items to $sources
      */
-    static public function get_sources_from_chainfolder_external(&$data, $context, $component, $filearea, &$sources, $mainfile, $recursive) {
+    public static function get_sources_from_chainfolder_external(&$data, $context, $component, $filearea, &$sources, $mainfile, $recursive) {
         global $DB;
 
         // get repository - cautiously :-)
@@ -496,9 +499,9 @@ class taskchain_source {
         // we must use the course context, because the get_repository_by_id() method
         // will try to join the "course_modules" table and the "taskchain" table
         // but the "taskchain" record has not yet been setup, so we get an error
-        if ($context->contextlevel==CONTEXT_MODULE) {
-            if ($cm = $DB->get_record('course_modules', array('id'=>$context->instanceid))) {
-                if ($cm->instance==0) {
+        if ($context->contextlevel == CONTEXT_MODULE) {
+            if ($cm = $DB->get_record('course_modules', array('id' => $context->instanceid))) {
+                if ($cm->instance == 0) {
                     $context = mod_taskchain::context(CONTEXT_COURSE, $data->course);
                 }
             }
@@ -517,7 +520,7 @@ class taskchain_source {
             'source'    => '',
             'sortorder' => 0, // may be filled in later
             'author'    => $mainfile->get_author(),
-            'license'   => $mainfile->get_license()
+            'license'   => $mainfile->get_license(),
         );
 
         // get repository type
@@ -555,7 +558,7 @@ class taskchain_source {
                 $encodepath = true;
                 break;
             default:
-                echo 'unknown repository type in get_sources_from_chainfolder_external(): '.$type;
+                echo 'unknown repository type in get_sources_from_chainfolder_external(): ' . $type;
                 die;
         }
 
@@ -564,9 +567,14 @@ class taskchain_source {
         if ($encodepath) {
             $listing = $repository->get_listing();
             switch (true) {
-                case isset($listing['list'][0]['source']): $param = 'source'; break; // file
-                case isset($listing['list'][0]['path']):   $param = 'path';   break; // dir
-                default: return false; // shouldn't happen !!
+                case isset($listing['list'][0]['source']):
+                    $param = 'source';
+                    break; // file
+                case isset($listing['list'][0]['path']):
+                    $param = 'path';
+                    break; // dir
+                default:
+                    return false; // shouldn't happen !!
             }
             $params = $listing['list'][0][$param];
             $params = json_decode(base64_decode($params), true);
@@ -580,8 +588,8 @@ class taskchain_source {
 
         // search and replace strings to convert
         // repository base path to $filearea base path
-        $search = '/'.$path.($path=='' ? '' : '/');
-        $search = '/'.preg_quote($search, '/').'/';
+        $search = '/' . $path . ($path == '' ? '' : '/');
+        $search = '/' . preg_quote($search, '/') . '/';
         $replace = $mainfile->get_filepath();
 
         // encode $params, if necessary
@@ -594,12 +602,11 @@ class taskchain_source {
             // for "filesystem" repository on Moodle >= 3.1
             // the following code mimics the protected method
             // $repository->build_node_path($nodepathmode, $dirpath)
-            $path = $nodepathmode.':'.base64_encode($path).':';
+            $path = $nodepathmode . ':' . base64_encode($path) . ':';
         }
 
         $listing = $repository->get_listing($path);
         foreach ($listing['list'] as $file) {
-
             if (empty($file['source'])) {
                 continue; // a directory
             }
@@ -607,20 +614,20 @@ class taskchain_source {
             // decode $file['source'], if necessary
             if ($encodepath) {
                 $file['source'] = json_decode(base64_decode($file['source']), true);
-                $file['source'] = trim($file['source']['filepath'], '/').'/'.$file['source']['filename'];
+                $file['source'] = trim($file['source']['filepath'], '/') . '/' . $file['source']['filename'];
             }
 
             $file_record['filename'] = basename($file['source']);
             $file_record['filepath'] = dirname($file['source']);
 
             if ($file_record['filepath'] = trim($file_record['filepath'], '/')) {
-                $file_record['filepath'] = '/'.$file_record['filepath'].'/';
+                $file_record['filepath'] = '/' . $file_record['filepath'] . '/';
             } else {
                 $file_record['filepath'] = '/';
             }
 
             // skip hidden files and folders
-            if (substr($file_record['filename'], 0, 1)=='.') {
+            if (substr($file_record['filename'], 0, 1) == '.') {
                 continue;
             }
 
@@ -661,23 +668,20 @@ class taskchain_source {
      * @param stored_file $file
      * @return string : $class name if $file is the required type; otherwise ""
      */
-    static public function is($methodname, $file, &$data) {
+    public static function is($methodname, $file, &$data) {
         $classes = mod_taskchain::get_classes('taskchainsource');
         foreach ($classes as $class) {
-
             $object = new $class($file);
             if (method_exists($object, $methodname) && ($result = $object->$methodname())) {
-
                 // if this is the first chain/task file to be recognized, then store the name
                 // because if $form->namesource==TASKCHAIN_NAMESOURCE_TASK,
                 // $this->chainname may be used later as the name of the TaskChain activity
 
                 $fields = array('name', 'entrytext', 'exittext');
                 foreach ($fields as $field) {
-
-                    $fieldsource = $field.'source';
-                    $chainfield = 'chain'.$field;
-                    $fieldmethod = 'get_'.$field;
+                    $fieldsource = $field . 'source';
+                    $chainfield = 'chain' . $field;
+                    $fieldmethod = 'get_' . $field;
 
                     if (isset($data->$fieldsource) && empty($data->$chainfield)) {
                         switch ($data->$fieldsource) {
@@ -714,8 +718,8 @@ class taskchain_source {
      * @param string a taskchain file/output class name
      * @return string class name without the leading "taskchain_source_"
      */
-    public function get_type($class='') {
-        if ($class=='') {
+    public function get_type($class = '') {
+        if ($class == '') {
             $class = get_class($this);
         }
         return preg_replace('/^taskchain_[a-z]+_/', '', $class);
@@ -808,9 +812,9 @@ class taskchain_source {
         if (preg_match('/^(?:https?:)?\/+/', $this->icon)) {
             $icon = $this->icon;
         } else {
-            $icon = $CFG->wwwroot.'/'.$this->icon;
+            $icon = $CFG->wwwroot . '/' . $this->icon;
         }
-        return '<img src="'.$icon.'" width="'.$this->iconwidth.'" height="'.$this->iconheight.'" class="'.$this->iconclass.'" />';
+        return '<img src="' . $icon . '" width="' . $this->iconwidth . '" height="' . $this->iconheight . '" class="' . $this->iconclass . '" />';
     }
 
     // property access functions
@@ -822,7 +826,7 @@ class taskchain_source {
      * @todo Finish documenting this function
      */
     public function get_file() {
-        if ($this->location==mod_taskchain::LOCATION_WWW) {
+        if ($this->location == mod_taskchain::LOCATION_WWW) {
             return $this->url;
         }
         if ($this->filepath) {
@@ -838,12 +842,12 @@ class taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_location($courseid)  {
+    public function get_location($courseid) {
         if ($this->coursefolder) {
-            if ($this->coursefolder==$courseid) {
+            if ($this->coursefolder == $courseid) {
                 return mod_taskchain::LOCATION_COURSEFILES;
             }
-            if ($this->coursefolder==SITEID) {
+            if ($this->coursefolder == SITEID) {
                 return mod_taskchain::LOCATION_SITEFILES;
             }
         }
@@ -861,7 +865,7 @@ class taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function filemtime($lastmodified, $etag)  {
+    public function filemtime($lastmodified, $etag) {
         if (is_object($this->file)) {
             if (method_exists($this->file, 'referencelastsync')) {
                 $time = $this->file->referencelastsync(); // Moodle >= 2.3
@@ -875,7 +879,7 @@ class taskchain_source {
         }
         if ($this->url) {
             $headers = array(
-                'If-Modified-Since'=>$lastmodified, 'If-None-Match'=>$etag
+                'If-Modified-Since' => $lastmodified, 'If-None-Match' => $etag,
                 // 'If-Modified-Since'=>'Wed, 23 Apr 2008 17:53:50 GMT',
                 // 'If-None-Match'=>'"52237ffc6aa5c81:16d9"'
             );
@@ -890,7 +894,7 @@ class taskchain_source {
                 }
                 return $filemtime;
             } else {
-                debugging('remote file not accesisble: '.$this->url, DEBUG_DEVELOPER);
+                debugging('remote file not accesisble: ' . $this->url, DEBUG_DEVELOPER);
                 return 0;
             }
         }
@@ -914,7 +918,7 @@ class taskchain_source {
         // initialize $this->filecontent
         $this->filecontents = false;
 
-        if ($this->location==mod_taskchain::LOCATION_WWW) {
+        if ($this->location == mod_taskchain::LOCATION_WWW) {
             if (! $this->url) {
                 // no url given - shouldn't happen
                 return false;
@@ -924,16 +928,15 @@ class taskchain_source {
                 return false;
             }
         } else {
-
             if (! $this->file) {
                 // no file object - shouldn't happen !!
-                throw new moodle_exception('source file object not found: class='.get_class($this));
+                throw new moodle_exception('source file object not found: class=' . get_class($this));
                 return false;
             }
 
             if (! $this->filecontents = $this->file->get_content()) {
                 if (! $path = $this->get_real_path()) {
-                    throw new moodle_exception('could not fetch file contents: class='.get_class($this->file).', file='.$this->file->get_filepath().$this->file->get_filename());
+                    throw new moodle_exception('could not fetch file contents: class=' . get_class($this->file) . ', file=' . $this->file->get_filepath() . $this->file->get_filename());
                     return false;
                 }
                 $this->filecontents = file_get_contents($path);
@@ -944,23 +947,23 @@ class taskchain_source {
 
         // detect BOMs - http://en.wikipedia.org/wiki/Byte_order_mark
         switch (true) {
-            case substr($this->filecontents, 0, 4)=="\xFF\xFE\x00\x00":
+            case substr($this->filecontents, 0, 4) == "\xFF\xFE\x00\x00":
                 $start = 4;
                 $encoding = 'UTF-32LE';
                 break;
-            case substr($this->filecontents, 0, 4)=="\x00\x00\xFE\xFF":
+            case substr($this->filecontents, 0, 4) == "\x00\x00\xFE\xFF":
                 $start = 4;
                 $encoding = 'UTF-32BE';
                 break;
-            case substr($this->filecontents, 0, 2)=="\xFF\xFE":
+            case substr($this->filecontents, 0, 2) == "\xFF\xFE":
                 $start = 2;
                 $encoding = 'UTF-16LE';
                 break;
-            case substr($this->filecontents, 0, 2)=="\xFE\xFF":
+            case substr($this->filecontents, 0, 2) == "\xFE\xFF":
                 $start = 2;
                 $encoding = 'UTF-16BE';
                 break;
-            case substr($this->filecontents, 0, 3)=="\xEF\xBB\xBF":
+            case substr($this->filecontents, 0, 3) == "\xEF\xBB\xBF":
                 $start = 3;
                 $encoding = 'UTF-8';
                 break;
@@ -975,7 +978,7 @@ class taskchain_source {
         }
 
         // convert to UTF-8, if necessary
-        if ($encoding=='' || $encoding=='UTF-8') {
+        if ($encoding == '' || $encoding == 'UTF-8') {
             // do nothing
         } else {
             $this->filecontents = mod_taskchain::textlib('convert', $this->filecontents, $encoding);
@@ -989,10 +992,10 @@ class taskchain_source {
      *
      * @return string
      */
-    public function get_real_path($file=null) {
+    public function get_real_path($file = null) {
         global $CFG, $PAGE;
 
-        if ($file===null) {
+        if ($file === null) {
             $file = $this->file;
         }
 
@@ -1003,7 +1006,7 @@ class taskchain_source {
 
         // set default path (= cached file in filedir)
         $hash = $file->get_contenthash();
-        $path = $CFG->dataroot.'/filedir/'.$hash[0].$hash[1].'/'.$hash[2].$hash[3].'/'.$hash;
+        $path = $CFG->dataroot . '/filedir/' . $hash[0] . $hash[1] . '/' . $hash[2] . $hash[3] . '/' . $hash;
 
         if (! method_exists($file, 'get_repository_id')) {
             return $path; // Moodle <= 2.2
@@ -1033,9 +1036,9 @@ class taskchain_source {
         switch ($type) {
             case 'filesystem':
                 if (method_exists($repository, 'get_rootpath')) {
-                    $path = $repository->get_rootpath().'/'.$file->get_reference();
+                    $path = $repository->get_rootpath() . '/' . $file->get_reference();
                 } else if (isset($repository->root_path)) {
-                    $path = $repository->root_path.'/'.$file->get_reference();
+                    $path = $repository->root_path . '/' . $file->get_reference();
                 }
                 break;
             case 'user':
@@ -1055,27 +1058,33 @@ class taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_filecontents_url($headers=null)  {
+    public function get_filecontents_url($headers = null) {
         global $CFG;
-        require_once($CFG->dirroot.'/lib/filelib.php');
+        require_once($CFG->dirroot . '/lib/filelib.php');
 
         $fullresponse = download_file_content($this->url, $headers, null, true);
         foreach ($fullresponse->headers as $header) {
             if ($pos = strpos($header, ':')) {
                 $name = trim(substr($header, 0, $pos));
-                $value = trim(substr($header, $pos+1));
+                $value = trim(substr($header, $pos + 1));
                 switch ($name) {
-                    case 'Last-Modified': $this->lastmodified = trim($value); break;
-                    case 'ETag'         : $this->etag         = trim($value); break;
-                    case 'Date'         : $this->date         = trim($value); break;
+                    case 'Last-Modified':
+                        $this->lastmodified = trim($value);
+                        break;
+                    case 'ETag':
+                        $this->etag         = trim($value);
+                        break;
+                    case 'Date':
+                        $this->date         = trim($value);
+                        break;
                 }
             }
         }
-        if ($fullresponse->status==200) {
+        if ($fullresponse->status == 200) {
             $this->filecontents = $fullresponse->results;
             return true;
         }
-        if ($fullresponse->status==304) {
+        if ($fullresponse->status == 304) {
             return true;
         }
         return false;
@@ -1087,16 +1096,16 @@ class taskchain_source {
      * @param array $tags (optional, default=null) specific tags to remove comments from
      * @todo Finish documenting this function
      */
-    public function compact_filecontents($tags=null) {
+    public function compact_filecontents($tags = null) {
         if (isset($this->filecontents)) {
             if ($tags) {
                 $callback = array($this, 'compact_filecontents_callback');
                 foreach ($tags as $tag) {
-                    $search = '/(?<=<'.$tag.'>).*(?=<\/'.$tag.'>)/is';
+                    $search = '/(?<=<' . $tag . '>).*(?=<\/' . $tag . '>)/is';
                     $this->filecontents = preg_replace_callback($search, $callback, $this->filecontents);
                 }
             }
-            $this->filecontents = preg_replace('/(?<=>)'.'\s+'.'(?=<)/s', '', $this->filecontents);
+            $this->filecontents = preg_replace('/(?<=>)' . '\s+' . '(?=<)/s', '', $this->filecontents);
         }
     }
 
@@ -1107,8 +1116,8 @@ class taskchain_source {
      */
     public function compact_filecontents_callback($match) {
         $search = array(
-            '/\/\/[^\n\r]*/',  // single line js comments
-            '/\/\*.*?\*\//s',  // multiline comments (js and css)
+            '/\/\/[^\n\r]*/', // single line js comments
+            '/\/\*.*?\*\//s', // multiline comments (js and css)
         );
         return preg_replace($search, '', $match[0]);
     }
@@ -1121,7 +1130,7 @@ class taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_sibling_filecontents($filename, $xmlize=false) {
+    public function get_sibling_filecontents($filename, $xmlize = false) {
         $filecontents = '';
 
         if (is_object($this->file)) {
@@ -1193,7 +1202,7 @@ class taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function synchronize_moodle_settings(&$task)  {
+    public function synchronize_moodle_settings(&$task) {
         return false;
     }
 }

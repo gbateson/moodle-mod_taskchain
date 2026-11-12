@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,15 +24,15 @@
  */
 
 /** Include required files */
-require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/tasks.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/tasks.php');
 
 // create object to represent this TaskChain activity
 $TC = new mod_taskchain();
 
 // create object to represent this TaskChain activity
-mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'edittasks', 'edit/tasks.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'edittasks', 'edit/tasks.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
 // Set editing mode
 mod_taskchain::set_user_editing();
@@ -53,12 +52,19 @@ $output = $PAGE->get_renderer('mod_taskchain');
 $mform = new mod_taskchain_edit_tasks_form();
 $newdata = $mform->get_data();
 
-if (isset($newdata->recordsaction) && $newdata->recordsaction=='addtasks' && isset($newdata->addtasks)) {
+if (isset($newdata->recordsaction) && $newdata->recordsaction == 'addtasks' && isset($newdata->addtasks)) {
     switch ($newdata->addtasks) {
-        case 'start' : $aftertaskid = -1; break;
-        case 'end'   : $aftertaskid = 0; break;
-        case 'after' : $aftertaskid = (empty($newdata->addtasks_taskid) ? 0 : $newdata->addtasks_taskid); break;
-        default      : $aftertaskid = 0;
+        case 'start':
+            $aftertaskid = -1;
+            break;
+        case 'end':
+            $aftertaskid = 0;
+            break;
+        case 'after':
+            $aftertaskid = (empty($newdata->addtasks_taskid) ? 0 : $newdata->addtasks_taskid);
+            break;
+        default:
+            $aftertaskid = 0;
     }
     $params = array('taskattemptid' => 0, 'taskscoreid' => 0, 'taskid' => 0, 'aftertaskid' => $aftertaskid);
     redirect($TC->url->edit('task', $params));

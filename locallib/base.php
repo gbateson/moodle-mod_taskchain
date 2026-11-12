@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,28 +27,28 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/locallib/available.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/can.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/create.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/get.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/regrade.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/require.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/url.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/available.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/can.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/create.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/get.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/regrade.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/require.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/url.php');
 
 /** PHP classes to handle TaskChain DB records */
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_cache.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_chain_attempt.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_chain_grade.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_chain.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_condition.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_detail.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_question.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_response.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_string.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_task_attempt.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_task_score.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_task.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_cache.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_chain_attempt.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_chain_grade.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_chain.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_condition.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_detail.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_question.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_response.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_string.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_task_attempt.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_task_score.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib/taskchain_task.php');
 
 /**
  * taskchain_base
@@ -60,7 +59,6 @@ require_once($CFG->dirroot.'/mod/taskchain/locallib/taskchain_task.php');
  * @package    mod_taskchain
  */
 class taskchain_base {
-
     /**#@+
      * internal codes for yes/no fields
      *
@@ -419,7 +417,7 @@ class taskchain_base {
      * @param array $objects (optional, default=null) array ($name => $object) of associated objects
      * @return void, if possible, properties will be assigned from $dbrecord and $objects
      */
-    public function __construct($dbrecord=null, $objects=null) {
+    public function __construct($dbrecord = null, $objects = null) {
         if ($dbrecord) {
             foreach (get_object_vars($dbrecord) as $name => $value) {
                 $this->__set($name, $value);
@@ -443,7 +441,7 @@ class taskchain_base {
      * @todo Finish documenting this function
      */
     public function __get($name) {
-        $method = 'get_'.$name;
+        $method = 'get_' . $name;
         if (method_exists($this, $method)) {
             return $this->$method();
         }
@@ -458,7 +456,7 @@ class taskchain_base {
      * @todo Finish documenting this function
      */
     public function __set($name, $value) {
-        $method = 'set_'.$name;
+        $method = 'set_' . $name;
         if (method_exists($this, $method)) {
             $this->$method($value);
             return true;
@@ -479,13 +477,13 @@ class taskchain_base {
      */
     protected function property_error($type, $property, $method) {
         if (property_exists($this, $property)) {
-            $hint = 'error_'.$type.'privateproperty';
+            $hint = 'error_' . $type . 'privateproperty';
         } else {
-            $hint = 'error_'.$type.'unknownproperty';
+            $hint = 'error_' . $type . 'unknownproperty';
         }
         $a = (object)array('class'    => get_class($this),
                            'property' => $property,
-                           'method'   => $method.'()');
+                           'method'   => $method . '()');
         $hint = get_string($hint, 'mod_taskchain', $a);
         throw new coding_exception($hint); // $debuginfo
     }
@@ -511,7 +509,7 @@ class taskchain_base {
      * @return array, the methods defined on $this object
      */
     public function get_methods() {
-        if ($this->methods===null) {
+        if ($this->methods === null) {
             $this->methods = get_class_methods($this);
             sort($this->methods);
         }

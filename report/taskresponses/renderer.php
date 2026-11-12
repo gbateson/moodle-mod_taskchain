@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/report/taskquestions/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/report/taskquestions/renderer.php');
 
 /**
  * mod_taskchain_report_taskresponses_renderer
@@ -49,7 +48,7 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_t
      * @param xxx $column
      * @param xxx $response
      */
-    public function add_response_to_rawdata(&$table, $attemptid, $column, $response)  {
+    public function add_response_to_rawdata(&$table, $attemptid, $column, $response) {
         $text = '';
 
         static $str = null;
@@ -59,15 +58,15 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_t
                 'wrong'   => get_string('wrong', 'mod_taskchain'),
                 'ignored' => get_string('ignored', 'mod_taskchain'),
                 'score'   => get_string('score', 'mod_taskchain'),
-                'hintsclueschecks' => get_string('clues', 'mod_taskchain').','.get_string('hints', 'mod_taskchain').','.get_string('checks', 'mod_taskchain')
+                'hintsclueschecks' => get_string('clues', 'mod_taskchain') . ',' . get_string('hints', 'mod_taskchain') . ',' . get_string('checks', 'mod_taskchain'),
             );
         }
 
         static $class = null;
-        if ($class===null) {
+        if ($class === null) {
             $class = array(
-                'correct' => 'correct '.$this->get_css_class('grade_correct', 'tick_green_big'),
-                'wrong'   => 'wrong '.$this->get_css_class('grade_incorrect', 'cross_red_small'),
+                'correct' => 'correct ' . $this->get_css_class('grade_correct', 'tick_green_big'),
+                'wrong'   => 'wrong ' . $this->get_css_class('grade_incorrect', 'cross_red_small'),
                 'ignored' => 'ignored',
                 'score'   => 'score',
                 'hintsclueschecks' => 'hintsclueschecks',
@@ -77,7 +76,7 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_t
         // correct
         if ($value = $response->correct) {
             $value = $table->set_legend($column, $value);
-            $text .= html_writer::tag('li', $value, array('class'=>$class['correct']));
+            $text .= html_writer::tag('li', $value, array('class' => $class['correct']));
         }
 
         // wrong
@@ -86,7 +85,7 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_t
             foreach (explode(',', $value) as $v) {
                 $values[] = $table->set_legend($column, $v);
             }
-            $text .= html_writer::tag('li', implode(',', $values), array('class'=>$class['wrong']));
+            $text .= html_writer::tag('li', implode(',', $values), array('class' => $class['wrong']));
         }
 
         // ignored
@@ -95,24 +94,24 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_t
             foreach (explode(',', $value) as $v) {
                 $values[] = $table->set_legend($column, $v);
             }
-            $text .= html_writer::tag('li', implode(',', $values), array('class'=>$class['ignored']));
+            $text .= html_writer::tag('li', implode(',', $values), array('class' => $class['ignored']));
         }
 
         // numeric
         if (is_numeric($response->score)) {
-            $value = $response->score.'%';
-            $text .= html_writer::tag('li', $value, array('class'=>$class['score']));
+            $value = $response->score . '%';
+            $text .= html_writer::tag('li', $value, array('class' => $class['score']));
 
             $hints = empty($response->hints) ? 0 : $response->hints;
             $clues = empty($response->clues) ? 0 : $response->clues;
             $checks = empty($response->checks) ? 0 : $response->checks;
 
-            $value = '('.$hints.','.$clues.','.$checks.')';
-            $text .= html_writer::tag('li', $value, array('class'=>$class['hintsclueschecks']));
+            $value = '(' . $hints . ',' . $clues . ',' . $checks . ')';
+            $text .= html_writer::tag('li', $value, array('class' => $class['hintsclueschecks']));
         }
 
         if ($text) {
-            $text = html_writer::tag('ul', $text, array('class'=>'response'));
+            $text = html_writer::tag('ul', $text, array('class' => 'response'));
         }
 
         $table->rawdata[$attemptid]->$column = $text;
@@ -124,9 +123,9 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_t
      * @param xxx $new filename of icon
      * @param xxx $old filename of icon
      */
-    function get_css_class($new, $old)  {
+    function get_css_class($new, $old) {
         global $CFG;
-        if (file_exists($CFG->dirroot."/pix/i/$new.png")) {
+        if (file_exists($CFG->dirroot . "/pix/i/$new.png")) {
             // Moodle >= 2.4
             return $new;
         } else {

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/report/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/report/renderer.php');
 
 /**
  * mod_taskchain_report_taskclicktrail_renderer

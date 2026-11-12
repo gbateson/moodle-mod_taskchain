@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jquiz/xml/v6/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jquiz/xml/v6/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer
@@ -39,13 +38,12 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jquiz/xml/v6/renderer.ph
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskchain_attempt_hp_6_jquiz_xml_v6_renderer {
-
     /**
      * List of source types which this renderer can handle
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    public static function sourcetypes() {
         return array('hp_6_jquiz_xml');
     }
 
@@ -73,21 +71,20 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
     function fix_headcontent() {
         $search = '/ol.MCAnswers\{.*?\}/s';
         $replace = ''
-            ."ol.MCAnswers{\n"
-            ."	text-align: left;\n"
-            ."	list-style-type: none;\n"
-            ."	padding: 1.5em 0em;\n"
-            ."}\n"
-            ."ol.MCAnswers li button{\n"
-            ."	font-size: 1.1em;\n"
-            ."}\n"
-        ;
+            . "ol.MCAnswers{\n"
+            . "	text-align: left;\n"
+            . "	list-style-type: none;\n"
+            . "	padding: 1.5em 0em;\n"
+            . "}\n"
+            . "ol.MCAnswers li button{\n"
+            . "	font-size: 1.1em;\n"
+            . "}\n";
         $this->headcontent = preg_replace($search, $replace, $this->headcontent, 1);
 
         // accept all answers as "correct" answers, so that Finished gets set to true
         $search = "/(I\[\d\]\[3\]\[\d\] = new Array\('.*',\d,)0(\d\);)/";
         $replace = '$1,1,$2';
-        //$this->headcontent = preg_replace($search, $replace, $this->headcontent);
+        // $this->headcontent = preg_replace($search, $replace, $this->headcontent);
 
         parent::fix_headcontent();
     }
@@ -101,7 +98,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
     function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'FuncBtnDown';
+        $names .= ($names ? ',' : '') . 'FuncBtnDown';
         return $names;
     }
 
@@ -117,10 +114,9 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
         $substr = substr($str, $start, $length);
         if ($pos = strrchr($substr, '}')) {
             $insert = ''
-                ."	FuncBtnOut = function() {}\n"
-                ."	FuncBtnOver = function() {}\n"
-            ;
-            $substr = substr_replace($substr, $insert, $pos-1, 0);
+                . "	FuncBtnOut = function() {}\n"
+                . "	FuncBtnOver = function() {}\n";
+            $substr = substr_replace($substr, $insert, $pos - 1, 0);
         }
         $str = substr_replace($str, $substr, $start, $length);
     }
@@ -162,7 +158,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
 
         parent::fix_js_CheckFinished($substr, 0, $length);
 
-        $search = '/\s*'.'Btn.innerHTML = [^;]*;'.'/s';
+        $search = '/\s*' . 'Btn.innerHTML = [^;]*;' . '/s';
         $substr = preg_replace($search, '', $substr);
 
         $str = substr_replace($str, $substr, $start, $length);
@@ -181,7 +177,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
 
         parent::fix_js_CheckFinished($substr, 0, $length);
 
-        $search = '/setTimeout'.'[^;]*'.';/';
+        $search = '/setTimeout' . '[^;]*' . ';/';
         $replace = "setTimeout('HP_send_results('+TaskEvent+')', SubmissionTimeout)";
         $substr = preg_replace($search, $replace, $substr, 1);
 

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/mediafilter/class.php');
+require_once($CFG->dirroot . '/mod/taskchain/mediafilter/class.php');
 
 /**
  * taskchain_mediafilter_moodle
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/mediafilter/class.php');
  * @package    mod_taskchain
  */
 class taskchain_mediafilter_moodle extends taskchain_mediafilter {
-
     /*
      * mediaplugin_filter
      *
@@ -47,7 +45,7 @@ class taskchain_mediafilter_moodle extends taskchain_mediafilter {
      * @param xxx $text
      * @param xxx $options (optional, ddefault=array())
      */
-    public function mediaplugin_filter($taskchain, $text, $options=array()) {
+    public function mediaplugin_filter($taskchain, $text, $options = array()) {
         global $CFG, $PAGE;
         static $eolas_fix_applied = 0;
 
@@ -55,20 +53,20 @@ class taskchain_mediafilter_moodle extends taskchain_mediafilter {
         $filter = taskchain_get_mediaplugin_filter($taskchain->context, array());
         $newtext = $filter->filter($text);
 
-        if ($newtext==$text) {
+        if ($newtext == $text) {
             // do nothing
-        } else if ($eolas_fix_applied==$taskchain->id) {
+        } else if ($eolas_fix_applied == $taskchain->id) {
             // eolas_fix.js and ufo.js have already been added for this task
         } else {
-            if ($eolas_fix_applied==0) {
+            if ($eolas_fix_applied == 0) {
                 // 1st task - eolas_fix.js was added by filter/mediaplugin/filter.php
             } else {
                 // 2nd (or later) task - e.g. we are being called by taskchain_cron()
                 $PAGE->requires->js('/mod/taskchain/mediafilter/eolas_fix.js');
-                //$newtext .= '<script defer="defer" src="'.$CFG->wwwroot.'/mod/taskchain/mediafilter/eolas_fix.js" type="text/javascript"></script>';
+                // $newtext .= '<script defer="defer" src="'.$CFG->wwwroot.'/mod/taskchain/mediafilter/eolas_fix.js" type="text/javascript"></script>';
             }
             $PAGE->requires->js('/mod/taskchain/mediafilter/ufo.js', true);
-            //$newtext .= '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/taskchain/mediafilter/ufo.js"></script>';
+            // $newtext .= '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/taskchain/mediafilter/ufo.js"></script>';
             $eolas_fix_applied = $taskchain->id;
         }
 

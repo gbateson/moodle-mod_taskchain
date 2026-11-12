@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/xml/v6/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/xml/v6/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/xml/v6/renderer.p
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_taskchain_attempt_hp_6_jcloze_xml_v6_renderer {
-
     /**
      * get_js_functionnames
      *
@@ -49,7 +47,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
     public function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'CheckAnswer';
+        $names .= ($names ? ',' : '') . 'CheckAnswer';
         return $names;
     }
 
@@ -124,96 +122,94 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
 
         $search = '/for \(var i \= 0; i<I\.length; i\+\+\)\{(.*?)(?=var TotalScore = 0;)/s';
         $replace = "\n"
-            ."	var clues = new Array();\n"
-            ."	var li = ListItems[CurrentListItem];\n"
-            ."	if (li && li.AnsweredCorrectly==false) {\n"
-            ."\n"
-            ."		var gapid = new RegExp('^Gap([0-9]+)\$');\n"
-            ."		var ListItemScore = 0;\n"
-            ."\n"
-            ."		var g_max = li.gaps.length;\n"
-            ."		for (var g=0; g<g_max; g++) {\n"
-            ."\n"
-            ."			var m = li.gaps[g].id.match(gapid);\n"
-            ."			if (! m) {\n"
-            ."				continue;\n"
-            ."			}\n"
-            ."\n"
-            ."			var i = parseInt(m[1]);\n"
-            ."			if (! State[i]) {\n"
-            ."				continue;\n"
-            ."			}\n"
-            ."\n"
-            ."			if (State[i].AnsweredCorrectly) {\n"
-            ."				ListItemScore += State[i].ItemScore;\n"
-            ."			} else {\n"
-            ."				var GapValue = GetGapValue(i);\n"
-            ."				if (typeof(GapValue)=='string' && GapValue=='') {\n"
-            ."					// not answered yet\n"
-            ."					AllCorrect = false;\n"
-            ."				} else if (CheckAnswer(i, true) > -1) {\n"
-            ."					// correct answer\n"
-            ."					var TotalChars = GapValue.length;\n"
-            ."					State[i].ItemScore = (TotalChars-State[i].HintsAndChecks)/TotalChars;\n"
-            ."					if (State[i].ClueGiven){\n"
-            ."						State[i].ItemScore /= 2;\n"
-            ."					}\n"
-            ."					if (State[i].ItemScore < 0){\n"
-            ."						State[i].ItemScore = 0;\n"
-            ."					}\n"
-            ."					State[i].AnsweredCorrectly = true;\n"
-            ."					SetCorrectAnswer(i, GapValue);\n"
-            ."					ListItemScore += State[i].ItemScore;\n"
-            ."				} else {\n"
-            ."					// wrong answer\n"
-            ."					var clue = I[i][2];\n"
-            ."					if (clue) {\n"
-            ."						var c_max = clues.length;\n"
-            ."						for (var c=0; c<c_max; c++) {\n"
-            ."							if (clues[c]==clue) {\n"
-            ."								break;\n"
-            ."							}\n"
-            ."						}\n"
-            ."						if (c==c_max) {\n"
-            ."							clues[c] = clue;\n"
-            ."						}\n"
-            ."						State[i].ClueGiven = true;\n"
-            ."					}\n"
-            ."					AllCorrect = false;\n"
-            ."				}\n"
-            ."			}\n"
-            ."		}\n"
-            ."		li.AnsweredCorrectly = AllCorrect;\n"
-            ."		if (li.AnsweredCorrectly) {\n"
-            ."			li.score = Math.round(100 * (ListItemScore / g_max));\n"
-            ."			var next_i = CurrentListItem;\n"
-            ."			var i_max = ListItems.length;\n"
-            ."			for (var i=0; i<i_max; i++) {\n"
-            ."				var next_i = (CurrentListItem + i + 1) % i_max;\n"
-            ."				if (ListItems[next_i].AnsweredCorrectly==false) {\n"
-            ."					break;\n"
-            ."				}\n"
-            ."			}\n"
-            ."			if (next_i==CurrentListItem) {\n"
-            ."				AA_SetProgressBar(next_i);\n"
-            ."			} else {\n"
-            ."				AA_ChangeListItem(next_i);\n"
-            ."			}\n"
-            ."		}\n"
-            ."	}\n"
-            ."	li = null;\n"
-            ."	clues = clues.join('\\n\\n');\n"
-            .'	'
-        ;
+            . "	var clues = new Array();\n"
+            . "	var li = ListItems[CurrentListItem];\n"
+            . "	if (li && li.AnsweredCorrectly==false) {\n"
+            . "\n"
+            . "		var gapid = new RegExp('^Gap([0-9]+)\$');\n"
+            . "		var ListItemScore = 0;\n"
+            . "\n"
+            . "		var g_max = li.gaps.length;\n"
+            . "		for (var g=0; g<g_max; g++) {\n"
+            . "\n"
+            . "			var m = li.gaps[g].id.match(gapid);\n"
+            . "			if (! m) {\n"
+            . "				continue;\n"
+            . "			}\n"
+            . "\n"
+            . "			var i = parseInt(m[1]);\n"
+            . "			if (! State[i]) {\n"
+            . "				continue;\n"
+            . "			}\n"
+            . "\n"
+            . "			if (State[i].AnsweredCorrectly) {\n"
+            . "				ListItemScore += State[i].ItemScore;\n"
+            . "			} else {\n"
+            . "				var GapValue = GetGapValue(i);\n"
+            . "				if (typeof(GapValue)=='string' && GapValue=='') {\n"
+            . "					// not answered yet\n"
+            . "					AllCorrect = false;\n"
+            . "				} else if (CheckAnswer(i, true) > -1) {\n"
+            . "					// correct answer\n"
+            . "					var TotalChars = GapValue.length;\n"
+            . "					State[i].ItemScore = (TotalChars-State[i].HintsAndChecks)/TotalChars;\n"
+            . "					if (State[i].ClueGiven){\n"
+            . "						State[i].ItemScore /= 2;\n"
+            . "					}\n"
+            . "					if (State[i].ItemScore < 0){\n"
+            . "						State[i].ItemScore = 0;\n"
+            . "					}\n"
+            . "					State[i].AnsweredCorrectly = true;\n"
+            . "					SetCorrectAnswer(i, GapValue);\n"
+            . "					ListItemScore += State[i].ItemScore;\n"
+            . "				} else {\n"
+            . "					// wrong answer\n"
+            . "					var clue = I[i][2];\n"
+            . "					if (clue) {\n"
+            . "						var c_max = clues.length;\n"
+            . "						for (var c=0; c<c_max; c++) {\n"
+            . "							if (clues[c]==clue) {\n"
+            . "								break;\n"
+            . "							}\n"
+            . "						}\n"
+            . "						if (c==c_max) {\n"
+            . "							clues[c] = clue;\n"
+            . "						}\n"
+            . "						State[i].ClueGiven = true;\n"
+            . "					}\n"
+            . "					AllCorrect = false;\n"
+            . "				}\n"
+            . "			}\n"
+            . "		}\n"
+            . "		li.AnsweredCorrectly = AllCorrect;\n"
+            . "		if (li.AnsweredCorrectly) {\n"
+            . "			li.score = Math.round(100 * (ListItemScore / g_max));\n"
+            . "			var next_i = CurrentListItem;\n"
+            . "			var i_max = ListItems.length;\n"
+            . "			for (var i=0; i<i_max; i++) {\n"
+            . "				var next_i = (CurrentListItem + i + 1) % i_max;\n"
+            . "				if (ListItems[next_i].AnsweredCorrectly==false) {\n"
+            . "					break;\n"
+            . "				}\n"
+            . "			}\n"
+            . "			if (next_i==CurrentListItem) {\n"
+            . "				AA_SetProgressBar(next_i);\n"
+            . "			} else {\n"
+            . "				AA_ChangeListItem(next_i);\n"
+            . "			}\n"
+            . "		}\n"
+            . "	}\n"
+            . "	li = null;\n"
+            . "	clues = clues.join('\\n\\n');\n"
+            . '	';
         $substr = preg_replace($search, $replace, $substr, 1);
 
         $search = '		TotalScore += State[i].ItemScore;';
         if ($pos = strpos($substr, $search)) {
             $insert = ''
-                ."		if (State[i].AnsweredCorrectly==false) {\n"
-                ."			AllCorrect = false;\n"
-                ."		}\n"
-            ;
+                . "		if (State[i].AnsweredCorrectly==false) {\n"
+                . "			AllCorrect = false;\n"
+                . "		}\n";
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
@@ -273,41 +269,41 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
             $item = "[$i]['#']";
             $text = $this->TC->task->source->xml_value($open_text, $item);
             if ($this->TC->task->source->xml_value($question_record, $item)) {
-                $gap .= '<span class="GapSpan" id="GapSpan'.$i.'">';
+                $gap .= '<span class="GapSpan" id="GapSpan' . $i . '">';
                 if (is_array($wordlist)) {
-                    $gap .= '<select id="Gap'.$i.'"><option value=""></option>'.$wordlist[$i].'</select>';
+                    $gap .= '<select id="Gap' . $i . '"><option value=""></option>' . $wordlist[$i] . '</select>';
                 } else if ($wordlist) {
-                    $gap .= '<select id="Gap'.$i.'"><option value=""></option>'.$wordlist.'</select>';
+                    $gap .= '<select id="Gap' . $i . '"><option value=""></option>' . $wordlist . '</select>';
                 } else {
                     // minimum gap size
-                    if (! $gapsize = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software.'-config-file,'.$this->TC->task->source->hbs_tasktype.',minimum-gap-size')) {
+                    if (! $gapsize = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',minimum-gap-size')) {
                         $gapsize = 6;
                     }
 
                     // increase gap size to length of longest answer for this gap
                     $a = 0;
-                    while (($answer=$item."['answer'][$a]['#']") && $this->TC->task->source->xml_value($question_record, $answer)) {
-                        $answertext = $this->TC->task->source->xml_value($question_record,  $answer."['text'][0]['#']");
+                    while (($answer = $item . "['answer'][$a]['#']") && $this->TC->task->source->xml_value($question_record, $answer)) {
+                        $answertext = $this->TC->task->source->xml_value($question_record, $answer . "['text'][0]['#']");
                         $answertext = preg_replace('/&[#a-zA-Z0-9]+;/', 'x', $answertext);
                         $gapsize = max($gapsize, strlen($answertext));
                         $a++;
                     }
 
-                    $gap .= '<input type="text" id="Gap'.$i.'" onfocus="TrackFocus('.$i.')" onblur="LeaveGap()" class="GapBox" size="'.$gapsize.'"></input>';
+                    $gap .= '<input type="text" id="Gap' . $i . '" onfocus="TrackFocus(' . $i . ')" onblur="LeaveGap()" class="GapBox" size="' . $gapsize . '"></input>';
                 }
                 if ($includeclues) {
-                    $clue = $this->TC->task->source->xml_value($question_record, $item."['clue'][0]['#']");
+                    $clue = $this->TC->task->source->xml_value($question_record, $item . "['clue'][0]['#']");
                     if (strlen((string)$clue)) {
-                        $gap .= '<button style="line-height: 1.0" class="FuncButton" onfocus="FuncBtnOver(this)" onmouseover="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="ShowClue('.$i.')">'.$cluecaption.'</button>';
+                        $gap .= '<button style="line-height: 1.0" class="FuncButton" onfocus="FuncBtnOver(this)" onmouseover="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="ShowClue(' . $i . ')">' . $cluecaption . '</button>';
                     }
                 }
                 $gap .= '</span>';
             }
             if (strlen((string)$text) || strlen($gap)) {
                 if ($startwithgap) {
-                    $str .= $gap.$text;
+                    $str .= $gap . $text;
                 } else {
-                    $str .= $text.$gap;
+                    $str .= $text . $gap;
                 }
                 $i++;
             } else {
@@ -315,7 +311,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
                 $looping = false;
             }
         }
-        if ($i==0) {
+        if ($i == 0) {
             // oops, no gaps found!
             return $this->TC->task->source->xml_value($tags);
         } else {
@@ -339,11 +335,11 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
         if ($this->use_DropDownList()) {
             $q = 0;
             $tags = 'data,gap-fill,question-record';
-            while (($question="[$q]['#']") && $this->TC->task->source->xml_value($tags, $question)) {
+            while (($question = "[$q]['#']") && $this->TC->task->source->xml_value($tags, $question)) {
                 $a = 0;
                 $aa = 0;
-                while (($answer=$question."['answer'][$a]['#']") && $this->TC->task->source->xml_value($tags, $answer)) {
-                    $text = $this->TC->task->source->xml_value($tags,  $answer."['text'][0]['#']");
+                while (($answer = $question . "['answer'][$a]['#']") && $this->TC->task->source->xml_value($tags, $answer)) {
+                    $text = $this->TC->task->source->xml_value($tags, $answer . "['text'][0]['#']");
                     if (strlen((string)$text)) {
                         $wordlists[$q][$aa] = $text;
                         $words[] = $text;
@@ -357,7 +353,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
 
                     $wordlist = '';
                     foreach ($wordlists[$q] as $word) {
-                        $wordlist .= '<option value="'.$word.'">'.$word.'</option>';
+                        $wordlist .= '<option value="' . $word . '">' . $word . '</option>';
                     }
                     $wordlists[$q] = $wordlist;
 
@@ -375,7 +371,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
         if ($singlewordlist) {
             $wordlist = '';
             foreach ($words as $word) {
-                $wordlist .= '<option value="'.$word.'">'.$word.'</option>';
+                $wordlist .= '<option value="' . $word . '">' . $word . '</option>';
             }
             return $wordlist;
         } else {

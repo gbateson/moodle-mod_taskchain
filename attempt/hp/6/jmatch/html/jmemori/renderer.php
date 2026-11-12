@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmatch/html/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/html/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmatch/html/renderer.php
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskchain_attempt_hp_6_jmatch_html_renderer {
-
     public $js_object_type = 'JMemori';
 
     /**
@@ -49,7 +47,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
         // replace standard jcloze.js with jmemori.js
         $this->javascripts = preg_grep('/jmatch.js/', $this->javascripts, PREG_GREP_INVERT);
@@ -61,7 +59,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    public static function sourcetypes() {
         return array('hp_6_jmatch_html_jmemori');
     }
 
@@ -70,7 +68,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      *
      * @todo Finish documenting this function
      */
-    public function fix_headcontent()  {
+    public function fix_headcontent() {
         $this->fix_headcontent_rottmeier('jmemori');
     }
 
@@ -79,7 +77,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      *
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent()  {
+    public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier();
         parent::fix_bodycontent();
     }
@@ -89,7 +87,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      *
      * @todo Finish documenting this function
      */
-    public function fix_title()  {
+    public function fix_title() {
         $this->fix_title_rottmeier_JMemori();
     }
 
@@ -99,10 +97,10 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_js_functionnames()  {
+    public function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'ShowSolution,CheckPair,WriteFeedback';
+        $names .= ($names ? ',' : '') . 'ShowSolution,CheckPair,WriteFeedback';
         return $names;
     }
 
@@ -114,7 +112,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_WriteFeedback(&$str, $start, $length)  {
+    public function fix_js_WriteFeedback(&$str, $start, $length) {
         $this->fix_js_WriteFeedback_JMemori($str, $start, $length);
     }
 
@@ -126,7 +124,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_HideFeedback(&$str, $start, $length)  {
+    public function fix_js_HideFeedback(&$str, $start, $length) {
         $this->fix_js_HideFeedback_JMemori($str, $start, $length);
     }
 
@@ -138,7 +136,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_ShowSolution(&$str, $start, $length)  {
+    public function fix_js_ShowSolution(&$str, $start, $length) {
         $this->fix_js_ShowSolution_JMemori($str, $start, $length);
     }
 
@@ -150,7 +148,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_CheckPair(&$str, $start, $length)  {
+    public function fix_js_CheckPair(&$str, $start, $length) {
         $this->fix_js_CheckPair_JMemori($str, $start, $length);
     }
 
@@ -160,7 +158,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CheckPair';
     }
 
@@ -170,7 +168,7 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_search()  {
+    public function get_stop_function_search() {
         return '/\s*if \((Pairs == F\.length)\)({.*?)setTimeout.*?}/s';
     }
 
@@ -180,9 +178,9 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_args()  {
+    public function get_stop_function_args() {
         // the arguments required by CheckPair
-        return '-1,'.mod_taskchain::STATUS_ABANDONED;
+        return '-1,' . mod_taskchain::STATUS_ABANDONED;
     }
 
     /**
@@ -191,10 +189,9 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_intercept()  {
+    public function get_stop_function_intercept() {
         return "\n"
-            ."	// intercept this Check\n"
-            ."	if (id>=0) HP.onclickCheck(id);\n"
-        ;
+            . "	// intercept this Check\n"
+            . "	if (id>=0) HP.onclickCheck(id);\n";
     }
 }

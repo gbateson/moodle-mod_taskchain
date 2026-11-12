@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/html/review.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/html/review.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jcloze_html_findit_review
@@ -39,14 +38,13 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/html/review.php')
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_html_findit_review extends mod_taskchain_attempt_hp_6_jcloze_html_review {
-
     /**
      * attempt_fields
      *
      * @return xxx
      * @todo Finish documenting this function
      */
-    static function attempt_fields()   {
+    static function attempt_fields() {
         return array('tnumber', 'score', 'penalties', 'status', 'duration', 'timestart');
     }
 }

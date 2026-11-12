@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/xml/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/xml/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jcloze_xml_dropdown_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/xml/renderer.php'
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_xml_dropdown_renderer extends mod_taskchain_attempt_hp_6_jcloze_xml_renderer {
-
     public $js_object_type = 'JClozeDropDown';
 
     /**
@@ -49,7 +47,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_dropdown_renderer extends mod_taskch
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
         // prepend templates for this output format
@@ -65,7 +63,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_dropdown_renderer extends mod_taskch
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    public static function sourcetypes() {
         return array('hp_6_jcloze_xml');
     }
 
@@ -75,10 +73,10 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_dropdown_renderer extends mod_taskch
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_js_functionnames()  {
+    public function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'Show_Solution,Build_GapText';
+        $names .= ($names ? ',' : '') . 'Show_Solution,Build_GapText';
         return $names;
     }
 
@@ -87,7 +85,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_dropdown_renderer extends mod_taskch
      *
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent()  {
+    public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier(true);
     }
 
@@ -110,35 +108,34 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_dropdown_renderer extends mod_taskch
             $replace = 'SelectorList = AlphabeticalSort(SelectorList, x);';
             $substr = str_replace($search, $replace, $substr);
             $substr .= "\n"
-                ."function AlphabeticalSort(SelectorList, x) {\n"
-                ."	if (MakeIndividualDropdowns) {\n"
-                ."		var y_max = I[x][1].length - 1;\n"
-                ."	} else {\n"
-                ."		var y_max = I.length - 1;\n"
-                ."	}\n"
-                ."	var sorted = false;\n"
-                ."	while (! sorted) {\n"
-                ."		sorted = true;\n"
-                ."		for (var y=0; y<y_max; y++) {\n"
-                ."			var y1 = SelectorList[y];\n"
-                ."			var y2 = SelectorList[y + 1];\n"
-                ."			if (MakeIndividualDropdowns) {\n"
-                ."				var s1 = I[x][1][y1][0].toLowerCase();\n"
-                ."				var s2 = I[x][1][y2][0].toLowerCase();\n"
-                ."			} else {\n"
-                ."				var s1 = I[y1][1][0][0].toLowerCase();\n"
-                ."				var s2 = I[y2][1][0][0].toLowerCase();\n"
-                ."			}\n"
-                ."			if (s1 > s2) {\n"
-                ."				sorted = false;\n"
-                ."				SelectorList[y] = y2;\n"
-                ."				SelectorList[y + 1] = y1;\n"
-                ."			}\n"
-                ."		}\n"
-                ."	}\n"
-                ."	return SelectorList;\n"
-                ."}\n"
-            ;
+                . "function AlphabeticalSort(SelectorList, x) {\n"
+                . "	if (MakeIndividualDropdowns) {\n"
+                . "		var y_max = I[x][1].length - 1;\n"
+                . "	} else {\n"
+                . "		var y_max = I.length - 1;\n"
+                . "	}\n"
+                . "	var sorted = false;\n"
+                . "	while (! sorted) {\n"
+                . "		sorted = true;\n"
+                . "		for (var y=0; y<y_max; y++) {\n"
+                . "			var y1 = SelectorList[y];\n"
+                . "			var y2 = SelectorList[y + 1];\n"
+                . "			if (MakeIndividualDropdowns) {\n"
+                . "				var s1 = I[x][1][y1][0].toLowerCase();\n"
+                . "				var s2 = I[x][1][y2][0].toLowerCase();\n"
+                . "			} else {\n"
+                . "				var s1 = I[y1][1][0][0].toLowerCase();\n"
+                . "				var s2 = I[y2][1][0][0].toLowerCase();\n"
+                . "			}\n"
+                . "			if (s1 > s2) {\n"
+                . "				sorted = false;\n"
+                . "				SelectorList[y] = y2;\n"
+                . "				SelectorList[y + 1] = y1;\n"
+                . "			}\n"
+                . "		}\n"
+                . "	}\n"
+                . "	return SelectorList;\n"
+                . "}\n";
         }
 
         $str = substr_replace($str, $substr, $start, $length);

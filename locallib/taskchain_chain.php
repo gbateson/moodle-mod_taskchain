@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -36,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_chain extends taskchain_base {
-
     /** db field: id (primary key, default=null) */
     private $id                  = null;
 
@@ -137,7 +135,7 @@ class taskchain_chain extends taskchain_base {
     private $gradeweighting      = 100;
 
     /** name of associated taskchain record */
-    //private $name                = null;
+    // private $name                = null;
 
     /**
      * get the "id" property
@@ -800,4 +798,3 @@ class taskchain_chain extends taskchain_base {
         $DB->set_field('grade_items', $fieldname, $value, $params);
     }
 }
-

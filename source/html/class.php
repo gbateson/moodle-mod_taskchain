@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/source/class.php');
+require_once($CFG->dirroot . '/mod/taskchain/source/class.php');
 
 /**
  * taskchain_source_html
@@ -48,7 +47,7 @@ class taskchain_source_html extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_name()  {
+    public function get_name() {
         if (! isset($this->name)) {
             $this->name = '';
             $this->title = '';
@@ -60,12 +59,11 @@ class taskchain_source_html extends taskchain_source {
 
             $search = '/<((?:h[1-6])|p|div|title)[^>]*>(.*?)<\/\1[^>]*>/is';
             if (preg_match_all($search, $this->filecontents, $matches)) {
-
                 // search string to match style and script blocks
                 $search = '/<(script|style)[^>]*>.*?<\/\1[^>]*>\s/is';
 
                 $i_max = count($matches[0]);
-                for ($i=0; $i<$i_max; $i++) {
+                for ($i = 0; $i < $i_max; $i++) {
                     $match = $matches[2][$i];
                     $match = preg_replace($search, '', $match);
                     if ($this->name = trim(strip_tags($match))) {
@@ -87,7 +85,6 @@ class taskchain_source_html extends taskchain_source {
     public function get_title() {
         $this->get_name(); // set name and title
         return $this->title;
-
     }
 
     // returns the introduction text for a task
@@ -107,7 +104,7 @@ class taskchain_source_html extends taskchain_source {
                 return false;
             }
             if (preg_match('/<(div|p)[^>]*>\s*(.*?)\s*<\/$1>/is', $this->filecontents, $matches)) {
-                $this->entrytext .= '<'.$matches[1].'>'.$matches[2].'</'.$matches[1].'>';
+                $this->entrytext .= '<' . $matches[1] . '>' . $matches[2] . '</' . $matches[1] . '>';
             }
         }
         return $this->entrytext;

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -37,10 +36,10 @@ defined('MOODLE_INTERNAL') || die();
  */
 class taskchain_mediaplayer_image extends taskchain_mediaplayer {
     public $aliases = array('img');
-    public $media_filetypes = array('gif','jpg','png');
+    public $media_filetypes = array('gif', 'jpg', 'png');
     public $options = array(
         'width' => 0, 'height' => 0, 'build' => 0,
-        'quality' => '', 'majorversion' => '', 'flashvars' => ''
+        'quality' => '', 'majorversion' => '', 'flashvars' => '',
     );
     public $spantext = '';
     public $removelink = false;
@@ -55,8 +54,8 @@ class taskchain_mediaplayer_image extends taskchain_mediaplayer {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function generate($filetype, $link, $mediaurl, $options)  {
-        $img = '<img src="'.$mediaurl.'"';
+    public function generate($filetype, $link, $mediaurl, $options) {
+        $img = '<img src="' . $mediaurl . '"';
         if (array_key_exists('player', $options)) {
             unset($options['player']);
         }
@@ -65,7 +64,7 @@ class taskchain_mediaplayer_image extends taskchain_mediaplayer {
         }
         foreach ($options as $name => $value) {
             if ($value) {
-                $img .= ' '.$name.'="'.$value.'"';
+                $img .= ' ' . $name . '="' . $value . '"';
             }
         }
         $img .= ' />';

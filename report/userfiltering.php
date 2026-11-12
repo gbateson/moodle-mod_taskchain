@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/user/filters/lib.php');
+require_once($CFG->dirroot . '/user/filters/lib.php');
 
 /**
  * taskchain_user_filtering
@@ -38,7 +37,6 @@ require_once($CFG->dirroot.'/user/filters/lib.php');
  * @since     Moodle 2.0
  */
 class taskchain_user_filtering extends user_filtering {
-
     /**
      * get_field
      *
@@ -46,10 +44,10 @@ class taskchain_user_filtering extends user_filtering {
      * @param xxx $advanced
      * @return xxx
      */
-    function get_field($fieldname, $advanced)  {
+    function get_field($fieldname, $advanced) {
         // taskchain version of standard function
 
-        $default = get_user_preferences('taskchain_'.$fieldname, '');
+        $default = get_user_preferences('taskchain_' . $fieldname, '');
         $rawdata = data_submitted();
         if ($rawdata && isset($rawdata->$fieldname) && ! is_array($rawdata->$fieldname)) {
             $default = optional_param($fieldname, $default, PARAM_ALPHANUM);
@@ -92,7 +90,7 @@ class taskchain_user_filtering extends user_filtering {
      * @param array named params (recommended prefix ex)
      * @return array sql string and $params
      */
-    function get_sql_filter($extra='', $params=null) {
+    function get_sql_filter($extra = '', $params = null) {
         list($filter, $params) = parent::get_sql_filter($extra, $params);
 
         // remove empty " AND " conditions at start, middle and end of filter
@@ -109,7 +107,7 @@ class taskchain_user_filtering extends user_filtering {
      * @param array named params (recommended prefix ex)
      * @return array sql string and $params
      */
-    function get_sql_filter_attempts($extra='', $params=null) {
+    function get_sql_filter_attempts($extra = '', $params = null) {
         global $SESSION;
 
         $filters = array();
@@ -123,8 +121,7 @@ class taskchain_user_filtering extends user_filtering {
         }
 
         if (! empty($SESSION->user_filtering)) {
-            foreach ($SESSION->user_filtering as $fieldname=>$fielddata) {
-
+            foreach ($SESSION->user_filtering as $fieldname => $fielddata) {
                 if (! array_key_exists($fieldname, $this->_fields)) {
                     continue;
                 }
@@ -134,7 +131,7 @@ class taskchain_user_filtering extends user_filtering {
                     continue;
                 }
 
-                foreach($fielddata as $data) {
+                foreach ($fielddata as $data) {
                     list($f, $p) = $field->get_sql_filter_attempts($data);
                     if ($f) {
                         $filters[] = $f;
@@ -164,7 +161,7 @@ class taskchain_filter_group extends user_filter_select {
      * @param boolean $advanced advanced form element flag
      * @param mixed $default option
      */
-    function __construct($filtername, $advanced, $default=null) {
+    function __construct($filtername, $advanced, $default = null) {
         global $TC; // taskchain object
 
         $label = '';
@@ -195,22 +192,22 @@ class taskchain_filter_group extends user_filter_select {
         foreach ($groupings as $gid => $grouping) {
             if ($count = $TC->get_count_grouping_members($gid)) {
                 if ($has_groups) {
-                    $prefix = $strgrouping.': ';
+                    $prefix = $strgrouping . ': ';
                 } else {
                     $prefix = '';
                 }
-                $options["grouping$gid"] = $prefix.format_string($grouping->name).' ('.$count.')';
+                $options["grouping$gid"] = $prefix . format_string($grouping->name) . ' (' . $count . ')';
             }
         }
 
         foreach ($groups as $gid => $group) {
             if ($count = $TC->get_count_group_members($gid)) {
                 if ($has_groupings) {
-                    $prefix = $strgroup.': ';
+                    $prefix = $strgroup . ': ';
                 } else {
                     $prefix = '';
                 }
-                $options["group$gid"] = $prefix.format_string($group->name).' ('.$count.')';
+                $options["group$gid"] = $prefix . format_string($group->name) . ' (' . $count . ')';
             }
         }
 
@@ -222,7 +219,7 @@ class taskchain_filter_group extends user_filter_select {
      *
      * @param xxx $mform (passed by reference)
      */
-    function setupForm(&$mform)  {
+    function setupForm(&$mform) {
         // only setup the select element if it has any options
         if (count($this->_options)) {
             parent::setupForm($mform);
@@ -235,17 +232,16 @@ class taskchain_filter_group extends user_filter_select {
      * @param xxx $data
      * @return xxx
      */
-    function get_sql_filter($data)  {
+    function get_sql_filter($data) {
         global $DB, $TC;
 
         $filter = '';
         $params = array();
 
         if (($value = $data['value']) && ($operator = $data['operator'])) {
-
             $userids = array();
-            if (substr($value, 0, 5)=='group') {
-                if (substr($value, 5, 3)=='ing') {
+            if (substr($value, 0, 5) == 'group') {
+                if (substr($value, 5, 3) == 'ing') {
                     $gids = groups_get_all_groupings($TC->course->id);
                     $gid = intval(substr($value, 8));
                     if ($gids && array_key_exists($gid, $gids)) {
@@ -261,7 +257,7 @@ class taskchain_filter_group extends user_filter_select {
             }
 
             if (count($userids)) {
-                switch($operator) {
+                switch ($operator) {
                     case 1: // is equal to
                         list($filter, $params) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, '', true);
                         break;
@@ -270,7 +266,7 @@ class taskchain_filter_group extends user_filter_select {
                         break;
                 }
                 if ($filter) {
-                    $filter = 'id '.$filter;
+                    $filter = 'id ' . $filter;
                 }
             }
         }
@@ -295,7 +291,7 @@ class taskchain_filter_status extends user_filter_select {
      * @param boolean $advanced advanced form element flag
      * @param mixed $default option
      */
-    function __construct($name, $advanced, $default=null) {
+    function __construct($name, $advanced, $default = null) {
         $label = get_string($name, 'mod_taskchain');
         $options = taskchain_available::statuses_list();
         parent::__construct($name, $label, $advanced, '', $options, $default);
@@ -307,7 +303,7 @@ class taskchain_filter_status extends user_filter_select {
      * @param xxx $data
      * @return xxx
      */
-    function get_sql_filter($data)  {
+    function get_sql_filter($data) {
         // this field type doesn't affect the selection of users
         return array('', array());
     }
@@ -318,20 +314,20 @@ class taskchain_filter_status extends user_filter_select {
      * @param xxx $data
      * @return xxx
      */
-    function get_sql_filter_attempts($data)  {
+    function get_sql_filter_attempts($data) {
         static $counter = 0;
-        $name = 'ex_status'.$counter++;
+        $name = 'ex_status' . $counter++;
 
         $filter = '';
         $params = array();
         if (($value = $data['value']) && ($operator = $data['operator'])) {
-            switch($operator) {
+            switch ($operator) {
                 case 1: // is equal to
-                    $filter = 'status=:'.$name;
+                    $filter = 'status=:' . $name;
                     $params[$name] = $value;
                     break;
                 case 2: // isn't equal to
-                    $filter = 'status<>:'.$name;
+                    $filter = 'status<>:' . $name;
                     $params[$name] = $value;
                     break;
             }
@@ -355,7 +351,7 @@ class taskchain_filter_number extends user_filter_select {
      * @param boolean $advanced advanced form element flag
      * @param mixed $default option
      */
-    function __construct($name, $label, $advanced, $default=null) {
+    function __construct($name, $label, $advanced, $default = null) {
         parent::user_filter_type($name, $label, $advanced);
 
         $this->_field   = '';
@@ -367,9 +363,9 @@ class taskchain_filter_number extends user_filter_select {
      * @return array of comparison operators
      */
     function get_operators() {
-        return array(0 => get_string('isanyvalue','filters'),
+        return array(0 => get_string('isanyvalue', 'filters'),
                      1 => get_string('islessthan', 'mod_taskchain'),
-                     2 => get_string('isequalto','filters'),
+                     2 => get_string('isequalto', 'filters'),
                      3 => get_string('isgreaterthan', 'mod_taskchain'));
     }
 
@@ -378,15 +374,15 @@ class taskchain_filter_number extends user_filter_select {
      *
      * @param xxx $mform (passed by reference)
      */
-    function setupForm(&$mform)  {
+    function setupForm(&$mform) {
         $objs = array(
-            $mform->createElement('select', $this->_name.'_op', null, $this->get_operators()),
-            $mform->createElement('text', $this->_name, null, array('size' => '3'))
+            $mform->createElement('select', $this->_name . '_op', null, $this->get_operators()),
+            $mform->createElement('text', $this->_name, null, array('size' => '3')),
         );
-        $mform->addElement('group', $this->_name.'_grp', $this->_label, $objs, '', false);
-        $mform->disabledIf($this->_name, $this->_name.'_op', 'eq', 0);
+        $mform->addElement('group', $this->_name . '_grp', $this->_label, $objs, '', false);
+        $mform->disabledIf($this->_name, $this->_name . '_op', 'eq', 0);
 
-        $mform->setType($this->_name.'_op', PARAM_INT);
+        $mform->setType($this->_name . '_op', PARAM_INT);
         $mform->setType($this->_name, PARAM_INT);
 
         if (!is_null($this->_default)) {
@@ -394,7 +390,7 @@ class taskchain_filter_number extends user_filter_select {
         }
 
         if ($this->_advanced) {
-            $mform->setAdvanced($this->_name.'_grp');
+            $mform->setAdvanced($this->_name . '_grp');
         }
     }
 
@@ -405,7 +401,7 @@ class taskchain_filter_number extends user_filter_select {
      */
     function check_data($formdata) {
         $field    = $this->_name;
-        $operator = $field.'_op';
+        $operator = $field . '_op';
 
         if (array_key_exists($field, (array) $formdata) and !empty($formdata->$operator)) {
             return array('operator' => (int)$formdata->$operator,
@@ -421,7 +417,7 @@ class taskchain_filter_number extends user_filter_select {
      * @param xxx $data
      * @return xxx
      */
-    function get_sql_filter($data)  {
+    function get_sql_filter($data) {
         // this field type doesn't affect the selection of users
         return array('', array());
     }
@@ -432,25 +428,25 @@ class taskchain_filter_number extends user_filter_select {
      * @param xxx $data
      * @return xxx
      */
-    function get_sql_filter_attempts($data)  {
+    function get_sql_filter_attempts($data) {
         static $counter = 0;
-        $name = 'ex_number'.$counter++;
+        $name = 'ex_number' . $counter++;
 
         $filter = '';
         $params = array();
         if (($value = $data['value']) && ($operator = $data['operator'])) {
             $field = $this->_name;
-            switch($operator) {
+            switch ($operator) {
                 case 1: // less than
-                    $filter = $field.'>:'.$name;
+                    $filter = $field . '>:' . $name;
                     $params[$name] = $value;
                     break;
                 case 2: // equal to
-                    $filter = $field.'=:'.$name;
+                    $filter = $field . '=:' . $name;
                     $params[$name] = $value;
                     break;
                 case 3: // greater than
-                    $filter = $field.'>:'.$name;
+                    $filter = $field . '>:' . $name;
                     $params[$name] = $value;
                     break;
             }
@@ -474,8 +470,8 @@ class taskchain_filter_number extends user_filter_select {
 
         $a = (object)array(
             'label'    => $this->_label,
-            'value'    => '"'.s($value).'"',
-            'operator' => $operators[$operator]
+            'value'    => '"' . s($value) . '"',
+            'operator' => $operators[$operator],
         );
 
         return get_string('selectlabel', 'filters', $a);
@@ -490,32 +486,31 @@ class taskchain_filter_number extends user_filter_select {
  * @since     Moodle 2.0
  */
 class taskchain_filter_grade extends taskchain_filter_number {
-
     /**
      * get_sql_filter_attempts
      *
      * @param xxx $data
      * @return xxx
      */
-    function get_sql_filter_attempts($data)  {
+    function get_sql_filter_attempts($data) {
         static $counter = 0;
-        $name = 'ex_grade'.$counter++;
+        $name = 'ex_grade' . $counter++;
 
         $filter = '';
         $params = array();
         if (($value = $data['value']) && ($operator = $data['operator'])) {
             $field = 'gg.rawgrade';
-            switch($operator) {
+            switch ($operator) {
                 case 1: // less than
-                    $filter = $field.'>:'.$name;
+                    $filter = $field . '>:' . $name;
                     $params[$name] = $value;
                     break;
                 case 2: // equal to
-                    $filter = $field.'=:'.$name;
+                    $filter = $field . '=:' . $name;
                     $params[$name] = $value;
                     break;
                 case 3: // greater than
-                    $filter = $field.'>:'.$name;
+                    $filter = $field . '>:' . $name;
                     $params[$name] = $value;
                     break;
             }
@@ -532,23 +527,22 @@ class taskchain_filter_grade extends taskchain_filter_number {
  * @since     Moodle 2.0
  */
 class taskchain_filter_duration extends taskchain_filter_number {
-
     /**
      * setupForm
      *
      * @param xxx $mform (passed by reference)
      */
-    function setupForm(&$mform)  {
+    function setupForm(&$mform) {
         $objs = array(
-            $mform->createElement('select', $this->_name.'_op', null, $this->get_operators()),
-            $mform->createElement('duration', $this->_name, null, array('optional'=>0, 'defaultunit'=>1))
+            $mform->createElement('select', $this->_name . '_op', null, $this->get_operators()),
+            $mform->createElement('duration', $this->_name, null, array('optional' => 0, 'defaultunit' => 1)),
         );
-        $mform->addElement('group', $this->_name.'_grp', $this->_label, $objs, '', false);
-        $mform->disabledIf($this->_name.'_grp', $this->_name.'_op', 'eq', 0);
+        $mform->addElement('group', $this->_name . '_grp', $this->_label, $objs, '', false);
+        $mform->disabledIf($this->_name . '_grp', $this->_name . '_op', 'eq', 0);
 
-        $mform->setType($this->_name.'_op', PARAM_INT);
-        $mform->setType($this->_name.'[number]', PARAM_INT);
-        $mform->setType($this->_name.'[timeunit]', PARAM_INT);
+        $mform->setType($this->_name . '_op', PARAM_INT);
+        $mform->setType($this->_name . '[number]', PARAM_INT);
+        $mform->setType($this->_name . '[timeunit]', PARAM_INT);
 
         if (!is_null($this->_default)) {
             // Force the default to be numeric, because the "duration" element passes
@@ -559,7 +553,7 @@ class taskchain_filter_duration extends taskchain_filter_number {
         }
 
         if ($this->_advanced) {
-            $mform->setAdvanced($this->_name.'_grp');
+            $mform->setAdvanced($this->_name . '_grp');
         }
     }
 
@@ -579,8 +573,8 @@ class taskchain_filter_duration extends taskchain_filter_number {
 
         $a = (object)array(
             'label'    => $this->_label,
-            'value'    => '"'.s(format_time($value)).'"',
-            'operator' => $operators[$operator]
+            'value'    => '"' . s(format_time($value)) . '"',
+            'operator' => $operators[$operator],
         );
 
         return get_string('selectlabel', 'filters', $a);
@@ -592,25 +586,25 @@ class taskchain_filter_duration extends taskchain_filter_number {
      * @param xxx $data
      * @return xxx
      */
-    function get_sql_filter_attempts($data)  {
+    function get_sql_filter_attempts($data) {
         static $counter = 0;
-        $name = 'ex_duration'.$counter++;
+        $name = 'ex_duration' . $counter++;
 
         $filter = '';
         $params = array();
         if (($value = $data['value']) && ($operator = $data['operator'])) {
             $field = '(timemodified - timestart)'; // $this->_name;
-            switch($operator) {
+            switch ($operator) {
                 case 1: // less than
-                    $filter = $field.'>:'.$name;
+                    $filter = $field . '>:' . $name;
                     $params[$name] = $value;
                     break;
                 case 2: // equal to
-                    $filter = $field.'=:'.$name;
+                    $filter = $field . '=:' . $name;
                     $params[$name] = $value;
                     break;
                 case 3: // greater than
-                    $filter = $field.'>:'.$name;
+                    $filter = $field . '>:' . $name;
                     $params[$name] = $value;
                     break;
             }

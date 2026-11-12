@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -41,7 +40,6 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
-
     /**
      * Constructor
      */
@@ -59,10 +57,10 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
      *
      * @param object $header (passed by reference)
      */
-    function renderHeader(&$header){
+    function renderHeader(&$header) {
         global $SCRIPT;
         if ($name = $header->getName()) {
-            if ($SCRIPT=='/mod/taskchain/edit/tasks.php' || $SCRIPT=='/mod/taskchain/edit/chains.php') {
+            if ($SCRIPT == '/mod/taskchain/edit/tasks.php' || $SCRIPT == '/mod/taskchain/edit/chains.php') {
                 // Moodle >= 2.5 adds a "id_" prefix to the header ids
                 // but this messages with the TaskChain CSS styles
                 // so we use the old "id" that had no prefix
@@ -79,7 +77,7 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
      * @param mixed $required
      * @param mixed $error
      */
-    function renderElement(&$element, $required, $error){
+    function renderElement(&$element, $required, $error) {
         if (method_exists($element, 'raiseError')) {
             // on Moodle >= 2.3 the ids are OK
         } else {
@@ -88,14 +86,14 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
             // but we want "id_applydefaults_selectedtasks"
             // Note: Moodle 2.2 ids are OK, but it does not harm ...
             $type = $element->getType();
-            if ($type=='radio' || $type=='checkbox') {
+            if ($type == 'radio' || $type == 'checkbox') {
                 // basically, the id is "id_"  followed by the element name
                 // we also fix "[" and "]" e.g. sortorder[1] -> sortorder_1
                 // and for radio buttons, we append "_" and the element value
-                $id = 'id_'.$element->getName();
+                $id = 'id_' . $element->getName();
                 $id = strtr($id, array('[' => '_', ']' => ''));
-                if ($type=='radio') {
-                    $id .= (is_null($element->getValue()) ? '' : '_'.$element->getValue());
+                if ($type == 'radio') {
+                    $id .= (is_null($element->getValue()) ? '' : '_' . $element->getValue());
                 }
                 $element->updateAttributes(array('id' => $id));
             }
@@ -108,10 +106,10 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
         // "checkbox" and "radio" elements
 
         $type = $element->getType();
-        if ($type=='checkbox' || $type=='radio') {
+        if ($type == 'checkbox' || $type == 'radio') {
             $name = $element->getName();
             if ($pos = strpos($name, '[')) {
-                $i = substr($name, $pos+1, -1);
+                $i = substr($name, $pos + 1, -1);
                 $name = substr($name, 0, $pos);
                 if (isset($_POST[$name]) && is_array($_POST[$name])) {
                     $element->setChecked(empty($_POST[$name][$i]) ? false : true);
@@ -123,18 +121,18 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
         parent::renderElement($element, $required, $error);
     }
 
-   /**
-    * Helper method for renderElement
-    *
-    * @param    string      Element name
-    * @param    mixed       Element label (if using an array of labels, you should set the appropriate template)
-    * @param    bool        Whether an element is required
-    * @param    string      Error message associated with the element
-    * @access   private
-    * @see      renderElement()
-    * @return   string      Html for element
-    */
-    function _prepareTemplate($name, $label, $required, $error, $type=null, $value=null) {
+    /**
+     * Helper method for renderElement
+     *
+     * @param    string      Element name
+     * @param    mixed       Element label (if using an array of labels, you should set the appropriate template)
+     * @param    bool        Whether an element is required
+     * @param    string      Error message associated with the element
+     * @access   private
+     * @see      renderElement()
+     * @return   string      Html for element
+     */
+    function _prepareTemplate($name, $label, $required, $error, $type = null, $value = null) {
         global $mform;
         static $count = array();
 
@@ -144,24 +142,24 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
         // add field-specific class name
         if ($name) {
             // remove unwanted prefixes and suffixes from element name, to get CSS class
-            $search = array('/^selectfield_/',     // leading "selectfield_"   (elements in the "#selects" row)
-                            '/^defaultfield_/',    // leading "defaultfield_"  (elements in the "#defaults" row)
-                            '/(?:\\[\\w+\\])+$/',  // trailing [99]            (elements in the "#record99" row)
-                            '/_elements$/',        // trailing _elements       (elements in a group of elements)
+            $search = array('/^selectfield_/', // leading "selectfield_"   (elements in the "#selects" row)
+                            '/^defaultfield_/', // leading "defaultfield_"  (elements in the "#defaults" row)
+                            '/(?:\\[\\w+\\])+$/', // trailing [99]            (elements in the "#record99" row)
+                            '/_elements$/', // trailing _elements       (elements in a group of elements)
                             '/_label$/');          // trailing _label          (elements in the "#labels" row)
             $class = preg_replace($search, '', $name);
 
             // insert new class name into HTML class attribute
             $search = '/(?<=class=")[^"]*(?=")/';
-            $html = preg_replace($search, '$0 '.$class, $html, 1);
+            $html = preg_replace($search, '$0 ' . $class, $html, 1);
         }
 
         // get $name and $value for this element
-        //     One day it may be possible to pass the $name and $value directly to this method,
-        //     but for now we have rely on the TaskChain mform object to fetch the information.
+        // One day it may be possible to pass the $name and $value directly to this method,
+        // but for now we have rely on the TaskChain mform object to fetch the information.
         if (isset($mform) && method_exists($mform, 'get_element')) {
             if (isset($count[$name])) {
-                $count[$name] ++;
+                $count[$name]++;
             } else {
                 $count[$name] = 0;
             }
@@ -172,30 +170,29 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
         }
 
         // make id unique for each radio element
-        //     The standard MoodleQuickForm radio elements all have the same id
-        //     which is the value of the first radio element appended to the element name.
-        //     This is not what we want, nor is it what I believe was intended, but anyway...,
-        //     We replace the suffix on the standard id with the value of the current element,
-        //     so that each item of the radio group has a unique id which we can use for CSS.
+        // The standard MoodleQuickForm radio elements all have the same id
+        // which is the value of the first radio element appended to the element name.
+        // This is not what we want, nor is it what I believe was intended, but anyway...,
+        // We replace the suffix on the standard id with the value of the current element,
+        // so that each item of the radio group has a unique id which we can use for CSS.
         if (isset($type)) {
-            if (substr($html, 0, 14)=="\n\t\t<div class=") {
+            if (substr($html, 0, 14) == "\n\t\t<div class=") {
                 // fix Moodle 2.0 - 2.1 (add id and type-specific CSS class)
-                $id = ($type=='group' ? 'fgroup' : 'fitem');
-                $id .= '_id_'.$name;
-                if ($type=='radio' && isset($value)) {
-                    $id .= '_'.$value;
+                $id = ($type == 'group' ? 'fgroup' : 'fitem');
+                $id .= '_id_' . $name;
+                if ($type == 'radio' && isset($value)) {
+                    $id .= '_' . $value;
                 }
                 $search = '/class="fitem\\b/';
-                $replace = 'id="'.$id.'" $0 fitem_f'.$type;
+                $replace = 'id="' . $id . '" $0 fitem_f' . $type;
                 $html = preg_replace($search, $replace, $html, 1);
-            } else if ($type=='radio' && isset($value)) {
+            } else if ($type == 'radio' && isset($value)) {
                 // fix Moodle >= 2.2 (make id unique, by replacing id suffix with $value)
                 $search = '/(?<=id=")([^"]*)(_[^_"]*)(?=")/';
-                $html = preg_replace($search, '$1_'.$value, $html, 1);
+                $html = preg_replace($search, '$1_' . $value, $html, 1);
             }
         }
 
         return $html;
     }
 }
-

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/records.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/records.php');
 
 /**
  * taskchain_form_helper_tasks
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/records.php');
  * @package    mod_taskchain
  */
 class taskchain_form_helper_tasks extends taskchain_form_helper_records {
-
     protected $recordtype = 'chain';
     protected $recordstype = 'task';
 
@@ -49,7 +47,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         'addtasks'      => false,
         'movetasks'     => true,
         'applydefaults' => true,
-        'deletetasks'   => true
+        'deletetasks'   => true,
     );
 
     protected $sortfield = array('sortorder', 'name', 'sourcefile', 'timeopen', 'timeclose', 'scorelimit', 'scoreweighting');
@@ -70,7 +68,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                     $courseid = 0;
                     $coursename = '';
                     foreach ($mytaskchains as $mytaskchain) {
-                        if ($mytaskchain->id==$this->TC->taskchain->id) {
+                        if ($mytaskchain->id == $this->TC->taskchain->id) {
                             continue; // skip current taskchain
                         }
                         $showfield = true;
@@ -131,37 +129,37 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         $this->mform->disabledIf($name, 'action', 'ne', $field);
 
         $filterlist = array(
-            self::FILTER_CONTAINS       => get_string('contains',       'filters'),
+            self::FILTER_CONTAINS       => get_string('contains', 'filters'),
             self::FILTER_NOT_CONTAINS   => get_string('doesnotcontain', 'filters'),
-            self::FILTER_EQUALS         => get_string('isequalto',      'filters'),
-            self::FILTER_NOT_EQUALS     => get_string('notisequalto',   'mod_taskchain'),
-            self::FILTER_STARTSWITH     => get_string('startswith',     'filters'),
-            self::FILTER_NOT_STARTSWITH => get_string('notstartswith',  'mod_taskchain'),
-            self::FILTER_ENDSWITH       => get_string('endswith',       'filters'),
-            self::FILTER_NOT_ENDSWITH   => get_string('notendswith',    'mod_taskchain'),
-            self::FILTER_EMPTY          => get_string('isempty',        'filters'),
-            self::FILTER_NOT_EMPTY      => get_string('notisempty',     'mod_taskchain')
+            self::FILTER_EQUALS         => get_string('isequalto', 'filters'),
+            self::FILTER_NOT_EQUALS     => get_string('notisequalto', 'mod_taskchain'),
+            self::FILTER_STARTSWITH     => get_string('startswith', 'filters'),
+            self::FILTER_NOT_STARTSWITH => get_string('notstartswith', 'mod_taskchain'),
+            self::FILTER_ENDSWITH       => get_string('endswith', 'filters'),
+            self::FILTER_NOT_ENDSWITH   => get_string('notendswith', 'mod_taskchain'),
+            self::FILTER_EMPTY          => get_string('isempty', 'filters'),
+            self::FILTER_NOT_EMPTY      => get_string('notisempty', 'mod_taskchain'),
         );
         $filters = array(
-            'coursename', 'activityname', 'taskname', 'taskposition', 'sourcefile', 'sourcetype'
+            'coursename', 'activityname', 'taskname', 'taskposition', 'sourcefile', 'sourcetype',
         );
         foreach ($filters as $filter) {
-            $filtername = 'filter'.$filter;
+            $filtername = 'filter' . $filter;
             $filterlabel = $this->get_fieldlabel($filter);
-            $name_filter = $this->get_fieldname($field.'_'.$filtername);
+            $name_filter = $this->get_fieldname($field . '_' . $filtername);
             $name_disabled = ''; // may be set below
 
-            if ($filter=='coursename') {
+            if ($filter == 'coursename') {
                 $courseid = $this->TC->get_courseid();
                 if ($mycourses = $this->TC->get_mycourses()) {
                     $list = array();
-                    if (count($mycourses)>1) {
+                    if (count($mycourses) > 1) {
                         $list[0] = get_string('all');
                     }
                     foreach ($mycourses as $mycourse) {
                         $shortname = format_string($mycourse->shortname);
-                        if ($mycourse->id==SITEID) {
-                            $shortname = get_string('frontpage', 'admin').': '.$shortname;
+                        if ($mycourse->id == SITEID) {
+                            $shortname = get_string('frontpage', 'admin') . ': ' . $shortname;
                         }
                         $list[$mycourse->id] = $shortname;
                     }
@@ -172,29 +170,25 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                 $this->mform->setDefault($name_filter, $courseid);
                 $this->mform->setType($name_filter, PARAM_INT);
                 $name_disabled = $name_filter;
-
-            } else if ($filter=='taskposition') {
-
-                $filtername = 'filter'.$filter;
+            } else if ($filter == 'taskposition') {
+                $filtername = 'filter' . $filter;
                 $filterlabel = $this->get_fieldlabel($filter);
-                $name_filter = $this->get_fieldname($field.'_'.$filtername);
+                $name_filter = $this->get_fieldname($field . '_' . $filtername);
                 $list = array(self::FILTER_POSITION_ANY   => get_string('any'),
                               self::FILTER_POSITION_START => get_string('startofchain', 'mod_taskchain'),
-                              self::FILTER_POSITION_END   => get_string('endofchain',   'mod_taskchain'));
+                              self::FILTER_POSITION_END   => get_string('endofchain', 'mod_taskchain'));
                 $this->mform->addElement('select', $name_filter, $filterlabel, $list);
                 $this->mform->setDefault($name_filter, self::FILTER_POSITION_ANY);
                 $this->mform->setType($name_filter, PARAM_INT);
                 $name_disabled = $name_filter;
-
             } else {
-
-                $name_type   = $this->get_fieldname($field.'_'.$filtername.'type');
-                $name_value  = $this->get_fieldname($field.'_'.$filtername.'value');
-                $name_elements = $this->get_fieldname($field.'_'.$filtername.'_elements');
+                $name_type   = $this->get_fieldname($field . '_' . $filtername . 'type');
+                $name_value  = $this->get_fieldname($field . '_' . $filtername . 'value');
+                $name_elements = $this->get_fieldname($field . '_' . $filtername . '_elements');
 
                 $elements = array();
-                $elements[] = $this->mform->createElement('select', $name_type,   '', $filterlist);
-                $elements[] = $this->mform->createElement('text',   $name_value,  '', array('size', $this->text_field_size));
+                $elements[] = $this->mform->createElement('select', $name_type, '', $filterlist);
+                $elements[] = $this->mform->createElement('text', $name_value, '', array('size', $this->text_field_size));
                 $this->mform->addGroup($elements, $name_elements, $filterlabel, ' ', false);
 
                 $this->mform->setType($name_type, PARAM_INT);
@@ -218,8 +212,8 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
      * @param integer $min_taskchain_count (optional, default=0)
      * @todo Finish documenting this function
      */
-    protected function add_actiontemplate_tasks($type, $min_record_count=0, $min_taskchain_count=0) {
-        $field = $type.'tasks'; // "addtasks" or "movetasks"
+    protected function add_actiontemplate_tasks($type, $min_record_count = 0, $min_taskchain_count = 0) {
+        $field = $type . 'tasks'; // "addtasks" or "movetasks"
         $name = $this->get_fieldname($field);
 
         // by default we do not add any fields here
@@ -247,13 +241,13 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
             $added = true;
             $elements = array();
 
-            $text = get_string('aftertaskid',  'mod_taskchain');
+            $text = get_string('aftertaskid', 'mod_taskchain');
             $elements[] = $this->mform->createElement('radio', $name, '', $text, 'after');
 
-            $name_taskid = $this->get_fieldname($field.'_taskid');
+            $name_taskid = $this->get_fieldname($field . '_taskid');
             $elements[] = $this->mform->createElement('select', $name_taskid, '', $list);
 
-            $name_elements = $this->get_fieldname($field.'after_elements');
+            $name_elements = $this->get_fieldname($field . 'after_elements');
             $this->mform->addGroup($elements, $name_elements, '', ' ', false);
 
             $this->mform->setType($name_taskid, PARAM_INT);
@@ -263,7 +257,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         }
 
         // add "endofchain", if required
-        if ($count >= $min_record_count && $count==1) {
+        if ($count >= $min_record_count && $count == 1) {
             $added = true;
             $text = get_string('endofchain', 'mod_taskchain');
             $this->mform->addElement('radio', $name, '', $text, 'end');
@@ -278,10 +272,10 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                     $courseid = 0;
                     $coursename = '';
                     foreach ($mytaskchains as $mytaskchain) {
-                        if ($mytaskchain->id==$this->TC->taskchain->id) {
+                        if ($mytaskchain->id == $this->TC->taskchain->id) {
                             continue; // skip current taskchain
                         }
-                        if ($courseid==$mytaskchain->course) {
+                        if ($courseid == $mytaskchain->course) {
                             // do nothing - same course as previous taskchain
                         } else {
                             $courseid = $mytaskchain->course;
@@ -302,10 +296,10 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
             $text = get_string('chain', 'mod_taskchain');
             $elements[] = $this->mform->createElement('radio', $name, '', $text, 'mytaskchain');
 
-            $name_taskchainid = $this->get_fieldname($field.'_taskchainid');
+            $name_taskchainid = $this->get_fieldname($field . '_taskchainid');
             $elements[] = $this->mform->createElement('selectgroups', $name_taskchainid, '', $list);
 
-            $name_elements = $this->get_fieldname($field.'chain_elements');
+            $name_elements = $this->get_fieldname($field . 'chain_elements');
             $this->mform->addGroup($elements, $name_elements, '', ' ', false);
 
             $this->mform->setType($name_taskchainid, PARAM_INT);
@@ -327,15 +321,15 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
     protected function fix_action_reordertasks(&$data) {
         $nameprefix = 'reordertasks_';
 
-        $name = $nameprefix.'sortdirection';
-        if (empty($data->$name) || $data->$name=='asc') {
+        $name = $nameprefix . 'sortdirection';
+        if (empty($data->$name) || $data->$name == 'asc') {
             $sortdirection = 'asc';
         } else {
             $sortdirection = 'desc';
         }
 
-        $name = $nameprefix.'sortfield';
-        if (empty($data->$name) || $data->$name=='sortorder') {
+        $name = $nameprefix . 'sortfield';
+        if (empty($data->$name) || $data->$name == 'sortorder') {
             $sortorder = $data->sortorder;
         } else {
             $field = $data->$name;
@@ -347,7 +341,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                 $sortorder[$id] = $value;
             }
         }
-        if ($sortdirection=='asc') {
+        if ($sortdirection == 'asc') {
             asort($sortorder);
         } else {
             arsort($sortorder);
@@ -362,13 +356,13 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
      * @param string the name of the $data->$field that contains that sorted recordids
      * @todo Finish documenting this function
      */
-    protected function fix_action_reorder_records(&$data, $field, $ids, $sortdirection='asc') {
+    protected function fix_action_reorder_records(&$data, $field, $ids, $sortdirection = 'asc') {
         $updated = array();
         $update_form = false;
 
         $sortorder = 0;
 
-        $name = 'reorder'.$this->recordstype.'s_sortincrement';
+        $name = 'reorder' . $this->recordstype . 's_sortincrement';
         $sortincrement = (empty($data->$name) ? self::SORT_INCREMENT : $data->$name);
 
         foreach ($ids as $id) {
@@ -409,7 +403,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
     protected function fix_action_applydefaults_extra(&$data, &$records, &$defaults, &$updated) {
         $fields = array(
             'preconditions'  => mod_taskchain::CONDITIONTYPE_PRE,
-            'postconditions' => mod_taskchain::CONDITIONTYPE_POST
+            'postconditions' => mod_taskchain::CONDITIONTYPE_POST,
         );
         foreach ($fields as $field => $type) {
             if (isset($defaults[$field])) {
@@ -437,7 +431,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
 
         // get all record ids (not including the target id)
         $recordids = array_keys($records);
-        $recordids = preg_grep('/^'.$targetid.'$/', $recordids, PREG_GREP_INVERT);
+        $recordids = preg_grep('/^' . $targetid . '$/', $recordids, PREG_GREP_INVERT);
 
         if (empty($recordids)) {
             return false;
@@ -445,7 +439,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
 
         // prepare SQL select filter
         list($select, $params) = $DB->get_in_or_equal($recordids);
-        $select = 'taskid '.$select.' AND conditiontype = ?';
+        $select = 'taskid ' . $select . ' AND conditiontype = ?';
         $params[] = $type;
 
         if ($conditionids = $DB->get_records_select('taskchain_conditions', $select, $params, 'id', 'id')) {
@@ -485,7 +479,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         }
 
         // update default conditions
-        $name = $field.'_elements[0]';
+        $name = $field . '_elements[0]';
         if ($this->mform->elementExists($name) && array_key_exists($targetid, $this->records)) {
             $record = &$this->records[$targetid];
             $value = $record->format_conditions($targetid, $type, false, false, false);
@@ -495,7 +489,6 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
 
         // update conditions of each record in form, if necessary
         foreach ($recordids as $recordid) {
-
             // update form field if this is one the current tasks
             if (array_key_exists($recordid, $this->records)) {
                 $record = &$this->records[$recordid];
@@ -505,14 +498,14 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                 // method will use the conditions cached earlier
                 // and will not include the newly copied conditions
 
-                if ($type==mod_taskchain::CONDITIONTYPE_PRE) {
+                if ($type == mod_taskchain::CONDITIONTYPE_PRE) {
                     unset($this->TC->cache_preconditions[$recordid]);
                 } else {
                     unset($this->TC->cache_postconditions[$recordid]);
                 }
 
                 // get form element name and check it exists
-                $name = $record->get_fieldname($field.'_elements');
+                $name = $record->get_fieldname($field . '_elements');
                 if ($this->mform->elementExists($name)) {
                     $value = $record->format_conditions($recordid, $type, false);
                     $this->mform->getElement($name)->setValue($value);
@@ -535,12 +528,12 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         global $DB;
         list($where, $params) = $DB->get_in_or_equal($ids);
         $select = 'tc_tsk.*';
-        $from   = "{taskchain} tc,".
-                  "{taskchain_chains} tc_chn,".
+        $from   = "{taskchain} tc," .
+                  "{taskchain_chains} tc_chn," .
                   "{taskchain_tasks} tc_tsk";
-        $where  = 'tc.id '.$where.' '.
-                  'AND tc.id = tc_chn.parentid '.
-                  'AND tc_chn.parenttype = ? '.
+        $where  = 'tc.id ' . $where . ' ' .
+                  'AND tc.id = tc_chn.parentid ' .
+                  'AND tc_chn.parenttype = ? ' .
                   'AND tc_chn.id = tc_tsk.chainid';
         $params[] = mod_taskchain::PARENTTYPE_ACTIVITY;
         return array($select, $from, $where, $params);
@@ -553,10 +546,10 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
      * @todo Finish documenting this function
      */
     function get_filter_params($field) {
-        return array($field.'_filteractivityname' => 'tc.name',
-                     $field.'_filtertaskname'     => 'tc_tsk.name',
-                     $field.'_filtersourcetype'   => 'tc_tsk.sourcetype',
-                     $field.'_filtersourcefile'   => 'tc_tsk.sourcefile');
+        return array($field . '_filteractivityname' => 'tc.name',
+                     $field . '_filtertaskname'     => 'tc_tsk.name',
+                     $field . '_filtersourcetype'   => 'tc_tsk.sourcetype',
+                     $field . '_filtersourcefile'   => 'tc_tsk.sourcefile');
     }
 
     /**
@@ -568,9 +561,9 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
     protected function fix_action_movetasks(&$data) {
 
         $type        = $this->recordstype;        // e.g. task
-        $types       = $type.'s';                 // e.g. tasks
-        $movetypes   = 'move'.$types;             // e.g. movetasks
-        $moveafterid = $movetypes.'_'.$type.'id'; // e.g. movetasks_taskid
+        $types       = $type . 's';                 // e.g. tasks
+        $movetypes   = 'move' . $types;             // e.g. movetasks
+        $moveafterid = $movetypes . '_' . $type . 'id'; // e.g. movetasks_taskid
 
         if (empty($data->$movetypes)) {
             return;
@@ -587,19 +580,22 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
         $recordids = array_values($recordids);
 
         switch ($data->$movetypes) {
-
-            case 'start' : $recordids = array_merge($targetids, $recordids); break;
-            case 'end'   : $recordids = array_merge($recordids, $targetids); break;
+            case 'start':
+                $recordids = array_merge($targetids, $recordids);
+                break;
+            case 'end':
+                $recordids = array_merge($recordids, $targetids);
+                break;
 
             case 'after':
                 if (empty($data->$moveafterid)) {
                     return;
                 }
                 $i = array_search($data->$moveafterid, $recordids);
-                if ($i===false) {
+                if ($i === false) {
                     return;
                 }
-                $recordids = array_merge(array_slice($recordids, 0, ($i+1)), $targetids, array_slice($recordids, ($i+1)));
+                $recordids = array_merge(array_slice($recordids, 0, ($i + 1)), $targetids, array_slice($recordids, ($i + 1)));
                 break;
 
             case 'mytaskchain':
@@ -612,18 +608,16 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                 if (! $ok) {
                     $TC->print_error(get_string('error_getrecord', 'mod_taskchain', "taskchain (id=$taskchainid)"));
                 }
-                if (! $chainid = $DB->get_field('taskchain_chains', 'id', array('parenttype'=>TASKCHAIN_PARENTTYPE_ACTIVITY, 'parentid'=>$taskchainid))) {
+                if (! $chainid = $DB->get_field('taskchain_chains', 'id', array('parenttype' => TASKCHAIN_PARENTTYPE_ACTIVITY, 'parentid' => $taskchainid))) {
                     $TC->print_error(get_string('error_getrecord', 'mod_taskchain', "taskchain_chains (parentid=$taskchainid)"));
                 }
                 $tables = ''
-                    ."{taskchain_chains} qu,"
-                    ."{taskchain_tasks} qq"
-                ;
+                    . "{taskchain_chains} qu,"
+                    . "{taskchain_tasks} qq";
                 $select = ''
-                    .'qu.parentid = '.$taskchainid.' '
-                    .'AND qu.parenttype = '.TASKCHAIN_PARENTTYPE_ACTIVITY.' '
-                    .'AND qu.id = qq.chainid'
-                ;
+                    . 'qu.parentid = ' . $taskchainid . ' '
+                    . 'AND qu.parenttype = ' . TASKCHAIN_PARENTTYPE_ACTIVITY . ' '
+                    . 'AND qu.id = qq.chainid';
                 $sortorder = $DB->count_records_sql(
                     "SELECT MAX(qq.sortorder) FROM $tables WHERE $select"
                 );
@@ -637,7 +631,6 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                     unset($TC->tasks[$recordid]);
                 }
                 break;
-
         } // end switch $movetasks
 
         // sort the records in the current TaskChain into their new order

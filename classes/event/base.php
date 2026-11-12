@@ -37,7 +37,6 @@ defined('MOODLE_INTERNAL') || die();
  * @since      Moodle 2.6
  */
 abstract class base extends \core\event\base {
-
     /**
      * Pattern to match names of legacy functions.
      * This is used to hide legacy functions and so prevent error
@@ -50,8 +49,9 @@ abstract class base extends \core\event\base {
      * Magic call function which hides the legacy functions.
      */
     public function __call($name, $args) {
-        if (preg_match(self::LEGACY_FUNCTIONS, $name)) {;
-            $name = 'my_'.$name;
+        if (preg_match(self::LEGACY_FUNCTIONS, $name)) {
+            ;
+            $name = 'my_' . $name;
         }
         return call_user_func_array([$this, $name], $args);
     }
@@ -60,8 +60,9 @@ abstract class base extends \core\event\base {
      * Magic callStatic function to hide legacy functions.
      */
     public static function __callStatic($name, $args) {
-        if (preg_match(self::LEGACY_FUNCTIONS, $name)) {;
-            $name = 'my_'.$name;
+        if (preg_match(self::LEGACY_FUNCTIONS, $name)) {
+            ;
+            $name = 'my_' . $name;
         }
         return call_user_func_array([__CLASS__, $name], $args);
     }
@@ -72,10 +73,10 @@ abstract class base extends \core\event\base {
      * @param string $suffix (optional, default="")
      * @return string
      */
-    public static function get_event_string_name($suffix='') {
+    public static function get_event_string_name($suffix = '') {
         $class = get_called_class();
         $class = substr($class, strlen(__NAMESPACE__) + 1);
-        return 'event_'.$class.$suffix;
+        return 'event_' . $class . $suffix;
     }
 
     /**
@@ -93,7 +94,7 @@ abstract class base extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        if ($this->contextlevel==CONTEXT_MODULE) {
+        if ($this->contextlevel == CONTEXT_MODULE) {
             $cmid = $this->contextinstanceid;
         } else {
             $cmid = 0; // shouldn't happen !!
@@ -126,13 +127,13 @@ abstract class base extends \core\event\base {
         $params = array();
         foreach ($this->my_get_legacy_records() as $record) {
             list($name, $table, $id) = $record;
-            if ($name=='course' || $name=='taskchain') {
+            if ($name == 'course' || $name == 'taskchain') {
                 continue; // not required in the URL
             }
-            if ($name=='cm') {
+            if ($name == 'cm') {
                 $params['id'] = $id;
             } else {
-                $params[$name.'id'] = $id;
+                $params[$name . 'id'] = $id;
             }
         }
         return new \moodle_url('/mod/taskchain/view.php', $params);
@@ -164,15 +165,15 @@ abstract class base extends \core\event\base {
         return $eventdata;
     }
 
-   /**
+    /**
      * Records required by my_get_legacy_eventdata
      *
      * @return array(array($name, $table, $id), ...)
      */
     protected function my_get_legacy_records() {
-        return array(array('course',    'course',         $this->courseid),
-                     array('cm',        'course_modules', $this->contextinstanceid),
-                     array('taskchain', 'taskchain',      $this->objectid));
+        return array(array('course', 'course', $this->courseid),
+                     array('cm', 'course_modules', $this->contextinstanceid),
+                     array('taskchain', 'taskchain', $this->objectid));
     }
 
     /**

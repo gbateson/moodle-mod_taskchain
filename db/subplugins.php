@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,5 +26,5 @@
 $subplugins = array(
     'taskchainattempt' => 'mod/taskchain/attempt',
     'taskchainsource'  => 'mod/taskchain/source',
-    'taskchainreport'  => 'mod/taskchain/report'
+    'taskchainreport'  => 'mod/taskchain/report',
 );

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,17 +24,17 @@
  */
 
 /** Include required files */
-require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/task.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/task.php');
 
 // create object to represent this TaskChain activity
 $TC = new mod_taskchain();
 
 if ($TC->task) {
-    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'edittask', 'edit/task.php?id='.$TC->task->id, $TC->taskchain->id, $TC->coursemodule->id);
+    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'edittask', 'edit/task.php?id=' . $TC->task->id, $TC->taskchain->id, $TC->coursemodule->id);
 } else {
-    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'edittask', 'edit/task.php?tc='.$TC->taskchain->id, $TC->taskchain->id, $TC->coursemodule->id);
+    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'edittask', 'edit/task.php?tc=' . $TC->taskchain->id, $TC->taskchain->id, $TC->coursemodule->id);
 }
 
 // Set editing mode
@@ -65,8 +64,7 @@ if ($mform->is_cancelled()) {
 }
 
 switch ($TC->action) {
-    case 'deleteconfirmed' :
-
+    case 'deleteconfirmed':
         // delete task
         taskchain_delete_tasks($TC->task->id);
 
@@ -94,8 +92,7 @@ switch ($TC->action) {
         echo $output->page_quick($text, 'continue', $url);
         break;
 
-    case 'delete' :
-
+    case 'delete':
         // check the user really wants to delete this task
         $text = get_string('confirmdeletetask', 'mod_taskchain');
         $params = $TC->merge_params(null, null, 'taskid');
@@ -104,7 +101,6 @@ switch ($TC->action) {
 
     case 'deletecancelled':
     case 'editcancelled':
-
         if ($TC->get_cnumber() || $TC->get_tnumber()) {
             // resume the chain/task attempt
             redirect($TC->url->attempt());
@@ -115,11 +111,10 @@ switch ($TC->action) {
         break;
 
     case 'datasubmitted':
-
         // set review options (see lib.forms.php)
-        //taskchain_set_reviewoptions($newdata);
+        // taskchain_set_reviewoptions($newdata);
 
-        require_once($CFG->dirroot.'/mod/taskchain/source/class.php');
+        require_once($CFG->dirroot . '/mod/taskchain/source/class.php');
 
         $sources = taskchain_source::get_sources_from_taskfile($newdata, $TC->coursemodule->context, 'mod_taskchain', 'sourcefile');
         if ($source = reset($sources)) {
@@ -154,7 +149,7 @@ switch ($TC->action) {
             $aftertaskid = optional_param('aftertaskid', 0, PARAM_INT);
             taskchain_add_tasks($newdata, $mform, $TC->chain, $aftertaskid);
         } else {
-            if ($TC->task->scoremethod==$newdata->scoremethod && $TC->task->scorelimit==$newdata->scorelimit && $TC->task->scoreweighting==$newdata->scoreweighting) {
+            if ($TC->task->scoremethod == $newdata->scoremethod && $TC->task->scorelimit == $newdata->scorelimit && $TC->task->scoreweighting == $newdata->scoreweighting) {
                 $regrade = false;
             } else {
                 $regrade = true;
@@ -183,9 +178,9 @@ switch ($TC->action) {
 
             // regrade task, if necessary
             if ($regrade) {
-                if ($taskscores = $DB->get_records('taskchain_task_scores', array('taskid'=>$TC->task->id), '', 'id,cnumber,userid')) {
+                if ($taskscores = $DB->get_records('taskchain_task_scores', array('taskid' => $TC->task->id), '', 'id,cnumber,userid')) {
                     $userids = array();
-                    foreach ($taskscores as $id=>$taskscore) {
+                    foreach ($taskscores as $id => $taskscore) {
                         // set task score from task attempts
                         $TC->regrade_attempts('task', $TC->task, $taskscore->cnumber, $taskscore->userid);
                         if (! array_key_exists($taskscore->userid, $userids)) {
@@ -204,7 +199,7 @@ switch ($TC->action) {
                     $TC->taskchain->gradeweighting = $TC->chain->gradeweighting;
 
                     // update chain grades and attempts
-                    foreach ($userids as $userid=>$cnumbers) {
+                    foreach ($userids as $userid => $cnumbers) {
                         foreach ($cnumbers as $cnumber) {
                             // set chain attempt from task score
                             $TC->regrade_chainattempt($TC->chain, $cnumber, $userid, $tasks);
@@ -233,14 +228,13 @@ switch ($TC->action) {
 
     case 'update':
     default:
-
         // initizialize data in form
         if ($TC->task) {
             // editing a task ($TC->task was set up in mod/taskchain/locallib.php)
             $defaults = (array)$TC->task->to_stdclass();
         } else {
             // adding a new task to this chain
-            $defaults = array('chainid'=>$TC->get_chainid());
+            $defaults = array('chainid' => $TC->get_chainid());
         }
         $mform->data_preprocessing($defaults);
         $mform->set_data($defaults);

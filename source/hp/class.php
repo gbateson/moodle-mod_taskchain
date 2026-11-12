@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/source/class.php');
+require_once($CFG->dirroot . '/mod/taskchain/source/class.php');
 
 /**
  * taskchain_source_hp
@@ -43,26 +42,26 @@ class taskchain_source_hp extends taskchain_source {
     public $xml_root; // the array key of the root of the xml tree
 
     public $hbs_software; // hotpot or textoys
-    public $hbs_quiztype; //  jcloze, jcross, jmatch, jmix, jquiz, quandary, rhubarb, sequitur
+    public $hbs_quiztype; // jcloze, jcross, jmatch, jmix, jquiz, quandary, rhubarb, sequitur
 
     // encode a string for javascript
     public $javascript_replace_pairs = array(
         // backslashes and quotes
-        '\\'=>'\\\\', "'"=>"\\'", '"'=>'\\"',
+        '\\' => '\\\\', "'" => "\\'", '"' => '\\"',
         // newlines (win = "\r\n", mac="\r", linux/unix="\n")
-        "\r\n"=>'\\n', "\r"=>'\\n', "\n"=>'\\n',
+        "\r\n" => '\\n', "\r" => '\\n', "\n" => '\\n',
         // other (closing tag is for XHTML compliance)
-        "\0"=>'\\0', '</'=>'<\\/'
+        "\0" => '\\0', '</' => '<\\/',
     );
 
     // unicode characters can be detected by checking the hex value of a character
-    //  00 - 7F : ascii char (roman alphabet + punctuation)
-    //  80 - BF : byte 2, 3 or 4 of a unicode char
-    //  C0 - DF : 1st byte of 2-byte char
-    //  E0 - EF : 1st byte of 3-byte char
-    //  F0 - FF : 1st byte of 4-byte char
+    // 00 - 7F : ascii char (roman alphabet + punctuation)
+    // 80 - BF : byte 2, 3 or 4 of a unicode char
+    // C0 - DF : 1st byte of 2-byte char
+    // E0 - EF : 1st byte of 3-byte char
+    // F0 - FF : 1st byte of 4-byte char
     // if the string doesn't match any of the above, it might be
-    //  80 - FF : single-byte, non-ascii char
+    // 80 - FF : single-byte, non-ascii char
     public $search_unicode_chars = '/[\xc0-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xff][\x80-\xbf]{3}|[\x00-\xff]/';
 
     // array used to figure what number to decrement from character order value
@@ -71,15 +70,15 @@ class taskchain_source_hp extends taskchain_source {
         1 => 0,
         2 => 192,
         3 => 224,
-        4 => 240
+        4 => 240,
     );
 
     // the number of bits to shift each utf8 character by
     static $utf8_shift = array(
-        1 => array(0=>0),
-        2 => array(0=>6,  1=>0),
-        3 => array(0=>12, 1=>6,  2=>0),
-        4 => array(0=>18, 1=>12, 2=>6, 3=>0)
+        1 => array(0 => 0),
+        2 => array(0 => 6, 1 => 0),
+        3 => array(0 => 12, 1 => 6, 2 => 0),
+        4 => array(0 => 18, 1 => 12, 2 => 6, 3 => 0),
     );
 
     /**
@@ -160,7 +159,7 @@ class taskchain_source_hp extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function html_get_name($textonly=true) {
+    public function html_get_name($textonly = true) {
         if (! isset($this->name)) {
             $this->name = '';
             $this->title = '';
@@ -206,10 +205,10 @@ class taskchain_source_hp extends taskchain_source {
                 return false;
             }
             if (preg_match('/<h3[^>]*class="ExerciseSubtitle"[^>]*>\s*(.*?)\s*<\/h3>/is', $this->filecontents, $matches)) {
-                $this->entrytext .= '<div>'.$matches[1].'</div>';
+                $this->entrytext .= '<div>' . $matches[1] . '</div>';
             }
             if (preg_match('/<div[^>]*id="Instructions"[^>]*>\s*(.*?)\s*<\/div>/is', $this->filecontents, $matches)) {
-                $this->entrytext .= '<div>'.$matches[1].'</div>';
+                $this->entrytext .= '<div>' . $matches[1] . '</div>';
             }
         }
         return $this->entrytext;
@@ -233,11 +232,9 @@ class taskchain_source_hp extends taskchain_source {
                 return false;
             }
             if (preg_match('/<div[^>]*class="NavButtonBar"[^>]*>(.*?)<\/div>/is', $this->filecontents, $matches)) {
-
                 $navbuttonbar = $matches[1];
-                if (preg_match_all('/<button[^>]*onclick="'."location='([^']*)'".'[^"]*"[^>]*>/is', $navbuttonbar, $matches)) {
-
-                    $lastbutton = count($matches[0])-1;
+                if (preg_match_all('/<button[^>]*onclick="' . "location='([^']*)'" . '[^"]*"[^>]*>/is', $navbuttonbar, $matches)) {
+                    $lastbutton = count($matches[0]) - 1;
                     $nexttaskurl = $matches[1][$lastbutton];
                     $this->nexttask = $this->xml_locate_file($context, $component, $filearea, $nexttaskurl);
                 }
@@ -255,7 +252,7 @@ class taskchain_source_hp extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function xml_get_name($textonly=true) {
+    public function xml_get_name($textonly = true) {
         if (! isset($this->name)) {
             $this->name = '';
             $this->title = '';
@@ -289,11 +286,11 @@ class taskchain_source_hp extends taskchain_source {
                 // could not detect Hot Potatoes quiz type - shouldn't happen !!
                 return false;
             }
-            if ($text = $this->xml_value($this->hbs_software.'-config-file,'.$this->hbs_tasktype.',exercise-subtitle')) {
-                $this->entrytext .= '<h3>'.$text.'</h3>';
+            if ($text = $this->xml_value($this->hbs_software . '-config-file,' . $this->hbs_tasktype . ',exercise-subtitle')) {
+                $this->entrytext .= '<h3>' . $text . '</h3>';
             }
-            if ($text = $this->xml_value($this->hbs_software.'-config-file,'.$this->hbs_tasktype.',instructions')) {
-                $this->entrytext .= '<div>'.$text.'</div>';
+            if ($text = $this->xml_value($this->hbs_software . '-config-file,' . $this->hbs_tasktype . ',instructions')) {
+                $this->entrytext .= '<div>' . $text . '</div>';
             }
         }
         return $this->entrytext;
@@ -317,12 +314,12 @@ class taskchain_source_hp extends taskchain_source {
                 return false;
             }
 
-            if (! $this->xml_value_int($this->hbs_software.'-config-file,global,include-next-ex')) {
+            if (! $this->xml_value_int($this->hbs_software . '-config-file,global,include-next-ex')) {
                 // next exercise is not enabled for this task
                 return false;
             }
 
-            if (! $nexttaskurl = $this->xml_value($this->hbs_software.'-config-file,'.$this->hbs_tasktype.',next-ex-url')) {
+            if (! $nexttaskurl = $this->xml_value($this->hbs_software . '-config-file,' . $this->hbs_tasktype . ',next-ex-url')) {
                 // there is no next URL given for the next task
                 return false;
             }
@@ -344,13 +341,13 @@ class taskchain_source_hp extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function xml_locate_file($context, $component, $filearea, $nexttaskurl, $filetypes=null) {
+    public function xml_locate_file($context, $component, $filearea, $nexttaskurl, $filetypes = null) {
 
         if (preg_match('/^https?:\/\//', $nexttaskurl)) {
             return $nexttaskurl;
         }
 
-        $filepath = $this->basepath.'/'.ltrim($nexttaskurl, '/');
+        $filepath = $this->basepath . '/' . ltrim($nexttaskurl, '/');
         if (file_exists($filepath)) {
             return $nexttaskurl;
         }
@@ -361,7 +358,7 @@ class taskchain_source_hp extends taskchain_source {
         }
 
         $filetype = substr($filename, $pos + 1);
-        if ($filetype=='htm' || $filetype=='html') {
+        if ($filetype == 'htm' || $filetype == 'html') {
             // $nexttaskurl is a local html file that doesn't exist
             // so search for a HP source file with the same name
             $len = strlen($filetype);
@@ -370,8 +367,8 @@ class taskchain_source_hp extends taskchain_source {
                 $filetypes = array('jcl', 'jcw', 'jmt', 'jmx', 'jqz'); // 'jbc' for HP 5 ?
             }
             foreach ($filetypes as $filetype) {
-                if (file_exists($filepath.$filetype)) {
-                    return substr($nexttaskurl, 0, -$len).$filetype;
+                if (file_exists($filepath . $filetype)) {
+                    return substr($nexttaskurl, 0, -$len) . $filetype;
                 }
             }
         }
@@ -400,24 +397,22 @@ class taskchain_source_hp extends taskchain_source {
             $this->pre_xmlize_filecontents();
 
             // define root of XML tree
-            $this->xml_root = $this->hbs_software.'-'.$this->hbs_tasktype.'-file';
+            $this->xml_root = $this->hbs_software . '-' . $this->hbs_tasktype . '-file';
 
             // convert to XML tree using taskchain_xmlize()
             if (! $this->xml = taskchain_xmlize($this->filecontents, 0)) {
-                debugging('Could not parse XML file: '.$this->filepath);
+                debugging('Could not parse XML file: ' . $this->filepath);
             } else if (! array_key_exists($this->xml_root, $this->xml)) {
-                debugging('Could not find XML root node: '.$this->xml_root);
+                debugging('Could not find XML root node: ' . $this->xml_root);
             }
 
             // merge config settings, if necessary
             if (isset($this->config) && $this->config && $this->config->get_filecontents()) {
-
                 $this->config->compact_filecontents(array('header-code'));
                 $xml = taskchain_xmlize($this->config->filecontents, 0);
 
-                $config_file = $this->hbs_software.'-config-file';
+                $config_file = $this->hbs_software . '-config-file';
                 if (isset($xml[$config_file]['#']) && isset($this->xml[$this->xml_root]['#'])) {
-
                     // make sure the xml tree has the expected structure
                     if (! isset($this->xml[$this->xml_root]['#'][$config_file][0]['#'])) {
                         if (! isset($this->xml[$this->xml_root]['#'][$config_file][0])) {
@@ -459,17 +454,17 @@ class taskchain_source_hp extends taskchain_source {
             $this->filecontents = preg_replace($search, '&amp;', $this->filecontents);
 
             // unicode characters can be detected by checking the hex value of a character
-            //  00 - 7F : ascii char (control chars + roman alphabet + punctuation)
-            //  80 - BF : byte 2, 3 or 4 of a unicode char
-            //  C0 - DF : 1st byte of 2-byte char
-            //  E0 - EF : 1st byte of 3-byte char
-            //  F0 - FF : 1st byte of 4-byte char
+            // 00 - 7F : ascii char (control chars + roman alphabet + punctuation)
+            // 80 - BF : byte 2, 3 or 4 of a unicode char
+            // C0 - DF : 1st byte of 2-byte char
+            // E0 - EF : 1st byte of 3-byte char
+            // F0 - FF : 1st byte of 4-byte char
             // if the string doesn't match the above, it might be
-            //  80 - FF : single-byte, non-ascii char
-            $search = '/'.'[\xc0-\xdf][\x80-\xbf]{1}'.'|'.
-                          '[\xe0-\xef][\x80-\xbf]{2}'.'|'.
-                          '[\xf0-\xff][\x80-\xbf]{3}'.'|'.
-                          '[\x80-\xff]'.'/';
+            // 80 - FF : single-byte, non-ascii char
+            $search = '/' . '[\xc0-\xdf][\x80-\xbf]{1}' . '|' .
+                          '[\xe0-\xef][\x80-\xbf]{2}' . '|' .
+                          '[\xf0-\xff][\x80-\xbf]{3}' . '|' .
+                          '[\x80-\xff]' . '/';
             $callback = array($this, 'utf8_char_to_html_entity');
             $this->filecontents = preg_replace_callback($search, $callback, $this->filecontents);
 
@@ -482,20 +477,20 @@ class taskchain_source_hp extends taskchain_source {
         }
     }
 
-    function utf8_char_to_html_entity($char, $ampersand='&') {
+    function utf8_char_to_html_entity($char, $ampersand = '&') {
         // thanks to: http://www.zend.com/codex.php?id=835&single=1
         if (is_array($char)) {
             $char = $char[0];
         }
         $dec = 0;
         $len = strlen($char);
-        for ($pos=0; $pos<$len; $pos++) {
-            $ord = ord ($char[$pos]);
+        for ($pos = 0; $pos < $len; $pos++) {
+            $ord = ord($char[$pos]);
             $ord -= ($pos ? 128 : $this->utf8_decrement[$len]);
             $dec += ($ord << $this->utf8_shift[$len][$pos]);
         }
 
-        return $ampersand.'#x'.sprintf('%04X', $dec).';';
+        return $ampersand . '#x' . sprintf('%04X', $dec) . ';';
     }
 
     /**
@@ -509,20 +504,20 @@ class taskchain_source_hp extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function xml_value($tags, $more_tags=null, $default='', $nl2br=true) {
+    public function xml_value($tags, $more_tags = null, $default = '', $nl2br = true) {
         global $CFG;
         static $block_elements = null;
 
         // set reference to a $value in $this->xml array
         if (isset($this->xml_root)) {
-            $all_tags = "['".$this->xml_root."']['#']";
+            $all_tags = "['" . $this->xml_root . "']['#']";
         } else {
             $all_tags = ''; // shouldn't happen
         }
         if ($tags) {
-            $all_tags .= "['".str_replace(",", "'][0]['#']['", $tags)."']";
+            $all_tags .= "['" . str_replace(",", "'][0]['#']['", $tags) . "']";
         }
-        if ($more_tags===null) {
+        if ($more_tags === null) {
             $all_tags .= "[0]['#']";
         } else {
             $all_tags .= $more_tags;
@@ -541,27 +536,26 @@ class taskchain_source_hp extends taskchain_source {
         }
 
         if (is_string($value)) {
-
             // decode angle brackets
-            $value = strtr($value, array('&#x003C;'=>'<', '&#x003E;'=>'>', '&#x0026;'=>'&'));
+            $value = strtr($value, array('&#x003C;' => '<', '&#x003E;' => '>', '&#x0026;' => '&'));
 
             // remove white space before and after HTML block elements
-            if ($block_elements===null) {
+            if ($block_elements === null) {
                 // set regexp to detect white space around html block elements
                 $block_elements = array(
-                    //'div','p','pre','blockquote','center',
-                    //'h1','h2','h3','h4','h5','h6','hr',
-                    'table','caption','colgroup','col','tbody','thead','tfoot','tr','th','td',
-                    'ol','ul','dl','li','dt','dd',
-                    'applet','embed','object','param',
-                    'select','optgroup','option',
-                    'fieldset','legend',
-                    'frameset','frame'
+                    // 'div','p','pre','blockquote','center',
+                    // 'h1','h2','h3','h4','h5','h6','hr',
+                    'table', 'caption', 'colgroup', 'col', 'tbody', 'thead', 'tfoot', 'tr', 'th', 'td',
+                    'ol', 'ul', 'dl', 'li', 'dt', 'dd',
+                    'applet', 'embed', 'object', 'param',
+                    'select', 'optgroup', 'option',
+                    'fieldset', 'legend',
+                    'frameset', 'frame',
                 );
                 $space = '(?:\s|(?:<br[^>]*>))*'; // unwanted white space
-                $block_elements = '(?:\/?'.implode(')|(?:\/?', $block_elements).')';
-                $block_elements = '/'.$space.'(<(?:'.$block_elements.')[^>]*>)'.$space.'/is';
-                //.'(?='.'<)' // followed by the start of another tag
+                $block_elements = '(?:\/?' . implode(')|(?:\/?', $block_elements) . ')';
+                $block_elements = '/' . $space . '(<(?:' . $block_elements . ')[^>]*>)' . $space . '/is';
+                // .'(?='.'<)' // followed by the start of another tag
             }
             $value = preg_replace($block_elements, '$1', $value);
 
@@ -607,7 +601,7 @@ class taskchain_source_hp extends taskchain_source {
             $text   = $match[2];
             $after  = $match[3];
         }
-        return $before.preg_replace('/(?:(?:<br[^>]*>)|\s)+/is', ' ', $text).$after;
+        return $before . preg_replace('/(?:(?:<br[^>]*>)|\s)+/is', ' ', $text) . $after;
     }
 
     /**
@@ -621,7 +615,7 @@ class taskchain_source_hp extends taskchain_source {
         $before = $match[1];
         $text   = $match[2];
         $after  = $match[3];
-        return $before.str_replace("\n", '<br />', $text).$after;
+        return $before . str_replace("\n", '<br />', $text) . $after;
     }
 
     /**
@@ -633,7 +627,7 @@ class taskchain_source_hp extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function xml_value_bool($tags, $more_tags=null, $default=false) {
+    public function xml_value_bool($tags, $more_tags = null, $default = false) {
         $value = $this->xml_value($tags, $more_tags, $default, false);
         if (empty($value)) {
             return 'false';
@@ -651,7 +645,7 @@ class taskchain_source_hp extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function xml_value_int($tags, $more_tags=null, $default=0) {
+    public function xml_value_int($tags, $more_tags = null, $default = 0) {
         $value = $this->xml_value($tags, $more_tags, $default, false);
         return intval($value);
     }
@@ -671,7 +665,7 @@ class taskchain_source_hp extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function xml_value_js($tags, $more_tags=null, $default='', $nl2br=true, $convert_to_unicode=true) {
+    public function xml_value_js($tags, $more_tags = null, $default = '', $nl2br = true, $convert_to_unicode = true) {
         $value = $this->xml_value($tags, $more_tags, $default, $nl2br);
         return $this->js_value_safe($value, $convert_to_unicode);
     }
@@ -684,7 +678,7 @@ class taskchain_source_hp extends taskchain_source {
      * @return xxx
      * @todo Finish documenting this function
      */
-    function js_value_safe($str, $convert_to_unicode=false) {
+    function js_value_safe($str, $convert_to_unicode = false) {
         global $CFG;
 
         $enableobfuscate = false; // disabled until fixed, check URLs in JMatch RHS
@@ -725,7 +719,7 @@ class taskchain_source_hp extends taskchain_source {
      */
     public function synchronize_moodle_settings(&$taskchain) {
         $name = $this->get_name();
-        if ($name=='' || $name==$taskchain->name) {
+        if ($name == '' || $name == $taskchain->name) {
             return false;
         } else {
             $taskchain->name = $name;

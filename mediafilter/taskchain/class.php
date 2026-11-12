@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/mediafilter/class.php');
+require_once($CFG->dirroot . '/mod/taskchain/mediafilter/class.php');
 
 /**
  * taskchain_mediafilter_taskchain
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/mediafilter/class.php');
  * @package    mod_taskchain
  */
 class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
-
     /**
      * mediaplugin_filter
      *
@@ -51,7 +49,7 @@ class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function mediaplugin_filter($taskchain, $text, $options=array())  {
+    public function mediaplugin_filter($taskchain, $text, $options = array()) {
         global $CFG, $PAGE;
 
         // Keep track of the id of the current task
@@ -66,12 +64,11 @@ class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
         $newtext = $text; // fullclone is slow and not needed here
 
         foreach (array_keys($this->media_filetypes) as $filetype) {
-
             // set $adminsetting, the name of the $CFG setting, if any, which enables/disables filtering of this file type
             $adminsetting = '';
             if (preg_match('/^[a-z]+$/', $filetype)) {
-                $taskchain_enable = 'taskchain_enable'.$filetype;
-                $filter_mediaplugin_enable = 'filter_mediaplugin_enable_'.$filetype;
+                $taskchain_enable = 'taskchain_enable' . $filetype;
+                $filter_mediaplugin_enable = 'filter_mediaplugin_enable_' . $filetype;
 
                 if (isset($CFG->$taskchain_enable)) {
                     $adminsetting = $taskchain_enable;
@@ -81,35 +78,35 @@ class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
             }
 
             // set $search and $replace strings
-            $search = '/<a.*?href="([^"?>]*\.'.$filetype.'[^">]*)"[^>]*>.*?<\/a>/is';
-            if ($adminsetting=='' || $CFG->$adminsetting) {
+            $search = '/<a.*?href="([^"?>]*\.' . $filetype . '[^">]*)"[^>]*>.*?<\/a>/is';
+            if ($adminsetting == '' || $CFG->$adminsetting) {
                 // filtering of this file type is allowed
                 $callback = array($this, 'taskchain_mediaplugin_filter');
                 $callback = partial($callback, $filetype, $options);
                 $newtext = preg_replace_callback($search, $callback, $newtext, -1, $count);
             } else {
                 // filtering of this file type is disabled
-                $replace = '$1<br />'.get_string('error_disabledfilter', 'mod_taskchain', $adminsetting);
+                $replace = '$1<br />' . get_string('error_disabledfilter', 'mod_taskchain', $adminsetting);
                 $newtext = preg_replace($search, $replace, $newtext, -1, $count);
             }
 
-            if ($count>0) {
+            if ($count > 0) {
                 break;
             }
         }
 
-        if (is_null($newtext) || $newtext==$text) {
+        if (is_null($newtext) || $newtext == $text) {
             // error or not filtered
             return $text;
         }
 
-        if ($eolas_fix_applied==$taskchain->id) {
+        if ($eolas_fix_applied == $taskchain->id) {
             // do nothing - the external javascripts have already been included for this task
         } else {
             $PAGE->requires->js('/mod/taskchain/mediafilter/ufo.js', true);
             $PAGE->requires->js('/mod/taskchain/mediafilter/eolas_fix.js');
-            //$newtext .= "\n".'<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/taskchain/mediafilter/ufo.js"></script>';
-            //$newtext .= "\n".'<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/taskchain/mediafilter/eolas_fix.js" defer="defer"></script>';
+            // $newtext .= "\n".'<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/taskchain/mediafilter/ufo.js"></script>';
+            // $newtext .= "\n".'<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/taskchain/mediafilter/eolas_fix.js" defer="defer"></script>';
             $eolas_fix_applied = $taskchain->id;
         }
 
@@ -125,7 +122,7 @@ class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function taskchain_mediaplugin_filter($filetype, $options, $match)  {
+    public function taskchain_mediaplugin_filter($filetype, $options, $match) {
         $link = $match[0];
         $mediaurl = $match[1];
 
@@ -135,15 +132,15 @@ class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
         } else {
             $player = '';
         }
-        if ($player=='') {
+        if ($player == '') {
             $player = $this->defaultplayer;
         } else if (! array_key_exists($player, $this->players)) {
-            debugging('Invalid media player requested: '.$player);
+            debugging('Invalid media player requested: ' . $player);
             $player = $this->defaultplayer;
         }
 
         // merge player options
-        if ($player==$this->defaultplayer) {
+        if ($player == $this->defaultplayer) {
             $options = array_merge($this->players[$player]->options, $options);
         } else {
             $options = array_merge($this->players[$this->defaultplayer]->options, $this->players[$player]->options, $options);

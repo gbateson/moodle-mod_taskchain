@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,8 +24,8 @@
  */
 
 /** Include required files */
-require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
 require_login(SITEID);
 if (class_exists('context_system')) {
@@ -38,7 +37,7 @@ require_capability('moodle/site:config', $context);
 
 // $SCRIPT is set by initialise_fullme() in 'lib/setuplib.php'
 // it is the path below $CFG->wwwroot of this script
-$PAGE->set_url($CFG->wwwroot.$SCRIPT);
+$PAGE->set_url($CFG->wwwroot . $SCRIPT);
 
 // set title
 $title = get_string('toolsindex', 'mod_taskchain');
@@ -51,14 +50,14 @@ echo $OUTPUT->box_start();
 
 // get path to this directory
 $dirname = dirname($SCRIPT);
-$dirpath = $CFG->dirroot.$dirname;
+$dirpath = $CFG->dirroot . $dirname;
 
-echo html_writer::start_tag('ul')."\n";
+echo html_writer::start_tag('ul') . "\n";
 
 $files = array();
 $items = new DirectoryIterator($dirpath);
 foreach ($items as $item) {
-    if ($item->isDot() || substr($item, 0, 1)=='.' || $item=='index.php' || trim($item)=='') {
+    if ($item->isDot() || substr($item, 0, 1) == '.' || $item == 'index.php' || trim($item) == '') {
         continue;
     }
     if ($item->isFile()) {
@@ -67,11 +66,11 @@ foreach ($items as $item) {
 }
 sort($files);
 foreach ($files as $file) {
-    $href = $CFG->wwwroot.$dirname.'/'.$file;
-    echo html_writer::tag('li', html_writer::tag('a', $file, array('href' => $href)))."\n";
+    $href = $CFG->wwwroot . $dirname . '/' . $file;
+    echo html_writer::tag('li', html_writer::tag('a', $file, array('href' => $href))) . "\n";
 }
 
-echo html_writer::end_tag('ul')."\n";
+echo html_writer::end_tag('ul') . "\n";
 
 echo $OUTPUT->box_end();
 echo $OUTPUT->footer();

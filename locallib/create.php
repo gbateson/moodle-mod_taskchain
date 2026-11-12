@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -36,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_create extends taskchain_base {
-
     /**
      * chaingrade
      *
@@ -50,10 +48,10 @@ class taskchain_create extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    function chaingrade($grade=0, $status=self::STATUS_INPROGRESS, $duration=0, $chainid=0, $cnumber=0, $userid=0) {
+    function chaingrade($grade = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $chainid = 0, $cnumber = 0, $userid = 0) {
         global $DB;
 
-        if ($userid==0 && $this->TC->get_chaingrade()) {
+        if ($userid == 0 && $this->TC->get_chaingrade()) {
             return $this->TC->get_chaingradeid();
         }
 
@@ -64,7 +62,7 @@ class taskchain_create extends taskchain_base {
             $userid = $this->TC->userid;
         }
         if ($chainid) {
-            $chain = $DB->get_record('taskchain_chains', array('id'=>$chainid), 'id,parenttype,parentid');
+            $chain = $DB->get_record('taskchain_chains', array('id' => $chainid), 'id,parenttype,parentid');
         } else {
             $chain = &$this->TC->chain;
         }
@@ -106,10 +104,10 @@ class taskchain_create extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    function chainattempt($grade=0, $status=self::STATUS_INPROGRESS, $duration=0, $chainid=0, $cnumber=0, $userid=0) {
+    function chainattempt($grade = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $chainid = 0, $cnumber = 0, $userid = 0) {
         global $DB;
 
-        if ($userid==0 && $this->TC->get_chainattempt()) {
+        if ($userid == 0 && $this->TC->get_chainattempt()) {
             return $this->TC->get_chainattemptid();
         }
 
@@ -150,9 +148,9 @@ class taskchain_create extends taskchain_base {
         $params  = array($chainid, $cnumber, $userid, self::STATUS_INPROGRESS);
 
         // set status of previous chain attempts (and their task_attempts and task_scores) to adandoned
-        $DB->set_field_select('taskchain_task_attempts',  'status', self::STATUS_ABANDONED, "taskid IN ($taskids) AND $select", $params);
-        $DB->set_field_select('taskchain_task_scores',    'status', self::STATUS_ABANDONED, "taskid IN ($taskids) AND $select", $params);
-        $DB->set_field_select('taskchain_chain_attempts', 'status', self::STATUS_ABANDONED, "chainid = ? AND $select",            $params);
+        $DB->set_field_select('taskchain_task_attempts', 'status', self::STATUS_ABANDONED, "taskid IN ($taskids) AND $select", $params);
+        $DB->set_field_select('taskchain_task_scores', 'status', self::STATUS_ABANDONED, "taskid IN ($taskids) AND $select", $params);
+        $DB->set_field_select('taskchain_chain_attempts', 'status', self::STATUS_ABANDONED, "chainid = ? AND $select", $params);
 
         // set status of previous PENDING chain attempts to COMPLETED
         $select  = 'chainid = ? AND cnumber < ? AND userid = ? AND status = ?';
@@ -186,10 +184,10 @@ class taskchain_create extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    function taskscore($score=0, $status=self::STATUS_INPROGRESS, $duration=0, $taskid=0, $cnumber=0, $userid=0) {
+    function taskscore($score = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $taskid = 0, $cnumber = 0, $userid = 0) {
         global $DB;
 
-        if ($userid==0 && $this->TC->get_taskscore()) {
+        if ($userid == 0 && $this->TC->get_taskscore()) {
             return $this->TC->get_taskscoreid();
         }
 
@@ -286,7 +284,7 @@ class taskchain_create extends taskchain_base {
         $taskattempt->resumefinish = 0;
         $taskattempt->timestart    = $this->TC->time;
         $taskattempt->timefinish   = 0;
-        //$taskattempt->timemodified = $this->TC->time;
+        // $taskattempt->timemodified = $this->TC->time;
 
         // add new task attempt record
         if (! $taskattempt->id = $DB->insert_record('taskchain_task_attempts', $taskattempt)) {
@@ -321,7 +319,7 @@ class taskchain_create extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    function attempt($type, $grade=0, $status=self::STATUS_INPROGRESS, $duration=0) {
+    function attempt($type, $grade = 0, $status = self::STATUS_INPROGRESS, $duration = 0) {
         $attempt = "{$type}attempt";
         return $this->$attempt($grade, $status, $duration);
     }

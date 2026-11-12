@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/html/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/html/renderer.php');
 
 /**
  * mod_taskchain_attempt_html_xhtml_renderer
@@ -39,13 +38,12 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/html/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_html_xhtml_renderer extends mod_taskchain_attempt_html_renderer {
-
     /**
      * List of source types which this renderer can handle
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    public static function sourcetypes() {
         return array('html_xhtml');
     }
 }

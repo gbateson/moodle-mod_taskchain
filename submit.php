@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,13 +24,13 @@
  */
 
 /** Include required files */
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
 $TC = new mod_taskchain();
 
 // Log this request
-mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'submit', 'view.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'submit', 'view.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
 // Set editing mode
 mod_taskchain::set_user_editing();
@@ -65,7 +64,7 @@ $subtype = $TC->get_attempt_subtype();
 $TC->load_class($subtype, 'storage.php');
 
 // store the results (use call_user_func to prevent syntax errors in PHP 5.2.x)
-$storage = 'mod_taskchain_'.$subtype.'_storage';
+$storage = 'mod_taskchain_' . $subtype . '_storage';
 call_user_func(array($storage, 'store'), $TC);
 
 // transfer gradelimit and gradeweighting to $TC->taskchain
@@ -82,7 +81,7 @@ $TC->update_completion_state($completion);
 
 // do the stuff the $TC->task->output->redirect() used to do
 
-if ($TC->task->delay3==mod_taskchain::TIME_DISABLE || $TC->taskattempt->status==mod_taskchain::STATUS_INPROGRESS || $TC->taskattempt->redirect==0) {
+if ($TC->task->delay3 == mod_taskchain::TIME_DISABLE || $TC->taskattempt->status == mod_taskchain::STATUS_INPROGRESS || $TC->taskattempt->redirect == 0) {
     // we need some check here to see if the user is trying to navigate away
     // from the page in which case we should just die and not send the header
     header("HTTP/1.0 204 No Response");
@@ -92,11 +91,11 @@ if ($TC->task->delay3==mod_taskchain::TIME_DISABLE || $TC->taskattempt->status==
     // script will die here
 }
 
-if ($TC->taskattempt->status==mod_taskchain::STATUS_ABANDONED) {
+if ($TC->taskattempt->status == mod_taskchain::STATUS_ABANDONED) {
     $can_continue = call_user_func(array($storage, 'can_continue'), $TC);
-    if ($can_continue==mod_taskchain::CONTINUE_RESUMETASK || $can_continue==mod_taskchain::CONTINUE_RESTARTTASK) {
+    if ($can_continue == mod_taskchain::CONTINUE_RESUMETASK || $can_continue == mod_taskchain::CONTINUE_RESTARTTASK) {
         $stop = true;
-    } else if ($can_continue==mod_taskchain::CONTINUE_RESTARTCHAIN && ! $TC->has_entrypage()) {
+    } else if ($can_continue == mod_taskchain::CONTINUE_RESTARTCHAIN && ! $TC->has_entrypage()) {
         $stop = true;
     } else {
         $stop = false;
@@ -105,14 +104,13 @@ if ($TC->taskattempt->status==mod_taskchain::STATUS_ABANDONED) {
         $url = $TC->url->course();
         if ($TC->inpopup) {
             echo ''
-                .'<script type="text/javascript">'."\n"
-                .'//<![CDATA['."\n"
-                ."if (window.opener && !opener.closed) {\n"
-                ."    opener.location = '$url';\n"
-                ."}\n"
-                .'//]]>'."\n"
-                ."</script>\n"
-            ;
+                . '<script type="text/javascript">' . "\n"
+                . '//<![CDATA[' . "\n"
+                . "if (window.opener && !opener.closed) {\n"
+                . "    opener.location = '$url';\n"
+                . "}\n"
+                . '//]]>' . "\n"
+                . "</script>\n";
             close_window();
             // script will die here
         } else {
@@ -142,7 +140,7 @@ if ($error = $TC->require_next_task()) {
 $output = $PAGE->get_renderer('mod_taskchain');
 
 if ($TC->get_taskid() != mod_taskchain::CONDITIONTASKID_ENDOFCHAIN) {
-    //$params = array('taskid'=>$taskid, 'tnumber'=>-1, 'taskattemptid'=>0, 'taskscoreid'=>0);
+    // $params = array('taskid'=>$taskid, 'tnumber'=>-1, 'taskattemptid'=>0, 'taskscoreid'=>0);
     $url = $output->format_url('attempt.php', 'coursemoduleid', array());
     redirect($url);
 }

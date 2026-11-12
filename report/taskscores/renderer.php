@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/report/taskscore/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/report/taskscore/renderer.php');
 
 /**
  * mod_taskchain_report_taskscores_renderer
@@ -57,10 +56,10 @@ class mod_taskchain_report_taskscores_renderer extends mod_taskchain_report_task
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function select_sql_record(&$select, &$from, &$where, &$params, $userid=0, $record=null) {
-        $from = '{taskchain_task_attempts} tc_tsk_att '.
-                ' JOIN {taskchain_tasks} tc_tsk ON tc_tsk.id = tc_tsk_att.taskid'.
-                ' JOIN {taskchain_task_scores} tc_tsk_scr ON (tc_tsk_scr.taskid = tc_tsk.id AND '.
+    public function select_sql_record(&$select, &$from, &$where, &$params, $userid = 0, $record = null) {
+        $from = '{taskchain_task_attempts} tc_tsk_att ' .
+                ' JOIN {taskchain_tasks} tc_tsk ON tc_tsk.id = tc_tsk_att.taskid' .
+                ' JOIN {taskchain_task_scores} tc_tsk_scr ON (tc_tsk_scr.taskid = tc_tsk.id AND ' .
                                                              'tc_tsk_scr.userid = tc_tsk_att.userid)';
 
         // restrict sql to a specific taskscore /user

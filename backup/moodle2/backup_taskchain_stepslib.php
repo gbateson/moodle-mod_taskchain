@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -39,7 +38,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 
 class backup_taskchain_activity_structure_step extends backup_activity_structure_step {
-
     /** maximum number of questions to retrieve in one DB query */
     const GET_QUESTIONS_LIMIT = 100;
 
@@ -49,7 +47,7 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function define_structure()  {
+    protected function define_structure() {
 
         // are we including userinfo?
         $userinfo = $this->get_setting_value('userinfo');
@@ -85,7 +83,6 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         ////////////////////////////////////////////////////////////////////////
 
         if ($userinfo) {
-
             // chain grades
             $chaingrades = new backup_nested_element('chaingrades');
             $fieldnames = array('id', 'parenttype', 'parentid'); // excluded fields
@@ -146,7 +143,6 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         $conditions->add_child($condition);
 
         if ($userinfo) {
-
             // chain grades
             $chain->add_child($chaingrades);
             $chaingrades->add_child($chaingrade);
@@ -186,12 +182,11 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         ////////////////////////////////////////////////////////////////////////
 
         if ($userinfo) {
-
             // chain grades
             $taskchainid = $this->get_setting_value(backup::VAR_ACTIVITYID);
             $params = array('parenttype' => array('sqlparam' => 0), 'parentid' => array('sqlparam' => $taskchainid));
             $chaingrade->set_source_sql('SELECT * FROM {taskchain_chain_grades} WHERE parenttype = ? AND parentid = ?', $params);
-            //$chaingrade->set_source_sql("SELECT * FROM {taskchain_chain_grades} WHERE parenttype=0 AND parentid=$taskchainid", array());
+            // $chaingrade->set_source_sql("SELECT * FROM {taskchain_chain_grades} WHERE parenttype=0 AND parentid=$taskchainid", array());
 
             // chain attempts
             $params = array('chainid' => backup::VAR_PARENTID);
@@ -243,8 +238,8 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
 
         $taskchain->annotate_files('mod_taskchain', 'sourcefile', null);
         $taskchain->annotate_files('mod_taskchain', 'configfile', null);
-        $taskchain->annotate_files('mod_taskchain', 'entrytext',  null);
-        $taskchain->annotate_files('mod_taskchain', 'exittext',   null);
+        $taskchain->annotate_files('mod_taskchain', 'entrytext', null);
+        $taskchain->annotate_files('mod_taskchain', 'exittext', null);
 
         // return the root element (taskchain), wrapped into standard activity structure
         return $this->prepare_activity_structure($taskchain);
@@ -258,7 +253,7 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
      * @param array $excluded_fieldnames these field names will be excluded
      * @return array of field names
      */
-    protected function get_fieldnames($tablename, array $excluded_fieldnames)   {
+    protected function get_fieldnames($tablename, array $excluded_fieldnames) {
         global $DB;
         $fieldnames = array_keys($DB->get_columns($tablename));
         return array_diff($fieldnames, $excluded_fieldnames);
@@ -289,9 +284,9 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         $taskchainid = $this->get_setting_value(backup::VAR_ACTIVITYID);
 
         $select = 'tq.*, tc.id AS chainid, t.id AS taskchainid';
-        $from   = '{taskchain_questions} tq '.
-                  'JOIN {taskchain_tasks} tt ON tq.taskid = tt.id '.
-                  'JOIN {taskchain_chains} tc ON tt.chainid = tc.id '.
+        $from   = '{taskchain_questions} tq ' .
+                  'JOIN {taskchain_tasks} tt ON tq.taskid = tt.id ' .
+                  'JOIN {taskchain_chains} tc ON tt.chainid = tc.id ' .
                   'JOIN {taskchain} t ON tc.parenttype = ? AND tc.parentid = t.id';
         $where  = 't.id = ?';
         $order  = 'tq.id, tq.text';
@@ -299,7 +294,6 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
 
         // get questions in this taskchain
         if ($questions = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $order", $params)) {
-
             // extract string ids in the "text" field of these questions
             foreach ($questions as $question) {
                 if ($id = intval(trim($question->text))) {
@@ -309,11 +303,9 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
 
             $questions = array_keys($questions);
             while (($questionids = array_splice($questions, 0, self::GET_QUESTIONS_LIMIT)) && count($questionids)) {
-
                 // get the responses to these questions
                 list($filter, $params) = $DB->get_in_or_equal($questionids);
                 if ($responses = $DB->get_records_select('taskchain_responses', "questionid $filter", $params)) {
-
                     // extract string ids from the string fields of these responses
                     foreach ($responses as $response) {
                         foreach ($stringfields as $stringfield) {
@@ -333,9 +325,14 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         $stringids = array_keys($stringids);
 
         switch (count($stringids)) {
-            case 0:  $filter = '< 0'; break;
-            case 1:  $filter = '='.$stringids[0]; break;
-            default: $filter = 'IN ('.implode(',', $stringids).')';
+            case 0:
+                $filter = '< 0';
+                break;
+            case 1:
+                $filter = '=' . $stringids[0];
+                break;
+            default:
+                $filter = 'IN (' . implode(',', $stringids) . ')';
         }
 
         // Note: we don't put the ids into $params like this
@@ -344,7 +341,7 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         // constants, which are all negative, in $params, and will
         // throw an exception for any positive values in $params
         // - baseelementincorrectfinalorattribute
-        //   backup/util/structure/base_final_element.class.php
+        // backup/util/structure/base_final_element.class.php
         return array($filter, array());
     }
 }

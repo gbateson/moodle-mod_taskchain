@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -41,9 +40,9 @@ class taskchain_mediaplayer_matbury_mp3_player extends taskchain_mediaplayer {
     public $flashvars_paramname = 'mp3url';
     public $more_options = array(
         'width' => 200, 'height' => 18, 'majorversion' => 9, 'build' => 115,
-        'timesToPlay' => 1, 'showPlay' => 'true', 'waitToPlay' => 'true'
+        'timesToPlay' => 1, 'showPlay' => 'true', 'waitToPlay' => 'true',
     );
     public $flashvars = array(
-        'timesToPlay' => PARAM_INT, 'showPlay' => PARAM_ALPHANUM, 'waitToPlay' => PARAM_ALPHANUM
+        'timesToPlay' => PARAM_INT, 'showPlay' => PARAM_ALPHANUM, 'waitToPlay' => PARAM_ALPHANUM,
     );
 }

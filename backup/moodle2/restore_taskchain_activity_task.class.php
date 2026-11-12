@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -39,7 +38,6 @@ require_once($CFG->dirroot . '/mod/taskchain/backup/moodle2/restore_taskchain_st
  * @package    mod_taskchain
  */
 class restore_taskchain_activity_task extends restore_activity_task {
-
     /**
      * Define (add) particular settings this activity can have
      */
@@ -61,9 +59,9 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function define_decode_contents() {
+    public static function define_decode_contents() {
         return array(
-            new restore_decode_content('taskchain_chains', array('entrytext', 'exittext'))
+            new restore_decode_content('taskchain_chains', array('entrytext', 'exittext')),
         );
     }
 
@@ -74,10 +72,10 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * @return xxx
      * @todo Finish documenting this function
      */
-    static public function define_decode_rules() {
+    public static function define_decode_rules() {
         return array(
             new restore_decode_rule('TASKCHAINVIEWBYID', '/mod/taskchain/view.php?id=$1', 'course_module'),
-            new restore_decode_rule('TASKCHAININDEX', '/mod/taskchain/index.php?id=$1', 'course')
+            new restore_decode_rule('TASKCHAININDEX', '/mod/taskchain/index.php?id=$1', 'course'),
         );
     }
 
@@ -87,7 +85,7 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * taskchain logs. It must return one array
      * of {@link restore_log_rule} objects
      */
-    static public function define_restore_log_rules() {
+    public static function define_restore_log_rules() {
         return array(
             new restore_log_rule('taskchain', 'attempt', 'view.php?id={course_module}', '{taskchain}'),
             new restore_log_rule('taskchain', 'editchains', 'view.php?id={course_module}', '{taskchain}'),
@@ -98,7 +96,7 @@ class restore_taskchain_activity_task extends restore_activity_task {
             new restore_log_rule('taskchain', 'report', 'report.php?id={course_module}', '{taskchain}'),
             new restore_log_rule('taskchain', 'review', 'view.php?id={course_module}', '{taskchain}'),
             new restore_log_rule('taskchain', 'submit', 'view.php?id={course_module}', '{taskchain}'),
-            new restore_log_rule('taskchain', 'view', 'view.php?id={course_module}', '{taskchain}')
+            new restore_log_rule('taskchain', 'view', 'view.php?id={course_module}', '{taskchain}'),
         );
     }
 
@@ -112,9 +110,9 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * by the restore final task, but are defined here at
      * activity level. All them are rules not linked to any module instance (cmid = 0)
      */
-    static public function define_restore_log_rules_for_course() {
+    public static function define_restore_log_rules_for_course() {
         return array(
-            new restore_log_rule('taskchain', 'index', 'index.php?id={course}', null)
+            new restore_log_rule('taskchain', 'index', 'index.php?id={course}', null),
         );
     }
 }

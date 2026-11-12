@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/report/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/report/renderer.php');
 
 /**
  * mod_taskchain_report_taskquestions_renderer
@@ -42,15 +41,15 @@ class mod_taskchain_report_taskquestions_renderer extends mod_taskchain_report_r
     public $mode = 'taskquestions';
 
     public $tablecolumns = array(
-        'taskattempttnumber',  'selected',
-        'taskattemptscore',    'taskattemptstatus',
-        'taskattemptduration', 'taskattempttimemodified'
+        'taskattempttnumber', 'selected',
+        'taskattemptscore', 'taskattemptstatus',
+        'taskattemptduration', 'taskattempttimemodified',
     );
     public $has_usercolumns = true;
 
     public $filterfields = array(
-        'realname'=>0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
-        'score'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'penalties'=>1, 'score'=>1
+        'realname' => 0, // 'lastname'=>1, 'firstname'=>1, 'username'=>1,
+        'score' => 1, 'timemodified' => 1, 'status' => 1, 'duration' => 1, 'penalties' => 1, 'score' => 1,
     );
 
     public $has_questioncolumns = true;
@@ -67,15 +66,15 @@ class mod_taskchain_report_taskquestions_renderer extends mod_taskchain_report_r
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function select_sql($userid=0, $record=null) {
-        $select = 'tc_tsk_att.id AS id, '.
-                  'tc_tsk_att.cnumber AS taskattemptcnumber, '.
-                  'tc_tsk_att.tnumber AS taskattempttnumber, '.
-                  'tc_tsk_att.penalties AS taskattemptpenalties, '.
-                  'tc_tsk_att.score AS taskattemptscore, '.
-                  'tc_tsk_att.status AS taskattemptstatus, '.
-                  'tc_tsk_att.duration AS taskattemptduration, '.
-                  'tc_tsk_att.timestart AS taskattempttimemodified, '.
+    public function select_sql($userid = 0, $record = null) {
+        $select = 'tc_tsk_att.id AS id, ' .
+                  'tc_tsk_att.cnumber AS taskattemptcnumber, ' .
+                  'tc_tsk_att.tnumber AS taskattempttnumber, ' .
+                  'tc_tsk_att.penalties AS taskattemptpenalties, ' .
+                  'tc_tsk_att.score AS taskattemptscore, ' .
+                  'tc_tsk_att.status AS taskattemptstatus, ' .
+                  'tc_tsk_att.duration AS taskattemptduration, ' .
+                  'tc_tsk_att.timestart AS taskattempttimemodified, ' .
                   'tc_tsk.name AS taskscoretaskname';
         $from   = '';
         $where  = '';
@@ -98,8 +97,8 @@ class mod_taskchain_report_taskquestions_renderer extends mod_taskchain_report_r
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function select_sql_record(&$select, &$from, &$where, &$params, $userid=0, $record=null) {
-        $from = '{taskchain_task_attempts} tc_tsk_att '.
+    public function select_sql_record(&$select, &$from, &$where, &$params, $userid = 0, $record = null) {
+        $from = '{taskchain_task_attempts} tc_tsk_att ' .
                 'JOIN {taskchain_tasks} tc_tsk ON tc_tsk_att.taskid = tc_tsk.id';
 
         // restrict sql to a specific task / user
@@ -125,7 +124,7 @@ class mod_taskchain_report_taskquestions_renderer extends mod_taskchain_report_r
      * @param xxx $column
      * @param xxx $response
      */
-    public function add_response_to_rawdata(&$table, $attemptid, $column, $response)  {
+    public function add_response_to_rawdata(&$table, $attemptid, $column, $response) {
         $table->rawdata[$attemptid]->$column = $response->score;
     }
 }

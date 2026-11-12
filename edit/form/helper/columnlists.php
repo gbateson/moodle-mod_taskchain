@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/record.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/record.php');
 
 /**
  * taskchain_form_helper_condition
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/record.php');
  * @package    mod_taskchain
  */
 class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
-
     /** type of record **/
     protected $recordtype = 'columnlists';
 
@@ -49,7 +47,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
     /** sections and fields in this form **/
     protected $sections = array(
         'headings' => array('columnlistsheading'),
-        'filters'  => array('columnlistid', 'columnlistname')
+        'filters'  => array('columnlistid', 'columnlistname'),
     );
 
     /** default values in a chain record */
@@ -59,7 +57,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
     protected $excludedfields = array(
         'columnlistid', 'columnlisttype', 'columnlistname',
         'edit', 'sortorder', 'defaultrecord', 'selectrecord',
-        'addtype', 'tasknames'
+        'addtype', 'tasknames',
     );
 
     /**
@@ -71,7 +69,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * @param boolean $is_multiple (optional, default=false)
      * @todo Finish documenting this function
      */
-    public function __construct(&$mform, &$context, &$type, $is_multiple=false) {
+    public function __construct(&$mform, &$context, &$type, $is_multiple = false) {
         global $CFG, $TC;
 
         if (empty($TC)) {
@@ -96,18 +94,18 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
         }
 
         switch ($type) {
-
             case 'tasks':
-                require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/task.php');
+                require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/task.php');
                 $form_helper = new taskchain_form_helper_task($mform, $context, $record);
                 break;
 
             case 'chains':
-                require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/chain.php');
+                require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/chain.php');
                 $form_helper = new taskchain_form_helper_chain($mform, $context, $record);
                 break;
 
-            default: throw new moodle_exception("Unknown columnlist type: $type");
+            default:
+                throw new moodle_exception("Unknown columnlist type: $type");
         }
 
         // add record sections after headings
@@ -118,7 +116,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
         unset($this->sections['general']);
 
         // remove "tasks" section from "Edit chains" page
-        if ($type=='chains') {
+        if ($type == 'chains') {
             unset($this->sections['tasks']);
         }
 
@@ -168,7 +166,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
             }
         }
         $data->columnlist = array_keys($data->columnlist);
-        //$data->columnlist = implode(',', $data->columnlist);
+        // $data->columnlist = implode(',', $data->columnlist);
     }
 
     /**
@@ -217,13 +215,13 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
     protected function add_section_filters($section, $fields) {
         global $PAGE;
 
-        //$this->mform->addElement('header', 'filtershdr', '');
+        // $this->mform->addElement('header', 'filtershdr', '');
         $type = $this->TC->get_columnlisttype();
         $lists = $this->TC->get_columnlists($type);
-        $options = array('00' => get_string('add').' ...') + $lists;
+        $options = array('00' => get_string('add') . ' ...') + $lists;
         $elements = array(
             $this->mform->createElement('select', 'columnlistid', '', $options),
-            $this->mform->createElement('text', 'columnlistname', '', array('size' => '10'))
+            $this->mform->createElement('text', 'columnlistname', '', array('size' => '10')),
         );
         $this->mform->addGroup($elements, 'columnlists_elements', '', array(' '), false);
         if (count($lists)) {
@@ -262,7 +260,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      */
     protected function get_fieldvalue_columnlistsheading() {
         $type = $this->TC->get_columnlisttype();
-        return get_string('columnlists'.$type, 'mod_taskchain');
+        return get_string('columnlists' . $type, 'mod_taskchain');
     }
 
     /**

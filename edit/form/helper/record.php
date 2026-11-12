@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/base.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/base.php');
 
 /**
  * taskchain_form_helper_record
@@ -42,7 +41,6 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/base.php');
  * @package    mod_taskchain
  */
 abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
-
     /** string suffix to add to the form's CSS class */
     protected $formclasssuffix = 'record';
 
@@ -88,19 +86,18 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     protected function prepare_template_filearea(&$data, $type) {
 
         // set parameters for accessing filearea
-        if (isset($this->context) && $this->context->contextlevel==CONTEXT_MODULE) {
+        if (isset($this->context) && $this->context->contextlevel == CONTEXT_MODULE) {
             $contextid = $this->context->id;
         } else {
             $contextid = null;
         }
         $component = 'mod_taskchain';
-        $filearea  = $type.'file';
+        $filearea  = $type . 'file';
         $options   = mod_taskchain::filearea_options();
         $itemid    = 0;
 
         // set current source file as the "main file" in this filearea
         if ($contextid) {
-
             if (isset($data[$filearea])) {
                 $datafile = $data[$filearea];
             } else {
@@ -114,12 +111,12 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                 if ($file->is_directory()) {
                     continue;
                 }
-                if ($datafile && $datafile==$file->get_filepath().$file->get_filename()) {
+                if ($datafile && $datafile == $file->get_filepath() . $file->get_filename()) {
                     $sortorder = 1; // main file
                 } else {
                     $sortorder = 0;
                 }
-                if ($sortorder==$file->get_sortorder()) {
+                if ($sortorder == $file->get_sortorder()) {
                     // do nothing
                 } else if (method_exists($file, 'set_sortorder')) {
                     // Moodle >= 2.3
@@ -136,8 +133,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         // Note: if you call "file_prepare_draft_area()" without setting itemid
         // (the first argument), then it will be assigned automatically, and the files
         // for this context will be transferred automatically, which is what we want
-        $data[$type.'itemid'] = $itemid;
-        file_prepare_draft_area($data[$type.'itemid'], $contextid, $component, $filearea, 0, $options);
+        $data[$type . 'itemid'] = $itemid;
+        file_prepare_draft_area($data[$type . 'itemid'], $contextid, $component, $filearea, 0, $options);
     }
 
     /////////////////////////////////////////////////////////
@@ -420,11 +417,11 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $name  = $this->get_fieldname($field);
         if ($this->is_add()) {
             $label = $this->get_fieldlabel($field);
-            $list  = $field.'s_list';
+            $list  = $field . 's_list';
             $this->mform->addElement('select', $name, $label, taskchain_available::$list());
             $this->mform->setDefault($name, $this->get_defaultvalue($field));
             $this->add_helpbutton($name, $field, 'taskchain');
-            //$this->mform->setAdvanced($name);
+            // $this->mform->setAdvanced($name);
         } else {
             $this->mform->addElement('hidden', $name, 0);
         }
@@ -496,7 +493,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     protected function add_field_attemptlimit($field) {
         $name  = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
-        $list  = $field.'s_list';
+        $list  = $field . 's_list';
         $this->mform->addElement('select', $name, $label, taskchain_available::$list());
         $this->mform->setDefault($name, $this->get_defaultvalue($field));
         $this->mform->setAdvanced($name);
@@ -511,7 +508,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
     protected function add_field_allowresume($field) {
         $name  = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
-        $list  = $field.'s_list';
+        $list  = $field . 's_list';
         $this->mform->addElement('select', $name, $label, taskchain_available::$list());
         $this->add_helpbutton($name, $field, 'taskchain');
         $this->mform->setAdvanced($name);
@@ -582,31 +579,31 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @param boolean $advanced true if this is an advanced field, otherwise false
      * @todo Finish documenting this function
      */
-    protected function add_template_timer($field, $summary=true, $before=false, $after=false, $advanced=true) {
+    protected function add_template_timer($field, $summary = true, $before = false, $after = false, $advanced = true) {
         $name  = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
 
-        $name_elements = $this->get_fieldname($field.'_elements');
+        $name_elements = $this->get_fieldname($field . '_elements');
         $elements = array();
 
         if ($summary) {
-            $elements[] = $this->mform->createElement('static', '', '', get_string($field.'summary', 'mod_taskchain'));
+            $elements[] = $this->mform->createElement('static', '', '', get_string($field . 'summary', 'mod_taskchain'));
             $elements[] = $this->mform->createElement('static', '', '', html_writer::empty_tag('br'));
         }
 
         if ($before) {
             foreach ($before as $extraname => $extraoptions) {
-                $extraname = $this->get_fieldname($field.$extraname);
+                $extraname = $this->get_fieldname($field . $extraname);
                 $elements[] = $this->mform->createElement('select', $extraname, '', $extraoptions);
             }
         }
 
         $optional = (($before || $after) ? 0 : 1);
-        $elements[] = $this->mform->createElement('duration', $name, '', array('optional'=>$optional, 'defaultunit'=>1));
+        $elements[] = $this->mform->createElement('duration', $name, '', array('optional' => $optional, 'defaultunit' => 1));
 
         if ($after) {
             foreach ($after as $extraname => $extraoptions) {
-                $extraname = $this->get_fieldname($field.$extraname);
+                $extraname = $this->get_fieldname($field . $extraname);
                 $elements[] = $mform->createElement('select', $extraname, '', $extraoptions);
             }
         }
@@ -616,27 +613,27 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
 
         // the standard disabledIf for the "enable" checkbox doesn't work because we are in group, so ...
         if ($optional) {
-            $this->mform->disabledIf($name.'[number]', $name.'[enabled]', 'notchecked');
-            $this->mform->disabledIf($name.'[timeunit]', $name.'[enabled]', 'notchecked');
+            $this->mform->disabledIf($name . '[number]', $name . '[enabled]', 'notchecked');
+            $this->mform->disabledIf($name . '[timeunit]', $name . '[enabled]', 'notchecked');
         }
-        $this->mform->setDefault($name.'[enabled]', 0);
+        $this->mform->setDefault($name . '[enabled]', 0);
 
         if ($before) {
             foreach ($before as $extraname => $extraoptions) {
-                $extraname = $this->get_fieldname($field.$extraname);
+                $extraname = $this->get_fieldname($field . $extraname);
                 $this->mform->setType($extraname, PARAM_INT);
                 if ($optional) {
-                    $this->mform->disabledIf($extraname, $name.'[enabled]', 'notchecked');
+                    $this->mform->disabledIf($extraname, $name . '[enabled]', 'notchecked');
                 }
             }
         }
 
         if ($after) {
             foreach ($before as $extraname => $extraoptions) {
-                $extraname = $this->get_fieldname($field.$extraname);
+                $extraname = $this->get_fieldname($field . $extraname);
                 $this->mform->setType($extraname, PARAM_INT);
                 if ($optional) {
-                    $this->mform->disabledIf($extraname, $name.'[enabled]', 'notchecked');
+                    $this->mform->disabledIf($extraname, $name . '[enabled]', 'notchecked');
                 }
             }
         }
@@ -654,8 +651,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function add_template_file($type, $params) {
-        $name = $this->get_fieldname($type.'itemid');
-        $label = $this->get_fieldlabel($type.'file');
+        $name = $this->get_fieldname($type . 'itemid');
+        $label = $this->get_fieldlabel($type . 'file');
         $options = array('subdirs'  => 1,
                          'maxbytes' => 0,
                          'maxfiles' => -1,
@@ -668,7 +665,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         if ($params['advanced']) {
             $this->mform->setAdvanced($name);
         }
-        $this->add_helpbutton($name, $type.'file', 'taskchain');
+        $this->add_helpbutton($name, $type . 'file', 'taskchain');
     }
 
     /**
@@ -678,7 +675,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function add_template_location($type) {
-        $name = $this->get_fieldname($type.'location');
+        $name = $this->get_fieldname($type . 'location');
         $location = $this->get_originalvalue($name, 0);
         $this->mform->addElement('hidden', $name, $location);
         $this->mform->setType($name, PARAM_INT);
@@ -700,22 +697,22 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $label = $this->get_fieldlabel($field);
         $size = array('size' => $this->text_field_size);
 
-        $name_source = $this->get_fieldname($field.'source');
-        $name_elements = $this->get_fieldname($field.'_elements');
+        $name_source = $this->get_fieldname($field . 'source');
+        $name_elements = $this->get_fieldname($field . '_elements');
 
         if ($this->is_add()) {
             // create a group of form $elements
             $elements = array(
                 $this->mform->createElement('select', $name_source, '', taskchain_available::namesources_list()),
-                $this->mform->createElement('text', $name, '', $size)
+                $this->mform->createElement('text', $name, '', $size),
             );
 
             $this->mform->addGroup($elements, $name_elements, $label, array(' '), false);
             $this->mform->disabledIf($name_elements, $name_source, 'ne', mod_taskchain::TEXTSOURCE_SPECIFIC);
 
             $strman = get_string_manager();
-            if ($strman->string_exists($field.'add', 'taskchain')) {
-                $helpstring = $field.'add';
+            if ($strman->string_exists($field . 'add', 'taskchain')) {
+                $helpstring = $field . 'add';
             } else {
                 $helpstring = $field;
             }
@@ -767,7 +764,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function add_template_method($type) {
-        $this->add_template_list($type.'method');
+        $this->add_template_list($type . 'method');
     }
 
     /**
@@ -777,10 +774,10 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function add_template_ignore($type) {
-        $field = $type.'ignore';
+        $field = $type . 'ignore';
         $name = $this->get_fieldname($field);
         $label = $this->get_fieldlabel($field);
-        $name_method = $this->get_fieldname($field.'method');
+        $name_method = $this->get_fieldname($field . 'method');
         $this->mform->addElement('selectyesno', $name, $label);
         $this->mform->setType($name, PARAM_INT);
         $this->mform->setDefault($name, $this->get_defaultvalue($field));
@@ -796,7 +793,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function add_template_weighting($type) {
-        $this->add_template_list($type.'weighting', true);
+        $this->add_template_list($type . 'weighting', true);
     }
 
     /**
@@ -806,7 +803,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function add_template_limit($type) {
-        $this->add_template_list($type.'limit', true);
+        $this->add_template_list($type . 'limit', true);
     }
 
     /////////////////////////////////////////////////////////
@@ -898,8 +895,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      */
     protected function fix_template_filearea($data, $type) {
         $component = 'mod_taskchain';
-        $filearea  = $type.'file';
-        $itemid    = $type.'itemid';
+        $filearea  = $type . 'file';
+        $itemid    = $type . 'itemid';
 
         if ($data->$itemid) {
             $options = mod_taskchain::filearea_options();
@@ -907,7 +904,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
 
             // set main file, if necessary
             $mainfile = taskchain_pluginfile_mainfile($this->context, $component, $filearea);
-            if ($mainfile && $mainfile->get_sortorder()==0) {
+            if ($mainfile && $mainfile->get_sortorder() == 0) {
                 if (method_exists($mainfile, 'set_sortorder')) {
                     $mainfile->set_sortorder(1);
                 } else {
@@ -941,9 +938,9 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @param string $field name of text field ("name", "tasknames", "entrytext" or "exittext")
      * @todo Finish documenting this function
      */
-    protected function fix_template_textsource($data, $field, $default='') {
+    protected function fix_template_textsource($data, $field, $default = '') {
         $name = $this->get_fieldname($field);
-        $textsource = $this->get_fieldname($field.'source');
+        $textsource = $this->get_fieldname($field . 'source');
 
         if ($this->is_add() && isset($data->$textsource)) {
             // do nothing - i.e. use the value from the form
@@ -952,7 +949,6 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         }
 
         switch ($data->$textsource) {
-
             case mod_taskchain::TEXTSOURCE_FILE:
             case mod_taskchain::TEXTSOURCE_FILENAME:
             case mod_taskchain::TEXTSOURCE_FILEPATH:
@@ -972,7 +968,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                 }
         }
 
-        if ($data->$name=='') {
+        if ($data->$name == '') {
             $data->$name = $default;
         }
     }
@@ -1122,7 +1118,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @todo Finish documenting this function
      */
     protected function format_fieldvalue_timelimit($field, $value) {
-        if ($value==mod_taskchain::TIME_TEMPLATE) { // =-1
+        if ($value == mod_taskchain::TIME_TEMPLATE) { // =-1
             return get_string('timelimittemplate', 'mod_taskchain');
         } else {
             return $this->format_templatevalue_timer($field, $value);
@@ -1194,7 +1190,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function format_conditions($taskid, $conditiontype, $return_intro=true, $return_js=false, $return_commands=true, $default='') {
+    public function format_conditions($taskid, $conditiontype, $return_intro = true, $return_js = false, $return_commands = true, $default = '') {
         $str = '';
 
         if ($conditions = $this->TC->get_conditions($conditiontype, $taskid)) {
@@ -1204,24 +1200,24 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                     if (empty($li[$condition->sortorder])) {
                         $li[$condition->sortorder] = '';
                     }
-                    $li[$condition->sortorder] .= '<li>'.$formatted_condition.'</li>';
+                    $li[$condition->sortorder] .= '<li>' . $formatted_condition . '</li>';
                 }
             }
             if (count($li)) {
-                $or = '</ul><p class="taskchainconditionsor">'.get_string('or', 'mod_taskchain').'</p><ul>';
-                $str = '<ul class="ml-0 mb-1 pl-3">'.implode($or, $li).'</ul>';
+                $or = '</ul><p class="taskchainconditionsor">' . get_string('or', 'mod_taskchain') . '</p><ul>';
+                $str = '<ul class="ml-0 mb-1 pl-3">' . implode($or, $li) . '</ul>';
             }
             unset($li);
         }
 
         if ($str) {
             if ($return_intro) {
-                if ($conditiontype==mod_taskchain::CONDITIONTYPE_PRE) {
+                if ($conditiontype == mod_taskchain::CONDITIONTYPE_PRE) {
                     $intro = get_string('preconditions_help', 'mod_taskchain');
                 } else {
                     $intro = get_string('postconditions_help', 'mod_taskchain');
                 }
-                $str = '<p class="taskchainconditionsintro">'.$intro.'</p>'.$str;
+                $str = '<p class="taskchainconditionsintro">' . $intro . '</p>' . $str;
             }
         } else {
             $str = $default; // e.g. '&nbsp;' for a table cell
@@ -1241,12 +1237,12 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         } else {
             $id = 'default';
         }
-        if ($conditiontype==mod_taskchain::CONDITIONTYPE_PRE) {
-            $id = 'taskchain_preconditions_'.$id;
+        if ($conditiontype == mod_taskchain::CONDITIONTYPE_PRE) {
+            $id = 'taskchain_preconditions_' . $id;
         } else {
-            $id = 'taskchain_postconditions_'.$id;
+            $id = 'taskchain_postconditions_' . $id;
         }
-        return html_writer::tag('div', $str, array('id'=>$id, 'class'=>'conditions'));
+        return html_writer::tag('div', $str, array('id' => $id, 'class' => 'conditions'));
     }
 
     /**
@@ -1255,8 +1251,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function format_condition(&$condition, $return_js=false, $return_commands=true) {
-        $str ='';
+    protected function format_condition(&$condition, $return_js = false, $return_commands = true) {
+        $str = '';
 
         static $groupnames = array();
         if ($condition->groupid) {
@@ -1264,15 +1260,12 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             if (! isset($groupnames[$gid])) {
                 $groupnames[$gid] = groups_get_group_name($gid);
             }
-            $str .= $groupnames[$gid].': ';
+            $str .= $groupnames[$gid] . ': ';
         }
 
         switch ($condition->conditiontype) {
-
             case mod_taskchain::CONDITIONTYPE_PRE:
-
                 switch ($condition->conditiontaskid) {
-
                     case mod_taskchain::CONDITIONTASKID_SAME:
                         $str .= get_string('sametask', 'mod_taskchain');
                         break;
@@ -1286,14 +1279,14 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                         if ($this->TC->get_tasks() && isset($this->TC->tasks[$condition->conditiontaskid])) {
                             $name = $this->TC->tasks[$condition->conditiontaskid]->name;
                             $sort = $this->TC->tasks[$condition->conditiontaskid]->sortorder;
-                            $str .= html_writer::tag('b', format_string($name)).' ('.$sort.')';
+                            $str .= html_writer::tag('b', format_string($name)) . ' (' . $sort . ')';
                         } else {
                             // $str .= 'conditiontaskid='.$condition->conditiontaskid;
                         }
                 } // end switch
 
                 if ($details = $this->format_condition_details($condition, true)) {
-                    $str .= ': '.$details;
+                    $str .= ': ' . $details;
                 }
 
                 if ($return_commands) {
@@ -1302,13 +1295,11 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                 break;
 
             case (mod_taskchain::CONDITIONTYPE_POST):
-
                 if ($details = $this->format_condition_details($condition)) {
-                    $str .= $details.': ';
+                    $str .= $details . ': ';
                 }
 
                 switch ($condition->nexttaskid) {
-
                     case mod_taskchain::CONDITIONTASKID_SAME:
                         $str .= get_string('sametask', 'mod_taskchain');
                         break;
@@ -1362,11 +1353,11 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_MENUALL:
-                       $str .= get_string('menuofalltasks', 'mod_taskchain');
+                        $str .= get_string('menuofalltasks', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_MENUALLONE:
-                       $str .= get_string('menuofalltasksone', 'mod_taskchain');
+                        $str .= get_string('menuofalltasksone', 'mod_taskchain');
                         break;
 
                     case mod_taskchain::CONDITIONTASKID_ENDOFCHAIN:
@@ -1377,7 +1368,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
                         if ($this->TC->get_tasks() && isset($this->TC->tasks[$condition->nexttaskid])) {
                             $name = $this->TC->tasks[$condition->nexttaskid]->name;
                             $sort = $this->TC->tasks[$condition->nexttaskid]->sortorder;
-                            $str .= html_writer::tag('b', format_string($name)).' ('.$sort.')';
+                            $str .= html_writer::tag('b', format_string($name)) . ' (' . $sort . ')';
                         } else {
                             // $str .= '<b>nexttaskid='.$condition->nexttaskid.'</b>';
                         }
@@ -1397,8 +1388,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
             return addslashes_js($str);
         }
 
-        $id = 'taskchain_condition_'.$condition->id;
-        return html_writer::tag('span', $str, array('id'=>$id));
+        $id = 'taskchain_condition_' . $condition->id;
+        return html_writer::tag('span', $str, array('id' => $id));
     }
 
     /**
@@ -1407,18 +1398,18 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function format_condition_details(&$condition, $returnlist=false) {
+    protected function format_condition_details(&$condition, $returnlist = false) {
         static $str;
         if (! isset($str)) {
             $str = (object)array(
                 'min' => '&gt;=',
                 'max' => '&lt;=',
-                'anyattempts'         => get_string('anyattempts',         'mod_taskchain'),
-                'recentattempts'      => get_string('recentattempts',      'mod_taskchain'),
+                'anyattempts'         => get_string('anyattempts', 'mod_taskchain'),
+                'recentattempts'      => get_string('recentattempts', 'mod_taskchain'),
                 'consecutiveattempts' => get_string('consecutiveattempts', 'mod_taskchain'),
-                'conditionscore'      => get_string('score',               'mod_taskchain'),
-                'attemptduration'     => get_string('duration',            'mod_taskchain'),
-                'attemptdelay'        => get_string('delay',               'mod_taskchain')
+                'conditionscore'      => get_string('score', 'mod_taskchain'),
+                'attemptduration'     => get_string('duration', 'mod_taskchain'),
+                'attemptdelay'        => get_string('delay', 'mod_taskchain'),
             );
         }
 
@@ -1426,38 +1417,45 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
 
         if ($condition->attemptcount) {
             switch ($condition->attempttype) {
-                case mod_taskchain::ATTEMPTTYPE_ANY:         $type = $str->anyattempts; break;
-                case mod_taskchain::ATTEMPTTYPE_RECENT:      $type = $str->recentattempts; break;
-                case mod_taskchain::ATTEMPTTYPE_CONSECUTIVE: $type = $str->consecutiveattempts; break;
-                default: $type = 'attempttype='.$condition->attempttype; // shouldn't happen !!
+                case mod_taskchain::ATTEMPTTYPE_ANY:
+                    $type = $str->anyattempts;
+                    break;
+                case mod_taskchain::ATTEMPTTYPE_RECENT:
+                    $type = $str->recentattempts;
+                    break;
+                case mod_taskchain::ATTEMPTTYPE_CONSECUTIVE:
+                    $type = $str->consecutiveattempts;
+                    break;
+                default:
+                    $type = 'attempttype=' . $condition->attempttype; // shouldn't happen !!
             }
-            if ($condition->attemptcount<0) {
+            if ($condition->attemptcount < 0) {
                 // minimum number of attempts
-                $details['attemptcount'] = get_string('ormore', 'mod_taskchain', abs($condition->attemptcount)).' x '.$type;
+                $details['attemptcount'] = get_string('ormore', 'mod_taskchain', abs($condition->attemptcount)) . ' x ' . $type;
             } else {
                 // maximum number of attempts
-                $details['attemptcount'] = get_string('orless', 'mod_taskchain', $condition->attemptcount).' x '.$type;
+                $details['attemptcount'] = get_string('orless', 'mod_taskchain', $condition->attemptcount) . ' x ' . $type;
             }
         }
 
         if ($condition->conditionscore) {
-            $minmax = ($condition->conditionscore<0 ? $str->min : $str->max);
-            $details['conditionscore'] = $minmax.abs($condition->conditionscore).'%';
+            $minmax = ($condition->conditionscore < 0 ? $str->min : $str->max);
+            $details['conditionscore'] = $minmax . abs($condition->conditionscore) . '%';
         }
         if ($condition->attemptduration) {
-            $minmax = ($condition->attemptduration<0 ? $str->min : $str->max);
-            $details['attemptduration'] = $minmax.format_time(abs($condition->attemptduration));
+            $minmax = ($condition->attemptduration < 0 ? $str->min : $str->max);
+            $details['attemptduration'] = $minmax . format_time(abs($condition->attemptduration));
         }
         if ($condition->attemptdelay) {
-            $minmax = ($condition->attemptdelay<0 ? $str->min : $str->max);
-            $details['attemptdelay'] = $minmax.format_time(abs($condition->attemptdelay));
+            $minmax = ($condition->attemptdelay < 0 ? $str->min : $str->max);
+            $details['attemptdelay'] = $minmax . format_time(abs($condition->attemptdelay));
         }
 
-        foreach ($details as $name=>$detail) {
-            if ($name=='conditionscore' || $name=='attemptcount') {
+        foreach ($details as $name => $detail) {
+            if ($name == 'conditionscore' || $name == 'attemptcount') {
                 $details[$name] = mod_taskchain::textlib('strtolower', $detail);
             } else {
-                $details[$name] = mod_taskchain::textlib('strtolower', $str->$name.$detail);
+                $details[$name] = mod_taskchain::textlib('strtolower', $str->$name . $detail);
             }
         }
 
@@ -1479,7 +1477,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function format_commands_conditions($conditiontype, $taskid=0) {
+    protected function format_commands_conditions($conditiontype, $taskid = 0) {
         global $output;
 
         if (! $taskid) {
@@ -1495,8 +1493,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $params = array(
             'chaingradeid' => 0, 'chainattemptid' => 0, 'cnumber' => 0,
             'taskscoreid'  => 0, 'taskattemptid'  => 0, 'tnumber' => 0,
-            'taskid'       => $taskid,                  'inpopup' => 0,
-            'conditionid'  => 0, 'conditiontype'  => $conditiontype
+            'taskid'       => $taskid, 'inpopup' => 0,
+            'conditionid'  => 0, 'conditiontype'  => $conditiontype,
         );
         return $output->commands($types, 'edit/condition.php', '', $params, 'taskchainpopup', true);
     }
@@ -1508,7 +1506,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    protected function format_commands_condition($condition=false) {
+    protected function format_commands_condition($condition = false) {
         global $output;
 
         if (! $condition) {
@@ -1519,8 +1517,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
         $params = array(
             'chaingradeid' => 0, 'chainattemptid' => 0, 'cnumber' => 0,
             'taskscoreid'  => 0, 'taskattemptid'  => 0, 'tnumber' => 0,
-            'taskid'       => $condition->taskid,       'inpopup' => 0,
-            'conditionid'  => $condition->id,    'conditiontype'  => $condition->conditiontype
+            'taskid'       => $condition->taskid, 'inpopup' => 0,
+            'conditionid'  => $condition->id, 'conditiontype'  => $condition->conditiontype,
         );
         return $output->commands($types, 'edit/condition.php', 'conditionid', $params, 'taskchainpopup', true);
     }
@@ -1532,7 +1530,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      */
     public function get_helpicon_password() {
         global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('requirepassword', 'taskchain');
+        return ' ' . $OUTPUT->help_icon('requirepassword', 'taskchain');
     }
 
     /**
@@ -1542,7 +1540,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      */
     public function get_helpicon_subnet() {
         global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('requiresubnet', 'taskchain');
+        return ' ' . $OUTPUT->help_icon('requiresubnet', 'taskchain');
     }
 
     /**
@@ -1552,7 +1550,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      */
     public function get_helpicon_timeopen() {
         global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('timeopenclose', 'taskchain');
+        return ' ' . $OUTPUT->help_icon('timeopenclose', 'taskchain');
     }
 
     /**
@@ -1562,7 +1560,7 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      */
     public function get_helpicon_timeclose() {
         global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('timeopenclose', 'taskchain');
+        return ' ' . $OUTPUT->help_icon('timeopenclose', 'taskchain');
     }
 
     /**

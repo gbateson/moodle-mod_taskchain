@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jquiz/xml/v6/storage.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jquiz/xml/v6/storage.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_storage

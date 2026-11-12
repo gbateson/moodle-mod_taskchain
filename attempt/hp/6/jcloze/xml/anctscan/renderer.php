@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/xml/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/xml/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/xml/renderer.php'
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskchain_attempt_hp_6_jcloze_xml_renderer {
-
     public $js_object_type = 'JCloze_ANCT_Scan';
 
     /**
@@ -49,7 +47,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
         // prepend templates for this output format
@@ -65,7 +63,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      *
      * @return array of strings
      */
-    static public function sourcetypes()  {
+    public static function sourcetypes() {
         return array('hp_6_jcloze_xml');
     }
 
@@ -75,10 +73,10 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_js_functionnames()  {
+    public function get_js_functionnames() {
         // start list of function names
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '').'CheckExStatus,DownTime,TimesUp';
+        $names .= ($names ? ',' : '') . 'CheckExStatus,DownTime,TimesUp';
         return $names;
     }
 
@@ -90,7 +88,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_CheckExStatus(&$str, $start, $length)  {
+    public function fix_js_CheckExStatus(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         // add changes as per CheckAnswers in other type of HP task
@@ -107,7 +105,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_DownTime(&$str, $start, $length)  {
+    public function fix_js_DownTime(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         $substr = str_replace('TimesUp();', 'CheckExStatus(2);', $substr);
@@ -123,7 +121,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * @param xxx $length
      * @todo Finish documenting this function
      */
-    public function fix_js_TimesUp(&$str, $start, $length)  {
+    public function fix_js_TimesUp(&$str, $start, $length) {
         $this->remove_js_function($str, $start, $length, 'TimesUp');
     }
 
@@ -133,7 +131,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_name()  {
+    public function get_stop_function_name() {
         return 'CheckExStatus';
     }
 
@@ -143,7 +141,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_search()  {
+    public function get_stop_function_search() {
         return '/\s*if \((ExStatus)\)({.*?)}/s';
     }
 
@@ -153,7 +151,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function get_stop_function_intercept()  {
+    public function get_stop_function_intercept() {
         // do not add standard onclickCheck()
         return '';
     }
@@ -163,7 +161,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      *
      * @todo Finish documenting this function
      */
-    public function fix_bodycontent()  {
+    public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier(true);
     }
 }

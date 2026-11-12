@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
 // admin_setting_xxx classes are defined in "lib/adminlib.php"
 // new admin_setting_xxx($name, $visiblename, $description, $defaultsetting);
@@ -41,9 +40,9 @@ $settings->add(
 // enable caching of browser content for each task (default=1)
 $str = get_string('clearcache', 'mod_taskchain');
 $url = new moodle_url('/mod/taskchain/tools/clear_cache.php', array('sesskey' => sesskey()));
-$link = html_writer::link($url, $str, array('class' => 'small', 'style'=> 'white-space: nowrap', 'onclick' => "this.target='_blank'"))."\n";
+$link = html_writer::link($url, $str, array('class' => 'small', 'style' => 'white-space: nowrap', 'onclick' => "this.target='_blank'")) . "\n";
 $settings->add(
-    new admin_setting_configcheckbox('taskchain_enablecache', get_string('enablecache', 'mod_taskchain'), get_string('configenablecache', 'mod_taskchain').' '.$link, 1)
+    new admin_setting_configcheckbox('taskchain_enablecache', get_string('enablecache', 'mod_taskchain'), get_string('configenablecache', 'mod_taskchain') . ' ' . $link, 1)
 );
 
 // restrict cron job to certain hours of the day (default=never)
@@ -62,7 +61,7 @@ if (abs($timezone) > 13) {
     $timezone = $timezone - 24;
 }
 $options = array();
-for ($i=0; $i<=23; $i++) {
+for ($i = 0; $i <= 23; $i++) {
     $options[($i - $timezone) % 24] = gmdate('H:i', $i * HOURSECS);
 }
 $settings->add(
@@ -82,9 +81,9 @@ $settings->add(
 // bodystyles
 $options = array(
     mod_taskchain::BODYSTYLES_BACKGROUND => get_string('bodystylesbackground', 'mod_taskchain'),
-    mod_taskchain::BODYSTYLES_COLOR      => get_string('bodystylescolor',      'mod_taskchain'),
-    mod_taskchain::BODYSTYLES_FONT       => get_string('bodystylesfont',       'mod_taskchain'),
-    mod_taskchain::BODYSTYLES_MARGIN     => get_string('bodystylesmargin',     'mod_taskchain')
+    mod_taskchain::BODYSTYLES_COLOR      => get_string('bodystylescolor', 'mod_taskchain'),
+    mod_taskchain::BODYSTYLES_FONT       => get_string('bodystylesfont', 'mod_taskchain'),
+    mod_taskchain::BODYSTYLES_MARGIN     => get_string('bodystylesmargin', 'mod_taskchain'),
 );
 $settings->add(
     new admin_setting_configmultiselect('taskchain_bodystyles', get_string('bodystyles', 'mod_taskchain'), get_string('configbodystyles', 'mod_taskchain'), array(), $options)
@@ -103,9 +102,9 @@ $settings->add(
 // store raw xml details of TaskChain task attempts (default=1)
 $str = get_string('cleardetails', 'mod_taskchain');
 $url = new moodle_url('/mod/taskchain/tools/clear_details.php', array('sesskey' => sesskey()));
-$link = html_writer::link($url, $str, array('class' => 'small', 'style'=> 'white-space: nowrap', 'onclick' => "this.target='_blank'"))."\n";
+$link = html_writer::link($url, $str, array('class' => 'small', 'style' => 'white-space: nowrap', 'onclick' => "this.target='_blank'")) . "\n";
 $settings->add(
-    new admin_setting_configcheckbox('taskchain_storedetails', get_string('storedetails', 'mod_taskchain'), get_string('configstoredetails', 'mod_taskchain').' '.$link, 0)
+    new admin_setting_configcheckbox('taskchain_storedetails', get_string('storedetails', 'mod_taskchain'), get_string('configstoredetails', 'mod_taskchain') . ' ' . $link, 0)
 );
 
 // maximum duration of a single calendar event (default=5 mins)
@@ -115,4 +114,3 @@ $settings->add($setting);
 
 // dispose of temporary variables used above
 unset($str, $url, $link, $timezone, $datetime, $options, $i);
-

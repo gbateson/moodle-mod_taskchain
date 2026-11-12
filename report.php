@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,18 +24,18 @@
  */
 
 /** Include required files */
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
 // create object to represent this TaskChain activity
 $TC = new mod_taskchain();
 
-if ($TC->action=='deleteselected') {
+if ($TC->action == 'deleteselected') {
     $TC->delete_selected_attempts();
 }
 
 // Log this request
-mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'report', 'report.php?id='.$TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'report', 'report.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
 $PAGE->set_url($TC->url->report($TC->mode));
 $PAGE->set_title($TC->taskchain->name);
@@ -50,22 +49,18 @@ if (class_exists('\\core\\output\\activity_header')) {
 
 $text = '';
 if ($TC->get_chaingrade()) {
-
     $text = get_string('pluginname', 'taskchainreport_chaingrade');
     if ($TC->get_chainattempt()) {
-
         $url = $TC->url->report('chaingrade', array('chaingradeid' => $TC->chaingrade->id));
         $PAGE->navbar->add($text, $url);
 
         $text = get_string('pluginname', 'taskchainreport_chainattempt');
         if ($TC->get_taskscore()) {
-
             $url = $TC->url->report('chainattempt', array('chainattemptid' => $TC->chainattempt->id));
             $PAGE->navbar->add($text, $url);
 
             $text = get_string('pluginname', 'taskchainreport_taskscore');
             if ($TC->get_taskattempt()) {
-
                 $url = $TC->url->report('taskscore', array('taskscoreid' => $TC->taskscore->id));
                 $PAGE->navbar->add($text, $url);
 
@@ -83,7 +78,7 @@ if ($text) {
 $subtype = $TC->get_report_renderer_subtype($TC->mode);
 $subdir = str_replace('_', '/', $subtype);
 
-require_once($CFG->dirroot.'/mod/taskchain/'.$subdir.'/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/' . $subdir . '/renderer.php');
 
 // create the renderer for this attempt
 $output = $PAGE->get_renderer('mod_taskchain', $subtype);

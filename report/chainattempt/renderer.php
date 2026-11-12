@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/report/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/report/renderer.php');
 
 /**
  * mod_taskchain_report_chainattempt_renderer
@@ -44,16 +43,16 @@ class mod_taskchain_report_chainattempt_renderer extends mod_taskchain_report_re
     protected $headerfields = array('user', 'chaingrade', 'chainattempt');
 
     public $tablecolumns = array(
-        'taskscoretaskname',    'selected',
-        'taskscorescore',       'taskscorestatus',
-        'taskscoreduration',    'taskscoretimemodified'
+        'taskscoretaskname', 'selected',
+        'taskscorescore', 'taskscorestatus',
+        'taskscoreduration', 'taskscoretimemodified',
     );
 
     /** columns with this prefix will be suppressed (i.e. only shown once per user) */
     protected $suppressprefix = 'chainattempt';
 
     public $filterfields = array(
-        'grade'=>1, 'timemodified'=>1, 'status'=>1, 'duration'=>1, 'score'=>1
+        'grade' => 1, 'timemodified' => 1, 'status' => 1, 'duration' => 1, 'score' => 1,
     );
 
     /** id param name and table name */
@@ -68,7 +67,7 @@ class mod_taskchain_report_chainattempt_renderer extends mod_taskchain_report_re
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function count_sql($userid=0, $record=null) {
+    public function count_sql($userid = 0, $record = null) {
         $select = 'COUNT(1)';
         $from   = '';
         $where  = '';
@@ -88,20 +87,20 @@ class mod_taskchain_report_chainattempt_renderer extends mod_taskchain_report_re
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function select_sql($userid=0, $record=null) {
-        $select = 'tc_tsk_scr.id AS id, '.
-                  'tc_tsk_scr.userid AS userid, '.
-                  'tc_tsk.name AS taskscoretaskname, '.
-                  'tc_tsk_scr.score AS taskscorescore, '.
-                  'tc_tsk_scr.status AS taskscorestatus, '.
-                  'tc_tsk_scr.duration AS taskscoreduration, '.
-                  'tc_tsk_scr.timemodified AS taskscoretimemodified, '.
-                  'tc_chn_att.id AS chainattemptid, '.
-                  'tc_chn_att.chainid AS chainattemptchainid, '.
-                  'tc_chn_att.cnumber AS chainattemptcnumber, '.
-                  'tc_chn_att.grade AS chainattemptgrade, '.
-                  'tc_chn_att.status AS chainattemptstatus, '.
-                  'tc_chn_att.duration AS chainattemptduration, '.
+    public function select_sql($userid = 0, $record = null) {
+        $select = 'tc_tsk_scr.id AS id, ' .
+                  'tc_tsk_scr.userid AS userid, ' .
+                  'tc_tsk.name AS taskscoretaskname, ' .
+                  'tc_tsk_scr.score AS taskscorescore, ' .
+                  'tc_tsk_scr.status AS taskscorestatus, ' .
+                  'tc_tsk_scr.duration AS taskscoreduration, ' .
+                  'tc_tsk_scr.timemodified AS taskscoretimemodified, ' .
+                  'tc_chn_att.id AS chainattemptid, ' .
+                  'tc_chn_att.chainid AS chainattemptchainid, ' .
+                  'tc_chn_att.cnumber AS chainattemptcnumber, ' .
+                  'tc_chn_att.grade AS chainattemptgrade, ' .
+                  'tc_chn_att.status AS chainattemptstatus, ' .
+                  'tc_chn_att.duration AS chainattemptduration, ' .
                   'tc_chn_att.timemodified AS chainattempttimemodified';
         $from   = '';
         $where  = '';
@@ -128,12 +127,12 @@ class mod_taskchain_report_chainattempt_renderer extends mod_taskchain_report_re
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function select_sql_record(&$select, &$from, &$where, &$params, $userid=0, $record=null) {
-        $from   = '{taskchain_task_scores} tc_tsk_scr '.
-                  ' JOIN {taskchain_tasks} tc_tsk ON tc_tsk.id = tc_tsk_scr.taskid'.
-                  ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_tsk.chainid'.
-                  ' JOIN {taskchain_chain_attempts} tc_chn_att ON (tc_chn_att.chainid = tc_chn.id AND '.
-                                                                  'tc_chn_att.cnumber = tc_tsk_scr.cnumber AND '.
+    public function select_sql_record(&$select, &$from, &$where, &$params, $userid = 0, $record = null) {
+        $from   = '{taskchain_task_scores} tc_tsk_scr ' .
+                  ' JOIN {taskchain_tasks} tc_tsk ON tc_tsk.id = tc_tsk_scr.taskid' .
+                  ' JOIN {taskchain_chains} tc_chn ON tc_chn.id = tc_tsk.chainid' .
+                  ' JOIN {taskchain_chain_attempts} tc_chn_att ON (tc_chn_att.chainid = tc_chn.id AND ' .
+                                                                  'tc_chn_att.cnumber = tc_tsk_scr.cnumber AND ' .
                                                                   'tc_chn_att.userid  = tc_tsk_scr.userid)';
 
         // restrict sql to a specific chainattempt /user

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/source/hp/6/jcloze/html/class.php');
+require_once($CFG->dirroot . '/mod/taskchain/source/hp/6/jcloze/html/class.php');
 
 /**
  * taskchain_source_hp_6_jcloze_html_jgloss
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/source/hp/6/jcloze/html/class.php');
  * @package    mod_taskchain
  */
 class taskchain_source_hp_6_jcloze_html_jgloss extends taskchain_source_hp_6_jcloze_html {
-
     /**
      * is_taskfile
      *

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmatch/xml/v6/plus/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/xml/v6/plus/renderer.php');
 
 /**
  * mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_duplicates_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jmatch/xml/v6/plus/rende
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_duplicates_renderer extends mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_renderer {
-
     /**
      * constructor function
      *
@@ -47,7 +45,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_duplicates_renderer extends 
      * @param xxx $target
      * @todo Finish documenting this function
      */
-    public function __construct(moodle_page $page, $target)  {
+    public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
         // prepend templates for this output format
@@ -60,13 +58,13 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_duplicates_renderer extends 
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function expand_DragArray()  {
+    public function expand_DragArray() {
         $this->set_jmatch_items();
         $str = '';
 
         // simple array to map item keys and texts
         $texts = array();
-        foreach ($this->l_items as $i=>$item) {
+        foreach ($this->l_items as $i => $item) {
             $key = $item['key'];
             if (empty($this->r_items[$i]['fixed'])) {
                 $texts[$key] = $item['text'];
@@ -75,17 +73,17 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_duplicates_renderer extends 
 
         // array to map drag item keys to fixed items key(s)
         $keys = array();
-        foreach ($this->l_items as $i=>$item) {
+        foreach ($this->l_items as $i => $item) {
             $key = $item['key'];
             if (empty($this->r_items[$i]['fixed'])) {
                 $texts_keys = array_keys($texts, $item['text']);
                 foreach ($texts_keys as $i => $texts_key) {
                     $texts_keys[$i] = $texts_key + 1;
                 }
-                if (count($texts_keys)==1) {
+                if (count($texts_keys) == 1) {
                     $keys[$key] = $texts_keys[0];
                 } else {
-                    $keys[$key] = 'new Array('.implode(',', $texts_keys).')';
+                    $keys[$key] = 'new Array(' . implode(',', $texts_keys) . ')';
                 }
             } else {
                 // drag item is fixed
@@ -94,12 +92,12 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_duplicates_renderer extends 
         }
         unset($texts);
 
-        foreach ($this->r_items as $i=>$item) {
+        foreach ($this->r_items as $i => $item) {
             if (array_key_exists($item['key'], $keys)) {
                 $str .= "D[$i] = new Array();\n";
-                $str .= "D[$i][0] = '".$this->TC->task->source->js_value_safe($item['text'], true)."';\n";
-                $str .= "D[$i][1] = ".$keys[$item['key']].";\n";
-                $str .= "D[$i][2] = ".$item['fixed'].";\n";
+                $str .= "D[$i][0] = '" . $this->TC->task->source->js_value_safe($item['text'], true) . "';\n";
+                $str .= "D[$i][1] = " . $keys[$item['key']] . ";\n";
+                $str .= "D[$i][2] = " . $item['fixed'] . ";\n";
             }
         }
         return $str;

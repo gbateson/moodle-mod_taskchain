@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,8 +24,8 @@
  */
 
 /** Include required files */
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
 $id = required_param('id', PARAM_INT);   // course
 
@@ -106,7 +105,7 @@ if ($usesections) {
 
 /// Print the list of instances (your module will probably extend this)
 
-$strsectionname = get_string('sectionname', 'format_'.$course->format);
+$strsectionname = get_string('sectionname', 'format_' . $course->format);
 $strname        = get_string('name');
 $strhighest     = get_string('highestgrade', 'mod_taskchain');
 $straverage     = get_string('averagegrade', 'mod_taskchain');

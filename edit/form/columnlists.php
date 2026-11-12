@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/columnlists.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/columnlists.php');
 
 /**
  * mod_taskchain_edit_columnlists_form
@@ -52,9 +51,14 @@ class mod_taskchain_edit_columnlists_form extends moodleform {
         $type = $TC->get_columnlisttype();
         $lists = $TC->get_columnlists($type);
         switch ($type) {
-            case 'chains': $context = $TC->course->context; break;
-            case 'tasks':  $context = $TC->coursemodule->context; break;
-            default: $context = null; // shouldn't happen !!
+            case 'chains':
+                $context = $TC->course->context;
+                break;
+            case 'tasks':
+                $context = $TC->coursemodule->context;
+                break;
+            default:
+                $context = null; // shouldn't happen !!
         }
         $this->form_helper = new taskchain_form_helper_columnlists($this->_form, $context, $type);
 
@@ -86,7 +90,7 @@ class mod_taskchain_edit_columnlists_form extends moodleform {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function validation($data, $files)  {
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
         $this->form_helper->validate_sections($errors, $data, $files);
         return $errors;
@@ -101,7 +105,7 @@ class mod_taskchain_edit_columnlists_form extends moodleform {
     public function get_data() {
         if ($data = parent::get_data()) {
             $this->form_helper->fix_sections($data);
-            //$this->form_helper->set_preferences($data);
+            // $this->form_helper->set_preferences($data);
         }
         return $data;
     }
@@ -112,13 +116,13 @@ class mod_taskchain_edit_columnlists_form extends moodleform {
      * @param bool $cancel whether to show cancel button, default true
      * @param string $submitlabel label for submit button, defaults to get_string('savechanges')
      */
-    public function add_action_buttons($cancel=true, $submitlabel=null) {
+    public function add_action_buttons($cancel = true, $submitlabel = null) {
         $this->_form->addElement('header', 'actionshdr', '');
         $elements = array();
         $elements[] = $this->_form->createElement('submit', 'update', get_string('savechanges'));
         $elements[] = $this->_form->createElement('cancel');
         $elements[] = $this->_form->createElement('submit', 'delete', get_string('delete'));
-        $elements[] = $this->_form->createElement('submit', 'deleteall', get_string('deleteall')  );
+        $elements[] = $this->_form->createElement('submit', 'deleteall', get_string('deleteall'));
         $this->_form->addGroup($elements, 'action_buttons_elements', '', '', false);
     }
 }

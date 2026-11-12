@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -36,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_task extends taskchain_base {
-
     /** db field: id (primary key, default=null) */
     private $id                  = null;
 
@@ -478,9 +476,12 @@ class taskchain_task extends taskchain_base {
      */
     public function get_usemediafilter() {
         switch ($this->usemediafilter) {
-            case '0': return '';
-            case '1': return 'moodle';
-            default : return $this->usemediafilter;
+            case '0':
+                return '';
+            case '1':
+                return 'moodle';
+            default:
+                return $this->usemediafilter;
         }
     }
 
@@ -870,7 +871,7 @@ class taskchain_task extends taskchain_base {
                 throw new moodle_exception('missingsourcetype', 'taskchain');
             }
             // $classname is something like "taskchain_source_hp_6_jcloze_xml"
-            $classname = 'taskchain_source_'.$sourcetype;
+            $classname = 'taskchain_source_' . $sourcetype;
             $this->TC->load_class($classname, 'class.php');
             $this->source = new $classname($file, $this->TC);
             $this->source->config = $this->get_config();
@@ -907,7 +908,7 @@ class taskchain_task extends taskchain_base {
      * @uses $DB
      * @return stored_file
      */
-    public function get_file($type=null) {
+    public function get_file($type = null) {
         global $CFG, $DB;
 
         if (empty($type)) {
@@ -916,31 +917,31 @@ class taskchain_task extends taskchain_base {
 
         $fs = get_file_storage();
 
-        $typefile = $type.'file';
-        $filearea = $type.'file';
+        $typefile = $type . 'file';
+        $filearea = $type . 'file';
 
-        if (empty($this->$typefile) && $type=='config') {
+        if (empty($this->$typefile) && $type == 'config') {
             return false; // ignore empty config file
         }
 
         $filename = basename($this->$typefile);
         $filepath = dirname($this->$typefile);
         $contextid = $this->TC->coursemodule->context->id;
-        //$contextid = $this->TC->course->context->id;
+        // $contextid = $this->TC->course->context->id;
 
         // require leading and trailing slash on $filepath
-        if (substr($filepath, 0, 1)=='/' && substr($filepath, -1)=='/') {
+        if (substr($filepath, 0, 1) == '/' && substr($filepath, -1) == '/') {
             // do nothing - $filepath is valid
         } else {
             // fix filepath - shouldn't happen !!
             // maybe leftover from a messy upgrade
-            if ($filepath=='.' || $filepath=='') {
+            if ($filepath == '.' || $filepath == '') {
                 $filepath = '/';
             } else {
-                $filepath = '/'.ltrim($filepath, '/');
-                $filepath = rtrim($filepath, '/').'/';
+                $filepath = '/' . ltrim($filepath, '/');
+                $filepath = rtrim($filepath, '/') . '/';
             }
-            $this->$typefile = $filepath.$filename;
+            $this->$typefile = $filepath . $filename;
             $DB->set_field('taskchain_tasks', $typefile, $this->$typefile, array('id' => $this->id));
         }
 
@@ -953,12 +954,12 @@ class taskchain_task extends taskchain_base {
         // so we are going to try to create the missing stored file
 
         $file_record = array(
-            'contextid'=>$contextid, 'component'=>'mod_taskchain', 'filearea'=>$filearea,
-            'sortorder'=>1, 'itemid'=>0, 'filepath'=>$filepath, 'filename'=>$filename
+            'contextid' => $contextid, 'component' => 'mod_taskchain', 'filearea' => $filearea,
+            'sortorder' => 1, 'itemid' => 0, 'filepath' => $filepath, 'filename' => $filename,
         );
 
         $coursecontextid  = $this->TC->course->context->id;
-        $filehash = sha1('/'.$coursecontextid.'/course/legacy/0'.$filepath.$filename);
+        $filehash = sha1('/' . $coursecontextid . '/course/legacy/0' . $filepath . $filename);
 
         if ($file = $fs->get_file_by_hash($filehash)) {
             // file exists in legacy course files
@@ -967,7 +968,7 @@ class taskchain_task extends taskchain_base {
             }
         }
 
-        $oldfilepath = $CFG->dataroot.'/'.$this->TC->course->id.$filepath.$filename;
+        $oldfilepath = $CFG->dataroot . '/' . $this->TC->course->id . $filepath . $filename;
         if (file_exists($oldfilepath)) {
             // file exists on server's filesystem
             if ($file = $fs->create_file_from_pathname($file_record, $oldfilepath)) {
@@ -977,7 +978,6 @@ class taskchain_task extends taskchain_base {
 
         // file not found - shouldn't happen !!
         return null;
-        //  throw new moodle_exception($type.'filenotfound', 'taskchain', '', $this->$typefile);
+        // throw new moodle_exception($type.'filenotfound', 'taskchain', '', $this->$typefile);
     }
 }
-

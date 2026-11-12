@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/attempt/html/renderer.php');
+require_once($CFG->dirroot . '/mod/taskchain/attempt/html/renderer.php');
 
 /**
  * mod_taskchain_attempt_html_xerte_renderer
@@ -39,7 +38,6 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/html/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_html_renderer {
-
     // source file types with which this output format can be used
     var $filetypes = array('html_xerte');
 
@@ -78,7 +76,7 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
         }
 
         if ($pos = strpos($this->TC->task->source->filecontents, '<title>')) {
-            $insert = '<base href="'.$this->TC->task->source->baseurl.$this->TC->task->source->filepath.'">'."\n";
+            $insert = '<base href="' . $this->TC->task->source->baseurl . $this->TC->task->source->filepath . '">' . "\n";
             $this->TC->task->source->filecontents = substr_replace($this->TC->task->source->filecontents, $insert, $pos, 0);
         }
 
@@ -107,7 +105,6 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
 
         // special processing for js files
         switch ($filename) {
-
             // HTML5 files
             case 'offline/js/offlinesupport.js':
             case 'offline/offline_engine_en-GB.js':
@@ -143,7 +140,7 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
             case 'rloObject.js':
                 break;
 
-            //default: echo "unknown file: '$filename'";
+            // default: echo "unknown file: '$filename'";
         }
 
         // set baseurl
@@ -157,35 +154,35 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
         $js = $this->TC->task->source->get_sibling_filecontents($match[1]);
 
         // several search-and-replace fixes
-        //  - add style to center the Flash Object
-        //  - convert MainPreloader.swf to absolute URL
-        //  - break up "script" strings to prevent unwanted TaskChain postprocessing
+        // - add style to center the Flash Object
+        // - convert MainPreloader.swf to absolute URL
+        // - break up "script" strings to prevent unwanted TaskChain postprocessing
         $search = array(
-            'style="'."padding:0px; width:' + rloWidth + 'px; height:' + rloHeight + 'px;".'"', // NEW
-            'style="'."width:' + rloWidth + 'px; height:' + rloHeight + 'px; ".'"',             // OLD
-            'var FileLocation = xmlPath;',       // NEW
+            'style="' . "padding:0px; width:' + rloWidth + 'px; height:' + rloHeight + 'px;" . '"', // NEW
+            'style="' . "width:' + rloWidth + 'px; height:' + rloHeight + 'px; " . '"', // OLD
+            'var FileLocation = xmlPath;', // NEW
             'var FileLocation = getLocation();', // OLD
             'MainPreloader.swf',
             'script', 'Script', 'SCRIPT',
         );
         $replace = array(
-            'style="'."padding:0px; width:' + rloWidth + 'px; height:' + rloHeight + 'px; margin:auto;".'"', // NEW
-            'style="'."width:' + rloWidth + 'px; height:' + rloHeight + 'px; margin:auto;".'"', // OLD
+            'style="' . "padding:0px; width:' + rloWidth + 'px; height:' + rloHeight + 'px; margin:auto;" . '"', // NEW
+            'style="' . "width:' + rloWidth + 'px; height:' + rloHeight + 'px; margin:auto;" . '"', // OLD
             "var FileLocation = '$baseurl';", // NEW
             "var FileLocation = '$baseurl';", // OLD
-            $baseurl.'MainPreloader.swf',
+            $baseurl . 'MainPreloader.swf',
             "scr' + 'ipt", "Scr' + 'ipt", "SCR' + 'IPT",
         );
 
-        if ($this->TC->task->source->get_displayMode()=='fill window') {
+        if ($this->TC->task->source->get_displayMode() == 'fill window') {
             // remove "id" to prevent resizing of Flash object
             // there might be another way to do this
             // e.g. using js to stretch canvas area
-            $search[] = 'id="'."rlo' + rloID + '".'"';
+            $search[] = 'id="' . "rlo' + rloID + '" . '"';
             $replace[] = '';
         }
 
         $js = str_replace($search, $replace, $js);
-        return '<script type="text/javascript">'."\n".trim($js)."\n".'</script>'."\n";
+        return '<script type="text/javascript">' . "\n" . trim($js) . "\n" . '</script>' . "\n";
     }
 }

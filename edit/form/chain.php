@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/chain.php');
+require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/chain.php');
 
 /**
  * mod_taskchain_mod_form
@@ -38,9 +37,8 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/chain.php');
  * @since      Moodle 2.0
  * @package    mod_taskchain
  */
-//class mod_taskchain_mod_form extends moodleform_mod {
+// class mod_taskchain_mod_form extends moodleform_mod {
 class mod_taskchain_edit_chain_form extends moodleform {
-
     /** TaskChain form helper - see mod/taskchain/form/base.php **/
     private $form_helper;
 
@@ -114,7 +112,7 @@ class mod_taskchain_edit_chain_form extends moodleform {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function validation($data, $files)  {
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
         $this->form_helper->validate_sections($errors, $data, $files);
         return $errors;

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -62,25 +61,25 @@ function xmldb_taskchain_upgrade($oldversion) {
 
                 // add format fields for entry/exit text
                 new xmldb_field('entryformat', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0', 'entrytext'),
-                new xmldb_field('exitformat',  XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0', 'exittext'),
+                new xmldb_field('exitformat', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0', 'exittext'),
 
                 // force text fields to be longtext
                 new xmldb_field('entrytext', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
-                new xmldb_field('exittext', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('exittext', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             // force text fields to be longtext
             'taskchain_cache' => array(
-                new xmldb_field('content', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('content', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             'taskchain_details' => array(
-                new xmldb_field('details', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('details', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             'taskchain_questions' => array(
-                new xmldb_field('name', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
+                new xmldb_field('name', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
             ),
             'taskchain_strings' => array(
-                new xmldb_field('string', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL)
-            )
+                new xmldb_field('string', XMLDB_TYPE_TEXT, 'long', null, XMLDB_NOTNULL),
+            ),
         );
         foreach ($tables as $tablename => $fields) {
             $table = new xmldb_table($tablename);
@@ -88,7 +87,7 @@ function xmldb_taskchain_upgrade($oldversion) {
                 xmldb_taskchain_fix_previous_field($dbman, $table, $field);
                 if ($dbman->field_exists($table, $field)) {
                     $fieldname = $field->getName();
-                    if ($field->getType()==XMLDB_TYPE_TEXT) {
+                    if ($field->getType() == XMLDB_TYPE_TEXT) {
                         $DB->set_field_select($tablename, $fieldname, '', "$fieldname IS NULL");
                     }
                     $dbman->change_field_type($table, $field);
@@ -107,14 +106,14 @@ function xmldb_taskchain_upgrade($oldversion) {
             $prefix = $DB->get_prefix();
             $tables = $DB->get_tables();
             foreach ($tables as $table) {
-                if (substr($table, 0, 9)=='taskchain') {
+                if (substr($table, 0, 9) == 'taskchain') {
                     $rs = $DB->get_recordset_sql("SHOW COLUMNS FROM {$CFG->prefix}$table WHERE type LIKE '%unsigned%'");
                     foreach ($rs as $column) {
                         // copied from as "lib/db/upgradelib.php"
                         $oldtype = preg_replace('/\s*unsigned/i', 'signed', $column->type);
                         $notnull = ($column->null === 'NO') ? 'NOT NULL' : 'NULL';
                         $default = (is_null($column->default) || $column->default === '') ? '' : "DEFAULT '$column->default'";
-                        $autoinc = (stripos($column->extra, 'auto_increment') === false)  ? '' : 'AUTO_INCREMENT';
+                        $autoinc = (stripos($column->extra, 'auto_increment') === false) ? '' : 'AUTO_INCREMENT';
                         $sql = "ALTER TABLE `{$prefix}$table` MODIFY COLUMN `$column->field` $oldtype $notnull $default $autoinc";
                         $DB->change_database_structure($sql);
                     }
@@ -132,7 +131,7 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $newversion = 2011040112;
     if ($oldversion < $newversion) {
-        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+        require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
         // set nexttaskid for PRE conditions to be current task
         $taskid = mod_taskchain::CONDITIONTASKID_SAME;
@@ -149,7 +148,7 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $newversion = 2011040115;
     if ($oldversion < $newversion) {
-        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+        require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
         // extract all TaskChain records and associated grade information
         $select = 't.*, tc.id AS chainid, tc.gradelimit, tc.gradeweighting';
@@ -182,14 +181,14 @@ function xmldb_taskchain_upgrade($oldversion) {
     if ($oldversion < $newversion) {
         $tables = array(
             'taskchain_tasks' => array(
-                new xmldb_field('allowpaste', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'stoptext')
+                new xmldb_field('allowpaste', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'stoptext'),
             ),
             'taskchain_cache' => array(
-                new xmldb_field('taskchain_bodystyles', XMLDB_TYPE_CHAR,    '8',  null, XMLDB_NOTNULL, null, null, 'slasharguments'),
-                new xmldb_field('sourcerepositoryid',   XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0',  'sourcelocation'),
-                new xmldb_field('configrepositoryid',   XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0',  'configlocation'),
-                new xmldb_field('allowpaste',           XMLDB_TYPE_INTEGER, '2',  null, XMLDB_NOTNULL, null, '0',  'stoptext')
-            )
+                new xmldb_field('taskchain_bodystyles', XMLDB_TYPE_CHAR, '8', null, XMLDB_NOTNULL, null, null, 'slasharguments'),
+                new xmldb_field('sourcerepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'sourcelocation'),
+                new xmldb_field('configrepositoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'configlocation'),
+                new xmldb_field('allowpaste', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'stoptext'),
+            ),
         );
         foreach ($tables as $table => $fields) {
             $table = new xmldb_table($table);
@@ -207,7 +206,7 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $newversion = 2014011773;
     if ($oldversion < $newversion) {
-        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+        require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
         taskchain_update_grades();
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }
@@ -217,26 +216,26 @@ function xmldb_taskchain_upgrade($oldversion) {
         // fix HTML task names such as "Task (99)"
 
         // get required script libraries
-        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+        require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
         // set up SQL query
         $select = 'tt.*, t.id AS taskchainid';
-        $from   = '{taskchain_tasks} tt '.
-                  'JOIN {taskchain_chains} tc ON tt.chainid = tc.id '.
+        $from   = '{taskchain_tasks} tt ' .
+                  'JOIN {taskchain_chains} tc ON tt.chainid = tc.id ' .
                   'JOIN {taskchain} t ON tc.parentid = t.id AND tc.parenttype = ?';
-        $where  = 'tt.sourcetype IN (?, ?) AND '.$DB->sql_like('tt.name', '?');
+        $where  = 'tt.sourcetype IN (?, ?) AND ' . $DB->sql_like('tt.name', '?');
         $orderby = 'tt.chainid, tt.sortorder';
         $params = array(mod_taskchain::PARENTTYPE_ACTIVITY,
                         'html_xhtml',
                         'html_xerte',
-                        get_string('task', 'mod_taskchain').' (%)');
+                        get_string('task', 'mod_taskchain') . ' (%)');
 
         // get tasks
         if ($tasks = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $orderby", $params)) {
             global $TC;
             $TC = null;
             foreach ($tasks as $taskid => $task) {
-                if ($TC===null || $TC->taskchain->id != $task->taskchainid) {
+                if ($TC === null || $TC->taskchain->id != $task->taskchainid) {
                     $TC = $DB->get_record('taskchain', array('id' => $task->taskchainid));
                     $TC = new mod_taskchain($TC);
                 }
@@ -245,7 +244,7 @@ function xmldb_taskchain_upgrade($oldversion) {
                 $task->get_source();
                 $oldname = $task->get_name();
                 $newname = $task->source->get_name();
-                if ($newname=='' || $newname==$oldname) {
+                if ($newname == '' || $newname == $oldname) {
                     // do nothing
                 } else {
                     $DB->set_field('taskchain_tasks', 'name', $newname, array('id' => $taskid));
@@ -258,13 +257,11 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $newversion = 2014051606;
     if ($oldversion < $newversion) {
-
         // select all sections using courselinks.js.php
         // typically there is just one in any QuizPort/TaskChain course
         $select  = $DB->sql_like('summary', '?');
         $params = array('%/courselinks.js.php%');
         if ($ids = $DB->get_records_select_menu('course_sections', $select, $params, '', 'id,course')) {
-
             // convert "quizport" to "taskchain"
             // and "attforblock" to "attendance"
             $update = '{course_sections}';
@@ -283,15 +280,14 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $newversion = 2014063025;
     if ($oldversion < $newversion) {
-
         // get required script libraries
-        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
-        require_once($CFG->dirroot.'/mod/taskchain/source/class.php');
+        require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
+        require_once($CFG->dirroot . '/mod/taskchain/source/class.php');
 
         // set up SQL query
         $select = 'tt.*, t.id AS taskchainid';
-        $from   = '{taskchain_tasks} tt '.
-                  'JOIN {taskchain_chains} tc ON tt.chainid = tc.id '.
+        $from   = '{taskchain_tasks} tt ' .
+                  'JOIN {taskchain_chains} tc ON tt.chainid = tc.id ' .
                   'JOIN {taskchain} t ON tc.parentid = t.id AND tc.parenttype = ?';
         $where  = 'tt.sourcetype = ?';
         $orderby = 'tt.chainid, tt.sortorder';
@@ -303,7 +299,7 @@ function xmldb_taskchain_upgrade($oldversion) {
             $TC = null;
             $data = new stdClass();
             foreach ($tasks as $task) {
-                if ($TC && $TC->taskchain->id==$task->taskchainid) {
+                if ($TC && $TC->taskchain->id == $task->taskchainid) {
                     // do nothing
                 } else {
                     $TC = $DB->get_record('taskchain', array('id' => $task->taskchainid));
@@ -314,7 +310,7 @@ function xmldb_taskchain_upgrade($oldversion) {
                 $file = $task->get_file('source');
                 if ($object = taskchain_source::is('is_taskfile', $file, $data)) {
                     $type = $object->get_type();
-                    if ($type=='' || $type==$task->get_sourcetype()) {
+                    if ($type == '' || $type == $task->get_sourcetype()) {
                         // do nothing
                     } else {
                         $DB->set_field('taskchain_tasks', 'sourcetype', $type, array('id' => $task->id));
@@ -347,7 +343,7 @@ function xmldb_taskchain_upgrade($oldversion) {
                                     'viewed'          => COMPLETION_VIEWED,
                                     'completionstate' => COMPLETION_INCOMPLETE);
                     if ($userids = $DB->get_records_menu('course_modules_completion', $params, '', 'id,userid')) {
-                        if ($course===null || $course->id != $cm->course) {
+                        if ($course === null || $course->id != $cm->course) {
                             $params = array('id' => $cm->course);
                             $course = $DB->get_record('course', $params);
                             $completion = new completion_info($course);
@@ -371,10 +367,9 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $newversion = 2014112850;
     if ($oldversion < $newversion) {
-        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+        require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
         if (function_exists('get_log_manager')) {
-
             if ($loglegacy = get_config('loglegacy', 'logstore_legacy')) {
                 set_config('loglegacy', 0, 'logstore_legacy');
             }
@@ -386,7 +381,6 @@ function xmldb_taskchain_upgrade($oldversion) {
             $standard_log_table = new xmldb_table($standard_log_tablename);
 
             if ($dbman->table_exists($legacy_log_table) && $dbman->table_exists($standard_log_table)) {
-
                 $select = 'module = ?';
                 $params = array('taskchain');
 
@@ -412,16 +406,18 @@ function xmldb_taskchain_upgrade($oldversion) {
                     }
                     foreach ($rs as $log) {
                         upgrade_set_timeout(); // 3 mins
-                        mod_taskchain::add_to_log($log->course,
-                                                  $log->module,
-                                                  $log->action,
-                                                  $log->url,
-                                                  $log->info,
-                                                  $log->cmid,
-                                                  $log->userid);
+                        mod_taskchain::add_to_log(
+                            $log->course,
+                            $log->module,
+                            $log->action,
+                            $log->url,
+                            $log->info,
+                            $log->cmid,
+                            $log->userid
+                        );
                         if ($interactive) {
                             $i++;
-                            $bar->update($i, $count, $strupdating.": ($i/$count)");
+                            $bar->update($i, $count, $strupdating . ": ($i/$count)");
                         }
                     }
                     $rs->close();
@@ -441,16 +437,16 @@ function xmldb_taskchain_upgrade($oldversion) {
         if (function_exists('get_log_manager')) {
             if ($dbman->table_exists('log')) {
                 $select = 'module = ? AND action = ?';
-                $DB->set_field_select('log', 'action', 'attempt',    $select, array('taskchain', 'attempt_started'));
+                $DB->set_field_select('log', 'action', 'attempt', $select, array('taskchain', 'attempt_started'));
                 $DB->set_field_select('log', 'action', 'editchains', $select, array('taskchain', 'chains_edited'));
                 $DB->set_field_select('log', 'action', 'editcolumnlists', $select, array('taskchain', 'columnlists_edited'));
                 $DB->set_field_select('log', 'action', 'editcondition', $select, array('taskchain', 'condition_edited'));
-                $DB->set_field_select('log', 'action', 'edittask',   $select, array('taskchain', 'task_edited'));
-                $DB->set_field_select('log', 'action', 'edittasks',  $select, array('taskchain', 'tasks_edited'));
-                $DB->set_field_select('log', 'action', 'index',      $select, array('taskchain', 'course_module_instance_list_viewed'));
-                $DB->set_field_select('log', 'action', 'report',     $select, array('taskchain', 'report_viewed'));
-                $DB->set_field_select('log', 'action', 'submit',     $select, array('taskchain', 'attempt_submitted'));
-                $DB->set_field_select('log', 'action', 'view',       $select, array('taskchain', 'course_module_viewed'));
+                $DB->set_field_select('log', 'action', 'edittask', $select, array('taskchain', 'task_edited'));
+                $DB->set_field_select('log', 'action', 'edittasks', $select, array('taskchain', 'tasks_edited'));
+                $DB->set_field_select('log', 'action', 'index', $select, array('taskchain', 'course_module_instance_list_viewed'));
+                $DB->set_field_select('log', 'action', 'report', $select, array('taskchain', 'report_viewed'));
+                $DB->set_field_select('log', 'action', 'submit', $select, array('taskchain', 'attempt_submitted'));
+                $DB->set_field_select('log', 'action', 'view', $select, array('taskchain', 'course_module_viewed'));
             }
         }
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
@@ -461,9 +457,9 @@ function xmldb_taskchain_upgrade($oldversion) {
         // add custom completion fields for TaskChain module
         $table = new xmldb_table('taskchain');
         $fields = array(
-            new xmldb_field('completionmingrade',  XMLDB_TYPE_FLOAT, '6,2', null, XMLDB_NOTNULL, null, 0.00, 'timemodified'),
-            new xmldb_field('completionpass',      XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0,    'completionmingrade'),
-            new xmldb_field('completioncompleted', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0,    'completionpass')
+            new xmldb_field('completionmingrade', XMLDB_TYPE_FLOAT, '6,2', null, XMLDB_NOTNULL, null, 0.00, 'timemodified'),
+            new xmldb_field('completionpass', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, 'completionmingrade'),
+            new xmldb_field('completioncompleted', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, 'completionpass'),
         );
         foreach ($fields as $field) {
             xmldb_taskchain_fix_previous_field($dbman, $table, $field);
@@ -499,7 +495,7 @@ function xmldb_taskchain_upgrade($oldversion) {
 
     $newversion = 2017031738;
     if ($oldversion < $newversion) {
-        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+        require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
         $table = new xmldb_table('taskchain_tasks');
         $field = new xmldb_field('titletext', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'title');
         xmldb_taskchain_fix_previous_field($dbman, $table, $field);
@@ -542,7 +538,7 @@ function xmldb_taskchain_upgrade($oldversion) {
     $newversion = 2018091075;
     if ($oldversion < $newversion) {
         // clear cache for tasks that use Moodle messaging
-        require_once($CFG->dirroot.'/mod/taskchain/locallib.php');
+        require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
         $params = array('studentfeedback' => mod_taskchain::FEEDBACK_MOODLEMESSAGING);
         if ($ids = $DB->get_records('taskchain_tasks', $params, 'id', 'id,studentfeedback')) {
             $ids = array_keys($ids);
@@ -591,8 +587,8 @@ function xmldb_taskchain_upgrade($oldversion) {
         // saved in a different way and so were not truncated.
         $columns = $DB->get_columns('user_preferences');
         if (isset($columns['value']->max_length) && $columns['value']->max_length <= 0) {
-            $select = $DB->sql_like('name', '?').' AND '.$DB->sql_like('name', '?', true, true, true);
-            $params = array($DB->sql_like_escape('taskchain_').'%', '%'.$DB->sql_like_escape('_columnlist').'%');
+            $select = $DB->sql_like('name', '?') . ' AND ' . $DB->sql_like('name', '?', true, true, true);
+            $params = array($DB->sql_like_escape('taskchain_') . '%', '%' . $DB->sql_like_escape('_columnlist') . '%');
             $DB->delete_records_select('user_preferences', $select, $params);
         }
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
