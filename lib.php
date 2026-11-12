@@ -149,7 +149,7 @@ function taskchain_update_instance(stdclass $data, $mform) {
     $DB->update_record('taskchain', $data);
 
     // Update gradebook item.
-    if ($data->grademethod == $mform->get_originalvalue('grademethod', 0)) {
+    if ($mform && $data->grademethod == $mform->get_originalvalue('grademethod', 0)) {
         taskchain_grade_item_update($data);
     } else {
         // Recalculate grades for all users.
@@ -191,7 +191,10 @@ function taskchain_process_formdata(stdclass $data, $mform) {
     }
 
     // Fix up secondary fields.
-    $mform->form_postprocessing($data);
+    // Note: $mform is null when a TaskChain is created by a test data generator.
+    if ($mform) {
+        $mform->form_postprocessing($data);
+    }
 
     // Set default name for a TaskChain activity.
     $defaultname = get_string('modulename', 'mod_taskchain');
@@ -202,7 +205,7 @@ function taskchain_process_formdata(stdclass $data, $mform) {
     $chaintable = 'taskchain_chains';
     $parenttable = '';
 
-    switch (get_class($mform)) {
+    switch ($mform ? get_class($mform) : 'mod_taskchain_mod_form') {
         case 'mod_taskchain_mod_form':
             $parenttype  = mod_taskchain::PARENTTYPE_ACTIVITY;
             $parenttable = 'taskchain';
@@ -338,7 +341,7 @@ function taskchain_process_formdata(stdclass $data, $mform) {
         }
 
         if ($parent->name != $data->name) {
-            if (! $DB->set_field($parenttable, 'name', $data->name, array('id' => $chain->id))) {
+            if (! $DB->set_field($parenttable, 'name', $data->name, array('id' => $parent->id))) {
                 return get_string('error_updaterecord', 'mod_taskchain', $parenttable);
             }
             $parent->name = $data->name;
@@ -456,7 +459,11 @@ function taskchain_add_tasks(&$data, &$mform, &$chain, $aftertaskid = 0) {
         throw new moodle_exception('$data->addtype is not set');
     }
 
-    $context = $mform->get_context();
+    if ($mform) {
+        $context = $mform->get_context();
+    } else {
+        $context = context_module::instance($data->coursemodule);
+    }
     $sources = taskchain_source::get_sources($data, $context, 'mod_taskchain', 'sourcefile', $data->addtype);
     $config  = taskchain_source::get_config($data, $context, 'mod_taskchain', 'configfile');
 

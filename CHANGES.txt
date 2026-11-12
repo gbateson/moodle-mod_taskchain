@@ -2,6 +2,15 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-12 (27)
+ - add PHPUnit tests (supported features, detection of source files, output
+   formats, creating chains, completion rules, and rendering of HP6 and HP7
+   tasks) and a data generator for tests
+ - allow TaskChain activities to be created without a form (e.g. by the test
+   data generator)
+ - fix the name of a new TaskChain activity being saved on the TaskChain whose
+   id matched the chain id, instead of on the new TaskChain
+
 2026-11-12 (26)
  - show task names in the task menu and on task pages, when the task title is
    set to 'specific text' but no text has been given (new tasks were created
