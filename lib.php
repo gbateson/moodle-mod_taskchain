@@ -742,6 +742,19 @@ function taskchain_get_coursemodule_info($cm) {
         $info->onclick = "window.open('$fullurl', 'taskchain{$cm->instance}', '$options'); return false;";
     }
 
+    // Moodle >= 3.11: custom completion rules, but only if completion is "automatic".
+    if (class_exists('\\core_completion\\activity_custom_completion')) {
+        if (isset($cm->completion) && $cm->completion == COMPLETION_TRACKING_AUTOMATIC) {
+            // The values of the custom completion rules are passed to
+            // \mod_taskchain\completion\custom_completion via the "customdata".
+            $info->customdata['customcompletionrules'] = array(
+                'completionmingrade' => floatval($taskchain->completionmingrade),
+                'completionpass' => intval($taskchain->completionpass),
+                'completioncompleted' => intval($taskchain->completioncompleted),
+            );
+        }
+    }
+
     return $info;
 }
 
@@ -2763,6 +2776,9 @@ function taskchain_set_missing_fields($table, &$record, &$formdata, $fieldnames)
 /**
  * Obtains the automatic completion state for this taskchain
  * based on the conditions in taskchain settings.
+ *
+ * Used by Moodle <= 4.2. In Moodle >= 4.3, the completion state is calculated
+ * by \mod_taskchain\completion\custom_completion::get_state().
  *
  * @param  object  $course record from "course" table
  * @param  object  $cm     record from "course_modules" table

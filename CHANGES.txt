@@ -2,6 +2,15 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-12 (17)
+ - add custom_completion class, and customcompletionrules in
+   taskchain_get_coursemodule_info(), because completion rules were ignored in
+   Moodle >= 4.3
+ - add suffix to names of completion fields on mod form, so that they can be
+   used on the 'Default activity completion' and 'Bulk edit activity completion'
+   pages in Moodle >= 4.3
+ - add 'completiondetail' strings to describe completion rules
+
 2026-11-12 (16)
  - only declare FEATURE_GROUPMEMBERSONLY on Moodle <= 2.6 (it caused
    'detectedbrokenplugin' on Moodle 5.x)

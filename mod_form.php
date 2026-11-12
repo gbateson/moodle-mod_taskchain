@@ -124,18 +124,35 @@ class mod_taskchain_mod_form extends moodleform_mod {
     }
 
     /**
+     * Get the suffix for the names of the completion fields.
+     *
+     * In Moodle >= 4.3, the completion fields are also used on the "Default activity completion"
+     * and "Bulk edit activity completion" pages, where each field name must end with a suffix.
+     * In Moodle <= 4.2, there is no get_suffix() method, so we always use an empty string.
+     *
+     * @return string
+     */
+    protected function get_completion_suffix() {
+        if (method_exists($this, 'get_suffix')) {
+            return $this->get_suffix(); // Moodle >= 4.3
+        }
+        return ''; // Moodle <= 4.2
+    }
+
+    /**
      * Display module-specific activity completion rules.
      * Part of the API defined by moodleform_mod
      * @return array Array of string IDs of added items, empty array if none
      */
     public function add_completion_rules() {
         $mform = $this->_form;
+        $suffix = $this->get_completion_suffix();
 
         // array of elements names to be returned by this method
         $names = array();
 
         // these fields will be disabled if gradelimit x gradeweighting = 0
-        $disablednames = array('completionusegrade');
+        $disablednames = array('completionusegrade'.$suffix);
 
         // add "minimum grade" completion condition
         $name = 'completionmingrade';
@@ -145,22 +162,27 @@ class mod_taskchain_mod_form extends moodleform_mod {
         } else {
             $value = floatval($this->current->$name);
         }
+        $enabled = $name.'enabled'.$suffix;
+        $groupname = $name.'group'.$suffix;
+        $space = $name.'space'.$suffix;
+        $name .= $suffix;
         $group = array();
-        $group[] = &$mform->createElement('checkbox', $name.'enabled', '', $label);
-        $group[] = &$mform->createElement('static', $name.'space', '', ' &nbsp; ');
+        $group[] = &$mform->createElement('checkbox', $enabled, '', $label);
+        $group[] = &$mform->createElement('static', $space, '', ' &nbsp; ');
         $group[] = &$mform->createElement('text', $name, '', array('size' => 3));
-        $mform->addGroup($group, $name.'group', '', '', false);
+        $mform->addGroup($group, $groupname, '', '', false);
         $mform->setType($name, PARAM_FLOAT);
         $mform->setDefault($name, 0.00);
-        $mform->setType($name.'enabled', PARAM_INT);
-        $mform->setDefault($name.'enabled', empty($value) ? 0 : 1);
-        $mform->disabledIf($name, $name.'enabled', 'notchecked');
-        $names[] = $name.'group';
-        $disablednames[] = $name.'group';
+        $mform->setType($enabled, PARAM_INT);
+        $mform->setDefault($enabled, empty($value) ? 0 : 1);
+        $mform->disabledIf($name, $enabled, 'notchecked');
+        $names[] = $groupname;
+        $disablednames[] = $groupname;
 
         // add "grade passed" completion condition
         $name = 'completionpass';
         $label = get_string($name, 'taskchain');
+        $name .= $suffix;
         $mform->addElement('checkbox', $name, '', $label);
         $mform->setType($name, PARAM_INT);
         $mform->setDefault($name, 0);
@@ -170,6 +192,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
         // add "status completed" completion condition
         $name = 'completioncompleted';
         $label = get_string($name, 'taskchain');
+        $name .= $suffix;
         $mform->addElement('checkbox', $name, '', $label);
         $mform->setType($name, PARAM_INT);
         $mform->setDefault($name, 0);
@@ -177,10 +200,15 @@ class mod_taskchain_mod_form extends moodleform_mod {
         // no need to disable this field :-)
 
         // disable grade conditions, if necessary
+        // (the grade fields are not available on the "Default activity completion" page)
         foreach ($disablednames as $name) {
             if ($mform->elementExists($name)) {
-                $mform->disabledIf($name, 'gradelimit', 'eq', 0);
-                $mform->disabledIf($name, 'gradeweighting', 'eq', 0);
+                if ($mform->elementExists('gradelimit')) {
+                    $mform->disabledIf($name, 'gradelimit', 'eq', 0);
+                }
+                if ($mform->elementExists('gradeweighting')) {
+                    $mform->disabledIf($name, 'gradeweighting', 'eq', 0);
+                }
             }
         }
 
@@ -194,13 +222,13 @@ class mod_taskchain_mod_form extends moodleform_mod {
      * @return bool True if one or more rules is enabled, false if none are.
      */
     public function completion_rule_enabled($data) {
-        if (empty($data['completionmingradeenabled']) || empty($data['completionmingrade'])) {
-            if (empty($data['completionpass']) && empty($data['completioncompleted'])) {
+        $suffix = $this->get_completion_suffix();
+        if (empty($data['completionmingradeenabled'.$suffix]) || empty($data['completionmingrade'.$suffix])) {
+            if (empty($data['completionpass'.$suffix]) && empty($data['completioncompleted'.$suffix])) {
                 return false;
             }
         }
         return true; // at least one of the module-specific completion conditions is set
-
     }
 
     /**
@@ -233,9 +261,12 @@ class mod_taskchain_mod_form extends moodleform_mod {
      */
     public function data_postprocessing($data) {
         // Remove completionmingrade, if it is not enabled and greater than 0.0
-        if (empty($data->completionmingradeenabled) || empty($data->completionmingrade) || floatval($data->completionmingrade)==0.0) {
-            $data->completionmingradeenabled = 0;
-            $data->completionmingrade = 0.0;
+        $suffix = $this->get_completion_suffix();
+        $enabled = 'completionmingradeenabled'.$suffix;
+        $name = 'completionmingrade'.$suffix;
+        if (empty($data->$enabled) || empty($data->$name) || floatval($data->$name)==0.0) {
+            $data->$enabled = 0;
+            $data->$name = 0.0;
         }
         return $data;
     }
