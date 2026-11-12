@@ -48,10 +48,12 @@ class taskchain_source_hp_6_jmatch_xml extends taskchain_source_hp_6_jmatch {
      * @return xxx
      */
     public function is_taskfile() {
-        if (preg_match('/\.jmt$/', $this->file->get_filename())) {
-            return true;
-        } else {
-            return false;
+        if (! preg_match('/\.jmt$/', $this->file->get_filename())) {
+            return false; // Wrong file type.
         }
+        if ($this->get_filecontents() && strpos($this->filecontents, '<version>7</version>')) {
+            return false; // HP7 file (see source/hp/7).
+        }
+        return true;
     }
 }

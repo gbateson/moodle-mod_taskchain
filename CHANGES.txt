@@ -2,6 +2,13 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-12 (25)
+ - add support for Hot Potatoes 7 (HP7) tasks: JCloze, JCross, JMatch (including
+   drag-and-drop and flashcards), JMix (including drag-and-drop) and JQuiz, from
+   both HP7 xml data files and HP7 html files (ported from HotPot)
+ - HP6 xml data files can also be displayed using the HP7 output formats
+ - do not recognize HP7 xml data files as HP6 tasks
+
 2026-11-12 (24)
  - fix status of abandoned chain grades, chain attempts and task scores in
    storage.php ('==' was used instead of '=')
