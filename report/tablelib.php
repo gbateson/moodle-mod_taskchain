@@ -1135,7 +1135,8 @@ class taskchain_report_table extends table_sql {
             $sort[] = 'tc_chn_grd.cnumber ASC';
         }
         if ($this->has_column('taskscorecnumber')) {
-            $sort[] = 'tc_tsk_scr.cnumber ASC';
+            // use the column alias, because "tc_tsk_scr" is not joined in all reports
+            $sort[] = 'taskscorecnumber ASC';
         }
         if ($this->has_column('taskattemptcnumber')) {
             $sort[] = 'tc_tsk_att.cnumber ASC';

@@ -2191,8 +2191,12 @@ function taskchain_extend_navigation(navigation_node $taskchainnode, stdclass $c
     if (isset($TC->can)) {
         if ($TC->can->preview()) {
             $label = get_string('preview', 'mod_taskchain');
-            $params = array('tab'=>'preview', 'cnumber'=>-1);
-            $params = $TC->merge_params($params, null, 'coursemoduleid');
+            // a preview is always a new attempt by the current user, so we remove
+            // the ids of any other user's grades and attempts from this page's params
+            $params = array('tab' => 'preview', 'cnumber' => -1,
+                            'chaingradeid' => 0, 'chainattemptid' => 0,
+                            'taskscoreid' => 0, 'taskattemptid' => 0);
+            $params = array_filter($TC->merge_params($params, null, 'coursemoduleid'));
             $url   = new moodle_url('/mod/taskchain/attempt.php', $params);
             $type  = navigation_node::TYPE_SETTING;
             $icon  = new pix_icon('t/preview', '');
@@ -2278,8 +2282,12 @@ function taskchain_extend_settings_navigation(settings_navigation $settingsnav, 
                 $type = navigation_node::TYPE_SETTING;
                 $icon = new pix_icon('t/preview', '');
 
-                $params = array('tab' => 'preview', 'cnumber' => -1);
-                $params = $TC->merge_params($params, null, 'coursemoduleid');
+                // a preview is always a new attempt by the current user, so we remove
+                // the ids of any other user's grades and attempts from this page's params
+                $params = array('tab' => 'preview', 'cnumber' => -1,
+                                'chaingradeid' => 0, 'chainattemptid' => 0,
+                                'taskscoreid' => 0, 'taskattemptid' => 0);
+                $params = array_filter($TC->merge_params($params, null, 'coursemoduleid'));
                 $action = new moodle_url('/mod/taskchain/attempt.php', $params);
                 $text = get_string('preview', 'mod_taskchain');
                 $nodes[] = new navigation_node(array('text'=>$text, 'action'=>$action, 'key'=>'preview', 'type'=>$type, 'icon'=>$icon));

@@ -2,6 +2,12 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-12 (22)
+ - fix 'Unknown column tc_tsk_scr.cnumber' SQL error, and missing fields for the
+   select column, on the task attempt report
+ - remove the ids of other users' grades and attempts from the 'Preview' links,
+   so that a teacher's preview always starts a new attempt by the teacher
+
 2026-11-12 (21)
  - users who can only review their own attempts can no longer see other users'
    attempts by changing the id in review.php or report.php URLs

@@ -100,6 +100,9 @@ class mod_taskchain_report_taskattempt_renderer extends mod_taskchain_report_ren
         // sql to select all grades for this TaskChain
         $select = 'tc_tsk_att.id AS id, '.
                   'tc_tsk_att.userid AS userid, '.
+                  'tc_tsk_att.taskid AS taskattempttaskid, '.
+                  'tc_tsk.chainid AS taskscorechainid, '.
+                  'tc_tsk_att.cnumber AS taskscorecnumber, '.
                   'tc_tsk_att.cnumber AS taskattemptcnumber, '.
                   'tc_tsk_att.tnumber AS taskattempttnumber, '.
                   'tc_tsk_att.penalties AS taskattemptpenalties, '.
@@ -127,7 +130,7 @@ class mod_taskchain_report_taskattempt_renderer extends mod_taskchain_report_ren
 
         // restrict sql to a specific attempt
         if ($attemptid) {
-            $where = ' AND tc_tsk_scr.id = ?';
+            $where .= ' AND tc_tsk_att.id = ?';
             $params[] = $attemptid;
         }
 
