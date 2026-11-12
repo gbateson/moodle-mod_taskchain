@@ -93,7 +93,7 @@ switch ($TC->action) {
                 $text = get_string('deletedactivity', '', $text);
                 echo $output->page_quick($text, 'close');
             } else {
-                print_error('error_deleterecords', 'taskchain', 'taskchain_conditions');
+                throw new moodle_exception('error_deleterecords', 'taskchain', 'taskchain_conditions');
             }
         break;
 
@@ -130,12 +130,12 @@ switch ($TC->action) {
         if ($newdata->id = $TC->get_conditionid()) {
             // updating a TaskChain task condition
             if (! $DB->update_record('taskchain_conditions', $newdata)) {
-                print_error('error_updaterecord', 'taskchain', '', 'taskchain_conditions');
+                throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_conditions');
             }
         } else {
             // adding a new TaskChain task condition
             if (! $newdata->id = $DB->insert_record('taskchain_conditions', $newdata)) {
-                print_error('error_insertrecord', 'taskchain', '', 'taskchain_conditions');
+                throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_conditions');
              }
         }
 

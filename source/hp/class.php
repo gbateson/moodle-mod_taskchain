@@ -404,8 +404,8 @@ class taskchain_source_hp extends taskchain_source {
             // define root of XML tree
             $this->xml_root = $this->hbs_software.'-'.$this->hbs_tasktype.'-file';
 
-            // convert to XML tree using xmlize()
-            if (! $this->xml = xmlize($this->filecontents, 0)) {
+            // convert to XML tree using taskchain_xmlize()
+            if (! $this->xml = taskchain_xmlize($this->filecontents, 0)) {
                 debugging('Could not parse XML file: '.$this->filepath);
             } else if (! array_key_exists($this->xml_root, $this->xml)) {
                 debugging('Could not find XML root node: '.$this->xml_root);
@@ -415,7 +415,7 @@ class taskchain_source_hp extends taskchain_source {
             if (isset($this->config) && $this->config && $this->config->get_filecontents()) {
 
                 $this->config->compact_filecontents(array('header-code'));
-                $xml = xmlize($this->config->filecontents, 0);
+                $xml = taskchain_xmlize($this->config->filecontents, 0);
 
                 $config_file = $this->hbs_software.'-config-file';
                 if (isset($xml[$config_file]['#']) && isset($this->xml[$this->xml_root]['#'])) {
@@ -476,7 +476,7 @@ class taskchain_source_hp extends taskchain_source {
             $this->filecontents = preg_replace_callback($search, $callback, $this->filecontents);
 
             // the following control characters are not allowed in XML
-            // and need to be removed because they will break xmlize()
+            // and need to be removed because they will break taskchain_xmlize()
             // basically this is the range 00-1F and the delete key 7F
             // but excluding tab 09, newline 0A and carriage return 0D
             $search = '/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]/';

@@ -848,11 +848,11 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         // add / update the cache record
         if (isset($this->cache->id)) {
             if (! $DB->update_record('taskchain_cache', $this->cache)) {
-                print_error('error_updaterecord', 'taskchain', '', 'taskchain_cache');
+                throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_cache');
             }
         } else {
             if (! $this->cache->id = $DB->insert_record('taskchain_cache', $this->cache)) {
-                print_error('error_insertrecord', 'taskchain', '', 'taskchain_cache');
+                throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_cache');
             }
         }
 

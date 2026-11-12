@@ -63,7 +63,6 @@ function taskchain_supports($feature) {
         'FEATURE_GRADE_HAS_GRADE'  => true, // default=false
         'FEATURE_GRADE_OUTCOMES'   => true,
         'FEATURE_GROUPINGS'        => true, // default=false
-        'FEATURE_GROUPMEMBERSONLY' => true, // default=false
         'FEATURE_GROUPS'           => true,
         'FEATURE_IDNUMBER'         => true,
         'FEATURE_MOD_ARCHETYPE'    => MOD_ARCHETYPE_OTHER,
@@ -76,12 +75,40 @@ function taskchain_supports($feature) {
         'FEATURE_USES_QUESTIONS'   => false,
         'FEATURE_CAN_DISPLAY'      => true, // Moodle >= 5.0
     );
+    if (! class_exists('\\core_availability\\info')) {
+        $constants['FEATURE_GROUPMEMBERSONLY'] = true; // Moodle <= 2.6
+        // Moodle >= 2.7 uses the availability API (\core_availability\info)
+        // Moodle >= 5.x treats any plugin that declares this feature as broken.
+    }
     foreach ($constants as $constant => $value) {
         if (defined($constant) && $feature==constant($constant)) {
             return $value;
         }
     }
     return null; // Return null to ensure we get the default value for any unknown FEATURE.
+}
+
+/**
+ * Convert XML to a nested array, using \core\xml_parser if it is available.
+ *
+ * xmlize() is deprecated in Moodle 5.1 (MDL-86256), and replaced by \core\xml_parser.
+ *
+ * @param string $data XML content
+ * @param int $whitespace 1 = keep whitespace, 0 = remove whitespace
+ * @param string $encoding the encoding of the XML content
+ * @param bool $reporterrors if true, throw an exception on errors
+ * @return array
+ */
+function taskchain_xmlize($data, $whitespace = 1, $encoding = 'UTF-8', $reporterrors = false) {
+    global $CFG;
+    if (class_exists('\\core\\xml_parser')) {
+        // Moodle >= 5.1.
+        $parser = new \core\xml_parser();
+        return $parser->parse($data, $whitespace, $encoding, $reporterrors);
+    }
+    // Moodle <= 5.0.
+    require_once($CFG->dirroot . '/lib/xmlize.php');
+    return xmlize($data, $whitespace, $encoding, $reporterrors);
 }
 
 /**
@@ -543,7 +570,7 @@ function taskchain_add_tasks(&$data, &$mform, &$chain, $aftertaskid=0) {
         $task->discarddetails = get_user_preferences('taskchain_task_discarddetails', mod_taskchain::NO);
 
         if (! $task->id = $DB->insert_record('taskchain_tasks', $task)) {
-            print_error('error_insertrecord', 'taskchain', '', 'taskchain_tasks');
+            throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_tasks');
         }
 
         $newtaskids[] = $task->id;

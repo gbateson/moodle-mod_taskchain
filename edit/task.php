@@ -175,7 +175,7 @@ switch ($TC->action) {
 
             // update the TaskChain task record
             if (! $DB->update_record('taskchain_tasks', $newdata)) {
-                print_error('error_updaterecord', 'taskchain', '', 'tasks');
+                throw new moodle_exception('error_updaterecord', 'taskchain', '', 'tasks');
             }
 
             // recreate $TC->task using updated values

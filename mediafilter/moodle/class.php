@@ -54,7 +54,7 @@ class taskchain_mediafilter_moodle extends taskchain_mediafilter {
         static $eolas_fix_applied = 0;
 
         // insert media players using Moodle's standard mediaplugin filter
-        $filter = new filter_mediaplugin($taskchain->context, array());
+        $filter = taskchain_get_mediaplugin_filter($taskchain->context, array());
         $newtext = $filter->filter($text);
 
         if ($newtext==$text) {

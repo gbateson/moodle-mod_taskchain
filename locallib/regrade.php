@@ -272,7 +272,7 @@ class taskchain_regrade extends taskchain_base {
                         $status = self::STATUS_COMPLETED;
                         $this->TC->chainattempt->status = $status;
                         if (! $DB->set_field('taskchain_chain_attempts', 'status', $status, array('id' => $this->TC->chainattempt->id))) {
-                            print_error('error_updaterecord', 'taskchain', '', 'taskchain_chain_attempts');
+                            throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_chain_attempts');
                         }
                     } else if ($nexttaskid==$record->id) {
                         // post conditions specify this task is to be repeated
@@ -308,7 +308,7 @@ class taskchain_regrade extends taskchain_base {
                     $graderecord->status = $status;
                     $graderecord->duration = $aggregate->duration;
                     if (! $DB->update_record($gradetable, $graderecord)) {
-                        print_error('error_updaterecord', 'taskchain', '', $table);
+                        throw new moodle_exception('error_updaterecord', 'taskchain', '', $table);
                     }
                     if ($thisuser) {
                         $this->TC->$typegrade = &$graderecord;
@@ -659,7 +659,7 @@ class taskchain_regrade extends taskchain_base {
                 $record = $chainattempt;
             }
             if (! $DB->update_record('taskchain_chain_attempts', $record)) {
-                print_error('error_updaterecord', 'taskchain', '', 'taskchain_chain_attempts');
+                throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_chain_attempts');
             }
         } else if ($counttaskscores) {
             // chain attempt record not found - might happen first time the grade is calculated

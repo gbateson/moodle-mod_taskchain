@@ -83,7 +83,7 @@ class taskchain_create extends taskchain_base {
 
         // add new chain grade record
         if (! $chaingrade->id = $DB->insert_record('taskchain_chain_grades', $chaingrade)) {
-            print_error('error_insertrecord', 'taskchain', '', 'taskchain_chain_grades');
+            throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_chain_grades');
         }
         $chaingradeid = $chaingrade->id;
 
@@ -142,7 +142,7 @@ class taskchain_create extends taskchain_base {
 
         // add new chain attempt record
         if (! $chainattempt->id = $DB->insert_record('taskchain_chain_attempts', $chainattempt)) {
-            print_error('error_insertrecord', 'taskchain', '', 'taskchain_chain_attempts');
+            throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_chain_attempts');
         }
         $chainattemptid = $chainattempt->id;
 
@@ -218,7 +218,7 @@ class taskchain_create extends taskchain_base {
         $taskscore->timemodified = $this->TC->time;
 
         if (! $taskscore->id = $DB->insert_record('taskchain_task_scores', $taskscore)) {
-            print_error('error_insertrecord', 'taskchain', '', 'taskchain_task_scores');
+            throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_task_scores');
         }
         $taskscoreid = $taskscore->id;
 
@@ -292,7 +292,7 @@ class taskchain_create extends taskchain_base {
 
         // add new task attempt record
         if (! $taskattempt->id = $DB->insert_record('taskchain_task_attempts', $taskattempt)) {
-            print_error('error_insertrecord', 'taskchain', '', 'taskchain_task_attempts');
+            throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_task_attempts');
         }
         $taskattemptid = $taskattempt->id;
 

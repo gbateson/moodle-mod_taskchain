@@ -29,7 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Include required files */
-require_once($CFG->dirroot.'/lib/xmlize.php');
+require_once($CFG->dirroot.'/mod/taskchain/lib.php');
 
 /**
  * taskchain_source
@@ -1165,7 +1165,7 @@ class taskchain_source {
             if (empty($filecontents)) {
                 $filecontents = array();
             } else {
-                $filecontents = xmlize($filecontents, 0);
+                $filecontents = taskchain_xmlize($filecontents, 0);
             }
         }
 

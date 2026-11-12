@@ -2107,7 +2107,7 @@ class mod_taskchain extends taskchain_base {
         // delete DB records
         list($select, $params) = $DB->get_in_or_equal($ids);
         if (! $DB->delete_records_select($tablename, "id $select", $params)) {
-            print_error('error_deleterecords', 'taskchain', $tablename);
+            throw new moodle_exception('error_deleterecords', 'taskchain', $tablename);
         }
 
         // delete cached records

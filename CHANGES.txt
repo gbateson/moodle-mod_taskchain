@@ -2,6 +2,15 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-12 (16)
+ - only declare FEATURE_GROUPMEMBERSONLY on Moodle <= 2.6 (it caused
+   'detectedbrokenplugin' on Moodle 5.x)
+ - replace print_error() (removed in Moodle 4.5) with moodle_exception
+ - use \core\xml_parser when available (xmlize deprecated in Moodle 5.1)
+ - only include filter/mediaplugin/filter.php on Moodle <= 4.4
+ - fix course category deletion in tools/import_taskchain_tables.php (Moodle
+   3.6+)
+
 2026-03-04 (15)
  - make courselink.js.php aware of groupings on the taskchain_navigation group selection menu
 
