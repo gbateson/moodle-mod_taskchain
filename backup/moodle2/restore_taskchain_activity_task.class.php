@@ -42,7 +42,7 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * Define (add) particular settings this activity can have
      */
     protected function define_my_settings() {
-        // No particular settings for this activity
+        // No particular settings for this activity.
     }
 
     /**
@@ -57,7 +57,6 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * processed by the link decoder
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function define_decode_contents() {
         return array(
@@ -70,7 +69,6 @@ class restore_taskchain_activity_task extends restore_activity_task {
      * to the activity to be executed by the link decoder
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function define_decode_rules() {
         return array(

@@ -38,10 +38,10 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/record.php');
  * @package    mod_taskchain
  */
 class taskchain_form_helper_condition extends taskchain_form_helper_record {
-    /** type of record **/
+    /** @var string type of record * */
     protected $recordtype = 'condition';
 
-    /** sections and fields in this form **/
+    /** @var array sections and fields in this form * */
     protected $sections = array(
         'headings'  => array('conditionheading'), // 'taskheading',
         'condition' => array('groupid', 'sortorder', 'conditiontaskid', 'conditionscore',
@@ -49,7 +49,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
         'hidden'    => array('id'),
     );
 
-    /** default values in a chain record */
+    /** @var array default values in a chain record */
     protected $defaultvalues = array(
         'groupid'         => 0, // = any group
         'sortorder'       => 0,
@@ -57,7 +57,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
         'conditionscore'  => 0,
         'attempttype'     => mod_taskchain::ATTEMPTTYPE_ANY,
         'attemptcount'    => 0,
-        'attempttype'     => 0,
         'attemptduration' => 0,
         'attemptdelay'    => 0,
         'nexttaskid'      => 0,
@@ -71,7 +70,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      *
      * @param string $field the field name
      * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
-     * @todo Finish documenting this function
      */
     protected function get_defaultvalue_conditiontaskid($field) {
         if ($this->get_conditiontype() == mod_taskchain::CONDITIONTYPE_POST) {
@@ -88,7 +86,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      *
      * @param string $field the field name
      * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
-     * @todo Finish documenting this function
      */
     protected function get_defaultvalue_nexttaskid($field) {
         if ($this->get_conditiontype() == mod_taskchain::CONDITIONTYPE_PRE) {
@@ -113,7 +110,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
     /**
      * get_minmax_options
      */
-    function get_minmax_options() {
+    public function get_minmax_options() {
         return array(mod_taskchain::MIN => get_string('minimum', 'mod_taskchain'),
                      mod_taskchain::MAX => get_string('maximum', 'mod_taskchain'));
     }
@@ -124,7 +121,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      *
      * @param object $data (passed by reference) from form
      * @param string name of minmax $field to fix
-     * @todo Finish documenting this function
      */
     protected function prepare_template_minmax(&$data, $field) {
 
@@ -147,7 +143,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      * prepare_field_conditionscore
      *
      * @param object $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function prepare_field_conditionscore(&$data) {
         $this->prepare_template_minmax($data, 'conditionscore');
@@ -157,7 +152,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      * prepare_field_attemptcount
      *
      * @param object $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function prepare_field_attemptcount(&$data) {
         $this->prepare_template_minmax($data, 'attemptcount');
@@ -167,7 +161,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      * prepare_field_attemptduration
      *
      * @param object $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function prepare_field_attemptduration(&$data) {
         $this->prepare_template_minmax($data, 'attemptduration');
@@ -177,7 +170,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      * prepare_field_attemptdelay
      *
      * @param object $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function prepare_field_attemptdelay(&$data) {
         $this->prepare_template_minmax($data, 'attemptdelay');
@@ -185,21 +177,17 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
 
     /**
      * get heading for this form
-     *
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue_taskheading() {
         if ($this->TC->get_taskid()) {
             return format_string($this->TC->task->get_name());
         } else {
-            return ''; // shouldn't happen !!
+            return ''; // Shouldn't happen !!
         }
     }
 
     /**
      * get heading for this form
-     *
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue_conditionheading() {
         switch ($this->TC->get_conditiontype()) {
@@ -210,7 +198,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
                 $type = 'postcondition';
                 break;
             default:
-                return ''; // shouldn't happen !!
+                return ''; // Shouldn't happen !!
         }
         switch ($this->TC->action) {
             case 'add':
@@ -221,7 +209,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
                 return get_string('delete' . $type, 'mod_taskchain');
             case 'deleteall':
                 return get_string('deleteall' . $type . 's', 'mod_taskchain');
-            return ''; // shouldn't happen !!
+            return ''; // Shouldn't happen !!
         }
     }
 
@@ -229,7 +217,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      * get_sectionlabel_condition
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_sectionlabel_condition() {
         switch ($this->get_conditiontype()) {
@@ -238,7 +225,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             case mod_taskchain::CONDITIONTYPE_POST:
                 return get_string('postcondition', 'mod_taskchain');
             default:
-                return get_string('general', 'form'); // shouldn't happen !!
+                return get_string('general', 'form'); // Shouldn't happen !!
         }
     }
 
@@ -311,12 +298,12 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
 
         $conditiontype = $this->get_conditiontype();
         if ($conditiontype == mod_taskchain::CONDITIONTYPE_PRE) {
-            // pre-conditions allow teacher to specify the task to which this condition refers
+            // Pre-conditions allow teacher to specify the task to which this condition refers.
             $options = array(
                 mod_taskchain::CONDITIONTASKID_PREVIOUS => get_string('previoustask', 'mod_taskchain'),
             );
             if ($tasks = $this->TC->get_tasks()) {
-                // a specific TaskChain task from this chain
+                // A specific TaskChain task from this chain.
                 foreach ($tasks as $task) {
                     $options[$task->id] = '[' . $task->sortorder . '] ' . format_string($task->name);
                 }
@@ -326,7 +313,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             $this->mform->setDefault($name, $this->get_defaultvalue($field));
             $this->add_helpbutton($name, $field, 'taskchain');
         } else {
-            // post-conditions always use the current task as the condition task
+            // Post-conditions always use the current task as the condition task.
             $this->mform->addElement('hidden', $name, $this->TC->get_taskid());
             $this->mform->setType($name, PARAM_INT);
         }
@@ -357,7 +344,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
         $this->mform->setType($name_minmax, PARAM_INT);
         $this->mform->setType($name, PARAM_INT);
         $this->mform->setType($name_enable, PARAM_INT);
-        $this->mform->setDefault($name_enable, 0); // i.e. disabled by default
+        $this->mform->setDefault($name_enable, 0); // I.e. disabled by default.
         $this->mform->disabledIf($name_elements, $name_enable, 'notchecked');
     }
 
@@ -389,7 +376,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
         $this->mform->setType($name_minmax, PARAM_INT);
         $this->mform->setType($name, PARAM_INT);
         $this->mform->setType($name_enable, PARAM_INT);
-        $this->mform->setDefault($name_enable, 0); // i.e. disabled by default
+        $this->mform->setDefault($name_enable, 0); // I.e. disabled by default.
         $this->mform->disabledIf($name_elements, $name_enable, 'notchecked');
         $this->add_helpbutton($name_elements, $field, 'taskchain');
         $this->mform->setAdvanced($name_elements);
@@ -400,7 +387,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      * disabledIf_attemptcount_zero
      *
      * @param string $name of field to be disabled if attempt count is zero
-     * @todo Finish documenting this function
      */
     protected function disabledIf_attemptcount_zero($name) {
         // $this->mform->disabledIf($name, 'attemptcount', 'eq', 0);
@@ -451,7 +437,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             $this->disabledIf_attemptcount_zero($name_elements);
             $this->mform->setAdvanced($name_elements);
         } else {
-            // post-conditions: time elapsed is always 0?
+            // Post-conditions: time elapsed is always 0?
             $this->mform->addElement('hidden', $name, 0);
             $this->mform->setType($name, PARAM_INT);
         }
@@ -468,11 +454,11 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
 
         $conditiontype = $this->get_conditiontype();
         if ($conditiontype == mod_taskchain::CONDITIONTYPE_PRE) {
-            // pre-conditions always have the current task as the next task
+            // Pre-conditions always have the current task as the next task.
             $this->mform->addElement('hidden', $name, $this->TC->get_taskid());
             $this->mform->setType($name, PARAM_INT);
         } else {
-            // post-conditions allow teacher to specify next task
+            // Post-conditions allow teacher to specify next task.
             $this->add_template_list($field);
         }
     }
@@ -482,7 +468,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      *
      * @param stdClass $data (passed by reference) from form
      * @param string name of $field to fix
-     * @todo Finish documenting this function
      */
     protected function fix_field_conditionscore($data, $field) {
         $this->fix_template_minmax($data, $field);
@@ -493,7 +478,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      *
      * @param stdClass $data (passed by reference) from form
      * @param string name of $field to fix
-     * @todo Finish documenting this function
      */
     protected function fix_field_attemptcount($data, $field) {
         $this->fix_template_minmax($data, $field);
@@ -504,7 +488,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      *
      * @param stdClass $data (passed by reference) from form
      * @param string name of $field to fix
-     * @todo Finish documenting this function
      */
     protected function fix_field_attemptduration($data, $field) {
         $this->fix_template_minmax($data, $field);
@@ -514,7 +497,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      * fix_field_attemptdelay
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_attemptdelay($data, $field) {
         $this->fix_template_minmax($data, $field);
@@ -525,7 +507,6 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
      *
      * @param stdClass $data (passed by reference) from form
      * @param string name of minmax $field to fix
-     * @todo Finish documenting this function
      */
     protected function fix_template_minmax($data, $field) {
 
@@ -565,22 +546,22 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             }
             $taskid = $this->TC->get_taskid();
 
-            // set this task to by the default task for conditions of this $type
+            // Set this task to by the default task for conditions of this $type.
             $name = 'taskchain_task_' . $type;
             set_user_preferences(array($name => $taskid));
 
-            // add javascript to modify conditions in opening window
+            // Add javascript to modify conditions in opening window.
             $js .= '<script type="text/javascript">' . "\n";
             $js .= '//<![CDATA[' . "\n";
             $js .= '    if (window.opener) {' . "\n";
 
-            // modify the default conditions, if any, in the opening window
+            // Modify the default conditions, if any, in the opening window.
             $js .= '        var obj = opener.document.getElementById("taskchain_' . $type . '_default");' . "\n";
             $js .= '        if (obj) {' . "\n";
             $js .= '            obj.innerHTML = "' . $this->format_conditions($taskid, $conditiontype, false, true, false) . '";' . "\n";
             $js .= '        }' . "\n";
 
-            // locate the conditions DIV in the opening window
+            // Locate the conditions DIV in the opening window.
             $js .= '        var obj = opener.document.getElementById("taskchain_' . $type . '_' . $taskid . '");' . "\n";
             $js .= '        if (obj) {' . "\n";
 
@@ -596,7 +577,7 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             $js .= '            }' . "\n";
             $js .= '            p = null;' . "\n";
 
-            // add the modified conditions
+            // Add the modified conditions.
             $js .= '            obj.innerHTML = "' . $this->format_conditions($taskid, $conditiontype, false, true, true) . '";' . "\n";
 
             // restore the conditions intro text (if necessary)
@@ -605,12 +586,12 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             $js .= '                intro = null;' . "\n";
             $js .= '            }' . "\n";
 
-            // adjust row heights as necessary
+            // Adjust row heights as necessary.
             $js .= '            if (window.opener.set_fitem_heights_and_widths) {' . "\n";
             $js .= '                window.opener.set_fitem_heights_and_widths();' . "\n";
             $js .= '            }' . "\n";
 
-            // close the javascript
+            // Close the javascript.
             $js .= '        }' . "\n";
             $js .= '        window.close()' . "\n";
             $js .= '    }' . "\n";

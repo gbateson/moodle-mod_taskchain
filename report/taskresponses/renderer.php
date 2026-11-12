@@ -38,6 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/report/taskquestions/renderer.php')
  * @package    mod_taskchain
  */
 class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_taskquestions_renderer {
+    /** @var string */
     public $mode = 'taskresponses';
 
     /**
@@ -73,13 +74,13 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_t
             );
         }
 
-        // correct
+        // Correct.
         if ($value = $response->correct) {
             $value = $table->set_legend($column, $value);
             $text .= html_writer::tag('li', $value, array('class' => $class['correct']));
         }
 
-        // wrong
+        // Wrong.
         if ($value = $response->wrong) {
             $values = array();
             foreach (explode(',', $value) as $v) {
@@ -88,7 +89,7 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_t
             $text .= html_writer::tag('li', implode(',', $values), array('class' => $class['wrong']));
         }
 
-        // ignored
+        // Ignored.
         if ($value = $response->ignored) {
             $values = array();
             foreach (explode(',', $value) as $v) {
@@ -97,7 +98,7 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_t
             $text .= html_writer::tag('li', implode(',', $values), array('class' => $class['ignored']));
         }
 
-        // numeric
+        // Numeric.
         if (is_numeric($response->score)) {
             $value = $response->score . '%';
             $text .= html_writer::tag('li', $value, array('class' => $class['score']));
@@ -123,13 +124,13 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_t
      * @param xxx $new filename of icon
      * @param xxx $old filename of icon
      */
-    function get_css_class($new, $old) {
+    public function get_css_class($new, $old) {
         global $CFG;
         if (file_exists($CFG->dirroot . "/pix/i/$new.png")) {
-            // Moodle >= 2.4
+            // Moodle >= 2.4.
             return $new;
         } else {
-            // Moodle 2.0 - 2.5
+            // Moodle 2.0 - 2.5.
             return $old;
         }
     }

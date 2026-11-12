@@ -40,35 +40,44 @@ require_once($CFG->dirroot . '/mod/taskchain/report/userfiltering.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_report_renderer extends mod_taskchain_renderer {
-    /** names of columns in this table */
+    /** @var array names of columns in this table */
     protected $tablecolumns = array();
 
-    /** names of columns to be suppressed (i.e. only shown once per user) */
+    /** @var array names of columns to be suppressed (i.e. only shown once per user) */
     protected $suppresscolumns = array();
 
-    /** columns with this prefix will be suppressed (i.e. only shown once per user) */
+    /** @var string columns with this prefix will be suppressed (i.e. only shown once per user) */
     protected $suppressprefix = '';
 
+    /** @var array */
     protected $filterfields = array();
+    /** @var array */
     protected $headerfields = array();
 
+    /** @var mixed */
     protected $TC = null;
 
+    /** @var string */
     protected $userfilter = '';
 
+    /** @var string */
     protected $attemptfilter = '';
 
+    /** @var string */
     public $mode = '';
 
+    /** @var array */
     public $questions = array();
 
+    /** @var bool */
     public $has_questioncolumns = false;
 
-    /** does this table have user columns, "picture" and "fullname", or not? */
+    /** @var bool does this table have user columns, "picture" and "fullname", or not? */
     public $has_usercolumns = false;
 
-    /** id param name and table name */
+    /** @var string id param name and table name */
     public $id_param_name = '';
+    /** @var string */
     public $id_param_table = '';
 
     /**
@@ -76,20 +85,19 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      *
      * @uses $DB
      * @param xxx $taskchain
-     * @todo Finish documenting this function
      */
     public function init($TC) {
         global $DB;
 
-        // save a reference to the $taskchain record
+        // Save a reference to the $taskchain record.
         $this->TC = &$TC;
 
-        // add user columns, if required
+        // Add user columns, if required.
         if ($this->has_usercolumns) {
             array_unshift($this->tablecolumns, 'fullname'); // 'picture'
         }
 
-        // add question numbers to $tablecolumns
+        // Add question numbers to $tablecolumns.
         if ($this->has_questioncolumns) {
             if ($records = $DB->get_records('taskchain_questions', array('taskid' => $this->TC->task->id), '', 'id,name,text')) {
                 $this->questions = array_values($records);
@@ -101,7 +109,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * render_report
      *
      * @param xxx $taskchain
-     * @todo Finish documenting this function
      */
     public function render_report($TC) {
         $this->init($TC);
@@ -116,7 +123,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      *
      * @uses $DB
      * @return string containing HTML table
-     * @todo Finish documenting this function
      */
     public function reportheader() {
         global $DB;
@@ -147,7 +153,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      *
      * @param string $type
      * @return string
-     * @todo Finish documenting this function
      */
     public function reportheaderdata($type) {
         $data = array();
@@ -184,27 +189,26 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @uses $DB
      * @uses $USER
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function reportcontent() {
         global $DB, $USER;
 
-        // get userid and recordid
+        // Get userid and recordid.
         $userid = $this->get_report_userid();
         $record = $this->get_report_record();
         if ($this->TC->can_reviewallattempts()) {
-            // do nothing
+            // Do nothing.
         } else if ($this->TC->can_reviewmyattempts()) {
-            // student users can only see their own data
+            // Student users can only see their own data.
             $userid = $USER->id;
             if ($record && $record->userid == $userid) {
-                // do nothing
+                // Do nothing.
             } else {
-                $record = null; // shoudn't happen !!
+                $record = null; // Shoudn't happen !!
             }
         } else {
             // has_capability('mod/taskchain:review', $this->TC->context))
-            // should already have been checked in "mod/taskchain/report.php"
+            // should already have been checked in "mod/taskchain/report.php".
             return false;
         }
 
@@ -217,17 +221,17 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         }
         $baseurl = $this->TC->url->report($this->mode, $params)->out();
 
-        // display user and attempt filters
+        // Display user and attempt filters
         // $this->display_filters($baseurl);
 
-        // create report table
+        // Create report table.
         $uniqueid = $this->page->pagetype . '-' . $this->mode;
         $table = new taskchain_report_table($uniqueid, $this, $this->TC);
 
-        // set the table columns
+        // Set the table columns.
         $tablecolumns = $this->tablecolumns;
         if (! $this->TC->can_deleteattempts()) {
-            // remove the select column from students view
+            // Remove the select column from students view.
             $i = array_search('selected', $tablecolumns);
             if (is_numeric($i)) {
                 array_splice($tablecolumns, $i, 1);
@@ -253,33 +257,33 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
             $this->suppresscolumns = array_unique($this->suppresscolumns);
         }
 
-        // setup the report table
+        // Setup the report table.
         $table->setup_report_table($tablecolumns, $this->suppresscolumns, $baseurl);
 
-        // setup sql to COUNT records
+        // Setup sql to COUNT records.
         list($select, $from, $where, $params) = $this->count_sql($userid, $record);
         $table->set_count_sql("SELECT $select FROM $from WHERE $where", $params);
 
-        // setup sql to SELECT records
+        // Setup sql to SELECT records.
         list($select, $from, $where, $params) = $this->select_sql($userid, $record);
         $table->set_sql($select, $from, $where, $params);
 
-        // extract attempt records
-        // Note: avoid error caused by zero $pagesize
+        // Extract attempt records
+        // Note: avoid error caused by zero $pagesize.
         $pagesize = $table->get_page_size();
         $table->query_db($pagesize ? $pagesize : 10);
 
-        // extract question responses, if required
+        // Extract question responses, if required.
         if ($this->has_questioncolumns) {
             $this->add_responses_to_rawdata($table);
         }
         $this->fix_suppresscolumns_in_rawdata($table);
 
-        // display the table
+        // Display the table.
         $table->build_table();
         $table->finish_html();
 
-        // display the legend
+        // Display the legend.
         $table->print_legend();
     }
 
@@ -287,7 +291,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * get_report_userid
      *
      * @return integer
-     * @todo Finish documenting this function
      */
     public function get_report_userid() {
         return optional_param('userid', 0, PARAM_INT);
@@ -298,7 +301,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      *
      * @uses   $DB
      * @return integer
-     * @todo   Finish documenting this function
      */
     public function get_report_record() {
         global $DB;
@@ -320,7 +322,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $userid (optional, default=0)
      * @param xxx $gradeid (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function select_sql_user(&$select, &$from, $tablealias) {
         if (in_array('fullname', $this->tablecolumns)) {
@@ -335,7 +336,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $userid (optional, default=0)
      * @param xxx $record (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function count_sql($userid = 0, $record = null) {
         $select = 'COUNT(1)';
@@ -343,7 +343,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         $where  = '';
         $params = array();
 
-        // restrict to a specific chaingrade / user
+        // Restrict to a specific chaingrade / user.
         $this->select_sql_record($select, $from, $where, $params, $userid, $record);
 
         return array($select, $from, $where, $params);
@@ -353,7 +353,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * display_filters
      *
      * @param xxx $baseurl
-     * @todo Finish documenting this function
      */
     public function display_filters($baseurl) {
         if (count($this->filterfields) && $this->TC->can_reviewattempts()) {
@@ -373,7 +372,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $userid (optional, default=0)
      * @param xxx $attemptid (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function select_sql($userid = 0, $attemptid = 0) {
         $select  = '';
@@ -390,7 +388,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @uses $DB
      * @param xxx $table (passed by reference)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function add_responses_to_rawdata(&$table) {
         global $DB;
@@ -402,7 +399,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         // get question column names ($index_by_id = true)
         $question_columns = $this->get_question_columns(true);
 
-        // empty out the response fields in the the rawdata
+        // Empty out the response fields in the the rawdata.
         $attemptids = array_keys($table->rawdata);
         foreach ($attemptids as $attemptid) {
             foreach ($question_columns as $questionid => $column) {
@@ -410,7 +407,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
             }
         }
 
-        // set sql to select responses for these attempts
+        // Set sql to select responses for these attempts.
         list($a_filter, $a_params) = $DB->get_in_or_equal($attemptids);
         list($q_filter, $q_params) = $DB->get_in_or_equal(array_keys($question_columns));
 
@@ -419,7 +416,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         $where  = "attemptid $a_filter AND questionid $q_filter";
         $params = array_merge($a_params, $q_params);
 
-        // get the responses for these attempts
+        // Get the responses for these attempts.
         if (! $responses = $DB->get_records_sql("SELECT $select FROM $from WHERE $where", $params)) {
             return false;
         }
@@ -427,12 +424,12 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         foreach ($responses as $response) {
             $attemptid = $response->attemptid;
             if (empty($table->rawdata[$attemptid])) {
-                return false; // shouldn't happen
+                return false; // Shouldn't happen.
             }
 
             $questionid = $response->questionid;
             if (empty($question_columns[$questionid])) {
-                return false; // shouldn't happen
+                return false; // Shouldn't happen.
             }
 
             $column = $question_columns[$questionid];
@@ -447,7 +444,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $attemptid
      * @param xxx $column
      * @param xxx $response
-     * @todo Finish documenting this function
      */
     public function add_response_to_rawdata(&$table, $attemptid, $column, $response) {
         // $table->rawdata[$attemptid]->$column = $response->somefield;
@@ -458,7 +454,6 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      *
      * @param xxx $index_by_id (optional, default=false)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_question_columns($index_by_id = false) {
         $question_columns = array();
@@ -481,12 +476,12 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $table (passed by reference)
      * @return xxx
      */
-    function fix_suppresscolumns_in_rawdata(&$table) {
+    public function fix_suppresscolumns_in_rawdata(&$table) {
         if (empty($table->rawdata)) {
-            return false; // no records
+            return false; // No records.
         }
         if (empty($table->column_suppress)) {
-            return false; // no columns are suppressed
+            return false; // No columns are suppressed.
         }
 
         $values = array();
@@ -495,9 +490,9 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
         foreach ($table->rawdata as $id => $record) {
             if ($this->show_suppressed_columns($record, $values, $prefixes)) {
                 foreach ($this->suppresscolumns as $column) {
-                    // new values - adjust prefixes so that all columns are displayed
+                    // New values - adjust prefixes so that all columns are displayed.
                     if (empty($prefixes[$column])) {
-                        // add an empty span tag to make this column different from previous row
+                        // Add an empty span tag to make this column different from previous row.
                         $prefixes[$column] = html_writer::tag('span', '');
                     } else {
                         $prefixes[$column] = '';
@@ -521,16 +516,16 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param xxx $prefixes
      * @return xxx
      */
-    function show_suppressed_columns($record, $values, $prefixes) {
+    public function show_suppressed_columns($record, $values, $prefixes) {
         if (empty($prefixes) || empty($values)) {
-            return true; // always show first row
+            return true; // Always show first row.
         }
         foreach ($this->suppresscolumns as $column) {
             if ($values[$column] != $prefixes[$column] . $record->$column) {
-                return true; // at least one column has a new value
+                return true; // At least one column has a new value.
             }
         }
-        return false; // all columns have same values, so don't show them
+        return false; // All columns have same values, so don't show them.
     }
 
     /**
@@ -542,33 +537,33 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
      * @param string $fieldprefix prefix to add to all columns in their aliases, does not apply to 'id'
      * @return string
      */
-    function get_userfields($tableprefix = '', array $extrafields = null, $idalias = 'id', $fieldprefix = '') {
+    public function get_userfields($tableprefix = '', array $extrafields = null, $idalias = 'id', $fieldprefix = '') {
 
         // Ensure $tableprefix is a string.
         if ($tableprefix === null) {
             $tableprefix = '';
         }
 
-        // Moodle >= 3.11
+        // Moodle >= 3.11.
         if (class_exists('\\core_user\\fields')) {
             $fields = \core_user\fields::for_userpic();
             if ($extrafields) {
-                $fields->including(...$extrafields); // splat operator is available from PHP 5.5
+                $fields->including(...$extrafields); // Splat operator is available from PHP 5.5.
             }
             $fields = $fields->get_sql($tableprefix, false, $fieldprefix, $idalias, false)->selects;
             if ($tableprefix === '') {
                 $fields = str_replace('{user}.', '', $fields);
             }
             return str_replace(', ', ',', $fields);
-            // id, picture, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename, imagealt, email
+            // Id, picture, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename, imagealt, email.
         }
 
-        // Moodle >= 2.6
+        // Moodle >= 2.6.
         if (class_exists('user_picture')) {
             return user_picture::fields($tableprefix, $extrafields, $idalias, $fieldprefix);
         }
 
-        // Moodle <= 2.5
+        // Moodle <= 2.5.
         $fields = array('id', 'firstname', 'lastname', 'picture', 'imagealt', 'email');
         if ($tableprefix || $extrafields || $idalias) {
             if ($tableprefix) {

@@ -38,23 +38,24 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/html/renderer.p
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskchain_attempt_hp_6_jcloze_html_renderer {
+    /** @var string */
     public $js_object_type = 'JClozeJGloss';
 
-    /** Glossary autolinking settings (override standard JCloze - (?:I\[\d+\]\[1\]\[\d+\]\[2\])) */
-    var $headcontent_strings = 'Feedback|Correct|Incorrect|GiveHint|YourScoreIs|Guesses|(?:I\[\d+\]\[2\])';
-    var $headcontent_arrays = '';
+    /** @var string Glossary autolinking settings (override standard JCloze - (?:I\[\d+\]\[1\]\[\d+\]\[2\])) */
+    public $headcontent_strings = 'Feedback|Correct|Incorrect|GiveHint|YourScoreIs|Guesses|(?:I\[\d+\]\[2\])';
+    /** @var string */
+    public $headcontent_arrays = '';
 
     /**
      * constructor function
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // replace standard jcloze.js with jgloss.js
+        // Replace standard jcloze.js with jgloss.js.
         $this->javascripts = preg_grep('/jcloze.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/taskchain/attempt/hp/6/jcloze/jgloss.js');
     }
@@ -70,8 +71,6 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
 
     /**
      * fix_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier();
@@ -81,10 +80,9 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'Show_GlossContent,ShowElements,Add_GlossFunctionality';
         return $names;
@@ -94,7 +92,6 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
         return 'HP_send_results';
@@ -104,7 +101,6 @@ class mod_taskchain_attempt_hp_6_jcloze_html_jgloss_renderer extends mod_taskcha
      * get_stop_function_args
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_args() {
         return 'HP.EVENT_COMPLETED';

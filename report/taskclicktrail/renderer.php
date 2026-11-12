@@ -38,6 +38,8 @@ require_once($CFG->dirroot . '/mod/taskchain/report/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_report_taskclicktrail_renderer extends mod_taskchain_report_renderer {
+    /** @var string */
     public $mode = 'taskclicktrail';
+    /** @var bool */
     public $has_usercolumns = true;
 }

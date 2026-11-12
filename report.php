@@ -27,14 +27,14 @@
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
-// create object to represent this TaskChain activity
+// Create object to represent this TaskChain activity.
 $TC = new mod_taskchain();
 
 if ($TC->action == 'deleteselected') {
     $TC->delete_selected_attempts();
 }
 
-// Log this request
+// Log this request.
 mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'report', 'report.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
 $PAGE->set_url($TC->url->report($TC->mode));
@@ -70,17 +70,17 @@ if ($TC->get_chaingrade()) {
     }
 }
 if ($text) {
-    $PAGE->navbar->add($text); // no link on last navbar item
+    $PAGE->navbar->add($text); // No link on last navbar item.
 }
 
 // get renderer subtype (e.g. report_overview)
-// and load the appropriate renderer class for this report $mode
+// and load the appropriate renderer class for this report $mode.
 $subtype = $TC->get_report_renderer_subtype($TC->mode);
 $subdir = str_replace('_', '/', $subtype);
 
 require_once($CFG->dirroot . '/mod/taskchain/' . $subdir . '/renderer.php');
 
-// create the renderer for this attempt
+// Create the renderer for this attempt.
 $output = $PAGE->get_renderer('mod_taskchain', $subtype);
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -42,9 +42,8 @@ class mod_taskchain_attempt_hp_6_jcross_review extends mod_taskchain_attempt_hp_
      * response_text_fields
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function response_text_fields() {
+    public static function response_text_fields() {
         return array('correct', 'wrong');
     }
 
@@ -52,9 +51,8 @@ class mod_taskchain_attempt_hp_6_jcross_review extends mod_taskchain_attempt_hp_
      * response_num_fields
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function response_num_fields() {
+    public static function response_num_fields() {
         return array('hints', 'clues', 'checks');
     }
 }

@@ -43,29 +43,28 @@ class taskchain_source_hp_6_jmix_html extends taskchain_source_hp_6_jmix {
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (! preg_match('/\.html?$/', $this->file->get_filename())) {
-            // wrong file type
+            // Wrong file type.
             return false;
         }
 
         if (! $this->get_filecontents()) {
-            // empty or non-existant file
+            // Empty or non-existant file.
             return false;
         }
 
         if (! strpos($this->filecontents, '<div id="MainDiv" class="StdDiv">')) {
             if (! strpos($this->filecontents, '<div class="StdDiv" id="CheckButtonDiv">')) {
-                // not a hp6 file
+                // Not a hp6 file.
                 return false;
             }
         }
 
-        if (! strpos($this->filecontents, '<div id="SegmentDiv">')) { // drop-down
-            if (! strpos($this->filecontents, '<div id="Drop')) { // drag-and-drop
-                // not a jmix file
+        if (! strpos($this->filecontents, '<div id="SegmentDiv">')) { // Drop-down.
+            if (! strpos($this->filecontents, '<div id="Drop')) { // Drag-and-drop
+                // not a jmix file.
                 return false;
             }
         }

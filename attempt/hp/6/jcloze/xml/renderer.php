@@ -42,14 +42,13 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_renderer extends mod_taskchain_attem
      * expand_ItemArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ItemArray() {
         $q = 0;
         $qq = 0;
 
         $str = '';
-        // Note: I = new Array(); is declared in hp6jcloze.js_
+        // Note: I = new Array(); is declared in hp6jcloze.js_.
 
         $tags = 'data,gap-fill,question-record';
         while (($question = "[$q]['#']") && $this->TC->task->source->xml_value($tags, $question)) {
@@ -59,7 +58,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_renderer extends mod_taskchain_attem
             while (($answer = $question . "['answer'][$a]['#']") && $this->TC->task->source->xml_value($tags, $answer)) {
                 $text = $this->TC->task->source->xml_value_js($tags, $answer . "['text'][0]['#']");
                 if (strlen((string)$text)) {
-                    if ($aa == 0) { // first time only
+                    if ($aa == 0) { // First time only.
                         $str .= "\n";
                         $str .= "I[$qq] = new Array();\n";
                         $str .= "I[$qq][1] = new Array();\n";
@@ -70,7 +69,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_renderer extends mod_taskchain_attem
                 }
                 $a++;
             }
-            // add clue, if any answers were found
+            // Add clue, if any answers were found.
             if ($aa) {
                 $clue = $this->TC->task->source->xml_value_js($tags, $question . "['clue'][0]['#']");
                 $str .= "I[$qq][2] = '$clue';\n";
@@ -86,20 +85,18 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_renderer extends mod_taskchain_attem
      * jcloze_autoadvance_gapid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function jcloze_autoadvance_gapid() {
-        return ''; // must be overridden by child class
+    public function jcloze_autoadvance_gapid() {
+        return ''; // Must be overridden by child class.
     }
 
     /**
      * jcloze_autoadvance_gaptype
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function jcloze_autoadvance_gaptype() {
-        return ''; // must be overridden by child class
+    public function jcloze_autoadvance_gaptype() {
+        return ''; // Must be overridden by child class.
     }
 
     /**
@@ -109,9 +106,8 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_renderer extends mod_taskchain_attem
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function jcloze_autoadvance_fix_js_StartUp(&$str, $start, $length) {
+    public function jcloze_autoadvance_fix_js_StartUp(&$str, $start, $length) {
         global $CFG;
 
         $substr = substr($str, $start, $length);
@@ -165,7 +161,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_renderer extends mod_taskchain_attem
                 . "	}\n"
                 . "	gapid = null;\n";
 
-            $dots = 'squares'; // default
+            $dots = 'squares'; // Default.
             if ($param = clean_param($this->expand_UserDefined1(), PARAM_ALPHANUM)) {
                 if (is_dir($CFG->dirroot . "/mod/taskchain/pix/autoadvance/$param")) {
                     $dots = $param;

@@ -38,12 +38,12 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/record.php');
  * @package    mod_taskchain
  */
 class taskchain_form_helper_chain extends taskchain_form_helper_record {
-    /** type of record **/
+    /** @var string type of record * */
     protected $recordtype = 'chain';
 
-    /** sections and fields in this form **/
+    /** @var array sections and fields in this form * */
     protected $sections = array(
-        // Note: "headings" section will be added by mod_moodleform
+        // Note: "headings" section will be added by mod_moodleform.
         'general'    => array('edit', 'defaultrecord', 'selectrecord', 'name', 'showdescription'),
         'tasks'      => array('sourcefile', 'sourcelocation', 'configfile', 'configlocation', 'addtype', 'tasknames'),
         'entrypage'  => array('entrypage', 'entrytext', 'entryoptions', 'entrycm', 'entrygrade'),
@@ -53,10 +53,10 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'attempts'   => array('attemptlimit', 'allowresume', 'allowfreeaccess', 'manualcompletion'),
         'security'   => array('password', 'subnet'),
         'assessment' => array('attemptgrademethod', 'grademethod', 'gradeignore', 'gradelimit', 'gradeweighting', 'gradepass', 'gradecategory'),
-        // Note: "hidden" section will be added by mod_moodleform
+        // Note: "hidden" section will be added by mod_moodleform.
     );
 
-    /** the default sections/fields shown on forms for multiple task records */
+    /** @var array the default sections/fields shown on forms for multiple task records */
     protected $defaultsections = array(
         'entrypage'  => array('entrypage'),
         'exitpage'   => array('exitpage'),
@@ -64,10 +64,10 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'assessment' => array('grademethod', 'gradelimit'),
     );
 
-    /** default values in a chain record (includes form fields not stored in the database ) */
+    /** @var array default values in a chain record (includes form fields not stored in the database ) */
     protected $defaultvalues = array(
         'intro'              => '',
-        'introformat'        => 0, // FORMAT_MOODLE
+        'introformat'        => 0, // FORMAT_MOODLE.
         'name'               => '',
         'namesource'         => mod_taskchain::TEXTSOURCE_FILE,
         'tasknamessource'    => mod_taskchain::TEXTSOURCE_FILE,
@@ -123,10 +123,10 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'gradecategory'      => 0,
     );
 
-    /** fields that are only used when adding a new record */
+    /** @var array fields that are only used when adding a new record */
     protected $addonlyfields = array('namesource', 'tasknamessource', 'addtype', 'entrytextsource', 'exittextsource');
 
-    /** name of chain **/
+    /** @var string name of chain * */
     protected $taskchainname = '';
 
     /**
@@ -136,15 +136,14 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * @param xxx $context
      * @param xxx $record
      * @param boolean $multiple (optional, default=false)
-     * @todo Finish documenting this function
      */
     public function __construct($mform, $context, $record, $multiple = false) {
         global $DB;
 
-        // standard setup
+        // Standard setup.
         parent::__construct($mform, $context, $record, $multiple);
 
-        // remove source/config file fields, when updating
+        // Remove source/config file fields, when updating.
         if ($this->is_update() && isset($this->sections['tasks'])) {
             unset($this->sections['tasks']);
         }
@@ -156,9 +155,9 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         }
 
         if (isset($record->instance)) {
-            // get chain fields for a taskchain record
+            // Get chain fields for a taskchain record.
             if (empty($record->instance)) {
-                // add a new taskchain
+                // Add a new taskchain.
             } else {
                 $chain = $DB->get_record('taskchain_chains', array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY, 'parentid' => $record->instance));
                 foreach ($chain as $field => $value) {
@@ -203,8 +202,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
     /**
      * get_fieldvalue_name
-     *
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue_name() {
         if ($this->taskchainname) {
@@ -216,20 +213,16 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
     /**
      * get_fieldvalue_showdescription
-     *
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue_showdescription() {
         if (isset($this->TC->coursemodule->showdescription)) {
             return $this->TC->coursemodule->showdescription;
         }
-        return 0; // Moodle <= 2.1
+        return 0; // Moodle <= 2.1.
     }
 
     /**
      * get_fieldvalue_gradecategory
-     *
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue_gradepass() {
         return $this->get_grade_item_field('gradepass', 0);
@@ -237,8 +230,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
     /**
      * get_fieldvalue_gradecategory
-     *
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue_gradecategory() {
         return $this->get_grade_item_field('categoryid', 0);
@@ -249,7 +240,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field the field name
      * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
-     * @todo Finish documenting this function
      */
     protected function get_defaultvalue_entrytextsource($field) {
         return $this->get_defaultvalue_template_source($field);
@@ -260,7 +250,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field the field name
      * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
-     * @todo Finish documenting this function
      */
     protected function get_defaultvalue_exittextsource($field) {
         return $this->get_defaultvalue_template_source($field);
@@ -274,7 +263,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * prepare_field_entrypage
      *
      * @param xxx $data (passed by reference)
-     * @todo Finish documenting this function
      */
     protected function prepare_field_entrypage(&$data) {
         $this->prepare_template_page($data, 'entry');
@@ -284,7 +272,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * prepare_field_exitpage
      *
      * @param xxx $data (passed by reference)
-     * @todo Finish documenting this function
      */
     protected function prepare_field_exitpage(&$data) {
         $this->prepare_template_page($data, 'exit');
@@ -294,7 +281,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * prepare_field_showpopup
      *
      * @param xxx $data (passed by reference)
-     * @todo Finish documenting this function
      */
     protected function prepare_field_showpopup(&$data) {
         $field = 'popupoptions';
@@ -313,7 +299,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                             $data[$name] = intval($matches[2]);
                         }
                     } else {
-                        $data[$name] = 1; // enable check box
+                        $data[$name] = 1; // Enable check box.
                     }
                 }
             }
@@ -324,7 +310,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * prepare_field_gradepass
      *
      * @param object $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function prepare_field_gradepass(&$data) {
         $data['gradepass'] = $this->get_grade_item_field('gradepass');
@@ -334,7 +319,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * prepare_field_gradecategory
      *
      * @param object $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function prepare_field_gradecategory(&$data) {
         $data['gradecategory'] = $this->get_grade_item_field('categoryid');
@@ -349,7 +333,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param xxx $data (passed by reference)
      * @param xxx $type
-     * @todo Finish documenting this function
      */
     protected function prepare_template_page(&$data, $type) {
 
@@ -366,12 +349,12 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $data[$format]     = $this->get_originalvalue($format, editors_get_preferred_format());
         $data[$options]    = $this->get_originalvalue($options, $this->get_defaultvalue($options));
 
-        // prepare boolean switches for page options
+        // Prepare boolean switches for page options.
         foreach (mod_taskchain::text_page_options($type) as $name => $mask) {
             $data[$type . '_' . $name] = intval($data[$options]) & $mask;
         }
 
-        // prepare text editor
+        // Prepare text editor.
         $itemid = 0;
         if ($this->is_add()) {
             $contextid = null;
@@ -394,7 +377,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_intro
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_intro($field) {
         // The intro field was added in Moodle 4.0 because it is
@@ -409,7 +391,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_entrypage
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_entrypage($field) {
         $this->add_template_page('entry');
@@ -417,10 +398,9 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
     /**
      * add_field_showdescription
-     *
      */
     protected function add_field_showdescription() {
-        if (defined('FEATURE_SHOW_DESCRIPTION')) { // Moodle >= 2.2
+        if (defined('FEATURE_SHOW_DESCRIPTION')) { // Moodle >= 2.2.
             $this->mform->addElement('checkbox', 'showdescription', get_string('showdescription', 'mod_taskchain'));
             $this->add_helpbutton('showdescription', 'showdescription', 'taskchain');
         } else {
@@ -432,7 +412,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_entrytext
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_entrytext($field) {
         $this->add_template_pagetext('entry');
@@ -442,7 +421,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_entryoptions
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_entryoptions($field) {
         $groups = array(
@@ -455,7 +433,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_entrycm
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_entrycm($field) {
         $this->add_template_activitylist('entry');
@@ -465,7 +442,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_entrygrade
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_entrygrade($field) {
         // do nothing - this field was added by add_field_entrycm($field)
@@ -475,7 +451,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_exitpage
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_exitpage($field) {
         $this->add_template_page('exit');
@@ -485,7 +460,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_exittext
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_exittext($field) {
         $this->add_template_pagetext('exit');
@@ -495,7 +469,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_exitoptions
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_exitoptions($field) {
         $groups = array(
@@ -509,7 +482,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_exitcm
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_exitcm($field) {
         $this->add_template_activitylist('exit');
@@ -519,7 +491,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_exitgrade
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_exitgrade($field) {
         // do nothing - this field was added by add_field_exitcm($field)
@@ -529,7 +500,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_showpopup
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_showpopup($field) {
         // Same window or new window (=popup) ?
@@ -540,7 +510,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $this->mform->addElement('select', 'showpopup', get_string('window', 'mod_taskchain'), $options);
         $this->add_helpbutton('showpopup', 'window', 'taskchain');
 
-        // New window options
+        // New window options.
         $elements = array();
         foreach (mod_taskchain::window_options('moodle') as $option) {
             $elements[] = $this->mform->createElement('checkbox', $option, '', get_string('window' . $option, 'mod_taskchain'));
@@ -565,12 +535,12 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             $elements[] = $this->mform->createElement('static', '', '', get_string('window' . $option, 'mod_taskchain'));
             $name = 'window_' . $option . '_elements';
             $this->mform->addGroup($elements, $name, '', ' ', false);
-            // uncommenting the next line seems to disable the sourcefile and configfile fields
+            // Uncommenting the next line seems to disable the sourcefile and configfile fields
             // $this->mform->disabledIf($name, 'showpopup', 'eq', 0);
             $this->mform->setAdvanced($name);
         }
 
-        // set defaults for window popup options
+        // Set defaults for window popup options.
         foreach (mod_taskchain::window_options() as $option) {
             switch ($option) {
                 case 'height':
@@ -580,7 +550,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                     $default = 620;
                     break;
                 default:
-                    $default = 1; // checkbox
+                    $default = 1; // Checkbox.
             }
             $this->mform->setType($option, PARAM_INT);
             $this->mform->setDefault($option, $this->get_defaultvalue('popup_' . $option));
@@ -591,7 +561,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_allowfreeaccess
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_allowfreeaccess($field) {
         $optgroups = array(
@@ -627,7 +596,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_attemptgrademethod
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_attemptgrademethod($field) {
         $this->add_template_method('attemptgrade');
@@ -637,7 +605,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_grademethod
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_grademethod($field) {
         $this->add_template_method('grade', 'grades');
@@ -647,7 +614,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_gradeignore
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_gradeignore($field) {
         $this->add_template_ignore('grade');
@@ -657,7 +623,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_gradeweighting
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_gradeweighting($field) {
         $this->add_template_weighting('grade');
@@ -667,7 +632,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_gradelimit
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_gradelimit($field) {
         $this->add_template_limit('grade');
@@ -677,7 +641,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_gradepass
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_gradepass($field) {
         $name = $this->get_fieldname($field);
@@ -685,7 +648,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $this->mform->addElement('text', $name, $label, array('size' => 8));
         $this->add_helpbutton($name, $name, 'grades');
         $this->mform->setType($name, PARAM_FLOAT);
-        // this element is not available if gradeweighting==0 or gradelimit==0
+        // This element is not available if gradeweighting==0 or gradelimit==0.
         $this->mform->disabledIf($name, 'gradeweighting', 'eq', 0);
         $this->mform->disabledIf($name, 'gradelimit', 'eq', 0);
     }
@@ -694,7 +657,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_field_gradecategory
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_gradecategory($field) {
         global $PAGE;
@@ -704,7 +666,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $this->mform->addElement('select', $name, $label, $options);
         $this->add_helpbutton($name, 'gradecategoryonmodform', 'grades');
         $this->mform->setType($name, PARAM_INT);
-        // this element is not available if gradeweighting==0 or gradelimit==0
+        // This element is not available if gradeweighting==0 or gradelimit==0.
         $this->mform->disabledIf($name, 'gradeweighting', 'eq', 0);
         $this->mform->disabledIf($name, 'gradelimit', 'eq', 0);
     }
@@ -717,7 +679,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_template_page
      *
      * @param string $type of page ("entry" or "exit")
-     * @todo Finish documenting this function
      */
     protected function add_template_page($type) {
 
@@ -751,7 +712,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * add_template_pagetext
      *
      * @param string $type of pagetext ("entry" or "exit")
-     * @todo Finish documenting this function
      */
     protected function add_template_pagetext($type) {
         $name = $this->get_fieldname($type . 'editor');
@@ -760,7 +720,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $options = mod_taskchain::text_editor_options($this->context);
         $this->mform->addElement('editor', $name, $label, null, $options);
 
-        $this->mform->setType($name, PARAM_RAW); // no XSS prevention here, users must be trusted
+        $this->mform->setType($name, PARAM_RAW); // No XSS prevention here, users must be trusted.
         $this->mform->setAdvanced($name);
 
         $this->mform->disabledIf($name . '[text]', $type . 'page', 'ne', 1);
@@ -777,20 +737,19 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $type of page_options ("entry" or "exit")
      * @param array $options
-     * @todo Finish documenting this function
      */
     protected function add_template_pageoptions($type, $groups) {
         global $PAGE;
 
-        // js_amd_inline is available in Moodle >= 3.3
+        // Js_amd_inline is available in Moodle >= 3.3.
         $js_amd_inline = method_exists($PAGE->requires, 'js_amd_inline');
 
         foreach ($groups as $groupname => $names) {
             $label = $this->get_fieldlabel($groupname);
-            $label .= html_writer::empty_tag('br'); // separator
+            $label .= html_writer::empty_tag('br'); // Separator.
 
             if ($js_amd_inline) {
-                // Moodle >= 3.3
+                // Moodle >= 3.3.
                 $select = $groupname . 'select';
                 $label .= html_writer::tag('small', get_string('all'), array('id' => $select . 'all'));
                 $label .= html_writer::tag('small', ' / ');
@@ -813,7 +772,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                     '});'
                 );
             } else {
-                // Moodle <= 3.2
+                // Moodle <= 3.2.
                 $onclick = 'select_all_in("DIV", "' . $groupname . '", null)';
                 $label .= html_writer::tag('small', get_string('all'), array('onclick' => $onclick));
                 $label .= html_writer::tag('small', ' / ');
@@ -860,7 +819,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         );
 
         if ($modinfo = get_fast_modinfo($PAGE->course)) {
-            // set course section descriptor
+            // Set course section descriptor.
             switch ($PAGE->course->format) {
                 case 'weeks':
                     $strsection = get_string('strftimedateshort');
@@ -872,22 +831,22 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                     $strsection = get_string('section');
             }
 
-            // create activity list
+            // Create activity list.
             $sectionnum = -1;
             foreach ($modinfo->cms as $cmid => $mod) {
                 if ($mod->modname == 'label') {
-                    continue; // ignore labels
+                    continue; // Ignore labels.
                 }
                 if ($type == 'entry' && $mod->modname == 'resource') {
-                    continue; // ignore resources as entry activities
+                    continue; // Ignore resources as entry activities.
                 }
                 if (isset($this->record->id) && $this->record->id == $cmid) {
-                    continue; // ignore this taskchain
+                    continue; // Ignore this taskchain.
                 }
                 if ($sectionnum == $mod->sectionnum) {
                     // do nothing (same section)
                 } else {
-                    // start new optgroup for this course section
+                    // Start new optgroup for this course section.
                     $sectionnum = $mod->sectionnum;
                     if ($sectionnum == 0) {
                         $optgroup = get_string('activities');
@@ -904,18 +863,18 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
                 $name = $this->format_longtext($mod->name);
 
-                // add this activity to the list
+                // Add this activity to the list.
                 $optgroups[$optgroup][$cmid] = $name;
             }
         }
 
-        // create activity grade element
+        // Create activity grade element.
         $options = array();
         for ($i = 100; $i >= 0; $i--) {
             $options[$i] = $i . '%';
         }
 
-        // add the activity list and grade element to the form
+        // Add the activity list and grade element to the form.
         $elements = array(
             $this->mform->createElement('selectgroups', $type . 'cm', '', $optgroups),
             $this->mform->createElement('select', $type . 'grade', '', $options),
@@ -926,7 +885,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         if ($type == 'entry') {
             $defaultcm = mod_taskchain::ACTIVITY_NONE;
             $defaultgrade = 100;
-        } else { // exit
+        } else { // Exit.
             $defaultcm = mod_taskchain::ACTIVITY_SECTION_TASKCHAIN;
             $defaultgrade = 0;
         }
@@ -938,13 +897,13 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             $this->mform->setAdvanced($type . 'cm_elements');
         }
 
-        // add module icons, if possible - there is no API for this, so we have to hack :-(
+        // Add module icons, if possible - there is no API for this, so we have to hack :-(.
         if ($modinfo) {
             $element = reset($this->mform->getElement($type . 'cm_elements')->getElements());
             if (method_exists($PAGE->theme, 'image_url')) {
-                $image_url = 'image_url'; // Moodle >= 3.3
+                $image_url = 'image_url'; // Moodle >= 3.3.
             } else {
-                $image_url = 'pix_url'; // Moodle <= 3.2
+                $image_url = 'pix_url'; // Moodle <= 3.2.
             }
             for ($i = 0; $i < count($element->_optGroups); $i++) {
                 $optgroup = &$element->_optGroups[$i];
@@ -974,7 +933,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param stdClass $data (passed by reference) from form
      * @param string $type type of options field (""entry" or "exit")
-     * @todo Finish documenting this function
      */
     protected function fix_template_pagetext($data, $type) {
         // set field names - use $this->get_fieldname() ?
@@ -983,7 +941,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $editorfield = $type . 'editor';
         $sourcefield = $type . 'textsource';
 
-        // ensure text, format and option fields are set
+        // Ensure text, format and option fields are set
         // (these fields can't be null in the database)
         if (! isset($data->$textfield)) {
             $data->$textfield = $this->get_originalvalue($textfield, '');
@@ -995,7 +953,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             $data->$sourcefield = $this->get_originalvalue($sourcefield, mod_taskchain::TEXTSOURCE_SPECIFIC);
         }
 
-        // set text and format fields
+        // Set text and format fields.
         if ($data->$sourcefield == mod_taskchain::TEXTSOURCE_SPECIFIC && isset($data->$editorfield)) {
             // get wysiwyg itemid (it should be there)
             if (isset($data->{$editorfield}['itemid'])) {
@@ -1004,10 +962,10 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                 $itemid = 0;
             }
 
-            // transfer wysiwyg editor text
+            // Transfer wysiwyg editor text.
             if ($itemid) {
                 if (isset($data->{$editorfield}['text'])) {
-                    // get the text that was sent from the browser
+                    // Get the text that was sent from the browser.
                     $options = mod_taskchain::filearea_options();
                     $text = file_save_draft_area_files($itemid, $this->context->id, 'mod_taskchain', $type, 0, $options, $data->{$editorfield}['text']);
 
@@ -1017,7 +975,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                     $text = preg_replace('/^((<p>\s*<\/p>)|(<br[^>]*>)|\s)+/is', '', $text);
                     $text = preg_replace('/((<p>\s*<\/p>)|(<br[^>]*>)|\s)+$/is', '', $text);
 
-                    // sanitise HTML to prevent stored XSS
+                    // Sanitise HTML to prevent stored XSS.
                     $text = clean_text($text, $data->{$editorfield}['format']);
 
                     $data->$textfield = $text;
@@ -1033,37 +991,36 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param stdClass $data (passed by reference) from form
      * @param string $type type of options field (""entry" or "exit")
-     * @todo Finish documenting this function
      */
     protected function fix_template_pageoptions($data, $type) {
-        // set field names
+        // Set field names.
         $page = $type . 'page';
         $options = $type . 'options';
 
-        // get options field value
+        // Get options field value.
         if (isset($data->$options)) {
             $value = $data->$options;
         } else {
             $value = $this->get_originalvalue($options, 0);
         }
 
-        // check all options for this page type
+        // Check all options for this page type.
         $page_options = mod_taskchain::text_page_options($type);
         foreach ($page_options as $name => $mask) {
             $option = $type . '_' . $name;
             if ($data->$page) {
                 if (empty($data->$option)) {
-                    // disable this option
+                    // Disable this option.
                     $value = $value & ~$mask;
                 } else {
-                    // enable this option
+                    // Enable this option.
                     $value = $value | $mask;
                 }
             }
             unset($data->$option);
         }
 
-        // update options field value
+        // Update options field value.
         $data->$options = $value;
     }
 
@@ -1076,7 +1033,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param stdClass $data (passed by reference) from form
      * @param string name of $field to fix
-     * @todo Finish documenting this function
      */
     protected function fix_field_intro($data, $field) {
         $this->fix_template_notnull($data, $field, '');
@@ -1088,7 +1044,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param stdClass $data (passed by reference) from form
      * @param string name of $field to fix
-     * @todo Finish documenting this function
      */
     protected function fix_field_entrypage($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
@@ -1098,7 +1053,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * fix_field_entrytext
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_entrytext($data, $field) {
         $this->fix_template_pagetext($data, 'entry');
@@ -1108,7 +1062,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * fix_field_entryoptions
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_entryoptions($data, $field) {
         $this->fix_template_pageoptions($data, 'entry');
@@ -1118,7 +1071,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * fix_field_entrycm
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_entrycm($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
@@ -1128,7 +1080,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * fix_field_entrygrade
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_entrygrade($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
@@ -1138,7 +1089,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * fix_field_exitpage
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_exitpage($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
@@ -1148,7 +1098,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * fix_field_exittext
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_exittext($data, $field) {
         $this->fix_template_pagetext($data, 'exit');
@@ -1158,7 +1107,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * fix_field_exitoptions
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_exitoptions($data, $field) {
         $this->fix_template_pageoptions($data, 'exit');
@@ -1168,7 +1116,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * fix_field_exitcm
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_exitcm($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
@@ -1178,7 +1125,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * fix_field_exitgrade
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_exitgrade($data, $field) {
         $this->fix_template_notnull($data, $field, 0);
@@ -1188,7 +1134,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * fix_field_showpopup
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_showpopup($data, $field) {
         $popupoptions = array();
@@ -1224,7 +1169,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * fix_field_gradecategory
      *
      * @param stdClass $data (passed by reference) from form
-     * @todo Finish documenting this function
      */
     protected function fix_field_gradecategory($data, $field) {
         if (empty($data->gradelimit) || empty($data->gradeweighting) || empty($data->gradecategory)) {
@@ -1243,7 +1187,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $type of page_options ("entry" or "exit")
      * @param array $options
-     * @todo Finish documenting this function
      */
     protected function format_template_page_options($field, $value, $type) {
         $texts = array();
@@ -1266,7 +1209,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string name of $field
      * @param mixed $value (mod_taskchain::ACTIVITY_xxx constant or coursemodule id)
-     * @todo Finish documenting this function
      */
     protected function format_template_cm($field, $value, $type) {
         if (empty($value)) {
@@ -1276,10 +1218,10 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             return $this->format_templatevalue_list($field, $value, 'cm', $type);
         }
         if (! $modinfo = get_fast_modinfo($this->TC->course)) {
-            return ''; // no mods - shouldn't happen !!
+            return ''; // No mods - shouldn't happen !!
         }
         if (! $cm = $modinfo->get_cm($value)) {
-            return ''; // invalid $value - shouldn't happen !!
+            return ''; // Invalid $value - shouldn't happen !!
         }
         return $this->format_longtext($cm->name);
     }
@@ -1289,7 +1231,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_name($field, $value) {
         return format_string($value);
@@ -1300,7 +1241,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_showdescription($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
@@ -1311,7 +1251,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_entrypage($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
@@ -1322,7 +1261,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_entrytext($field, $value) {
         return $this->format_longtext($value, 15, 12, 0);
@@ -1333,7 +1271,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_entryoptions($field, $value) {
         return $this->format_template_page_options($field, $value, 'entry');
@@ -1344,7 +1281,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_entrycm($field, $value) {
         return $this->format_template_cm($field, $value, 'entry');
@@ -1355,7 +1291,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_entrygrade($field, $value) {
         return (empty($value) ? '' : $value . '%');
@@ -1366,7 +1301,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_exitpage($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
@@ -1377,7 +1311,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_exittext($field, $value) {
         return $this->format_longtext($value, 15, 12, 0);
@@ -1388,7 +1321,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_exitoptions($field, $value) {
         return $this->format_template_page_options($field, $value, 'exit');
@@ -1399,7 +1331,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_exitcm($field, $value) {
         return $this->format_template_cm($field, $value, 'exit');
@@ -1410,7 +1341,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_exitgrade($field, $value) {
         return (empty($value) ? '' : $value . '%');
@@ -1421,7 +1351,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_showpopup($field, $value) {
         if (empty($value)) {
@@ -1435,7 +1364,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_allowfreeaccess($field, $value) {
         if (empty($value)) {
@@ -1453,7 +1381,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_attemptgrademethod($field, $value) {
         return $this->format_templatevalue_list($field, $value);
@@ -1464,7 +1391,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_grademethod($field, $value) {
         return $this->format_templatevalue_list($field, $value, '', 'grade');
@@ -1475,7 +1401,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_gradeignore($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
@@ -1486,7 +1411,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_gradelimit($field, $value) {
         return $this->format_templatevalue_list($field, $value, '', 'grade');
@@ -1497,7 +1421,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_gradeweighting($field, $value) {
         return $this->format_templatevalue_list($field, $value);
@@ -1508,7 +1431,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param string $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_gradepass($field, $value) {
         if ($value) {
@@ -1523,7 +1445,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param string $value of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_gradecategory($field, $value) {
         if ($value) {
@@ -1542,7 +1463,6 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
      * format_selectfield_name
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_selectfield_name($field) {
         $name = $this->get_fieldname($field);

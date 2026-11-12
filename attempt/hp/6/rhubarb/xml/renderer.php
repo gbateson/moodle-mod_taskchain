@@ -42,7 +42,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * expand_JSRhubarb6
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSRhubarb6() {
         return $this->expand_template('rhubarb6.js_');
@@ -52,7 +51,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * expand_Finished
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Finished() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,finished');
@@ -62,7 +60,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * expand_GuessHere
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_GuessHere() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,type-your-guess-here');
@@ -72,7 +69,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * expand_IncorrectWords
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_IncorrectWords() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',incorrect-words');
@@ -82,7 +78,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * expand_PreparingExercise
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_PreparingExercise() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,preparing-exercise');
@@ -92,7 +87,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * expand_Solution
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Solution() {
         return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-solution');
@@ -102,7 +96,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * expand_WordsArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_WordsArray() {
         $str = '';
@@ -111,7 +104,7 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
         $text = mod_taskchain::textlib('entities_to_utf8', $text);
 
         $space = ' \\x09\\x0A\\x0C\\x0D'; // " \t\n\r\l"
-        $punc = preg_quote('!"#$%&()*+,-./:;+<=>?@[]\\^_`{|}~', '/'); // not apostrophe \'
+        $punc = preg_quote('!"#$%&()*+,-./:;+<=>?@[]\\^_`{|}~', '/'); // Not apostrophe \'.
         $search = '/([^' . $punc . $space . ']+)|([' . $punc . '][' . $punc . $space . ']*)/s';
 
         if (preg_match_all($search, $text, $matches)) {
@@ -126,7 +119,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * expand_FreeWordsArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_FreeWordsArray() {
         $str = '';
@@ -143,7 +135,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * expand_StyleSheet
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_StyleSheet() {
         return $this->expand_template('tt3.cs_');

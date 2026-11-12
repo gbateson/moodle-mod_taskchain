@@ -38,24 +38,30 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt_hp_6_renderer {
+    /** @var string */
     public $js_object_type = 'Sequitur';
 
+    /** @var string */
     public $templatefile = 'sequitur6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList|SegmentsArray';
 
-    // Glossary autolinking settings
+    /** @var string Glossary autolinking settings */
     public $headcontent_strings = 'CorrectIndicator|IncorrectIndicator|YourScoreIs|strTimesUp';
+    /** @var string */
     public $headcontent_arrays = 'Segments';
 
-    // TexToys do not have a SubmissionTimeout variable
+    /** @var bool TexToys do not have a SubmissionTimeout variable */
     public $hasSubmissionTimeout = false;
 
+    /** @var array */
     public $response_text_fields = array(
-        'correct', 'wrong', // remove: ignored
+        'correct', 'wrong', // Remove: ignored.
     );
 
+    /** @var array */
     public $response_num_fields = array(
-        'checks', // remove: score, weighting, hints, clues
+        'checks', // Remove: score, weighting, hints, clues.
     );
 
     /**
@@ -63,7 +69,6 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
@@ -74,10 +79,9 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'CheckAnswer,TimesUp';
         return $names;
@@ -89,16 +93,15 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_TimesUp(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         if ($pos = strpos($substr, '	ShowMessage')) {
             if ($this->TC->task->delay3 == mod_taskchain::TIME_AFTEROK) {
-                $flag = 1; // set form values only
+                $flag = 1; // Set form values only.
             } else {
-                $flag = 0; // set form values and send form
+                $flag = 0; // Set form values and send form.
             }
             $insert = ''
                 . "	Finished = true;\n"
@@ -116,10 +119,9 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_CalculateScore(&$str, $start, $length) {
-        // original function was simply this:
+        // Original function was simply this:
         // return Math.floor(100*ScoredPoints/TotalPoints);
         $substr = ''
             . "function CalculateScore(){\n"
@@ -150,12 +152,11 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckAnswer(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // add extra argument to this function, so it can be called from stop button
+        // Add extra argument to this function, so it can be called from stop button.
         if ($pos = strpos($substr, ')')) {
             $substr = substr_replace($substr, ', ForceTaskEvent', $pos, 0);
         }
@@ -169,7 +170,7 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
             $substr = substr_replace($substr, 'else if (Btn){', $pos, strlen($search));
         }
 
-        // intercept checks
+        // Intercept checks.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
                 . "	if (CurrentNumber!=TotalSegments && !AllDone && Btn && Btn.innerHTML!=IncorrectIndicator){\n"
@@ -178,7 +179,7 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
             $substr = substr_replace($substr, $insert, $pos + 1, 0);
         }
 
-        // set task status
+        // Set task status.
         if ($pos = strpos($substr, 'if (CurrentCorrect == Chosen)')) {
             $event = $this->get_send_results_event();
             $insert = ''
@@ -195,7 +196,7 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
-        // send results to Moodle, if necessary
+        // Send results to Moodle, if necessary.
         if ($pos = strrpos($substr, '}')) {
             $insert = "\n"
                 . "	if (HP.end_of_quiz(TaskEvent)) {\n"
@@ -222,7 +223,6 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
         return 'CheckAnswer';
@@ -232,7 +232,6 @@ class mod_taskchain_attempt_hp_6_sequitur_renderer extends mod_taskchain_attempt
      * get_stop_function_args
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_args() {
         return '0,null,HP.EVENT_ABANDONED';

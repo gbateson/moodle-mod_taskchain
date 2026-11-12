@@ -35,8 +35,12 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_mediaplayer_dyer_mp3_player extends taskchain_mediaplayer {
+    /** @var array */
     public $aliases = array('dyer');
+    /** @var string */
     public $playerurl = 'dyer_mp3_player/hbs_mp3_player_dyer.swf';
+    /** @var string */
     public $flashvars_paramname = 'TheSound';
+    /** @var array */
     public $more_options = array('width' => 150, 'height' => 20, 'flashvars' => '');
 }

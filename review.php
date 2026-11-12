@@ -27,10 +27,10 @@
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
-// create object to represent this TaskChain activity
+// Create object to represent this TaskChain activity.
 $TC = new mod_taskchain();
 
-// Log this request
+// Log this request.
 mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'report', 'review.php?id=' . $TC->taskattempt->id, $TC->taskchain->id, $TC->coursemodule->id);
 
 $PAGE->set_url($TC->url->review());
@@ -66,14 +66,14 @@ if ($TC->get_chaingrade()) {
     }
 }
 if ($text) {
-    $PAGE->navbar->add($text); // no link on last navbar item
+    $PAGE->navbar->add($text); // No link on last navbar item.
 }
 
-// get the taskchain renderer
+// Get the taskchain renderer.
 $output = $PAGE->get_renderer('mod_taskchain');
 
 // get renderer subtype (e.g. attempt_hp_6_jcloze_xml)
-// and load the appropriate review class for this attempt
+// and load the appropriate review class for this attempt.
 $subtype = $TC->get_attempt_subtype();
 $TC->load_class($subtype, 'review.php');
 
@@ -85,8 +85,8 @@ echo $output->header();
 
 echo $output->box_start('generalbox boxaligncenter boxwidthwide');
 
-// show the attempt review page
-// use call_user_func() to prevent syntax error in PHP 5.2.x
+// Show the attempt review page
+// use call_user_func() to prevent syntax error in PHP 5.2.x.
 $class = 'mod_taskchain_' . $subtype . '_review';
 echo call_user_func(array($class, 'review'), $TC, $class);
 

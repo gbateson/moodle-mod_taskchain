@@ -28,14 +28,14 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 require_once($CFG->dirroot . '/mod/taskchain/edit/form/columnlists.php');
 
-// create object to represent this TaskChain activity
+// Create object to represent this TaskChain activity.
 $TC = new mod_taskchain();
 ;
 
 $url = $TC->url->edit('columnlists');
 // mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editcolumnlists', $url, $TC->columnlisttype, $TC->columnlistid);
 
-// Set editing mode
+// Set editing mode.
 mod_taskchain::set_user_editing();
 
 // initialize $PAGE (and compute blocks)
@@ -82,12 +82,12 @@ switch ($TC->action) {
         $lists = $TC->get_columnlists($type);
 
         if (empty($name)) {
-            // no list name given, so use old name if there was one
+            // No list name given, so use old name if there was one.
             if (array_key_exists($id, $lists)) {
                 $name = $lists[$id];
             }
         } else {
-            // list name given, so check it is unique
+            // List name given, so check it is unique.
             if (in_array($name, $lists)) {
                 $id = array_search($name, $lists);
             }
@@ -95,12 +95,12 @@ switch ($TC->action) {
 
         if ($id == '' || $id == '0' || $id == '00') {
             if (count($lists)) {
-                // new columnlist id required
+                // New columnlist id required.
                 $id = array_keys($lists);
                 $id = array_map('intval', $id);
                 $id = sprintf('%02d', max($id) + 1);
             } else {
-                // first column list is being added
+                // First column list is being added.
                 $id = '01';
             }
         }
@@ -137,7 +137,7 @@ switch ($TC->action) {
         $text = get_string('confirmdelete' . $type . 'columnlists', 'mod_taskchain');
         $params = array('inpopup'        => $TC->inpopup,
                         'chainid'        => $TC->get_chainid(),
-                        'columnlistid'   => '00', // i.e. all
+                        'columnlistid'   => '00', // I.e. all.
                         'columnlisttype' => $type);
         echo $output->page_delete($text, 'edit/columnlists.php', $params);
         break;
@@ -149,12 +149,12 @@ switch ($TC->action) {
         $lists = $TC->get_columnlists($type);
         if (is_numeric($id) && $id > 0) {
             if (array_key_exists($id, $lists)) {
-                // delete a single columnlist
+                // Delete a single columnlist.
                 unset_user_preference('taskchain_' . $type . '_columnlist_' . $id);
                 $text = get_string('columnlist', 'mod_taskchain', $lists[$id]);
             }
         } else {
-            // delete all user defined column lists
+            // Delete all user defined column lists.
             foreach ($lists as $id => $name) {
                 unset_user_preference('taskchain_' . $type . '_columnlist_' . $id);
                 if ($text == '') {
@@ -175,7 +175,7 @@ switch ($TC->action) {
     case 'update':
     case 'edit':
     default:
-        // initizialize data in form
+        // Initizialize data in form.
         $defaults = array();
         $mform->data_preprocessing($defaults);
         $mform->set_data($defaults);
@@ -183,7 +183,7 @@ switch ($TC->action) {
 
         echo $output->header();
 
-        // display the form
+        // Display the form.
         $mform->display();
 
         echo $output->footer();

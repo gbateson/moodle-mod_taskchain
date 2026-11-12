@@ -43,7 +43,6 @@ class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (preg_match('/\.jcl$/', $this->file->get_filename())) {
@@ -57,16 +56,15 @@ class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
      * compact_filecontents
      *
      * @param array $tags (optional, default=null) specific tags to remove comments from
-     * @todo Finish documenting this function
      */
     public function compact_filecontents($tags = null) {
-        // remove white space within tags
+        // Remove white space within tags.
         parent::compact_filecontents($tags);
 
-        // fix white space and html entities in open text
+        // Fix white space and html entities in open text.
 
         // Note: when testing this code, be aware that
-        // xmlize() behaves differently in PHP4 and PHP5
+        // xmlize() behaves differently in PHP4 and PHP5.
 
         $search = '/(?<=<gap-fill)' . '>.*?<' . '(?=\/gap-fill>)/s';
         if (preg_match($search, $this->filecontents, $matches, PREG_OFFSET_CAPTURE)) {
@@ -74,7 +72,7 @@ class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
             $start = $matches[0][1];
             $length = strlen($match);
 
-            // convert newlines to html line breaks
+            // Convert newlines to html line breaks.
             $newlines = array(
                 "\r\n" => '&lt;br /&gt;',
                 "\r"   => '&lt;br /&gt;',
@@ -82,19 +80,19 @@ class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
             );
             $match = strtr($match, $newlines);
 
-            // make sure there is at least one space between the gaps
+            // Make sure there is at least one space between the gaps.
             $search = '/(?<=<\/question-record>)(?=<question-record>)/';
             $match = preg_replace($search, ' ', $match);
 
-            // add <open-text> tags around open text
+            // Add <open-text> tags around open text.
             $search = array(
-                '/(^>)([^<>]+?)(<question-record>)/', // start text
+                '/(^>)([^<>]+?)(<question-record>)/', // Start text.
                 '/(<\/question-record>)([^<>]+?)(<question-record>)/',
-                '/(<\/question-record>)([^<>]+?)(<$)/', // end text
+                '/(<\/question-record>)([^<>]+?)(<$)/', // End text.
             );
             $match = preg_replace($search, '$1<open-text>$2</open-text>$3', $match);
 
-            // surround ampersands in open text by CDATA start and end tags
+            // Surround ampersands in open text by CDATA start and end tags.
             $search = '/(?<=>)([^<]*)(?=<)/s';
             $callback = array($this, 'compact_filecontents_opentext');
             $match = preg_replace_callback($search, $callback, $match);
@@ -108,7 +106,6 @@ class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function compact_filecontents_opentext($match) {
         $search = '/&[a-zA-Z0-9#;]*;/';
@@ -121,10 +118,9 @@ class taskchain_source_hp_6_jcloze_xml extends taskchain_source_hp_6_jcloze {
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function compact_filecontents_entities($match) {
-        // these html entities are coverted back to plain text
+        // These html entities are coverted back to plain text.
         static $html_entities = array(
             '&apos;' => "'",
             '&quot;' => '"',

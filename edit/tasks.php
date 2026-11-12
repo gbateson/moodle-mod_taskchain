@@ -28,13 +28,13 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 require_once($CFG->dirroot . '/mod/taskchain/edit/form/tasks.php');
 
-// create object to represent this TaskChain activity
+// Create object to represent this TaskChain activity.
 $TC = new mod_taskchain();
 
-// create object to represent this TaskChain activity
+// Create object to represent this TaskChain activity.
 mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'edittasks', 'edit/tasks.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
-// Set editing mode
+// Set editing mode.
 mod_taskchain::set_user_editing();
 
 // initialize $PAGE (and compute blocks)
@@ -70,10 +70,10 @@ if (isset($newdata->recordsaction) && $newdata->recordsaction == 'addtasks' && i
     redirect($TC->url->edit('task', $params));
 }
 
-// display the page
+// Display the page.
 echo $output->header();
 
-// display the form
+// Display the form.
 $mform->display();
 
 echo $output->footer();

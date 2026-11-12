@@ -43,7 +43,6 @@ class taskchain_source_hp_6_sequitur_xml extends taskchain_source_hp_6_sequitur 
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (preg_match('/\.sqt$/', $this->file->get_filename())) {

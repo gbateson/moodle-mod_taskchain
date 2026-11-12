@@ -38,25 +38,30 @@ require_once($CFG->dirroot . '/mod/taskchain/report/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_renderer {
+    /** @var string */
     public $mode = 'chaingrade';
 
+    /** @var array */
     protected $headerfields = array('user', 'chaingrade');
 
+    /** @var array */
     public $tablecolumns = array(
         'chainattemptcnumber', 'selected',
         'chainattemptgrade', 'chainattemptstatus',
         'chainattemptduration', 'chainattempttimemodified',
     );
 
-    /** columns with this prefix will be suppressed (i.e. only shown once per user) */
+    /** @var string columns with this prefix will be suppressed (i.e. only shown once per user) */
     protected $suppressprefix = 'chaingrade';
 
+    /** @var array */
     public $filterfields = array(
         'grade' => 1, 'timemodified' => 1, 'status' => 0, 'duration' => 1, // 'score'=>1
     );
 
-    /** id param name and table name */
+    /** @var string id param name and table name */
     public $id_param_name = 'chaingradeid';
+    /** @var string */
     public $id_param_table = 'taskchain_chain_grades';
 
     /**
@@ -65,14 +70,13 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
      * @param xxx $userid (optional, default=0)
      * @param xxx $record (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function select_sql($userid = 0, $record = null) {
-        // the standard way to get Moodle grades is thus:
+        // The standard way to get Moodle grades is thus:
         // $grades = grade_get_grades($this->TC->course->id, 'mod', 'taskchain', $this->TC->id, $userid);
         // $grade = $grades->items[0]->grades[$USER->id]->grade;
 
-        // sql to select all grades for this TaskChain - what about Moodle grade?
+        // Sql to select all grades for this TaskChain - what about Moodle grade?
         $select = 'tc_chn_att.id AS id, ' .
                   'tc_chn_att.userid AS userid, ' .
                   'tc_chn_att.chainid AS chainattemptchainid, ' .
@@ -90,10 +94,10 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
         $where  = '';
         $params = array();
 
-        // restrict to a specific chaingrade / user
+        // Restrict to a specific chaingrade / user.
         $this->select_sql_record($select, $from, $where, $params, $userid, $record);
 
-        // add sql to select user fields
+        // Add sql to select user fields.
         $this->select_sql_user($select, $from, 'tc_chn_grd');
 
         return array($select, $from, $where, $params);
@@ -109,7 +113,6 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
      * @param integer  $userid  (optional, default=0)
      * @param object   $record  (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function select_sql_record(&$select, &$from, &$where, &$params, $userid = 0, $record = null) {
         $from   = '{taskchain_chain_attempts} tc_chn_att ' .
@@ -117,7 +120,7 @@ class mod_taskchain_report_chaingrade_renderer extends mod_taskchain_report_rend
                   ' JOIN {taskchain_chain_grades} tc_chn_grd ON (tc_chn.parenttype  = tc_chn_grd.parenttype AND ' .
                                                                 'tc_chn.parentid    = tc_chn_grd.parentid AND ' .
                                                                 'tc_chn_att.userid  = tc_chn_grd.userid)';
-        // restrict sql to a specific chaingrade /user
+        // Restrict sql to a specific chaingrade /user.
         if ($record) {
             $where = 'tc_chn_grd.id = ?';
             $params[] = $record->id;

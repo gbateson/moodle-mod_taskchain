@@ -43,39 +43,38 @@ class taskchain_source_hp_6_jmatch_html_jmemori extends taskchain_source_hp_6_jm
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (! preg_match('/\.html?$/', $this->file->get_filename())) {
-            // wrong file type
+            // Wrong file type.
             return false;
         }
 
         if (! $this->get_filecontents()) {
-            // empty or non-existant file
+            // Empty or non-existant file.
             return false;
         }
 
         if (! strpos($this->filecontents, 'div id="MainDiv" class="StdDiv"')) {
-            // not a HP file
+            // Not a HP file.
             return false;
         }
 
         if (! strpos($this->filecontents, 'div id="MatchDiv"')) {
-            // not a jmatch file
+            // Not a jmatch file.
             return false;
         }
 
         if (strpos($this->filecontents, 'function CheckPair(id){')) {
             if (strpos($this->filecontents, 'M = new Array();')) {
                 if (strpos($this->filecontents, 'clickarray = new Array();')) {
-                    // jmemori
+                    // Jmemori.
                     return true;
                 }
             }
         }
 
-        // not a jmemori file
+        // Not a jmemori file.
         return false;
     }
 }

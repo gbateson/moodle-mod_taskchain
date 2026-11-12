@@ -35,37 +35,39 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain extends taskchain_base {
-    /** db field: id (primary key, default=null) */
+    /** @var mixed db field: id (primary key, default=null) */
     private $id                  = null;
 
-    /** db field: course (integer, default=0) */
+    /** @var int db field: course (integer, default=0) */
     private $course              = 0;
 
-    /** db field: name (string (255), default='') */
+    /** @var string db field: name (string (255), default='') */
     private $name                = '';
 
-    /** db field: intro (string, default='') */
+    /** @var string db field: intro (string, default='') */
     private $intro               = '';
 
-    /** db field: introformat (integer, default=0) */
+    /** @var int db field: introformat (integer, default=0) */
     private $introformat         = 0;
 
-    /** db field: timecreated (integer, default=0) */
+    /** @var int db field: timecreated (integer, default=0) */
     private $timecreated         = 0;
 
-    /** db field: timemodified (integer, default=0) */
+    /** @var int db field: timemodified (integer, default=0) */
     private $timemodified        = 0;
 
-    /** db field: completionmingrade (decimal, default=0.0) */
+    /** @var float db field: completionmingrade (decimal, default=0.0) */
     private $completionmingrade  = 0.0;
 
-    /** db field: completionpass (integer, default=0) */
+    /** @var int db field: completionpass (integer, default=0) */
     private $completionpass    = 0;
 
-    /** db field: completioncompleted (integer, default=0) */
+    /** @var int db field: completioncompleted (integer, default=0) */
     private $completioncompleted = 0;
 
+    /** @var int */
     public $gradelimit           = 0;
+    /** @var int */
     public $gradeweighting       = 0;
 
     /**

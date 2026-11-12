@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/base.php');
  * @package    mod_taskchain
  */
 abstract class taskchain_form_helper_records extends taskchain_form_helper_base {
-    /** string suffix to add to the form's CSS class */
+    /** @var string string suffix to add to the form's CSS class */
     protected $formclasssuffix = 'records';
 
     /** the default sortorder increment */
@@ -62,13 +62,13 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     const FILTER_POSITION_START = 1;
     const FILTER_POSITION_END   = 2;
 
-    /** array to store $records in form */
+    /** @var array array to store $records in form */
     protected $records = array();
 
-    /** type of $records */
+    /** @var string type of $records */
     protected $recordstype = '';
 
-    /** sections and fields in this form **/
+    /** @var array sections and fields in this form * */
     protected $sections = array(
         'filters'  => array('columnlistid'),
         'labels'   => array(), // fields will be fetched from first record in $this->records
@@ -79,10 +79,10 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
         'hidden'   => array('id'),
     );
 
-    /** the actions available for this form **/
+    /** @var array the actions available for this form * */
     protected $actions = array();
 
-    /** the names fields on which records in this form can be sorted **/
+    /** @var array the names fields on which records in this form can be sorted * */
     protected $sortfield = array();
 
     /**
@@ -92,7 +92,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @param object $context a context record from the database
      * @param stdClass $record fields from record in the database
      * @param boolean $multiple (optional, default=true)
-     * @todo Finish documenting this function
      */
     public function __construct(&$mform, &$context, &$record, &$records) {
         global $CFG;
@@ -108,7 +107,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
                 throw new moodle_exception(get_string('error_formhelperfilenotfound', 'mod_taskchain', $formclassfile));
             }
 
-            // get class definition for child $records
+            // Get class definition for child $records.
             require_once($formclassfile);
 
             if (! class_exists($objectclass)) {
@@ -119,9 +118,9 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             }
 
             foreach (array_keys($records) as $id) {
-                $r = $records[$id]; // a single record
-                $r = new $objectclass($r, array('TC' => &$this->TC)); // taskchain_chain
-                $r = new $formclass($mform, $context, $r, true);      // taskchain_form_helper_chain
+                $r = $records[$id]; // A single record.
+                $r = new $objectclass($r, array('TC' => &$this->TC)); // Taskchain_chain.
+                $r = new $formclass($mform, $context, $r, true);      // Taskchain_form_helper_chain.
                 $this->records[$id] = $r;
             }
         }
@@ -149,14 +148,13 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * add_field_columnlistid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function add_field_columnlistid($field) {
         global $output;
 
         $list = array();
 
-        // add standard section names
+        // Add standard section names.
         if ($record = $this->get_live_records(true)) {
             foreach ($record->get_sections(true) as $section => $fields) {
                 // "general" section is added to every other section
@@ -175,13 +173,13 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
         }
 
         if (count($list)) {
-            // prepend "default"
+            // Prepend "default".
             $list = array_merge(array('default' => get_string('default')), $list);
 
-            // append "all"
+            // Append "all".
             $list = array_merge($list, array('all' => get_string('all')));
 
-            // add custom lists
+            // Add custom lists.
             $type = $this->TC->get_columnlisttype();
             $list = array_merge($list, $this->TC->get_columnlists($type));
         }
@@ -197,7 +195,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             // command($type, $taskchainscriptname, $id, $params, $popup=false)
             $popup = array('width' => 300, 'fullheight' => true);
             if ($this->recordtype == 'course') {
-                // on the "edit/chains.php" page, there is no chain, so we need the course id
+                // On the "edit/chains.php" page, there is no chain, so we need the course id.
                 $params = array('id' => $this->TC->get_courseid());
             } else {
                 $params = array();
@@ -215,8 +213,8 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $this->mform->setDefault($name, $default);
             $this->add_helpbutton($name_elements, $field, 'taskchain');
 
-            // make mform CSS class specific to this form
-            // helps isolate HTML elements when in CSS3 styles
+            // Make mform CSS class specific to this form
+            // helps isolate HTML elements when in CSS3 styles.
             $class = $this->mform->getAttribute('class');
             $class = (empty($class) ? '' : "$class ");
             $class = $class . 'columnlist' . $default;
@@ -226,8 +224,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * This function add the "labels" section of the records form.
-     *
-     * @todo Finish documenting this function
      */
     public function add_section_labels($section, $fields) {
         if ($record = $this->get_live_records(1)) {
@@ -238,8 +234,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * add_section_defaults
-     *
-     * @todo Finish documenting this function
      */
     public function add_section_defaults($section, $fields) {
         if ($record = $this->get_live_records(1)) {
@@ -251,8 +245,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * add_section_selects
-     *
-     * @todo Finish documenting this function
      */
     public function add_section_selects($section, $fields) {
         if ($record = $this->get_live_records(1)) {
@@ -262,8 +254,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * add_section_records
-     *
-     * @todo Finish documenting this function
      */
     public function add_section_records($section, $fields) {
         $records = $this->get_live_records();
@@ -274,46 +264,44 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * add_field_action
-     *
-     * @todo Finish documenting this function
      */
     public function add_field_action($field) {
         global $PAGE;
 
         // Note: field name must not be "action"
         // as this name is already used by the
-        // navigation block in Moodle >= 3.0
+        // navigation block in Moodle >= 3.0.
         $name = $this->get_fieldname($field);
 
         $count = count($this->get_live_records());
         if ($count > 0) {
             $default = 'applydefaults';
         } else {
-            $default = 'add' . $this->recordstype . 's'; // e.g. "addtasks"
+            $default = 'add' . $this->recordstype . 's'; // E.g. "addtasks".
         }
 
         $actions = array();
         foreach ($this->get_actions() as $action => $require_records) {
-            // skip this action if it requires records but there aren't any
+            // Skip this action if it requires records but there aren't any.
             if ($require_records && $count == 0) {
                 continue;
             }
 
-            // cache this action
+            // Cache this action.
             $actions[] = $action;
 
-            // add this $action to the form
+            // Add this $action to the form.
             $method = 'add_action_' . $action;
             if (method_exists($this, $method)) {
                 $this->$method($action, $name);
             } else {
-                // by default we add this action as a radio button
+                // By default we add this action as a radio button.
                 $label = get_string('action');
                 $text = get_string($action, 'mod_taskchain');
                 $this->mform->addElement('radio', $name, $label, $text, $action);
             }
 
-            // add $action details, if required
+            // Add $action details, if required.
             $method = 'add_action_' . $action . '_details';
             if (method_exists($this, $method)) {
                 $this->$method();
@@ -335,7 +323,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $PAGE->requires->js_init_call("$M.setup_action_elements", $options, false, $module);
 
             if (empty($this->bootstrap)) {
-                // add javascript to fix some dimensions and borders
+                // Add javascript to fix some dimensions and borders
                 // $PAGE->requires->js_init_call("$M.set_fitem_heights_and_widths", null, false, $module);
                 // $PAGE->requires->js_init_call("$M.set_bottom_borders", null, false, $module);
             }
@@ -346,7 +334,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * get_fieldvalue_columnlistid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue_columnlistid() {
         return $this->get_preference('columnlistid');
@@ -356,7 +343,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * get_fieldname_action
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_fieldname_action() {
         return 'recordsaction';
@@ -366,7 +352,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * get_fieldlabel_action
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_fieldlabel_action() {
         return get_string('action');
@@ -376,7 +361,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * fix_field_action
      *
      * @param stdClass $data (passed by reference)
-     * @todo Finish documenting this function
      */
     public function fix_field_action($data) {
         $name = $this->get_fieldname('action');
@@ -393,7 +377,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * get_fieldlabel_coursename
      *
      * @return string
-     * @todo Finish documenting this function
      */
     protected function get_fieldlabel_coursename() {
         return get_string('coursename', 'grades');
@@ -401,8 +384,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * get_actions
-     *
-     * @todo Finish documenting this function
      */
     public function get_actions() {
         return $this->actions;
@@ -410,8 +391,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * get_records
-     *
-     * @todo Finish documenting this function
      */
     public function get_records() {
         return $this->records;
@@ -422,7 +401,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * "live" records are those that have NOT been deleted
      *
      * @param integer $limit (optional, default=0)
-     * @todo Finish documenting this function
      */
     public function get_live_records($limit = 0) {
         $action = optional_param('action', '', PARAM_ALPHA);
@@ -445,13 +423,11 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
         if ($limit > 0) {
             return array_slice($records, 0, $limit);
         }
-        return $records; // i.e. return all records
+        return $records; // I.e. return all records.
     }
 
     /**
      * prepare_records
-     *
-     * @todo Finish documenting this function
      */
     public function prepare_records() {
         $records = $this->get_live_records();
@@ -462,8 +438,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * add_records
-     *
-     * @todo Finish documenting this function
      */
     public function add_records() {
         $records = $this->get_live_records();
@@ -474,8 +448,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * validate_records
-     *
-     * @todo Finish documenting this function
      */
     public function validate_records(&$errors, &$data, &$files) {
         $records = $this->get_live_records();
@@ -486,8 +458,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * fix_data
-     *
-     * @todo Finish documenting this function
      */
     public function fix_data(&$data) {
         if (! isset($data->action)) {
@@ -500,8 +470,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * fix_records
-     *
-     * @todo Finish documenting this function
      */
     public function fix_records(&$data) {
         $records = $this->get_live_records();
@@ -515,7 +483,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      *
      * @param array $ids the ids of records that need to be updated
      * @return void, may update records in the database
-     * @todo Finish documenting this function
      */
     protected function update_records($ids) {
         $records = $this->get_live_records();
@@ -533,7 +500,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @param object $data (passed by reference)the recently submitted form data
      * @param array $ids the ids of records that need to be deleted
      * @return void, may delete records in the database
-     * @todo Finish documenting this function
      */
     protected function delete_records($ids) {
         $records = $this->get_records();
@@ -552,7 +518,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @param string $field the name of the field on which tasks are to be sorted
      * @param string $direction "asc" or "desc"
      * @return void, but may alter order of $this->tasks array
-     * @todo Finish documenting this function
      */
     protected function sort_records($field, $direction) {
         $method = 'sort_' . $field . '_' . $direction;
@@ -572,7 +537,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @param object $a (passed by reference) an object to be compared
      * @param object $b (passed by reference) an object to be compared
      * @return integer -1 ($a > $b), 0 (equal), or 1 ($a < $b)
-     * @todo Finish documenting this function
      */
     protected function sort_sortorder_desc($a, $b) {
         return $this->sort($a, $b, 'sortorder', -1, 1);
@@ -584,7 +548,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @param object $a (passed by reference) an object to be compared
      * @param object $b (passed by reference) an object to be compared
      * @return integer 1 ($a > $b), 0 (equal), or -1 ($a < $b)
-     * @todo Finish documenting this function
      */
     protected function sort_sortorder_asc($a, $b) {
         return $this->sort($a, $b, 'sortorder', 1, -1);
@@ -600,7 +563,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @param integer $lt the result to return if $a < $b (asc=-1, desc=1)
      * @param integer $eq the result to return if $a==$b (optional, default=0)
      * @return integer 1 ($a > $b), 0 ($a==$b), or -1 ($a < $b)
-     * @todo Finish documenting this function
      */
     protected function sort($a, $b, $field, $gt, $lt, $eq = 0) {
         $method = 'get_' . $field;
@@ -634,7 +596,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
         if ($a_value > $b_value) {
             return $gt;
         }
-        return $eq; // values are equal
+        return $eq; // Values are equal.
     }
 
     /**
@@ -644,7 +606,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @param string $formfield
      * @param string $dbfield
      * @return string
-     * @todo Finish documenting this function
      */
     protected function get_filter(&$data, $formfield, $dbfield) {
         global $DB;
@@ -663,7 +624,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $value = '';
         }
 
-        // check $type and $value are consistent
+        // Check $type and $value are consistent.
         if ($type == self::FILTER_NOT_EMPTY || $type == self::FILTER_NOT_EMPTY) {
             $value = '';
         } else if ($value === '') {
@@ -729,7 +690,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
                 return array($filter, $params);
         }
 
-        return false; // unrecognized $type or empty $value
+        return false; // Unrecognized $type or empty $value.
     }
 
     /**
@@ -737,9 +698,8 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      *
      * @param string name of $field to prefix to $dbfield
      * @return array ($formfield => $dbfield) of params to pass to $this->get_filter()
-     * @todo Finish documenting this function
      */
-    function get_filter_params($field) {
+    public function get_filter_params($field) {
         return array();
     }
 
@@ -750,7 +710,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @param string name of $field
      * @param string $filtername
      * @return array ($select, $result)
-     * @todo Finish documenting this function
      */
     protected function get_filter_search(&$data, $field, $filtername) {
         $search = '';
@@ -775,31 +734,31 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
         switch ($type) {
             case self::FILTER_CONTAINS:
-                $result = 1; // no break here
+                $result = 1; // No break here.
             case self::FILTER_NOT_CONTAINS:
                 $search = "/$value/i";
                 break;
 
             case self::FILTER_EQUALS:
-                $result = 1; // no break here
+                $result = 1; // No break here.
             case self::FILTER_NOT_EQUALS:
                 $search = "/^$value$/i";
                 break;
 
             case self::FILTER_STARTSWITH:
-                $result = 1; // no break here
+                $result = 1; // No break here.
             case self::FILTER_NOT_STARTSWITH:
                 $search = "/^$value/i";
                 break;
 
             case self::FILTER_ENDSWITH:
-                $result = 1; // no break here
+                $result = 1; // No break here.
             case self::FILTER_NOT_ENDSWITH:
                 $search = "/$value$/i";
                 break;
 
             case self::FILTER_EMPTY:
-                $result = 1; // no break here
+                $result = 1; // No break here.
             case self::FILTER_NOT_EMPTY:
                 $search = "/^$/";
                 break;
@@ -814,7 +773,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @param object $data the recently submitted form $data
      * @param boolean $fullrecord if true, return the full records, otherwise return just the record ids
      * @return array of records (or just their ids)
-     * @todo Finish documenting this function
      */
     protected function get_selected_records(&$data, $fullrecord = true) {
         $records = array();
@@ -836,16 +794,15 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * fix_action_applydefaults
      *
      * @param object $data the recently submitted form $data
-     * @todo Finish documenting this function
      */
     protected function fix_action_applydefaults(&$data) {
         global $DB, $USER;
 
         if (empty($this->records) || empty($data->applydefaults)) {
-            return; // nothing to do
+            return; // Nothing to do.
         }
 
-         // set defaults from selected record if necessary
+         // Set defaults from selected record if necessary.
         if (isset($data->defaultrecord) && array_key_exists($data->defaultrecord, $this->records)) {
             $defaultid = $data->defaultrecord;
             $record = $this->records[$defaultid];
@@ -862,7 +819,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $record = $this->get_live_records(true);
         }
 
-        // get selected fields
+        // Get selected fields.
         $defaultfields = array();
         foreach ($record->sections as $section => $fields) {
             foreach ($fields as $field) {
@@ -877,14 +834,14 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             return;
         }
 
-        // get default values for selected fields
+        // Get default values for selected fields.
         $defaults = $record->get_preferences($defaultfields);
 
         if (empty($defaults)) {
             return;
         }
 
-        // get selected records
+        // Get selected records.
         $records = array();
         switch ($data->applydefaults) {
             case 'selected' . $this->recordstype . 's':
@@ -892,7 +849,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
                 break;
 
             case 'filtered' . $this->recordstype . 's':
-                $ids = array(); // taskchain ids
+                $ids = array(); // Taskchain ids.
                 if (empty($data->coursenamefilter)) {
                     $courses = $DB->get_records('course');
                 } else {
@@ -943,7 +900,7 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             return;
         }
 
-        // updated selected fields on selected records
+        // Updated selected fields on selected records.
         $updated = array();
         foreach ($records as $id => $record) {
             $update_record = false;
@@ -991,15 +948,12 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * @param xxx $records  (passed by reference)
      * @param xxx $defaults (passed by reference)
      * @param xxx $updated  (passed by reference)
-     * @todo Finish documenting this function
      */
     protected function fix_action_applydefaults_extra(&$data, &$records, &$defaults, &$updated) {
     }
 
     /**
      * add_field_sortfield
-     *
-     * @todo Finish documenting this function
      */
     protected function get_sortfield_fields() {
         $list = array();
@@ -1011,8 +965,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * add_field_sortfield
-     *
-     * @todo Finish documenting this function
      */
     protected function add_field_sortfield($field, $nameprefix = '') {
         $name = $this->get_fieldname($nameprefix . $field);
@@ -1027,8 +979,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * add_field_sortdirection
-     *
-     * @todo Finish documenting this function
      */
     protected function add_field_sortdirection($field, $nameprefix = '') {
         $name = $this->get_fieldname($nameprefix . $field);
@@ -1043,8 +993,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /**
      * add_field_sortincrement
-     *
-     * @todo Finish documenting this function
      */
     protected function add_field_sortincrement($field, $nameprefix = '') {
         $name = $this->get_fieldname($nameprefix . $field);
@@ -1061,7 +1009,6 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
      * add_action_buttons
      *
      * @return array($name => $text)
-     * @todo Finish documenting this function
      */
     protected function get_action_buttons() {
         return array('submit' => get_string('go'));

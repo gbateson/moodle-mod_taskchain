@@ -35,22 +35,22 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_question extends taskchain_base {
-    /** db field: id (primary key, default=null) */
+    /** @var mixed db field: id (primary key, default=null) */
     private $id                  = null;
 
-    /** db field: taskid (integer, default=0) */
+    /** @var int db field: taskid (integer, default=0) */
     private $taskid              = 0;
 
-    /** db field: name (string, default='') */
+    /** @var string db field: name (string, default='') */
     private $name                = '';
 
-    /** db field: md5key (string (32), default='') */
+    /** @var string db field: md5key (string (32), default='') */
     private $md5key              = '';
 
-    /** db field: type (integer, default=0) */
+    /** @var int db field: type (integer, default=0) */
     private $type                = 0;
 
-    /** db field: text (integer, default=0) */
+    /** @var int db field: text (integer, default=0) */
     private $text                = 0;
 
     /**

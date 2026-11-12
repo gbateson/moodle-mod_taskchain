@@ -38,22 +38,22 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/record.php');
  * @package    mod_taskchain
  */
 class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
-    /** type of record **/
+    /** @var string type of record * */
     protected $recordtype = 'columnlists';
 
-    /** type of records **/
+    /** @var string type of records * */
     protected $recordstype = 'columnlists';
 
-    /** sections and fields in this form **/
+    /** @var array sections and fields in this form * */
     protected $sections = array(
         'headings' => array('columnlistsheading'),
         'filters'  => array('columnlistid', 'columnlistname'),
     );
 
-    /** default values in a chain record */
+    /** @var array default values in a chain record */
     protected $defaultvalues = array();
 
-    /** these fields will not be included in columnlists */
+    /** @var array these fields will not be included in columnlists */
     protected $excludedfields = array(
         'columnlistid', 'columnlisttype', 'columnlistname',
         'edit', 'sortorder', 'defaultrecord', 'selectrecord',
@@ -67,7 +67,6 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * @param object $context a context record from the database
      * @param string $type "chains" or "tasks"
      * @param boolean $is_multiple (optional, default=false)
-     * @todo Finish documenting this function
      */
     public function __construct(&$mform, &$context, &$type, $is_multiple = false) {
         global $CFG, $TC;
@@ -76,15 +75,15 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
             $TC = new mod_taskchain();
         }
 
-        // setup $record
+        // Setup $record.
         $record = new stdClass();
 
-        // get columnlist info
+        // Get columnlist info.
         $id = $TC->get_columnlistid();
         $type = $TC->get_columnlisttype();
         $lists = $TC->get_columnlists($type, true);
 
-        // transfer columnlist fields to $record
+        // Transfer columnlist fields to $record.
         if ($id && isset($lists[$id])) {
             $record->columnlistid = $id;
             $record->columnlisttype = $type;
@@ -108,19 +107,19 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
                 throw new moodle_exception("Unknown columnlist type: $type");
         }
 
-        // add record sections after headings
+        // Add record sections after headings.
         $this->sections = array_merge($this->sections, $form_helper->get_sections());
         unset($form_helper);
 
         // remove "general" section (as those fields are always displayed)
         unset($this->sections['general']);
 
-        // remove "tasks" section from "Edit chains" page
+        // Remove "tasks" section from "Edit chains" page.
         if ($type == 'chains') {
             unset($this->sections['tasks']);
         }
 
-        // overwrite hidden section
+        // Overwrite hidden section.
         $this->sections['hidden'] = array('id');
 
         $this->TC          = &$TC;
@@ -137,10 +136,9 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * @param array $data (passed by reference)
      * @param array $files (passed by reference)
      * @return void may modify $errors and $data
-     * @todo Finish documenting this function
      */
     public function validate_sections(&$errors, &$data, &$files) {
-        // do nothing
+        // Do nothing.
     }
 
     /**
@@ -148,7 +146,6 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      *
      * @param stdClass $data (passed by reference)
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     public function fix_sections($data) {
         $data->columnlist = array();
@@ -157,7 +154,7 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
             foreach ($fields as $field) {
                 if (isset($data->$field)) {
                     if (in_array($field, $this->excludedfields)) {
-                        // do nothing
+                        // Do nothing.
                     } else if ($data->$field) {
                         $data->columnlist[$field] = true;
                         unset($data->$field);
@@ -175,13 +172,12 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * @param array $data (passed by reference)
      * @param string $field name of field
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function prepare_field(&$data, $field) {
         if (isset($data[$field])) {
-            // field has already be prepared
+            // Field has already be prepared.
         } else {
-            // copy value across from record
+            // Copy value across from record.
             $data[$field] = $this->get_originalvalue($field, '');
         }
     }
@@ -190,13 +186,12 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * add_field
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function add_field($field) {
         if (in_array($field, $this->excludedfields)) {
-            // do nothing
+            // Do nothing.
         } else {
-            // default action is to add a checkbox element
+            // Default action is to add a checkbox element.
             $name = $this->get_fieldname($field);
             $label = $this->get_fieldlabel($field);
             $this->mform->addElement('checkbox', $name, $label);
@@ -210,7 +205,6 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * @param string $section name of section
      * @param array $fields in this section
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function add_section_filters($section, $fields) {
         global $PAGE;
@@ -246,7 +240,6 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      *
      * @param string $section name of section
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_sectionlabel_conditions() {
         return get_string('conditions', 'mod_taskchain');
@@ -256,7 +249,6 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * get_fieldvalue_columnlistsheading
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue_columnlistsheading() {
         $type = $this->TC->get_columnlisttype();
@@ -267,7 +259,6 @@ class taskchain_form_helper_columnlists extends taskchain_form_helper_record {
      * add_action_buttons
      *
      * @return array($name => $text)
-     * @todo Finish documenting this function
      */
     protected function get_action_buttons() {
         return array('submit' => '',

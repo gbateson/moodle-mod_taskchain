@@ -38,6 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/html/findit/ren
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_html_findit_b_renderer extends mod_taskchain_attempt_hp_6_jcloze_html_findit_renderer {
+    /** @var string */
     public $js_object_type = 'JClozeFindItB';
 
     /**
@@ -45,12 +46,11 @@ class mod_taskchain_attempt_hp_6_jcloze_html_findit_b_renderer extends mod_taskc
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // replace standard jcloze.js with findit.b.js
+        // Replace standard jcloze.js with findit.b.js.
         $this->javascripts = preg_grep('/jcloze.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/taskchain/attempt/hp/6/jcloze/findit.b.js');
     }
@@ -70,17 +70,16 @@ class mod_taskchain_attempt_hp_6_jcloze_html_findit_b_renderer extends mod_taskc
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckAnswers(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // do several search and replace actions at once
+        // Do several search and replace actions at once.
         $search = array(
             '/if \(NumOfVisibleGaps < 1\)\{return;\}/',
             "/(\s+)Output = '';/s",
             '/Output \+= MissingMistakes \+ Get_NumMissingErr\(\);/',
-            '/CalculateScore\(\);/', // last occurrence
+            '/CalculateScore\(\);/', // Last occurrence.
         );
         $replace = array(
             'if (NumOfVisibleGaps){',

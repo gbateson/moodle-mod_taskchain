@@ -38,10 +38,10 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/record.php');
  * @package    mod_taskchain
  */
 class taskchain_form_helper_task extends taskchain_form_helper_record {
-    /** type of record **/
+    /** @var string type of record * */
     protected $recordtype = 'task';
 
-    /** sections and fields in this form **/
+    /** @var array sections and fields in this form * */
     protected $sections = array(
         'general'    => array('sortorder', 'edit', 'defaultrecord', 'selectrecord', 'name'),
         'tasks'      => array('sourcefile', 'sourcetype', 'sourcelocation', 'configfile', 'configlocation', 'addtype', 'tasknames'),
@@ -55,7 +55,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'hidden'     => array('id', 'aftertaskid'),
     );
 
-    /** the default sections/fields shown on forms for multiple task records */
+    /** @var array the default sections/fields shown on forms for multiple task records */
     protected $defaultsections = array(
         'tasks'      => array('sourcefile'),
         'time'       => array('timeopen', 'timeclose'),
@@ -63,7 +63,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'hidden'     => array('id', 'aftertaskid'),
     );
 
-    /** default values in a task record (includes form fields not stored in the database ) */
+    /** @var array default values in a task record (includes form fields not stored in the database ) */
     protected $defaultvalues = array(
         'name'            => '',
         'namesource'      => mod_taskchain::TEXTSOURCE_FILE,
@@ -105,20 +105,18 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'scoreweighting'  => 100,
         'clickreporting'  => mod_taskchain::NO,
         'discarddetails'  => mod_taskchain::YES,
-        'addtype'         => mod_taskchain::ADDTYPE_AUTO,
         'tasknames'       => mod_taskchain::TEXTSOURCE_FILE,
         'preconditions'   => '',
         'postconditions'  => '',
     );
 
-    /** fields that are only used when adding a new record */
+    /** @var array fields that are only used when adding a new record */
     protected $addonlyfields = array('namesource', 'tasknamessource', 'addtype');
 
     /**
      * prepare title's "source", "prependchainname" and "appendsortorder" values
      *
      * @param array $data (passed by reference)
-     * @todo Finish documenting this function
      */
     protected function prepare_field_title(&$data) {
         $field = 'title';
@@ -146,7 +144,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * prepare_field_reviewoptions
      *
      * @param array $data (passed by reference)
-     * @todo Finish documenting this function
      */
     protected function prepare_field_reviewoptions(&$data) {
         $name = $this->get_fieldname('reviewoptions');
@@ -167,7 +164,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * set stopbutton's "yesno" and "type" values
      *
      * @param array $data (passed by reference)
-     * @todo Finish documenting this function
      */
     protected function prepare_field_stopbutton(&$data) {
         $field = 'stopbutton';
@@ -177,11 +173,11 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name_text  = $this->get_fieldname('stoptext');
 
         if (empty($data[$name])) {
-            $data[$name_yesno] = 0; // NO
+            $data[$name_yesno] = 0; // NO.
             $data[$name_type] = 'taskchain_giveup';
             $data[$name_text] = '';
         } else {
-            $data[$name_yesno] = 1; // YES
+            $data[$name_yesno] = 1; // YES.
             if ($data[$name] == mod_taskchain::STOPBUTTON_SPECIFIC) {
                 $data[$name_type] = 'specific';
             } else if ($data[$name_text] == 'taskchain_giveup') {
@@ -197,7 +193,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * prepare task's "timelimit" value
      *
      * @param array $data (passed by reference)
-     * @todo Finish documenting this function
      */
     protected function prepare_field_timelimit(&$data) {
         $this->prepare_template_timelist($data, 'timelimit');
@@ -207,7 +202,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * prepare task's "delay3" value
      *
      * @param array $data (passed by reference)
-     * @todo Finish documenting this function
      */
     protected function prepare_field_delay3(&$data) {
         $this->prepare_template_timelist($data, 'delay3');
@@ -218,7 +212,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param array $data (passed by reference)
      * @param string $field name
-     * @todo Finish documenting this function
      */
     protected function prepare_template_timelist(&$data, $field) {
         $name = $this->get_fieldname($field);
@@ -235,7 +228,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * prepare the "aftertaskid" values
      *
      * @param array $data (passed by reference)
-     * @todo Finish documenting this function
      */
     protected function prepare_field_aftertaskid(&$data) {
         $field = 'aftertaskid';
@@ -247,7 +239,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_outputformat
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_outputformat($field) {
         $name  = $this->get_fieldname($field);
@@ -263,7 +254,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_navigation
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_navigation($field) {
         $this->add_template_list($field);
@@ -273,7 +263,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_title
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_title($field) {
         $name = $this->get_fieldname($field);
@@ -319,7 +308,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_titletext
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_titletext($field) {
         // do nothing - this field was added by add_field_title($field)
@@ -329,7 +317,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_stopbutton
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_stopbutton($field) {
         $name = $this->get_fieldname($field);
@@ -361,7 +348,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_stoptext
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_stoptext($field) {
         // do nothing - this field was added by add_field_stopbutton($field)
@@ -371,7 +357,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_allowpaste
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_allowpaste($field) {
         $this->add_template_yesno($field);
@@ -381,7 +366,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_usefilters
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_usefilters($field) {
         $this->add_template_yesno($field);
@@ -391,7 +375,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_useglossary
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_useglossary($field) {
         $this->add_template_yesno($field);
@@ -401,7 +384,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_usemediafilter
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_usemediafilter($field) {
         $name = $this->get_fieldname($field);
@@ -416,7 +398,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_studentfeedback
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_studentfeedback($field) {
         $name = $this->get_fieldname($field);
@@ -445,7 +426,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_studentfeedbackurl
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_studentfeedbackurl($field) {
         // do nothing - this field was added by add_field_studentfeedback($field)
@@ -455,7 +435,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_timelimit
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_timelimit($field) {
         $this->add_template_timelist('timelimit');
@@ -465,7 +444,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_delay3
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_delay3($field) {
         $this->add_template_timelist('delay3');
@@ -475,7 +453,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_template_time
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_template_timelist($field) {
         $name = $this->get_fieldname($field);
@@ -490,7 +467,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_scoremethod
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_scoremethod($field) {
         $this->add_template_method('score');
@@ -500,7 +476,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_scoreignore
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_scoreignore($field) {
         $this->add_template_ignore('score');
@@ -510,7 +485,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_scorelimit
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_scorelimit($field) {
         $this->add_template_limit('score');
@@ -520,7 +494,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_scoreweighting
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_scoreweighting($field) {
         $this->add_template_weighting('score');
@@ -530,7 +503,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_clickreporting
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_clickreporting($field) {
         $this->add_template_yesno($field);
@@ -540,7 +512,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_discarddetails
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_discarddetails($field) {
         $this->add_template_yesno($field);
@@ -550,7 +521,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_reviewoptions
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_reviewoptions($field) {
         global $PAGE;
@@ -561,18 +531,18 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $times = taskchain_available::reviewoptions_list('times');
         $items = taskchain_available::reviewoptions_list('items');
 
-        // js_amd_inline is available in Moodle >= 3.3
+        // Js_amd_inline is available in Moodle >= 3.3.
         $js_amd_inline = method_exists($PAGE->requires, 'js_amd_inline');
 
         foreach ($times as $timename => $timevalue) {
-            // set groupname and id
+            // Set groupname and id.
             $groupname = $name . $timename . '_elements';
             $groupid = 'fgroup_id_' . $groupname;
 
-            // set All/None links
+            // Set All/None links.
             $allnone = '';
             if ($js_amd_inline) {
-                // Moodle >= 3.3
+                // Moodle >= 3.3.
                 $select = $name . $timename . 'select';
                 $allnone .= html_writer::tag('a', get_string('all'), array('href' => '#', 'id' => $select . 'all'));
                 $allnone .= ' / ';
@@ -598,7 +568,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
                     '});'
                 );
             } else {
-                // Moodle <= 3.2
+                // Moodle <= 3.2.
                 $allnone .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in("DIV", "fitem", "' . $groupid . '")'));
                 $allnone .= ' / ';
                 $allnone .= html_writer::tag('a', get_string('none'), array('onclick' => 'deselect_all_in("DIV", "fitem", "' . $groupid . '")'));
@@ -606,7 +576,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
             $elements = array();
             foreach ($items as $itemname => $itemvalue) {
-                $fieldname = $name . $timename . $itemname; // e.g. duringattemptresponses
+                $fieldname = $name . $timename . $itemname; // E.g. duringattemptresponses.
                 $elements[] = &$this->mform->createElement('checkbox', $fieldname, '', get_string($itemname, 'quiz'));
                 $this->mform->setType($fieldname, PARAM_INT);
             }
@@ -623,7 +593,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * add_field_preconditions
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_preconditions($field) {
         $type = mod_taskchain::CONDITIONTYPE_PRE;
@@ -635,7 +604,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function add_field_postconditions($field) {
         $type = mod_taskchain::CONDITIONTYPE_POST;
@@ -646,7 +614,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * get_sectionlabel_conditions
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_sectionlabel_conditions() {
         return get_string('conditions', 'mod_taskchain');
@@ -654,8 +621,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
     /**
      * get_fieldvalue_aftertaskid
-     *
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue_aftertaskid() {
         return optional_param('aftertaskid', 0, PARAM_INT);
@@ -666,7 +631,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $field the field name
      * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
-     * @todo Finish documenting this function
      */
     protected function get_defaultvalue_tasknamessource($field) {
         return $this->get_defaultvalue_template_source($field);
@@ -678,7 +642,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @param array $errors (passed by reference)
      * @param xxx $data (passed by reference)
      * @param xxx $files (passed by reference)
-     * @todo Finish documenting this function
      */
     protected function validate_field_studentfeedbackurl(&$errors, &$data, &$files) {
         $field = 'studentfeedback';
@@ -687,10 +650,10 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name_elements = $this->get_fieldname($field . '_elements');
 
         if (empty($data[$name])) {
-            // do nothing
+            // Do nothing.
         } else if ($data[$name] == mod_taskchain::FEEDBACK_WEBPAGE || $data[$name] == mod_taskchain::FEEDBACK_FORMMAIL) {
             if (empty($data[$name_url]) || ! preg_match('/^https?:\/\/.+/', $data[$name_url])) {
-                // empty or invalid url
+                // Empty or invalid url.
                 $errors[$name_elements] = get_string('invalidurl', 'error');
             }
         }
@@ -702,7 +665,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function fix_field_title($data, $field) {
         $value = 0;
@@ -739,7 +701,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function fix_field_stopbutton($data, $field) {
         $name  = $this->get_fieldname($field);
@@ -761,7 +722,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
                 $data->$name = mod_taskchain::STOPBUTTON_LANGPACK;
                 break;
 
-            default: // button required, but no text/string specified
+            default: // Button required, but no text/string specified.
                 $data->$name = mod_taskchain::STOPBUTTON_LANGPACK;
                 $data->$name_text = 'taskchain_giveup';
         }
@@ -778,7 +739,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function fix_field_timelimit($data, $field) {
         $this->fix_template_timelist($data, $field);
@@ -790,7 +750,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function fix_field_delay3($data, $field) {
         $this->fix_template_timelist($data, $field);
@@ -802,7 +761,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function fix_template_timelist($data, $field) {
         $name = $this->get_fieldname($field);
@@ -826,7 +784,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function fix_field_reviewoptions($data, $field) {
         $name = $this->get_fieldname($field);
@@ -837,7 +794,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         foreach ($times as $timename => $timevalue) {
             foreach ($items as $itemname => $itemvalue) {
-                $fieldname = $name . $timename . $itemname; // e.g. duringattemptresponses
+                $fieldname = $name . $timename . $itemname; // E.g. duringattemptresponses.
                 if (isset($data->$fieldname)) {
                     if ($data->$fieldname) {
                         $data->$name += ($timevalue & $itemvalue);
@@ -852,7 +809,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * format_field_addtype
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function format_field_addtype($field) {
         return '';
@@ -862,7 +818,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * format_field_tasknames
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function format_field_tasknames($field) {
         return '';
@@ -873,7 +828,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed the $value to be formatted
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_outputformat($field, $value) {
         $type = $this->get_fieldvalue('sourcetype');
@@ -890,7 +844,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_navigation($field, $value) {
         return $this->format_templatevalue_list($field, $value);
@@ -901,7 +854,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $field name of field
      * @param mixed the $value to be formatted
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_title($field, $value) {
         $title = ($value & mod_taskchain::TITLE_SOURCE);
@@ -920,7 +872,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_stopbutton($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
@@ -931,7 +882,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_allowpaste($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
@@ -942,7 +892,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_usefilters($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
@@ -953,7 +902,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_useglossary($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
@@ -964,7 +912,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_usemediafilter($field, $value) {
         return $this->format_templatevalue_list($field, $value, 'mediafilter');
@@ -975,7 +922,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_studentfeedback($field, $value) {
         return $this->format_templatevalue_list($field, $value, 'feedback');
@@ -986,7 +932,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_timelimit($field, $value) {
         return $this->format_templatevalue_timelist($field, $value);
@@ -997,7 +942,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_delay3($field, $value) {
         return $this->format_templatevalue_timelist($field, $value);
@@ -1008,7 +952,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_templatevalue_timelist($field, $value) {
         if ($value < 0) {
@@ -1023,7 +966,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_scoremethod($field, $value) {
         return $this->format_templatevalue_list($field, $value, 'grademethod', 'score');
@@ -1034,7 +976,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_scoreignore($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
@@ -1045,7 +986,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_scorelimit($field, $value) {
         return $this->format_templatevalue_list($field, $value, 'gradelimit', 'score');
@@ -1056,7 +996,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_scoreweighting($field, $value) {
         return $this->format_templatevalue_list($field, $value, 'gradeweighting');
@@ -1067,7 +1006,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_clickreporting($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
@@ -1078,7 +1016,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $value of field from the record
      * @return string formatted version of the value
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_discarddetails($field, $value) {
         return $this->format_templatevalue_yesno($field, $value);
@@ -1088,7 +1025,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * format_field_reviewoptions
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue_reviewoptions($field, $value) {
 
@@ -1115,7 +1051,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * format_field_preconditions
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function format_field_preconditions($field) {
         $type = mod_taskchain::CONDITIONTYPE_PRE;
@@ -1124,8 +1059,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
     /**
      * format_field_postconditions
-     *
-     * @todo Finish documenting this function
      */
     protected function format_field_postconditions($field) {
         $type = mod_taskchain::CONDITIONTYPE_POST;
@@ -1137,7 +1070,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string $type CONDITIONTYPE_PRE or CONDITIONTYPE_POST
      * @param string $name "preconditions" or "postconditions"
-     * @todo Finish documenting this function
      */
     protected function format_fieldtemplate_conditions($field, $type) {
         $elements = array();
@@ -1155,7 +1087,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param stdClass $data (passed by reference) recently submitted form $data or db record
      * @param string name of required user preference $field
-     * @todo Finish documenting this function
      */
     protected function get_datavalue_preconditions($data, $field, $default = 0) {
         return (empty($data->id) ? 0 : $data->id);
@@ -1166,7 +1097,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param stdClass $data (passed by reference) recently submitted form $data
      * @param string name of required user preference $field
-     * @todo Finish documenting this function
      */
     protected function get_datavalue_postconditions($data, $field, $default = 0) {
         return (isset($data->id) ? $data->id : $default);
@@ -1176,7 +1106,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * get_fieldvalue_preconditions
      *
      * @param string name of required user preference $field
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue_preconditions() {
         return $this->get_fieldvalue('id');
@@ -1186,7 +1115,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * get_fieldvalue_postconditions
      *
      * @param string name of required user preference $field
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue_postconditions() {
         return $this->get_fieldvalue('id');
@@ -1196,7 +1124,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * format_defaultfield_preconditions
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function format_defaultfield_preconditions($field) {
         $type = mod_taskchain::CONDITIONTYPE_PRE;
@@ -1207,7 +1134,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * format_defaultfield_postconditions
      *
      * @param string name of $field
-     * @todo Finish documenting this function
      */
     protected function format_defaultfield_postconditions($field) {
         $type = mod_taskchain::CONDITIONTYPE_POST;
@@ -1219,7 +1145,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      *
      * @param string name of $field ("preconditions" or "postconditions")
      * @param string $type CONDITIONTYPE_PRE or CONDITIONTYPE_POST
-     * @todo Finish documenting this function
      */
     protected function format_defaultfield_conditions($field, $type) {
         $name = 'defaultfield_' . $field;

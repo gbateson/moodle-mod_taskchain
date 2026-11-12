@@ -38,12 +38,18 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jquiz/xml/v6/renderer.
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchain_attempt_hp_6_jquiz_xml_v6_renderer {
-    // to faciliate autoadvance to next question, pass QNum to ShowMessage()
+    /** @var string to faciliate autoadvance to next question, pass QNum to ShowMessage() */
     public $searchShowMessage = '/(?<=ShowMessage)\(([^)]*)\)/';
+    /** @var string */
     public $replaceShowMessage = '($1, QNum)';
 
-    // to facilitate autoplay of media, call PlaySound() every time we advance to a new question
+    /**
+     * to facilitate autoplay of media, call PlaySound() every time we advance to a new question
+     *
+     * @var string
+     */
     public $searchSetQNumReadout = '/(\s*)SetQNumReadout\(\);/';
+    /** @var string */
     public $replaceSetQNumReadout = '$1PlaySound(CurrQNum,0);$0';
 
     /**
@@ -59,10 +65,9 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'CompleteEmptyFeedback';
         return $names;
@@ -74,7 +79,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_StartUp(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -90,7 +94,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
         $substr = preg_replace($search, $replace, $substr, 1);
         parent::fix_js_StartUp($substr, 0, strlen($substr));
 
-        // append the PlaySound() and StopSound() functions
+        // Append the PlaySound() and StopSound() functions.
         if ($pos = strrpos($substr, '}')) {
             $append = "\n"
                 . "function PlaySound(i, count) {\n"
@@ -148,15 +152,14 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowMessage(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // do standard fix for this function
+        // Do standard fix for this function.
         parent::fix_js_ShowMessage($substr, 0, strlen($substr));
 
-        // add extra argument, QNum, to this function
+        // Add extra argument, QNum, to this function.
         $substr = preg_replace($this->searchShowMessage, $this->replaceShowMessage, $substr, 1);
 
         if ($pos = strpos($substr, '{')) {
@@ -199,7 +202,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_WriteToInstructions(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -235,15 +237,14 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CompleteEmptyFeedback(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // display only correct feedback
+        // Display only correct feedback.
         $substr = str_replace('DefaultWrong', 'DefaultRight', $substr);
 
-        // set all answers to be treated as correct
+        // Set all answers to be treated as correct.
         $search = '/(\s*)if \(I\[QNum\]\[3\]\[ANum\]\[1\]\.length < 1\)\{/';
         $replace = '$1' . 'I[QNum][3][ANum][2] = 1;' . '$0';
         $substr = preg_replace($search, $replace, $substr, 1);
@@ -251,7 +252,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
         $str = substr_replace($str, $substr, $start, $length);
     }
 
-    // utility function to search and replace and, if required, call the fix_js_xxx() method of the parent class
+    // Utility function to search and replace and, if required, call the fix_js_xxx() method of the parent class.
 
     /**
      * fix_js_search_replace
@@ -261,7 +262,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $length
      * @param xxx $thisfunction
      * @param xxx $parentfunction (optional, default='')
-     * @todo Finish documenting this function
      */
     public function fix_js_search_replace(&$str, $start, $length, $thisfunction, $parentfunction = '') {
         $substr = substr($str, $start, $length);
@@ -284,7 +284,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_SetUpQuestions(&$str, $start, $length) {
         $this->fix_js_search_replace($str, $start, $length, 'SetQNumReadout', 'SetUpQuestions');
@@ -296,7 +295,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ChangeQ(&$str, $start, $length) {
         $this->fix_js_search_replace($str, $start, $length, 'SetQNumReadout', 'ChangeQ');
@@ -308,7 +306,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowAnswers(&$str, $start, $length) {
         $this->fix_js_search_replace($str, $start, $length, 'ShowMessage');
@@ -320,7 +317,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowHint(&$str, $start, $length) {
         $this->fix_js_search_replace($str, $start, $length, 'ShowMessage');
@@ -332,7 +328,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckMCAnswer(&$str, $start, $length) {
         $this->fix_js_search_replace($str, $start, $length, 'ShowMessage', 'CheckMCAnswer');
@@ -344,7 +339,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckMultiSelAnswer(&$str, $start, $length) {
         $this->fix_js_search_replace($str, $start, $length, 'ShowMessage', 'CheckMultiSelAnswer');
@@ -356,7 +350,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_exam_renderer extends mod_taskchai
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckShortAnswer(&$str, $start, $length) {
         $this->fix_js_search_replace($str, $start, $length, 'ShowMessage', 'CheckShortAnswer');

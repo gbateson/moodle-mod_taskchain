@@ -43,86 +43,141 @@ class mod_taskchain extends taskchain_base {
     /** @var bool cache of switch to show if user can start this taskchain */
     public $canstart     = null;
 
+    /** @var int cache $USER->userid */
     public $userid       = 0; // cache $USER->userid
+    /** @var int cache $USER->realuser */
     public $realuserid   = 0; // cache $USER->realuser
 
-    public $time         = 0; // the time this page was displayed
+    /** @var int the time this page was displayed */
+    public $time         = 0; // The time this page was displayed.
+    /** @var int */
     public $inpopup      = 0;
+    /** @var string 'add', 'update', 'delete', 'deleteall', 'deleteconfirmed', 'deletecancelled' */
     public $action       = ''; // 'add', 'update', 'delete', 'deleteall', 'deleteconfirmed', 'deletecancelled'
+    /** @var string 'info', 'preview' */
     public $tab          = ''; // 'info', 'preview'
-    public $mode         = ''; // e.g. report name
+    /** @var string e.g. report name */
+    public $mode         = ''; // E.g. report name.
+    /** @var int */
     public $confirmed    = 0;
-    public $selected     = null; // array of ids of selected records
+    /** @var mixed array of ids of selected records */
+    public $selected     = null; // Array of ids of selected records.
 
+    /** @var mixed */
     public $course       = null;
+    /** @var mixed */
     public $module       = null;
+    /** @var mixed */
     public $coursemodule = null;
+    /** @var mixed */
     public $taskchain    = null;
+    /** @var mixed */
     public $chain        = null;
+    /** @var mixed */
     public $task         = null;
+    /** @var mixed */
     public $condition    = null;
+    /** @var mixed */
     public $chaingrade   = null;
+    /** @var mixed */
     public $chainattempt = null;
+    /** @var mixed */
     public $taskscore    = null;
+    /** @var mixed */
     public $taskattempt  = null;
+    /** @var mixed */
     public $block        = null;
 
+    /** @var mixed */
     public $usergrade     = null;
 
+    /** @var mixed */
     public $lastchainattempt = null;
+    /** @var mixed */
     public $lasttaskattempt  = null;
 
+    /** @var mixed */
     public $tasks         = null;
+    /** @var mixed */
     public $conditions    = null;
+    /** @var mixed */
     public $chaingrades   = null;
+    /** @var mixed */
     public $chainattempts = null;
+    /** @var mixed */
     public $taskscores    = null;
+    /** @var mixed */
     public $taskattempts  = null;
 
+    /** @var mixed */
     public $taskchains    = null;
+    /** @var mixed */
     public $chains        = null;
 
+    /** @var mixed */
     public $mycourses     = null;
+    /** @var mixed */
     public $mytaskchains  = null;
 
+    /** @var string */
     public $pageid        = '';
+    /** @var string */
     public $pageclass     = '';
 
-    /** child objects to simulate multiple inheritance */
+    /** @var mixed child objects to simulate multiple inheritance */
     public $available     = null;
+    /** @var mixed */
     public $can           = null;
+    /** @var mixed */
     public $create        = null;
+    /** @var mixed */
     public $get           = null;
+    /** @var mixed */
     public $regrade       = null;
+    /** @var mixed */
     public $require       = null;
+    /** @var mixed */
     public $url           = null;
 
-    /** fields to allow forced values for cnumber, tnumber and taskid */
+    /** @var int fields to allow forced values for cnumber, tnumber and taskid */
     public $forcecnumber = 0;
+    /** @var int */
     public $forcetnumber = 0;
+    /** @var int */
     public $forcetaskid  = 0;
 
-    /** settings for allowfreeaccess */
+    /** @var mixed settings for allowfreeaccess */
     public $maxchainattemptgrade = null;
+    /** @var mixed */
     public $chaincompleted  = null;
 
-    public $availabletaskid = 0;    // id of first available task
-    public $availabletaskids = null; // ids of all available tasks
-    public $countavailabletaskids = 0;   // number of availabletasks
+    /** @var int id of first available task */
+    public $availabletaskid = 0;    // Id of first available task.
+    /** @var mixed ids of all available tasks */
+    public $availabletaskids = null; // Ids of all available tasks.
+    /** @var int number of availabletasks */
+    public $countavailabletaskids = 0;   // Number of availabletasks.
 
-    // array of arrays (by taskid)
+    /** @var array array of arrays (by taskid) */
     public $cache_taskattempts = array();
+    /** @var array */
     public $cache_taskattemptsusort = array();
 
+    /** @var array */
     public $cache_preconditions  = array();
+    /** @var array */
     public $cache_postconditions = array();
+    /** @var array */
     public $cache_available_task = array();
 
-    public $conditiontype   = 0;  // CONDITIONTYPE_PRE or CONDITIONTYPE_POST
+    /** @var int CONDITIONTYPE_PRE or CONDITIONTYPE_POST */
+    public $conditiontype   = 0;  // CONDITIONTYPE_PRE or CONDITIONTYPE_POST.
+    /** @var string "task" or "chain" */
     public $columnlisttype  = ''; // "task" or "chain"
-    public $columnlistid    = ''; // two-digit number e.g. '01'
+    /** @var string two-digit number e.g. '01' */
+    public $columnlistid    = ''; // Two-digit number e.g. '01'.
 
-    /** maintain statistics on deleted records */
+    /** @var mixed maintain statistics on deleted records */
     public $deleted       = null;
 
     /** properties that should be replaced by methods: $this->get_xxx() */
@@ -151,11 +206,11 @@ class mod_taskchain extends taskchain_base {
             $this->realuserid = $USER->realuser;
         }
 
-        // get $pageid and $pageclass of current Moodle page
+        // Get $pageid and $pageclass of current Moodle page.
         list($pageid, $pageclass) = $this->get_pageid_pageclass();
 
-        // do TaskChain initialization if this is a TaskChain page
-        // i.e. don't initalize for backup, restore or upgrade
+        // Do TaskChain initialization if this is a TaskChain page
+        // i.e. don't initalize for backup, restore or upgrade.
 
         if (
             $pageclass == 'mod-taskchain' ||
@@ -163,7 +218,7 @@ class mod_taskchain extends taskchain_base {
             $pageclass == 'mod-taskchain-edit-form' ||
             $pageclass == 'course' || $pageclass == 'admin'
         ) {
-            // get input params passed to this page
+            // Get input params passed to this page.
             $course         = optional_param('course', 0, PARAM_INT);
             $courseid       = optional_param('courseid', $course, PARAM_INT);
             $coursemoduleid = optional_param('cm', 0, PARAM_INT);
@@ -177,7 +232,7 @@ class mod_taskchain extends taskchain_base {
             $taskattemptid  = optional_param('taskattemptid', 0, PARAM_INT);
             $blockid        = optional_param('blockid', 0, PARAM_INT);
 
-            // get main id for this page
+            // Get main id for this page.
             $set_page_context = true;
             switch ($pageid) {
                 case 'course-mod':
@@ -265,7 +320,7 @@ class mod_taskchain extends taskchain_base {
                     throw new moodle_exception('error_unrecognizedpageid', 'taskchain', '', $pageid);
             }
 
-            // define main select criteria
+            // Define main select criteria.
             $select = array();
             $allowtaskid = false;
             switch (true) {
@@ -364,7 +419,7 @@ class mod_taskchain extends taskchain_base {
                     $tablenames['course'] = 'c';
             }
 
-            // define names and aliases for tables and fields
+            // Define names and aliases for tables and fields.
             $tables = array();
             $fields = array();
             foreach ($tablenames as $tablename => $table) {
@@ -377,24 +432,24 @@ class mod_taskchain extends taskchain_base {
                     }
                 }
 
-                // remove final "s" to get $classname
+                // Remove final "s" to get $classname.
                 if (substr($tablename, -1) == 's') {
                     $classname = substr($tablename, 0, -1);
                 } else {
                     $classname = $tablename;
                 }
 
-                // remove initial "taskchain_" to get $propertyname
+                // Remove initial "taskchain_" to get $propertyname.
                 if (substr($classname, 0, 10) == 'taskchain_') {
                     $propertyname = substr($classname, 10);
                 } else {
                     $propertyname = $classname;
                 }
 
-                // remove any remaining underscores,  "_"
+                // Remove any remaining underscores,  "_".
                 $propertyname = str_replace('_', '', $propertyname);
 
-                // create new property of the appropriate class
+                // Create new property of the appropriate class.
                 if ($propertyname == 'course' || $propertyname == 'coursemodule' | $propertyname == 'module') {
                     $this->$propertyname = new stdClass();
                 } else {
@@ -402,7 +457,7 @@ class mod_taskchain extends taskchain_base {
                 }
             }
 
-            // check we had some sensible input
+            // Check we had some sensible input.
             if (! $fields = implode(',', $fields)) {
                 throw new moodle_exception('error_nodatabaseinfo', 'taskchain');
             }
@@ -413,12 +468,12 @@ class mod_taskchain extends taskchain_base {
                 throw new moodle_exception('error_noinputparameters', 'taskchain');
             }
 
-            // get the information from the database
+            // Get the information from the database.
             if (! $record = $DB->get_record_sql("SELECT $fields FROM $tables WHERE $select")) {
                 throw new moodle_exception('error_norecordsfound', 'taskchain');
             }
 
-            // distribute the database information into the relevant objects
+            // Distribute the database information into the relevant objects.
             foreach (get_object_vars($record) as $field => $value) {
                 $pos = strrpos($field, '_');
                 $table = substr($field, 0, $pos);
@@ -460,7 +515,7 @@ class mod_taskchain extends taskchain_base {
                 }
             }
 
-            // get course context
+            // Get course context.
             $this->course->context = self::context(CONTEXT_COURSE, $this->course->id);
 
             // mimic get_coursemodule_from_id() and get_coursemodule_from_instance()
@@ -471,7 +526,7 @@ class mod_taskchain extends taskchain_base {
                 if ($set_page_context) {
                     $PAGE->set_context($this->coursemodule->context);
                 }
-                // prevent "Cannot find grade item" error in "lib/completionlib.php"
+                // Prevent "Cannot find grade item" error in "lib/completionlib.php".
                 if ($this->chain->gradelimit == 0 && $this->chain->gradeweighting == 0) {
                     $this->coursemodule->completiongradeitemnumber = null;
                 }
@@ -481,24 +536,24 @@ class mod_taskchain extends taskchain_base {
                 }
             }
 
-            // the main objects have now been set up - yay !
+            // The main objects have now been set up - yay !
 
-            // reclaim some memory
+            // Reclaim some memory.
             unset($record, $tablenames, $tablename, $tables, $table, $fields, $field, $select, $allowtaskid, $jointask, $joinchain);
 
-            // we should at least have a course record by now
+            // We should at least have a course record by now.
             if (empty($this->course->id)) {
                 throw new moodle_exception('error_nocourseid', 'taskchain');
             }
 
-            // require_login must come before inclusion of script libraries
+            // Require_login must come before inclusion of script libraries
             // so that correct language is set for calls to get_string() in the
-            // included libraries
+            // included libraries.
             if (substr($pageclass, 0, 13) == 'mod-taskchain') {
                 require_login($this->course->id, true, $this->coursemodule);
             }
 
-            // create secondary objects
+            // Create secondary objects.
             $this->available = new taskchain_available(null, array('TC' => &$this));
             $this->can       = new taskchain_can(null, array('TC' => &$this));
             $this->create    = new taskchain_create(null, array('TC' => &$this));
@@ -515,16 +570,16 @@ class mod_taskchain extends taskchain_base {
                     break;
                 case 'mod-taskchain-attempt':
                     $this->can->attempt(true);
-                    // users may only continue their own attempts
+                    // Users may only continue their own attempts.
                     $this->require_own_attempt(false);
                     break;
                 case 'mod-taskchain-submit':
-                    // users may only submit results for their own attempts
+                    // Users may only submit results for their own attempts.
                     $this->require_own_attempt(false);
                     break;
                 case 'mod-taskchain-report':
                     $this->can->viewreports() || $this->can->reviewmyattempts(true);
-                    // users who can only review their own attempts may not see other users' attempts
+                    // Users who can only review their own attempts may not see other users' attempts.
                     $this->require_own_attempt($this->can->viewreports() || $this->can->reviewallattempts());
                     break;
                 case 'mod-taskchain-review':
@@ -547,7 +602,7 @@ class mod_taskchain extends taskchain_base {
                     break;
             }
 
-            // set tab and other page settings
+            // Set tab and other page settings.
             switch ($pageid) {
                 case 'mod-taskchain-edit-tasks':
                     $this->tab = 'edit';
@@ -571,11 +626,11 @@ class mod_taskchain extends taskchain_base {
             $this->confirmed = optional_param('confirmed', 0, PARAM_INT);
             $this->selected = self::optional_param_array('selected', 0, PARAM_INT);
 
-            // set conditiontype
+            // Set conditiontype.
             $type = ($this->condition ? $this->condition->conditiontype : 0);
             $this->conditiontype = optional_param('conditiontype', $type, PARAM_INT);
 
-            // set columnlisttype and columnlistid
+            // Set columnlisttype and columnlistid.
             switch ($pageid) {
                 case 'mod-taskchain-edit-chains':
                     $type = 'chains';
@@ -593,7 +648,7 @@ class mod_taskchain extends taskchain_base {
                 $this->columnlistid = optional_param('columnlistid', $this->columnlistid, PARAM_ALPHA);
             }
 
-            // set action
+            // Set action.
             if ($this->action == '' && ($pageclass == 'mod-taskchain' || $pageclass == 'mod-taskchain-edit')) {
                 $actions = array('add',
                                  'update',
@@ -611,7 +666,7 @@ class mod_taskchain extends taskchain_base {
                 }
             }
 
-            // check sesskey, if required
+            // Check sesskey, if required.
             if ($this->action) {
                 require_sesskey();
             }
@@ -620,7 +675,7 @@ class mod_taskchain extends taskchain_base {
             $this->force_tnumber(optional_param('tnumber', 0, PARAM_INT));
             $this->force_taskid(optional_param('taskid', 0, PARAM_INT));
 
-            // store the time this page was created
+            // Store the time this page was created.
             $this->time  = time();
         } // end if $pageid == mod-taskchain
     }
@@ -671,7 +726,6 @@ class mod_taskchain extends taskchain_base {
      *
      * @param string $name
      * @param array $params
-     * @todo Finish documenting this function
      */
     public function __call($name, $params) {
         switch (true) {
@@ -697,7 +751,7 @@ class mod_taskchain extends taskchain_base {
                 $callback = array($this->url, substr($name, 4));
                 break;
             default:
-                return false; // shouldn't happen !!
+                return false; // Shouldn't happen !!
         }
         return call_user_func_array($callback, $params);
     }
@@ -708,7 +762,7 @@ class mod_taskchain extends taskchain_base {
 
     // - set_user_editing()
 
-    // the following methods are passed to taskchain_available
+    // The following methods are passed to taskchain_available
     // class in "mod/taskchain/locallib/available.php"
     // - available_navigations_list()
     // - available_feedbacks_list()
@@ -751,7 +805,6 @@ class mod_taskchain extends taskchain_base {
      * set_user_editing
      *
      * @uses $USER
-     * @todo Finish documenting this function
      */
     public static function set_user_editing() {
         global $PAGE, $USER;
@@ -772,19 +825,18 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $prefix (optional, default='')
      * @param xxx $suffix (optional, default='')
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function get_classes($plugintype, $classfilename = 'class.php', $prefix = '', $suffix = '') {
         global $CFG;
 
-        // initialize array to hold class names
+        // Initialize array to hold class names.
         $classes = array();
 
-        // get list of all subplugins
+        // Get list of all subplugins.
         $subplugins = array();
         include($CFG->dirroot . '/mod/taskchain/db/subplugins.php');
 
-        // extract the $plugintype we are interested in
+        // Extract the $plugintype we are interested in.
         $types = array();
         if (isset($subplugins[$plugintype])) {
             $types[$plugintype] = $subplugins[$plugintype];
@@ -794,7 +846,7 @@ class mod_taskchain extends taskchain_base {
         // we are not interested in these directories (or any beginning with ".")
         $ignored = array('CVS', '_vti_cnf', 'simpletest', 'db', 'yui', 'phpchain');
 
-        // get all the subplugins for this $plugintype
+        // Get all the subplugins for this $plugintype.
         reset($types);
         while ($type = key($types)) {
             $dir = current($types);
@@ -803,12 +855,12 @@ class mod_taskchain extends taskchain_base {
                 // include the class
                 require_once($fulldir . '/' . $classfilename);
 
-                // extract class name, e.g. taskchain_source_hp_6_jcloze_xml
+                // Extract class name, e.g. taskchain_source_hp_6_jcloze_xml
                 // from $subdir, e.g. mod/taskchain/file/h6/6/jcloze/xml
-                // by removing leading "mod/" and converting all "/" to "_"
+                // by removing leading "mod/" and converting all "/" to "_".
                 $classes[] = $prefix . str_replace('/', '_', substr($dir, 4)) . $suffix;
 
-                // get subplugins in this $dir
+                // Get subplugins in this $dir.
                 $items = new DirectoryIterator($fulldir);
                 foreach ($items as $item) {
                     if (substr($item, 0, 1) == '.' || in_array($item, $ignored)) {
@@ -850,7 +902,6 @@ class mod_taskchain extends taskchain_base {
      * @uses $CFG
      * @param xxx $info
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function get_version_info($info) {
         global $CFG;
@@ -872,13 +923,12 @@ class mod_taskchain extends taskchain_base {
      * load_mediafilter_filter
      *
      * @param xxx $classname
-     * @todo Finish documenting this function
      */
     public static function load_mediafilter_filter($classname) {
         global $CFG;
         $path = $CFG->dirroot . '/mod/taskchain/mediafilter/' . $classname . '/class.php';
 
-        // check the filter exists
+        // Check the filter exists.
         if (! file_exists($path)) {
             debugging('taskchain mediafilter class is not accessible: ' . $classname, DEBUG_DEVELOPER);
             return false;
@@ -892,7 +942,6 @@ class mod_taskchain extends taskchain_base {
      *
      * @uses $CFG
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function filearea_options($context = null) {
         global $CFG;
@@ -900,13 +949,13 @@ class mod_taskchain extends taskchain_base {
 
         $types = 0;
         if (defined('FILE_INTERNAL')) {
-            $types = $types | FILE_INTERNAL; // Moodle >= 2.0
+            $types = $types | FILE_INTERNAL; // Moodle >= 2.0.
         }
         if (defined('FILE_EXTERNAL')) {
-            $types = $types | FILE_EXTERNAL; // Moodle >= 2.0
+            $types = $types | FILE_EXTERNAL; // Moodle >= 2.0.
         }
         if (defined('FILE_REFERENCE')) {
-            $types = $types | FILE_REFERENCE; // Moodle >= 2.3
+            $types = $types | FILE_REFERENCE; // Moodle >= 2.3.
         }
 
         return array('context'      => $context,
@@ -923,7 +972,6 @@ class mod_taskchain extends taskchain_base {
      *
      * @param xxx $context
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function text_editor_options($context) {
         return array('subdirs'   => 1,
@@ -939,7 +987,6 @@ class mod_taskchain extends taskchain_base {
      * text_page_types
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function text_page_types() {
         return array('entry', 'exit');
@@ -949,7 +996,6 @@ class mod_taskchain extends taskchain_base {
      * filearea_types
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function filearea_types() {
         return array('source', 'config');
@@ -961,7 +1007,6 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $type
      * @param xxx $subtype (optional, default='')
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function text_page_options($type, $subtype = '') {
         $options = array();
@@ -996,7 +1041,6 @@ class mod_taskchain extends taskchain_base {
      *
      * @param string $type 'yesno', 'moodle' or 'numeric'
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function window_options($type = '') {
         $options = array();
@@ -1016,30 +1060,29 @@ class mod_taskchain extends taskchain_base {
      * user_preferences_fieldnames_chain
      *
      * @return array of user_preferences for a TaskChain chain
-     * @todo Finish documenting this function
      */
     public static function user_preferences_fieldnames_chain() {
         return array(
-            // fields used only when adding a new TaskChain
+            // Fields used only when adding a new TaskChain.
             'namesource', 'entrytextsource', 'exittextsource', 'taskchain',
 
-            // source/config files
+            // Source/config files.
             'sourcefile', 'sourcelocation', 'configfile', 'configlocation',
 
-            // entry/exit pages
+            // Entry/exit pages.
             'entrypage', 'entryformat', 'entryoptions',
             'exitpage', 'exitformat', 'exitoptions',
             'entrycm', 'entrygrade', 'exitcm', 'exitgrade',
 
-            // display
+            // Display.
             'outputformat', 'navigation', 'title', 'stopbutton', 'stoptext',
             'usefilters', 'useglossary', 'usemediafilter', 'studentfeedback', 'studentfeedbackurl',
 
-            // access restrictions
+            // Access restrictions.
             'timeopen', 'timeclose', 'timelimit', 'delay1', 'delay2', 'delay3',
             'password', 'subnet', 'reviewoptions', 'attemptlimit',
 
-            // grading and reporting
+            // Grading and reporting.
             'grademethod', 'gradeweighting', 'clickreporting', 'discarddetails',
         );
     }
@@ -1048,28 +1091,27 @@ class mod_taskchain extends taskchain_base {
      * user_preferences_fieldnames_task
      *
      * @return array of user_preferences for a TaskChain task
-     * @todo Finish documenting this function
      */
     public static function user_preferences_fieldnames_task() {
         return array(
-            // adding a task
+            // Adding a task.
             'namesource', 'addtype',
 
-            // adding / editing a task
+            // Adding / editing a task.
             'sourcelocation', 'sourcefile', 'configfile', 'configlocation',
 
-            // display
+            // Display.
             'outputformat', 'navigation', 'title', 'stopbutton', 'stoptext',
             'usefilters', 'useglossary', 'usemediafilter', 'studentfeedback', 'studentfeedbackurl',
 
-            // access restrictions
+            // Access restrictions.
             'timeopen', 'timeclose', 'timelimit', 'delay1', 'delay2', 'delay3',
             'password', 'subnet', 'allowresume', 'reviewoptions', 'attemptlimit',
 
-            // scoring, storing and reports
+            // Scoring, storing and reports.
             'scoremethod', 'scoreignore', 'scorelimit', 'scoreweighting', 'clickreporting', 'discarddetails',
 
-            // conditions
+            // Conditions.
             'preconditions', 'postconditions',
         );
     }
@@ -1080,16 +1122,15 @@ class mod_taskchain extends taskchain_base {
      * @uses $DB
      * @param xxx $question
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function get_question_text($question) {
         global $DB;
 
         if (empty($question->text)) {
-            // JMatch, JMix and JQuiz
+            // JMatch, JMix and JQuiz.
             return $question->name;
         } else {
-            // JCloze and JCross
+            // JCloze and JCross.
             return $DB->get_field('taskchain_strings', 'string', array('id' => $question->text));
         }
     }
@@ -1100,7 +1141,6 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $field_value
      * @param xxx $max_field_length (optional, default=255)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function string_ids($field_value, $max_field_length = 255) {
         $ids = array();
@@ -1113,19 +1153,19 @@ class mod_taskchain extends taskchain_base {
         }
         $ids = implode(',', $ids);
 
-        // we have to make sure that the list of $ids is no longer
-        // than the maximum allowable length for this field
+        // We have to make sure that the list of $ids is no longer
+        // than the maximum allowable length for this field.
         if (strlen($ids) > $max_field_length) {
-            // truncate $ids just before last comma in allowable field length
+            // Truncate $ids just before last comma in allowable field length
             // Note: largest possible id is something like 9223372036854775808
-            // so we must leave space for that in the $ids string
+            // so we must leave space for that in the $ids string.
             $ids = substr($ids, 0, $max_field_length - 20);
             $ids = substr($ids, 0, strrpos($ids, ','));
 
-            // create single $str(ing) containing all $strings not included in $ids
+            // Create single $str(ing) containing all $strings not included in $ids.
             $str = implode(',', array_slice($strings, substr_count($ids, ',') + 1));
 
-            // append the id of the string containing all the strings not yet in $ids
+            // Append the id of the string containing all the strings not yet in $ids.
             if ($id = self::string_id($str)) {
                 $ids .= ',' . $id;
             }
@@ -1141,31 +1181,30 @@ class mod_taskchain extends taskchain_base {
      * @uses $DB
      * @param xxx $str
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function string_id($str) {
         global $DB;
 
         if (! isset($str) || ! is_string($str) || trim($str) == '') {
-            // invalid input string
+            // Invalid input string.
             return false;
         }
 
-        // create md5 key
+        // Create md5 key.
         $md5key = md5($str);
 
         if ($id = $DB->get_field('taskchain_strings', 'id', array('md5key' => $md5key))) {
-            // string already exists
+            // String already exists.
             return $id;
         }
 
-        // create a new string record
+        // Create a new string record.
         $record = (object)array('string' => $str, 'md5key' => $md5key);
         if (! $id = $DB->insert_record('taskchain_strings', $record)) {
             throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_strings');
         }
 
-        // new string was successfully added
+        // New string was successfully added.
         return $id;
     }
 
@@ -1174,14 +1213,13 @@ class mod_taskchain extends taskchain_base {
      *
      * @param xxx $status
      * @return string
-     * @todo Finish documenting this function
      */
     public static function format_status($status) {
         $options = taskchain_available::statuses_list();
         if (array_key_exists($status, $options)) {
             return $options[$status];
         } else {
-            return $status; // shouldn't happen
+            return $status; // Shouldn't happen.
         }
     }
 
@@ -1249,7 +1287,7 @@ class mod_taskchain extends taskchain_base {
         global $SCRIPT;
 
         if ($this->pageid == '' || $this->pageclass == '') {
-            // set pageid and pageclass from $SCRIPT
+            // Set pageid and pageclass from $SCRIPT
             // e.g.
             // $SCRIPT    : /mod/taskchain/view.php
             // $pageid    : mod-taskchain-view
@@ -1274,33 +1312,31 @@ class mod_taskchain extends taskchain_base {
      * show_entrypage
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function show_entrypage() {
-        // teacher can always see the entry page
+    public function show_entrypage() {
+        // Teacher can always see the entry page.
         if ($this->can_manage()) {
             return true;
         }
 
         if ($this->has_entrypage()) {
-            // special case for student who has an "in progress" chain attempt
-            // when "allowresume" is set to "force"
+            // Special case for student who has an "in progress" chain attempt
+            // when "allowresume" is set to "force".
             if ($this->chain->allowresume == mod_taskchain::ALLOWRESUME_FORCE) {
                 if (! $this->require->previous_chainattempt()) {
-                    return false; // student must resume previous chain attempt
+                    return false; // Student must resume previous chain attempt.
                 }
             }
-            return true; // student can see entry page
+            return true; // Student can see entry page.
         }
 
-        return false; // no entry page for student
+        return false; // No entry page for student.
     }
 
     /**
      * has_entrypage
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function has_entrypage() {
         return $this->get_field('chain', 'entrypage', 0);
@@ -1310,7 +1346,6 @@ class mod_taskchain extends taskchain_base {
      * has_exitpage
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function has_exitpage() {
         return $this->get_field('chain', 'exitpage', 0);
@@ -1322,12 +1357,11 @@ class mod_taskchain extends taskchain_base {
      * @uses $DB
      * @param xxx $ids
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function get_strings($ids) {
+    public static function get_strings($ids) {
         global $DB;
 
-        // convert $ids to an array, if necessary
+        // Convert $ids to an array, if necessary.
         if (is_string($ids)) {
             $ids = explode(',', $ids);
             $ids = array_filter($ids);
@@ -1351,7 +1385,7 @@ class mod_taskchain extends taskchain_base {
         if (array_key_exists($this->chain->allowresume, $options)) {
             return $options[$this->chain->allowresume];
         } else {
-            return $this->chain->allowresume; // shouldn't happen
+            return $this->chain->allowresume; // Shouldn't happen.
         }
     }
 
@@ -1375,13 +1409,13 @@ class mod_taskchain extends taskchain_base {
                 $method = $type . 'method';
                 $option = $this->$record->$method;
             } else {
-                $option = ''; // shouldn't happen !!
+                $option = ''; // Shouldn't happen !!
             }
         }
         if (array_key_exists($option, $options)) {
             return $options[$option];
         } else {
-            return $option; // shouldn't happen
+            return $option; // Shouldn't happen.
         }
     }
 
@@ -1404,7 +1438,6 @@ class mod_taskchain extends taskchain_base {
      * @uses $CFG
      * @param xxx $classname
      * @param xxx $filename
-     * @todo Finish documenting this function
      */
     public function load_class($classname, $filename) {
         global $CFG;
@@ -1421,10 +1454,9 @@ class mod_taskchain extends taskchain_base {
      * set_preferred_pagelayout
      *
      * @param xxx $PAGE
-     * @todo Finish documenting this function
      */
     public function set_preferred_pagelayout($PAGE) {
-        // page layouts are defined in theme/xxx/config.php
+        // Page layouts are defined in theme/xxx/config.php.
 
         $pagelayout = $PAGE->pagelayout;
 
@@ -1487,7 +1519,6 @@ class mod_taskchain extends taskchain_base {
      * get_report_modes
      *
      * @return xxx array($name => $params)
-     * @todo Finish documenting this function
      */
     public function get_report_modes() {
         $modes = array();
@@ -1531,7 +1562,6 @@ class mod_taskchain extends taskchain_base {
      *
      * @uses $OUTPUT
      * @param xxx $error
-     * @todo Finish documenting this function
      */
     public function print_error($error) {
         global $OUTPUT;
@@ -1547,14 +1577,13 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $field
      * @param xxx $value (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function force($field, $value = null) {
         $forcefield = 'force' . $field;
         if (is_null($value)) {
-            return $this->$forcefield;   // get $field value
+            return $this->$forcefield;   // Get $field value.
         } else {
-            $this->$forcefield = $value; // set $field to $value
+            $this->$forcefield = $value; // Set $field to $value.
             return true;
         }
     }
@@ -1566,9 +1595,8 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $more_params (optional, default=false)
      * @param xxx $id (optional, default='') name of id field
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function merge_params($params = false, $more_params = false, $id = '') {
+    public function merge_params($params = false, $more_params = false, $id = '') {
 
         $basic_params = array('id'             => 0,
                               'inpopup'        => $this->inpopup,
@@ -1589,7 +1617,7 @@ class mod_taskchain extends taskchain_base {
                               'columnlistid'   => $this->get_columnlistid(),
                               'columnlisttype' => $this->get_columnlisttype());
 
-        // remove empty values
+        // Remove empty values.
         $basic_params = array_filter($basic_params);
 
         if (! $params) {
@@ -1601,14 +1629,14 @@ class mod_taskchain extends taskchain_base {
         $all_params = array_merge($basic_params, $params, $more_params);
 
         if (isset($all_params['sesskey']) && empty($all_params['sesskey'])) {
-            // sesskey is not required
+            // Sesskey is not required.
             unset($all_params['sesskey']);
         } else {
-            // sesskey was not set, so set it
+            // Sesskey was not set, so set it.
             $all_params['sesskey'] = sesskey();
         }
 
-        // remove unnecessary parameters
+        // Remove unnecessary parameters.
         $unset = array();
         $unsettask = false;
         $unsetchain = false;
@@ -1644,7 +1672,7 @@ class mod_taskchain extends taskchain_base {
             unset($all_params[$name]);
         }
 
-        // rename the $id parameter, if necessary
+        // Rename the $id parameter, if necessary.
         if ($id && isset($all_params[$id])) {
             $all_params['id'] = $all_params[$id];
             unset($all_params[$id]);
@@ -1658,7 +1686,6 @@ class mod_taskchain extends taskchain_base {
      *
      * @param xxx $value (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function force_cnumber($value = null) {
         return $this->force('cnumber', $value);
@@ -1669,7 +1696,6 @@ class mod_taskchain extends taskchain_base {
      *
      * @param xxx $value (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function force_tnumber($value = null) {
         return $this->force('tnumber', $value);
@@ -1680,7 +1706,6 @@ class mod_taskchain extends taskchain_base {
      *
      * @param xxx $value (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function force_taskid($value = null) {
         return $this->force('taskid', $value);
@@ -1696,7 +1721,7 @@ class mod_taskchain extends taskchain_base {
     // All preconditions must be satisfied(i.e. AND)
     // Post condition with highest score is used (i.e. OR)
     //
-    // Additionally, a postcondition is not satisfied if the preconditions for [nexttaskid] are not satisfied
+    // Additionally, a postcondition is not satisfied if the preconditions for [nexttaskid] are not satisfied.
 
     /**
      * check_conditions
@@ -1706,12 +1731,11 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $taskid
      * @param xxx $previoustaskid
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function check_conditions($conditiontype, $taskid, $previoustaskid) {
         global $DB;
 
-        // set initial return value
+        // Set initial return value.
         if ($conditiontype == taskchain::CONDITIONTYPE_PRE) {
             $ok = true; // if there are no pre conditions, then the user can do this task
         } else {
@@ -1719,12 +1743,12 @@ class mod_taskchain extends taskchain_base {
         }
 
         switch (true) {
-            case $this->chain->allowfreeaccess > 0: // required grade
+            case $this->chain->allowfreeaccess > 0: // Required grade.
                 if ($this->get_maxchainattemptgrade() >= $this->chain->allowfreeaccess) {
                     return $ok;
                 }
                 break;
-            case $this->chain->allowfreeaccess < 0: // number of completed attempts
+            case $this->chain->allowfreeaccess < 0: // Number of completed attempts.
                 if ($this->get_chaincompleted() >= abs($this->chain->allowfreeaccess)) {
                     return $ok;
                 }
@@ -1732,11 +1756,11 @@ class mod_taskchain extends taskchain_base {
         }
 
         if (! $conditions = $this->get_conditions($conditiontype, $taskid)) {
-            // no conditions found for this task
+            // No conditions found for this task.
             return $ok;
         }
 
-        // make sure we have info on all tasks
+        // Make sure we have info on all tasks.
         if (is_null($this->tasks)) {
             $this->get_tasks();
         }
@@ -1746,7 +1770,7 @@ class mod_taskchain extends taskchain_base {
 
         foreach ($conditions as $condition) {
             if ($sortorder >= 0) {
-                // not the first condition, so check status of previous group of conditions
+                // Not the first condition, so check status of previous group of conditions.
                 if ($ok) {
                     if ($conditiontype == taskchain::CONDITIONTYPE_POST) {
                         // previous post-condition was satisfied (=success!)
@@ -1757,16 +1781,16 @@ class mod_taskchain extends taskchain_base {
                     }
                 } else if ($condition->sortorder == $sortorder && $conditiontype == taskchain::CONDITIONTYPE_PRE) {
                     // a previous pre-condition was not satisfied (=failure),
-                    // so skip remaining pre-conditions with the same sortorder
+                    // so skip remaining pre-conditions with the same sortorder.
                     continue;
                 }
             }
             $sortorder = $condition->sortorder;
 
-            // this task has pre/post conditions, so the default return value is FALSE
+            // This task has pre/post conditions, so the default return value is FALSE
             // for pre-conditions, this means the task cannot be done
             // for post-conditions, this means no next task was specified
-            // to return TRUE, we must find a condition that is satisfied
+            // to return TRUE, we must find a condition that is satisfied.
             $ok = false;
 
             switch ($condition->conditiontaskid) {
@@ -1779,17 +1803,17 @@ class mod_taskchain extends taskchain_base {
                     break;
 
                 default:
-                    // specific task id
+                    // Specific task id.
                     $conditiontaskid = $condition->conditiontaskid;
             }
 
             if (! isset($this->tasks[$conditiontaskid])) {
-                // condition task id is not valid !!
+                // Condition task id is not valid !!
                 continue;
             }
 
             if (! $this->get_cache_taskattempts($conditiontaskid)) {
-                // no attempts at the [conditiontask], so condition cannot be satisifed
+                // No attempts at the [conditiontask], so condition cannot be satisifed.
                 continue;
             }
 
@@ -1800,16 +1824,16 @@ class mod_taskchain extends taskchain_base {
                 // sort attempts by time DESC (most recent attempts first)
                 $this->usort_attempts($attempts, $usort, 'time_desc');
 
-                // get delay (=time elapsed) since most recent attempt
+                // Get delay (=time elapsed) since most recent attempt.
                 $attempt = reset($attempts);
                 $attemptdelay = ($this->time - $attempt->timemodified);
 
                 if ($condition->attemptdelay < 0 && $attemptdelay < $condition->attemptdelay) {
-                    // not enough time elapsed, so precondition fails
+                    // Not enough time elapsed, so precondition fails.
                     return false;
                 }
                 if ($condition->attemptdelay > 0 && $attemptdelay > $condition->attemptdelay) {
-                    // too much time has elapsed, so precondition fails
+                    // Too much time has elapsed, so precondition fails.
                     return false;
                 }
             }
@@ -1819,19 +1843,19 @@ class mod_taskchain extends taskchain_base {
             switch ($condition->attempttype) {
                 case taskchain::ATTEMPTTYPE_ANY:
                     if ($condition->attemptduration > 0) {
-                        // total time must not exceed attemptduration, so
+                        // Total time must not exceed attemptduration, so
                         // sort attempts by duration ASC (fastest attempts first)
                         $this->usort_attempts($attempts, $usort, 'duration_asc');
                     }
                     if ($condition->attemptduration < 0) {
-                        // total time must be at least attemptduration, so
+                        // Total time must be at least attemptduration, so
                         // sort attempts by duration DESC (slowest attempts first)
                         $this->usort_attempts($attempts, $usort, 'duration_desc');
                     }
                     foreach ($attempts as $attempt) {
                         $ok = $this->check_condition_score($condition, $attempt->score);
                         if (! $ok) {
-                            // score condition not satisfied
+                            // Score condition not satisfied.
                             continue;
                         }
 
@@ -1879,7 +1903,7 @@ class mod_taskchain extends taskchain_base {
                     break;
 
                 case taskchain::ATTEMPTTYPE_CONSECUTIVE:
-                    // sort attempts by time DESC
+                    // Sort attempts by time DESC.
                     foreach ($attempts as $attempt) {
                         $ok = $this->check_condition_score($condition, $attempt->score);
                         if ($ok) {
@@ -1921,18 +1945,17 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $condition (passed by reference)
      * @param xxx $attemptscore (passed by reference)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function check_condition_score(&$condition, &$attemptscore) {
         if ($condition->conditionscore > 0 && $attemptscore > $condition->conditionscore) {
-            // maximum score exceeded
+            // Maximum score exceeded.
             return false;
         }
         if ($condition->conditionscore < 0 && $attemptscore < $condition->abs_conditionscore) {
-            // minimum score not reached
+            // Minimum score not reached.
             return false;
         }
-        // score condition is satisfied
+        // Score condition is satisfied.
         return true;
     }
 
@@ -1943,15 +1966,14 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $attemptcount
      * @param xxx $attemptduration
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function check_condition_max(&$condition, $attemptcount, $attemptduration) {
         if ($condition->attemptcount > 0 && $attemptcount > $condition->attemptcount) {
-            // maximum number of attempts exceeded
+            // Maximum number of attempts exceeded.
             return false;
         }
         if ($condition->attemptduration > 0 && $attemptduration > $condition->attemptduration) {
-            // maximum time exceeded
+            // Maximum time exceeded.
             return false;
         }
         // "max" conditions are satisfied
@@ -1965,15 +1987,14 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $attemptcount
      * @param xxx $attemptduration
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function check_condition_min(&$condition, $attemptcount, $attemptduration) {
         if ($condition->attemptcount < 0 && $attemptcount < $condition->abs_attemptcount) {
-            // minimum number of attempts not reached
+            // Minimum number of attempts not reached.
             return false;
         }
         if ($condition->attemptduration < 0 && $attemptduration < $condition->abs_attemptduration) {
-            // minimum time not reached
+            // Minimum time not reached.
             return false;
         }
         // "min" conditions are satisfied
@@ -1986,11 +2007,10 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $attempts (passed by reference)
      * @param xxx $usort (passed by reference)
      * @param xxx $newusort
-     * @todo Finish documenting this function
      */
     public function usort_attempts(&$attempts, &$usort, $newusort) {
         if ($usort == $newusort) {
-            // do nothing - attempts are already in order
+            // Do nothing - attempts are already in order.
         } else {
             $usort = $newusort;
             // "uasort" maintains the id => record correlation (where "usort" does not)
@@ -2006,12 +2026,11 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $taskid
      * @param xxx $previoustaskid
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_nexttaskid(&$condition, $taskid, $previoustaskid) {
         global $DB;
 
-        // initialize recturn value
+        // Initialize recturn value.
         $nexttaskid = 0;
 
         $ids = array();
@@ -2044,7 +2063,7 @@ class mod_taskchain extends taskchain_base {
             case taskchain::CONDITIONTASKID_NEXT4:
             case taskchain::CONDITIONTASKID_NEXT5:
                 // skip is the number of tasks to skip (next1=0, next2=1, etc)
-                // remember nexttaskid and the NEXT constants are all negative
+                // remember nexttaskid and the NEXT constants are all negative.
                 $skip = (taskchain::CONDITIONTASKID_NEXT1 - $condition->nexttaskid);
                 $sql = "
                     SELECT id, sortorder
@@ -2054,7 +2073,7 @@ class mod_taskchain extends taskchain_base {
                 ";
                 break;
 
-            case taskchain::CONDITIONTASKID_UNSEEN: // no attempts
+            case taskchain::CONDITIONTASKID_UNSEEN: // No attempts.
                 $sql = "
                     SELECT id, sortorder FROM {taskchain_tasks} q
                     LEFT JOIN (
@@ -2071,7 +2090,7 @@ class mod_taskchain extends taskchain_base {
                 $random = true;
                 break;
 
-            case taskchain::CONDITIONTASKID_UNANSWERED: // no responses
+            case taskchain::CONDITIONTASKID_UNANSWERED: // No responses.
                 $sql = "
                     SELECT id, sortorder FROM {taskchain_tasks} q
                     LEFT JOIN (
@@ -2096,7 +2115,7 @@ class mod_taskchain extends taskchain_base {
                 $random = true;
                 break;
 
-            case taskchain::CONDITIONTASKID_INCORRECT: // score < 100%
+            case taskchain::CONDITIONTASKID_INCORRECT: // Score < 100%.
                 $sql = "
                     SELECT q.id, q.sortorder FROM {taskchain_tasks} q
                     LEFT JOIN (
@@ -2138,7 +2157,7 @@ class mod_taskchain extends taskchain_base {
         }
 
         if ($i_max = count($ids)) {
-            // set capability, if necessary
+            // Set capability, if necessary.
             static $has_capability_preview = null;
             if (is_null($has_capability_preview)) {
                 $has_capability_preview = has_capability('mod/taskchain:preview', $this->coursemodule->context);
@@ -2150,10 +2169,10 @@ class mod_taskchain extends taskchain_base {
                     $i = $this->random_number(0, $i_max - 1);
                 }
                 if ($has_capability_preview) {
-                    // a teacher: don't check pre-conditions
+                    // A teacher: don't check pre-conditions.
                     $ok = true;
                 } else {
-                    // a student: always check pre-conditions on candidate for next task
+                    // A student: always check pre-conditions on candidate for next task
                     // (and pass the current $taskid to be the $previoustaskid in order to do the checking)
                     $ok = $this->check_conditions(taskchain::CONDITIONTYPE_PRE, $ids[$i], $taskid);
                 }
@@ -2162,11 +2181,11 @@ class mod_taskchain extends taskchain_base {
                         $skip--;
                     } else {
                         $nexttaskid = $ids[$i];
-                        break; // nexttaskid has been found
+                        break; // Nexttaskid has been found.
                     }
                 }
                 if ($random) {
-                    // remove this id from the $ids array
+                    // Remove this id from the $ids array.
                     $ids = array_splice($ids, $i, 1);
                     $i_max--;
                     $i = 0;
@@ -2185,7 +2204,6 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $min (optional, default=0)
      * @param xxx $max (optional, default=RAND_MAX)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function random_number($min = 0, $max = RAND_MAX) {
         static $rand;
@@ -2194,7 +2212,7 @@ class mod_taskchain extends taskchain_base {
             $rand = function_exists('mt_rand') ? 'mt_rand' : 'rand';
             $srand = function_exists('mt_srand') ? 'mt_srand' : 'srand';
 
-            // seed the random number generator
+            // Seed the random number generator.
             list($usec, $sec) = explode(' ', microtime());
             $srand((int) ((float) $sec + ((float) $usec * 100000)));
         }
@@ -2207,9 +2225,8 @@ class mod_taskchain extends taskchain_base {
      * @param string $types "taskchains", "chains", "tasks", "conditions", "chaingrades", "chainattempts", "quizscores", "quizattempts"
      * @param string $types "taskchain", "chain", "task", "condition", "chaingrade", "chainattempt", "quizscore", "quizattempt"
      * @param array  $ids
-     * @todo Finish documenting this function
      */
-    function delete_cached_records($types, $type, $ids) {
+    public function delete_cached_records($types, $type, $ids) {
         $typeid = $type . 'id';
         foreach ($ids as $id) {
             if (isset($this->{$typeid}) && $this->{$typeid} == $id) {
@@ -2231,22 +2248,21 @@ class mod_taskchain extends taskchain_base {
      * @param string $types
      * @param string $type
      * @param array  $records
-     * @todo Finish documenting this function
      */
-    function delete_records($tablename, $types, $type, $records) {
+    public function delete_records($tablename, $types, $type, $records) {
         global $DB;
         $ids = array_keys($records);
 
-        // delete DB records
+        // Delete DB records.
         list($select, $params) = $DB->get_in_or_equal($ids);
         if (! $DB->delete_records_select($tablename, "id $select", $params)) {
             throw new moodle_exception('error_deleterecords', 'taskchain', '', $tablename);
         }
 
-        // delete cached records
+        // Delete cached records.
         $this->delete_cached_records($types, $type, $ids);
 
-        // update deleted totals
+        // Update deleted totals.
         $this->deleted->{$types} = count($ids);
         $this->deleted->total += $this->deleted->{$types};
     }
@@ -2256,27 +2272,26 @@ class mod_taskchain extends taskchain_base {
      *
      * @uses $DB
      * @return array $deleted[taskattempts, taskscores, chainattempts, chaingrades, total]
-     * @todo Finish documenting this function
      */
     public function delete_selected_attempts() {
         global $DB, $USER;
 
         if (! $this->confirmed) {
-            return false; // show a confirm button ?
+            return false; // Show a confirm button ?
         }
 
         if (! $this->can->deleteattempts()) {
-            return false; // user cannot delete any attempts
+            return false; // User cannot delete any attempts.
         }
 
         if (! $selected = $this->selected) {
-            return false; // no attempts selected
+            return false; // No attempts selected.
         }
         // $selected[$userid][chainid][cnumber][taskid][tnumber][taskattemptid]
 
         if ($this->can->deleteallattempts()) {
             if (! $userfilter = $this->get_userfilter('')) {
-                return false; // no users selected
+                return false; // No users selected.
             }
         } else {
             // "deletemyattempts" only allows deletion of the user's own attempts
@@ -2286,16 +2301,16 @@ class mod_taskchain extends taskchain_base {
                 }
             }
             if (empty($selected)) {
-                return false; // no attempts selected
+                return false; // No attempts selected.
             }
             $userfilter = 'userid = ' . intval($USER->id);
         }
 
         // TODO: get status from filters
-        // and maybe other fields too
+        // and maybe other fields too.
         $status = 0;
 
-        // we are going to return some totals of how many records were deleted
+        // We are going to return some totals of how many records were deleted.
         $this->deleted = (object)array(
             'taskattempts' => 0, 'taskscores' => 0, 'chainattempts' => 0, 'chaingrades' => 0, 'total' => 0,
         );
@@ -2318,7 +2333,7 @@ class mod_taskchain extends taskchain_base {
             $taskfilter = 'taskid IN (SELECT id FROM {taskchain_tasks} WHERE ' . $chainfilter . ')';
         }
 
-        // remove all task_attempts by users in $userfilter
+        // Remove all task_attempts by users in $userfilter.
         $select = $this->get_selected_sql($selected, $chains, $tasks, $taskattempts);
 
         if ($select) {
@@ -2331,7 +2346,7 @@ class mod_taskchain extends taskchain_base {
             }
         }
 
-        // remove all task_scores which have no task attempts by users in $userfilter
+        // Remove all task_scores which have no task attempts by users in $userfilter.
         $select = "id IN (
             SELECT qs.id FROM {taskchain_task_scores} qs
             LEFT JOIN (
@@ -2344,7 +2359,7 @@ class mod_taskchain extends taskchain_base {
             $this->delete_records('taskchain_task_scores', 'taskscores', 'taskscore', $records);
         }
 
-        // remove all chain_attempts which have no task scores by users in $userfilter
+        // Remove all chain_attempts which have no task scores by users in $userfilter.
         $select = "id IN (
             SELECT ua.id FROM {taskchain_chain_attempts} ua
             LEFT JOIN (
@@ -2360,7 +2375,7 @@ class mod_taskchain extends taskchain_base {
             $this->delete_records('taskchain_chain_attempts', 'chainattempts', 'chainattempt', $records);
         }
 
-        // remove all chain_grades which have no chain_attempts by users in $userfilter
+        // Remove all chain_grades which have no chain_attempts by users in $userfilter.
         $select = "id IN (
             SELECT ug.id FROM {taskchain_chain_grades} ug
             LEFT JOIN (
@@ -2377,7 +2392,7 @@ class mod_taskchain extends taskchain_base {
             $this->delete_records('taskchain_chain_grades', 'chaingrades', 'chaingrade', $records);
         }
 
-        // regrade tasks, chains and taskchains
+        // Regrade tasks, chains and taskchains.
         $this->regrade->selected_tasks($selected, $taskchains, $chains, $tasks, $userfilter);
 
         // Note: don't use $this->regrade_selected_tasks(), as this causes the following error:
@@ -2394,7 +2409,6 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $tasks (passed by reference)
      * @param xxx $taskattempts (passed by reference)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_selected_sql(&$selected, &$chains, &$tasks, &$taskattempts) {
         $userid_filters = array();
@@ -2411,8 +2425,8 @@ class mod_taskchain extends taskchain_base {
                         continue;
                     }
                     $chainid_filter = array();
-                    // the chainid filter to select taskids for this chainid will be added later
-                    // because it is only required if specific taskids have not been specified
+                    // The chainid filter to select taskids for this chainid will be added later
+                    // because it is only required if specific taskids have not been specified.
                     $add_chainid_filter = true;
                     if (is_array($cnumbers)) {
                         $cnumber_filters = array();
@@ -2429,7 +2443,7 @@ class mod_taskchain extends taskchain_base {
                                     }
                                     $taskid_filter = array();
                                     $taskid_filter[] = "taskid = $taskid";
-                                    $add_chainid_filter = false; // not required if we have a taskid
+                                    $add_chainid_filter = false; // Not required if we have a taskid.
                                     if (is_array($tnumbers)) {
                                         $tnumber_filters = array();
                                         foreach ($tnumbers as $tnumber => $taskattemptids) {
@@ -2524,7 +2538,7 @@ class mod_taskchain extends taskchain_base {
                     } // end if is_array($cnumbers)
 
                     if ($add_chainid_filter) {
-                        // prepend filter to select only taskids for this chainid
+                        // Prepend filter to select only taskids for this chainid.
                         array_unshift($chainid_filter, "taskid IN (SELECT id FROM {taskchain_tasks} WHERE chainid = $chainid)");
                     }
                     switch (count($chainid_filter)) {
@@ -2540,7 +2554,7 @@ class mod_taskchain extends taskchain_base {
 
                 switch (count($chainid_filters)) {
                     case 0:
-                        break; // nothing to delete
+                        break; // Nothing to delete.
                     case 1:
                         $userid_filter[] = $chainid_filters[0];
                         break;
@@ -2562,7 +2576,7 @@ class mod_taskchain extends taskchain_base {
 
         switch (count($userid_filters)) {
             case 0:
-                return ''; // nothing to delete
+                return ''; // Nothing to delete.
             case 1:
                 return $userid_filters[0];
             default:
@@ -2578,20 +2592,19 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $selected (passed by reference)
      * @param xxx $capability
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function clean_selected(&$selected, $capability) {
-        // we are expecting the "selected" array to be something like this:
+        // We are expecting the "selected" array to be something like this:
         // selected[userid][chainid][cnumber][taskid][tnumber][taskattemptid]
         // cnumber and tnumber maybe zero
-        // taskattemptid maybe be missing
+        // taskattemptid maybe be missing.
         global $CFG, $DB;
 
-        // arrays to hold ids of records this user wants to delete
-        $taskchains = array(); // taskchain
-        $chains = array(); // taskchain_chains
-        $tasks = array(); // taskchain_tasks
-        $taskattempts = array(); // taskchain_task_attempts
+        // Arrays to hold ids of records this user wants to delete.
+        $taskchains = array(); // Taskchain.
+        $chains = array(); // Taskchain_chains.
+        $tasks = array(); // Taskchain_tasks.
+        $taskattempts = array(); // Taskchain_task_attempts.
 
         // get ids of records this user wants to delete (tidy up $selected where necessary)
         foreach ($selected as $userid => $chainids) {
@@ -2649,13 +2662,13 @@ class mod_taskchain extends taskchain_base {
             }
         }
 
-        // we don't need these anymore
+        // We don't need these anymore.
         unset($taskchainids);
         unset($chainids);
         unset($taskids);
         unset($taskattemptids);
 
-        // get requested task attempts
+        // Get requested task attempts.
         if (count($taskattempts)) {
             $fields = 'id,taskid';
             list($select, $params) = $DB->get_in_or_equal(array_keys($taskattempts));
@@ -2664,11 +2677,11 @@ class mod_taskchain extends taskchain_base {
                     $tasks[$taskattempt->taskid] = true;
                 }
             } else {
-                $taskattempts = array(); // shouldn't happen !!
+                $taskattempts = array(); // Shouldn't happen !!
             }
         }
 
-        // get requested tasks
+        // Get requested tasks.
         if (count($tasks)) {
             $fields = 'id,chainid,timelimit,allowresume,attemptlimit,scoremethod,scoreignore,scorelimit,scoreweighting';
             list($select, $params) = $DB->get_in_or_equal(array_keys($tasks));
@@ -2677,11 +2690,11 @@ class mod_taskchain extends taskchain_base {
                     $chains[$task->chainid] = true;
                 }
             } else {
-                $tasks = array(); // shouldn't happen !!
+                $tasks = array(); // Shouldn't happen !!
             }
         }
 
-        // get requested chains and taskchainids
+        // Get requested chains and taskchainids.
         if (count($chains)) {
             $fields = 'id,parenttype,parentid,timelimit,allowresume,attemptlimit,attemptgrademethod,grademethod,gradeignore,gradelimit,gradeweighting';
             list($select, $params) = $DB->get_in_or_equal(array_keys($chains));
@@ -2692,21 +2705,21 @@ class mod_taskchain extends taskchain_base {
                     $taskchains[$chain->parentid] = true;
                 }
             } else {
-                $chains = array(); // shouldn't happen !!
+                $chains = array(); // Shouldn't happen !!
             }
         }
 
-        // select requested course modules for which this user is allowed to delete attempts at TaskChains
+        // Select requested course modules for which this user is allowed to delete attempts at TaskChains.
         if (count($taskchains)) {
             if ($modinfo = get_fast_modinfo($this->course)) {
                 foreach ($modinfo->cms as $cmid => $mod) {
                     if ($mod->modname == 'taskchain') {
                         $taskchainid = $mod->instance;
                         if (array_key_exists($taskchainid, $taskchains) && $this->can->$capability(false, self::context(CONTEXT_MODULE, $cmid))) {
-                            // user can delete attempts, so save the taskchain id
-                            // we don't need to get the full taskchain/coursemodule record
+                            // User can delete attempts, so save the taskchain id
+                            // we don't need to get the full taskchain/coursemodule record.
                             $taskchains[$taskchainid] = (object)array(
-                                // these fields are required by taskchain_grade_item_update() in "mod/taskchain/lib.php"
+                                // These fields are required by taskchain_grade_item_update() in "mod/taskchain/lib.php".
                                 'id'         => $mod->instance,
                                 'cmidnumber' => $mod->idnumber,
                                 'course'     => $mod->course,
@@ -2718,14 +2731,14 @@ class mod_taskchain extends taskchain_base {
             }
         }
 
-        // remove taskchains that this user is not allowed to touch
+        // Remove taskchains that this user is not allowed to touch.
         foreach ($taskchains as $taskchainid => $taskchain) {
             if ($taskchain === true) {
                 unset($taskchains[$taskchainid]);
             }
         }
 
-        // remove chains that this user is not allowed to touch
+        // Remove chains that this user is not allowed to touch.
         foreach ($chains as $chainid => $chain) {
             if (empty($taskchains[$chain->parentid])) {
                 unset($chains[$chainid]);
@@ -2733,14 +2746,14 @@ class mod_taskchain extends taskchain_base {
                 $chains[$chainid]->tasks = array();
                 $chains[$chainid]->userids = array();
 
-                // transfer gradelimit and gradeweighting to $taskchain
+                // Transfer gradelimit and gradeweighting to $taskchain
                 // (required for taskchain_get_user_grades() in "mod/taskchain/lib.php")
                 $taskchains[$chain->parentid]->gradelimit = $chain->gradelimit;
                 $taskchains[$chain->parentid]->gradeweighting = $chain->gradeweighting;
             }
         }
 
-        // remove tasks that this user is not allowed to touch
+        // Remove tasks that this user is not allowed to touch.
         foreach ($tasks as $taskid => $task) {
             if (empty($chains[$task->chainid])) {
                 unset($tasks[$taskid]);
@@ -2748,7 +2761,7 @@ class mod_taskchain extends taskchain_base {
             $tasks[$taskid]->userids = array();
         }
 
-        // remove task attempts that this user is not allowed to delete
+        // Remove task attempts that this user is not allowed to delete.
         foreach ($taskattempts as $id => $taskattempt) {
             if (empty($tasks[$taskattempt->taskid])) {
                 unset($taskattempts[$id]);
@@ -2767,7 +2780,6 @@ class mod_taskchain extends taskchain_base {
      * @param xxx $params (optional, default=null)
      * @param xxx $countitem (optional, default="COUNT('x')")
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function count_records_select($table, $select, $params = null, $countitem = "COUNT('x')") {
         if ($select) {
@@ -2784,7 +2796,6 @@ class mod_taskchain extends taskchain_base {
      * @param xxx array
      * @param xxx $params (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function count_records_sql($sql, $params = null) {
         global $DB;
@@ -2799,11 +2810,10 @@ class mod_taskchain extends taskchain_base {
      * to_stdclass
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function to_stdclass() {
         $stdclass = parent::to_stdclass();
-        // extra fields required for grades
+        // Extra fields required for grades.
         if (isset($this->course) && is_object($this->course)) {
             $stdclass->course = $this->course->id;
         }
@@ -2820,7 +2830,6 @@ class mod_taskchain extends taskchain_base {
      * @param string $field the name of the field on which tasks are to be sorted
      * @param string $direction "asc" or "desc"
      * @return void, but may alter order of $this->tasks array
-     * @todo Finish documenting this function
      */
     public function sort_tasks($field, $direction) {
         $method = 'sort_' . $field . '_' . $direction;
@@ -2835,7 +2844,6 @@ class mod_taskchain extends taskchain_base {
      * @param object $a (passed by reference) an object to be compared
      * @param object $b (passed by reference) an object to be compared
      * @return integer 1 ($a > $b), 0 (equal), or -1 ($a < $b)
-     * @todo Finish documenting this function
      */
     protected function sort_sortorder_asc(&$a, &$b) {
         return $this->sort_asc($a, $b, 'sortorder');
@@ -2848,7 +2856,6 @@ class mod_taskchain extends taskchain_base {
      * @param object $b (passed by reference) an object to be compared
      * @param string $field the name of the field on which $a and $b are to be compared
      * @return integer 1 ($a > $b), 0 ($a==$b), or -1 ($a < $b)
-     * @todo Finish documenting this function
      */
     protected function sort_asc(&$a, &$b, $field) {
         if ($a->$field < $b->$field) {
@@ -2857,7 +2864,7 @@ class mod_taskchain extends taskchain_base {
         if ($a->$field > $b->$field) {
             return 1; // $a after $b
         }
-        // equal values
+        // Equal values.
         return 0;
     }
 
@@ -2873,11 +2880,10 @@ class mod_taskchain extends taskchain_base {
      * @param integer $instanceid (optional, default=0)
      * @param int $strictness (optional, default=0 i.e. IGNORE_MISSING)
      * @return required context
-     * @todo Finish documenting this function
      */
     public static function context($contextlevel, $instanceid = 0, $strictness = 0) {
         if (class_exists('context_helper')) {
-            // use call_user_func() to prevent syntax error in PHP 5.2.x
+            // Use call_user_func() to prevent syntax error in PHP 5.2.x.
             $class = context_helper::get_class_for_level($contextlevel);
             return call_user_func(array($class, 'instance'), $instanceid, $strictness);
         } else {
@@ -2896,7 +2902,6 @@ class mod_taskchain extends taskchain_base {
      * @param string $method
      * @param mixed any extra params that are required by the textlib $method
      * @return result from the textlib $method
-     * @todo Finish documenting this function
      */
     public static function textlib() {
 
@@ -2909,19 +2914,19 @@ class mod_taskchain extends taskchain_base {
         if ($method == 'utf8_to_entities') {
             if (class_exists('core_text') && method_exists('core_text', 'typo3') == false) {
                 $str = array_shift($args);
-                $map = [0xa0, 0xffff, 0, 0xffff]; // start_code, end_code, offset, mask
+                $map = [0xa0, 0xffff, 0, 0xffff]; // Start_code, end_code, offset, mask.
                 return mb_encode_numericentity($str, $map, 'UTF-8', true);
             }
         }
 
         if (class_exists('core_text')) {
-            // Moodle >= 2.6
+            // Moodle >= 2.6.
             $textlib = 'core_text';
         } else if (method_exists('textlib', 'textlib')) {
-            // Moodle 2.0 - 2.1
+            // Moodle 2.0 - 2.1.
             $textlib = textlib_get_instance();
         } else {
-            // Moodle 2.2 - 2.5
+            // Moodle 2.2 - 2.5.
             $textlib = 'textlib';
         }
 
@@ -2931,8 +2936,8 @@ class mod_taskchain extends taskchain_base {
         }
 
         if ($method == 'utf8ord') {
-            // Moodle <= 2.4
-            $args = array($args[0], true); // force decimal entity
+            // Moodle <= 2.4.
+            $args = array($args[0], true); // Force decimal entity.
             $callback = array($textlib, 'utf8_to_entities');
             $str = call_user_func_array($callback, $args);
             if (substr($str, 0, 2) == '&#' && substr($str, -1) == ';') {
@@ -2964,7 +2969,7 @@ class mod_taskchain extends taskchain_base {
                 $param = $_GET[$name];
                 break;
             default:
-                return $default; // param not found
+                return $default; // Param not found.
         }
         if (is_array($param) && function_exists('clean_param_array')) {
             return clean_param_array($param, $type, $recursive);
@@ -2985,12 +2990,12 @@ class mod_taskchain extends taskchain_base {
      * @param string  $cmid (optional, default=0)
      * @param integer $userid (optional, default=0)
      */
-    static function add_to_log($courseid, $module, $action, $url = '', $info = '', $cmid = 0, $userid = 0) {
+    public static function add_to_log($courseid, $module, $action, $url = '', $info = '', $cmid = 0, $userid = 0) {
         global $DB, $PAGE, $TC;
 
         // detect new event API (Moodle >= 2.6)
         if (function_exists('get_log_manager')) {
-            // map old $action to new $eventname
+            // Map old $action to new $eventname.
             switch ($action) {
                 case 'attempt':
                     $eventname = 'attempt_started';
@@ -3039,13 +3044,13 @@ class mod_taskchain extends taskchain_base {
                 $objectid  = 0;
 
                 if ($action == 'view all' || $action == 'index' || $action == 'editchains') {
-                    // course context
+                    // Course context.
                     if (isset($PAGE->course) && $PAGE->course->id == $courseid) {
-                        // normal Moodle use
+                        // Normal Moodle use.
                         $context = $PAGE->context;
                         $course  = $PAGE->course;
                     } else if ($courseid) {
-                        // Moodle upgrade
+                        // Moodle upgrade.
                         $context = mod_taskchain::context(CONTEXT_COURSE, $courseid);
                         $course  = $DB->get_record('course', array('id' => $courseid));
                     }
@@ -3053,15 +3058,15 @@ class mod_taskchain extends taskchain_base {
                         $params = array('context' => $context);
                     }
                 } else {
-                    // course module context
+                    // Course module context.
                     if (isset($PAGE->cm) && $PAGE->cm->id == $cmid) {
-                        // normal Moodle use
+                        // Normal Moodle use.
                         $objectid  = $PAGE->cm->instance;
                         $context   = $PAGE->context;
                         $course    = $PAGE->course;
                         $taskchain = $PAGE->activityrecord;
                     } else if ($cmid) {
-                        // Moodle upgrade
+                        // Moodle upgrade.
                         $objectid  = $DB->get_field('course_modules', 'instance', array('id' => $cmid));
                         $context   = mod_taskchain::context(CONTEXT_MODULE, $cmid);
                         $course    = $DB->get_record('course', array('id' => $courseid));
@@ -3076,7 +3081,7 @@ class mod_taskchain extends taskchain_base {
                     if ($userid) {
                         $params['relateduserid'] = $userid;
                     }
-                    // use call_user_func() to prevent syntax error in PHP 5.2.x
+                    // Use call_user_func() to prevent syntax error in PHP 5.2.x.
                     $event = call_user_func(array($classname, 'create'), $params);
                     if ($course) {
                         $event->add_record_snapshot('course', $course);
@@ -3102,7 +3107,7 @@ class mod_taskchain extends taskchain_base {
                 }
             }
         } else if (function_exists('add_to_log')) {
-            // Moodle <= 2.5
+            // Moodle <= 2.5.
             add_to_log($courseid, $module, $action, $url, $info, $cmid, $userid);
         }
     }
@@ -3143,6 +3148,6 @@ class mod_taskchain extends taskchain_base {
                 return true;
             }
         }
-        return false; // shouldn't happen !!
+        return false; // Shouldn't happen !!
     }
 }

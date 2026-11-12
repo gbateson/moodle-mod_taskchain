@@ -35,37 +35,37 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_response extends taskchain_base {
-    /** db field: id (primary key, default=null) */
+    /** @var mixed db field: id (primary key, default=null) */
     private $id                  = null;
 
-    /** db field: attemptid (integer, default=0) */
+    /** @var int db field: attemptid (integer, default=0) */
     private $attemptid           = 0;
 
-    /** db field: questionid (integer, default=0) */
+    /** @var int db field: questionid (integer, default=0) */
     private $questionid          = 0;
 
-    /** db field: score (integer, default=0) */
+    /** @var int db field: score (integer, default=0) */
     private $score               = 0;
 
-    /** db field: weighting (integer, default=0) */
+    /** @var int db field: weighting (integer, default=0) */
     private $weighting           = 0;
 
-    /** db field: hints (integer, default=0) */
+    /** @var int db field: hints (integer, default=0) */
     private $hints               = 0;
 
-    /** db field: clues (integer, default=0) */
+    /** @var int db field: clues (integer, default=0) */
     private $clues               = 0;
 
-    /** db field: checks (integer, default=0) */
+    /** @var int db field: checks (integer, default=0) */
     private $checks              = 0;
 
-    /** db field: correct (string (255), default='') */
+    /** @var string db field: correct (string (255), default='') */
     private $correct             = '';
 
-    /** db field: wrong (string (255), default='') */
+    /** @var string db field: wrong (string (255), default='') */
     private $wrong               = '';
 
-    /** db field: ignored (string (255), default='') */
+    /** @var string db field: ignored (string (255), default='') */
     private $ignored             = '';
 
     /**

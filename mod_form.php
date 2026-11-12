@@ -39,20 +39,20 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/chain.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_mod_form extends moodleform_mod {
-    /** TaskChain form helper - see mod/taskchain/form/base.php **/
+    /** @var mixed TaskChain form helper - see mod/taskchain/form/base.php * */
     private $form_helper;
 
     /**
      * Standard function to define elements on a TaskChain mod form
      */
     public function definition() {
-        // set up TaskChain form helper
+        // Set up TaskChain form helper.
         $this->form_helper = new taskchain_form_helper_chain($this->_form, $this->context, $this->current);
 
-        // add form sections
+        // Add form sections.
         $this->form_helper->add_sections();
 
-        // add standard elements and buttons
+        // Add standard elements and buttons.
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();
     }
@@ -75,7 +75,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
      * @return void
      */
     public function form_postprocessing($data) {
-        // update context for newly created coursemodule
+        // Update context for newly created coursemodule.
         $this->form_helper->set_context(CONTEXT_MODULE, $data->coursemodule);
         $this->form_helper->fix_sections($data);
         $this->form_helper->set_preferences($data);
@@ -111,7 +111,6 @@ class mod_taskchain_mod_form extends moodleform_mod {
      * @param xxx $data (passed by reference)
      * @param xxx $files
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
@@ -130,9 +129,9 @@ class mod_taskchain_mod_form extends moodleform_mod {
      */
     protected function get_completion_suffix() {
         if (method_exists($this, 'get_suffix')) {
-            return $this->get_suffix(); // Moodle >= 4.3
+            return $this->get_suffix(); // Moodle >= 4.3.
         }
-        return ''; // Moodle <= 4.2
+        return ''; // Moodle <= 4.2.
     }
 
     /**
@@ -144,13 +143,13 @@ class mod_taskchain_mod_form extends moodleform_mod {
         $mform = $this->_form;
         $suffix = $this->get_completion_suffix();
 
-        // array of elements names to be returned by this method
+        // Array of elements names to be returned by this method.
         $names = array();
 
-        // these fields will be disabled if gradelimit x gradeweighting = 0
+        // These fields will be disabled if gradelimit x gradeweighting = 0.
         $disablednames = array('completionusegrade' . $suffix);
 
-        // add "minimum grade" completion condition
+        // Add "minimum grade" completion condition.
         $name = 'completionmingrade';
         $label = get_string($name, 'taskchain');
         if (empty($this->current->$name)) {
@@ -175,7 +174,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
         $names[] = $groupname;
         $disablednames[] = $groupname;
 
-        // add "grade passed" completion condition
+        // Add "grade passed" completion condition.
         $name = 'completionpass';
         $label = get_string($name, 'taskchain');
         $name .= $suffix;
@@ -185,7 +184,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
         $names[] = $name;
         $disablednames[] = $name;
 
-        // add "status completed" completion condition
+        // Add "status completed" completion condition.
         $name = 'completioncompleted';
         $label = get_string($name, 'taskchain');
         $name .= $suffix;
@@ -195,7 +194,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
         $names[] = $name;
         // no need to disable this field :-)
 
-        // disable grade conditions, if necessary
+        // Disable grade conditions, if necessary
         // (the grade fields are not available on the "Default activity completion" page)
         foreach ($disablednames as $name) {
             if ($mform->elementExists($name)) {
@@ -224,7 +223,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
                 return false;
             }
         }
-        return true; // at least one of the module-specific completion conditions is set
+        return true; // At least one of the module-specific completion conditions is set.
     }
 
     /**
@@ -240,7 +239,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
             if (! method_exists('moodleform_mod', 'data_postprocessing')) {
                 // In Moodle >= 3.3, the get_data() method calls
                 // the data_postprocessing() method automatically,
-                // but in Moodle <= 3.2 we have to call it manually
+                // but in Moodle <= 3.2 we have to call it manually.
                 $data = $this->data_postprocessing($data);
             }
         }
@@ -267,7 +266,7 @@ class mod_taskchain_mod_form extends moodleform_mod {
         $completion = 'completion' . $suffix;
         $automatic = (isset($data->$completion) && $data->$completion == COMPLETION_TRACKING_AUTOMATIC);
 
-        // Remove completionmingrade, if it is not enabled and greater than 0.0
+        // Remove completionmingrade, if it is not enabled and greater than 0.0.
         $enabled = 'completionmingradeenabled' . $suffix;
         $name = 'completionmingrade' . $suffix;
         if ($automatic == false || empty($data->$enabled) || empty($data->$name) || floatval($data->$name) == 0.0) {

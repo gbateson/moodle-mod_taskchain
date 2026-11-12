@@ -38,6 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/html/renderer.p
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_taskchain_attempt_hp_6_jcloze_html_renderer {
+    /** @var string */
     public $js_object_type = 'JClozeDropDown';
 
     /**
@@ -45,12 +46,11 @@ class mod_taskchain_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_taskc
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // replace standard jcloze.js with dropdown.js
+        // Replace standard jcloze.js with dropdown.js.
         $this->javascripts = preg_grep('/jcloze.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/taskchain/attempt/hp/6/jcloze/dropdown.js');
     }
@@ -68,10 +68,9 @@ class mod_taskchain_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_taskc
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'Show_Solution,Build_GapText';
         return $names;
@@ -79,8 +78,6 @@ class mod_taskchain_attempt_hp_6_jcloze_html_dropdown_renderer extends mod_taskc
 
     /**
      * fix_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier(true);

@@ -51,10 +51,9 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'CompleteEmptyFeedback,ReplaceGuessBox,SetFocusToTextbox';
         return $names;
@@ -66,7 +65,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_WriteToInstructions(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -109,12 +107,11 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_StartUp(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // hide instructions, if they are not required
+        // Hide instructions, if they are not required.
         $search = '/(\s*)strInstructions = document.getElementById[^;]*;/s';
         $replace = ''
             . '\\1' . "var obj = document.getElementById('Instructions');"
@@ -141,7 +138,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
             $substr = substr_replace($substr, $insert, $pos, 0);
         }
 
-        // call the fix_js_StartUp() method on the parent object
+        // Call the fix_js_StartUp() method on the parent object.
         parent::fix_js_StartUp($substr, 0, strlen($substr));
 
         $str = substr_replace($str, $substr, $start, $length);
@@ -155,7 +152,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_SetUpQuestions(&$str, $start, $length) {
         global $CFG;
@@ -163,14 +159,14 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
 
         parent::fix_js_SetUpQuestions($substr, 0, strlen($substr));
 
-        $dots = 'squares'; // default
+        $dots = 'squares'; // Default.
         if ($param = clean_param($this->expand_UserDefined1(), PARAM_ALPHANUM)) {
             if (is_dir($CFG->dirroot . "/mod/taskchain/pix/autoadvance/$param")) {
                 $dots = $param;
             }
         }
 
-        // assume there are no jmix questions
+        // Assume there are no jmix questions.
         $jmix = true;
 
         $search = 'Qs.appendChild(QList[i]);';
@@ -180,7 +176,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
             $substr = substr_replace($substr, $insert, $pos + strlen($search), 0);
         }
 
-        // add progress bar
+        // Add progress bar.
         if ($dots) {
             $search = '/\s*' . 'SetQNumReadout\(\);/';
             $replace = "\n"
@@ -254,7 +250,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
         }
 
         if ($dots) {
-            // add functions required for progress bar
+            // Add functions required for progress bar.
             $substr .= "\n"
                 . "function AA_images() {\n"
                 . "	return 'pix/autoadvance/$dots';\n"
@@ -388,7 +384,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
                 . "}\n";
         }
 
-        // append the PlaySound() and StopSound() functions
+        // Append the PlaySound() and StopSound() functions.
         if ($this->expand_UserDefined2()) {
             $substr .= "\n"
                 . "function PlaySound(i, count) {\n"
@@ -436,7 +432,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
                 . "}";
         }
 
-        // append the SetUpJMixQuestion() and MoveJumbledItem() functions
+        // Append the SetUpJMixQuestion() and MoveJumbledItem() functions.
         if ($jmix) {
             $substr .= "\n"
                 . "function SetUpJMixQuestion(q) {\n"
@@ -531,15 +527,14 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowMessage(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // do standard fix for this function
+        // Do standard fix for this function.
         parent::fix_js_ShowMessage($substr, 0, strlen($substr));
 
-        // add extra argument, QNum, to this function
+        // Add extra argument, QNum, to this function.
         $substr = preg_replace('/(?<=ShowMessage)\(' . '(.*)' . '\)/', '(\\1, QNum)', $substr, 1);
 
         if ($this->expand_UserDefined2()) {
@@ -602,12 +597,11 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CompleteEmptyFeedback(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // set empty feedback to blank string
+        // Set empty feedback to blank string.
         $substr = str_replace('DefaultWrong', "''", $substr);
         $substr = str_replace('DefaultRight', "''", $substr);
 
@@ -620,7 +614,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ChangeQ(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -636,7 +629,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
 
         $str = substr_replace($str, $substr, $start, $length);
     }
-    // utility function to search and replace and, if required, call the fix_js_xxx() method of the parent class
+    // Utility function to search and replace and, if required, call the fix_js_xxx() method of the parent class.
 
     /**
      * fix_js_search_replace
@@ -647,7 +640,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $thisfunction
      * @param xxx $parentfunction (optional, default='')
      * @param xxx $search_insert (optional, default=null)
-     * @todo Finish documenting this function
      */
     public function fix_js_search_replace(&$str, $start, $length, $thisfunction, $parentfunction = '', $search_insert = null) {
         $substr = substr($str, $start, $length);
@@ -678,7 +670,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowAnswers(&$str, $start, $length) {
         $this->fix_js_search_replace($str, $start, $length, 'ShowMessage');
@@ -690,7 +681,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowHint(&$str, $start, $length) {
         $this->fix_js_search_replace($str, $start, $length, 'ShowMessage');
@@ -702,7 +692,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckMCAnswer(&$str, $start, $length) {
         $search = 'if (I[QNum][3][ANum][2] < 1){';
@@ -729,7 +718,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckMultiSelAnswer(&$str, $start, $length) {
         $search = 'if (Matches == I[QNum][3].length){';
@@ -761,7 +749,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckShortAnswer(&$str, $start, $length) {
         $search_insert = array();
@@ -819,7 +806,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowHideQuestions(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -827,7 +813,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
         $search = "/\s*document\.getElementById\('OneByOneReadout'\)\.style.display = '[^']*';/s";
         $substr = preg_replace($search, '', $substr);
 
-        // do standard fix for this function
+        // Do standard fix for this function.
         parent::fix_js_ShowHideQuestions($substr, 0, strlen($substr));
     }
 
@@ -836,7 +822,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      *
      * @param xxx $functionname
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function js_to_display_feedback($functionname) {
         return ''
@@ -857,7 +842,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ReplaceGuessBox(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -884,7 +868,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_SetFocusToTextbox(&$str, $start, $length) {
         $substr = ''
@@ -912,7 +895,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckFinished(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -969,7 +951,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * expand_HeaderCode
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_HeaderCode() {
         $vars = array(
@@ -1046,7 +1027,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $answer
      * @param xxx $a
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ItemArray_answertext($tags, $answer, $a) {
         $text = $this->TC->task->source->xml_value($tags, $answer . "['text'][0]['#']", '', false);
@@ -1075,7 +1055,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      * @param xxx $q
      * @param xxx $defaultsize (optional, default=9)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_jquiz_textbox_details($tags, $answers, $q, $defaultsize = 9) {
         $prefix = '';
@@ -1114,7 +1093,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
         }
 
         if ($jmix) {
-            // add spans to $prefix and $suffix
+            // Add spans to $prefix and $suffix.
             if ($prefix) {
                 $prefix = '<span id="Q_' . $q . '_JumbledItemsPrefix" class="JumbledItemsPrefix">' . $prefix . '</span>';
             }
@@ -1122,7 +1101,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
                 $suffix = '<span id="Q_' . $q . '_JumbledItemsSuffix" class="JumbledItemsSuffix">' . $suffix . '</span>';
             }
 
-            // create array of random indexes
+            // Create array of random indexes.
             $index = range(1, count($items));
             shuffle($index);
 
@@ -1134,7 +1113,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
                 $cues .= '<span class="JumbledItem" id="Q_' . $q . '_JumbledItem_' . $index[$i] . '" onclick="MoveJumbledItem(this);">' . $item . '</span>';
             }
 
-            // add Jumbled items div
+            // Add Jumbled items div.
             if ($cues) {
                 $prefix = '<div class="JumbledItems" id="Q_' . $q . '_JumbledItems">' . $cues . '</div>' . $prefix;
             }

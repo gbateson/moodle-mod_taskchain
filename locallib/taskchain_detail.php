@@ -35,13 +35,13 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_detail extends taskchain_base {
-    /** db field: id (primary key, default=null) */
+    /** @var mixed db field: id (primary key, default=null) */
     private $id                  = null;
 
-    /** db field: attemptid (integer, default=0) */
+    /** @var int db field: attemptid (integer, default=0) */
     private $attemptid           = 0;
 
-    /** db field: details (string, default='') */
+    /** @var string db field: details (string, default='') */
     private $details             = '';
 
     /**

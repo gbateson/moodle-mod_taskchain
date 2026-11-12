@@ -38,6 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/html/renderer.p
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskchain_attempt_hp_6_jmatch_html_renderer {
+    /** @var string */
     public $js_object_type = 'JMemori';
 
     /**
@@ -45,11 +46,10 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
-        // replace standard jcloze.js with jmemori.js
+        // Replace standard jcloze.js with jmemori.js.
         $this->javascripts = preg_grep('/jmatch.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/taskchain/attempt/hp/6/jmatch/jmemori.js');
     }
@@ -65,8 +65,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
 
     /**
      * fix_headcontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_headcontent() {
         $this->fix_headcontent_rottmeier('jmemori');
@@ -74,8 +72,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
 
     /**
      * fix_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier();
@@ -84,8 +80,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
 
     /**
      * fix_title
-     *
-     * @todo Finish documenting this function
      */
     public function fix_title() {
         $this->fix_title_rottmeier_JMemori();
@@ -95,10 +89,9 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'ShowSolution,CheckPair,WriteFeedback';
         return $names;
@@ -110,7 +103,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_WriteFeedback(&$str, $start, $length) {
         $this->fix_js_WriteFeedback_JMemori($str, $start, $length);
@@ -122,7 +114,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_HideFeedback(&$str, $start, $length) {
         $this->fix_js_HideFeedback_JMemori($str, $start, $length);
@@ -134,7 +125,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowSolution(&$str, $start, $length) {
         $this->fix_js_ShowSolution_JMemori($str, $start, $length);
@@ -146,7 +136,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckPair(&$str, $start, $length) {
         $this->fix_js_CheckPair_JMemori($str, $start, $length);
@@ -156,7 +145,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
         return 'CheckPair';
@@ -166,7 +154,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * get_stop_function_search
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_search() {
         return '/\s*if \((Pairs == F\.length)\)({.*?)setTimeout.*?}/s';
@@ -176,10 +163,9 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * get_stop_function_args
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_args() {
-        // the arguments required by CheckPair
+        // The arguments required by CheckPair.
         return '-1,' . mod_taskchain::STATUS_ABANDONED;
     }
 
@@ -187,7 +173,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_jmemori_renderer extends mod_taskch
      * get_stop_function_intercept
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_intercept() {
         return "\n"

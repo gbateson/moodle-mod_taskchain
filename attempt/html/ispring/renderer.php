@@ -51,7 +51,6 @@ class mod_taskchain_attempt_html_ispring_renderer extends mod_taskchain_attempt_
      * preprocessing
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function preprocessing() {
         if ($this->cache_uptodate) {
@@ -63,20 +62,20 @@ class mod_taskchain_attempt_html_ispring_renderer extends mod_taskchain_attempt_
         }
 
         if (! $this->TC->task->source->get_filecontents()) {
-            // empty source file - shouldn't happen !!
+            // Empty source file - shouldn't happen !!
             return false;
         }
 
-        // remove doctype
+        // Remove doctype.
         $search = '/\s*(?:<!--\s*)?<!DOCTYPE[^>]*>\s*(?:-->\s*)?/s';
         $this->TC->task->source->filecontents = preg_replace($search, '', $this->TC->task->source->filecontents);
 
-        // replace <object> with link and force through filters
+        // Replace <object> with link and force through filters.
         $search = '/<object id="presentation"[^>]*>.*?<param name="movie" value="([^">]*)"[^>]*>.*?<\/object>/is';
         $replace = '<a href="$1?d=800x600">$1</a>';
         $this->TC->task->source->filecontents = preg_replace($search, $replace, $this->TC->task->source->filecontents);
 
-        // remove fixprompt.js
+        // Remove fixprompt.js.
         $search = '/<script[^>]*src="[^">]*fixprompt.js"[^>]*(?:(?:\/>)|(?:<\/script>))\s*/s';
         $this->TC->task->source->filecontents = preg_replace($search, '', $this->TC->task->source->filecontents);
 

@@ -42,7 +42,6 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * expand_JSSequitur6
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSSequitur6() {
         return $this->expand_template('sequitur6.js_');
@@ -52,7 +51,6 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * expand_NumberOfOptions
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NumberOfOptions() {
         $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',number-of-options';
@@ -63,7 +61,6 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * expand_PartText
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_PartText() {
         $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',show-part-text';
@@ -74,7 +71,6 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * expand_Solution
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Solution() {
         $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-solution';
@@ -85,7 +81,6 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * expand_SolutionCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_SolutionCaption() {
         $tags = $this->TC->task->source->hbs_software . '-config-file,global,solution-caption';
@@ -96,7 +91,6 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * expand_Score
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Score() {
         $tags = $this->TC->task->source->hbs_software . '-config-file,global,your-score-is';
@@ -107,7 +101,6 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * expand_WholeText
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_WholeText() {
         $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',show-whole-text';
@@ -118,12 +111,11 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * expand_SegmentsArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_SegmentsArray() {
-        // we might have empty segments, so we need to first
+        // We might have empty segments, so we need to first
         // find out how many segments there are and then go
-        // through them all, ignoring the empty ones
+        // through them all, ignoring the empty ones.
 
         $i_max = 0;
         if ($segments = $this->TC->task->source->xml_value('data,segments')) {
@@ -153,7 +145,6 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * expand_StyleSheet
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_StyleSheet() {
         return $this->expand_template('tt3.cs_');

@@ -35,40 +35,40 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_condition extends taskchain_base {
-    /** db field: id (primary key, default=null) */
+    /** @var mixed db field: id (primary key, default=null) */
     private $id                  = null;
 
-    /** db field: taskid (integer, default=0) */
+    /** @var int db field: taskid (integer, default=0) */
     private $taskid              = 0;
 
-    /** db field: groupid (integer, default=0) */
+    /** @var int db field: groupid (integer, default=0) */
     private $groupid             = 0;
 
-    /** db field: conditiontype (integer, default=0) */
+    /** @var int db field: conditiontype (integer, default=0) */
     private $conditiontype       = 0;
 
-    /** db field: conditionscore (integer, default=0) */
+    /** @var int db field: conditionscore (integer, default=0) */
     private $conditionscore      = 0;
 
-    /** db field: conditiontaskid (integer, default=0) */
+    /** @var int db field: conditiontaskid (integer, default=0) */
     private $conditiontaskid     = 0;
 
-    /** db field: sortorder (integer, default=0) */
+    /** @var int db field: sortorder (integer, default=0) */
     private $sortorder           = 0;
 
-    /** db field: attempttype (integer, default=0) */
+    /** @var int db field: attempttype (integer, default=0) */
     private $attempttype         = 0;
 
-    /** db field: attemptcount (integer, default=0) */
+    /** @var int db field: attemptcount (integer, default=0) */
     private $attemptcount        = 0;
 
-    /** db field: attemptduration (integer, default=0) */
+    /** @var int db field: attemptduration (integer, default=0) */
     private $attemptduration     = 0;
 
-    /** db field: attemptdelay (integer, default=0) */
+    /** @var int db field: attemptdelay (integer, default=0) */
     private $attemptdelay        = 0;
 
-    /** db field: nexttaskid (integer, default=0) */
+    /** @var int db field: nexttaskid (integer, default=0) */
     private $nexttaskid          = 0;
 
     /**

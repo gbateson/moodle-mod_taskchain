@@ -28,7 +28,7 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 require_once($CFG->dirroot . '/mod/taskchain/edit/form/condition.php');
 
-// create object to represent this TaskChain activity
+// Create object to represent this TaskChain activity.
 $TC = new mod_taskchain();
 ;
 
@@ -38,7 +38,7 @@ if (isset($TC->condition->id)) {
     mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editcondition', 'edit/condition.php?cm=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 }
 
-// Set editing mode
+// Set editing mode.
 mod_taskchain::set_user_editing();
 
 // initialize $PAGE (and compute blocks)
@@ -82,13 +82,13 @@ switch ($TC->action) {
             // delete a single condition ($TC->condition)
             $select = 'id=' . $TC->get_conditionid();
         } else {
-            // delete all pre/post conditions
+            // Delete all pre/post conditions.
             $select = 'taskid=' . $TC->get_taskid() . ' AND conditiontype=' . $TC->get_conditiontype();
             $type   = 'all' . $type . 's';
         }
 
         if ($DB->delete_records_select('taskchain_conditions', $select)) {
-            // success
+            // Success.
             $text = get_string($type, 'mod_taskchain');
             $text = mod_taskchain::textlib('strtolower', $text);
             $text = get_string('deletedactivity', '', $text);
@@ -137,12 +137,12 @@ switch ($TC->action) {
         // $newdata object holds the submitted data
 
         if ($newdata->id = $TC->get_conditionid()) {
-            // updating a TaskChain task condition
+            // Updating a TaskChain task condition.
             if (! $DB->update_record('taskchain_conditions', $newdata)) {
                 throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_conditions');
             }
         } else {
-            // adding a new TaskChain task condition
+            // Adding a new TaskChain task condition.
             if (! $newdata->id = $DB->insert_record('taskchain_conditions', $newdata)) {
                 throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_conditions');
             }
@@ -158,12 +158,12 @@ switch ($TC->action) {
 
     case 'update':
     default:
-        // initizialize data in form
+        // Initizialize data in form.
         if ($TC->get_conditionid()) {
-            // editing a condition
+            // Editing a condition.
             $defaults = (array)$TC->condition->to_stdclass();
         } else {
-            // adding a new condition to this task
+            // Adding a new condition to this task.
             $defaults = array('taskid' => $TC->get_taskid());
         }
         $mform->data_preprocessing($defaults);
@@ -172,7 +172,7 @@ switch ($TC->action) {
 
         echo $output->header();
 
-        // display the form
+        // Display the form.
         $mform->display();
 
         echo $output->footer();

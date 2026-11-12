@@ -41,14 +41,15 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
     /** @var string the HTML content of the source file */
     public $htmlcontent;
 
-    // strings to mark beginning and end of submission form
+    /** @var string strings to mark beginning and end of submission form */
     protected $BeginSubmissionForm = '<!-- BeginSubmissionForm -->';
+    /** @var string */
     protected $EndSubmissionForm = '<!-- EndSubmissionForm -->';
 
-    // the id/name of the of the form which returns results to the browser
+    /** @var string the id/name of the of the form which returns results to the browser */
     protected $formid = 'store';
 
-    // the name of the score field in the results returned form the browser
+    /** @var string the name of the score field in the results returned form the browser */
     protected $scorefield = 'mark';
 
     /**
@@ -56,7 +57,6 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
      *
      * @uses $CFG
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function preprocessing() {
         global $CFG;
@@ -81,21 +81,21 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         }
 
         if (! $this->TC->task->source->get_filecontents()) {
-            // empty source file - shouldn't happen !!
+            // Empty source file - shouldn't happen !!
             return false;
         }
         $this->htmlcontent = &$this->TC->task->source->filecontents;
 
-        // extract contents of first <head> tag
+        // Extract contents of first <head> tag.
         if (preg_match($this->tagpattern('head'), $this->htmlcontent, $matches)) {
             $this->headcontent = $matches[2];
         }
 
         if ($this->usemoodletheme) {
-            // remove the title from the <head>
+            // Remove the title from the <head>.
             $this->headcontent = preg_replace($this->tagpattern('title'), '', $this->headcontent);
         } else {
-            // replace <title> with current name of this task
+            // Replace <title> with current name of this task.
             $title = '<title>' . $this->get_title() . '</title>' . "\n";
             $this->headcontent = preg_replace($this->tagpattern('title'), $title, $this->headcontent);
 
@@ -128,7 +128,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
                 $callback = array($this, 'fix_css_definitions');
                 $this->styles = preg_replace_callback($search, $callback, $this->styles);
 
-                // the following is not necessary for standard HP styles, but may required to handle some custom styles
+                // The following is not necessary for standard HP styles, but may required to handle some custom styles.
                 $this->styles = str_replace('TheBody', $this->themecontainer, $this->styles);
             }
             $this->styles = $this->remove_blank_lines($this->styles);
@@ -151,20 +151,20 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
             }
             $this->scripts = $this->remove_blank_lines($this->scripts);
 
-            // standardize "} else {" formatting
+            // Standardize "} else {" formatting.
             $this->scripts = preg_replace('/}\s*else\s*{/s', '} else {', $this->scripts);
         }
 
-        // remove blank lines
+        // Remove blank lines.
         $this->headcontent = $this->remove_blank_lines($this->headcontent);
 
-        // put each <meta> tag on its own line
+        // Put each <meta> tag on its own line.
         $this->headcontent = preg_replace('/' . '([^\n])' . '(<\w+)' . '/', '$1' . "\n" . '$2', $this->headcontent);
 
         // append styles and scripts to the end of the $this->headcontent
         $this->headcontent .= $this->styles . $this->scripts;
 
-        // extract <body> tag
+        // Extract <body> tag.
         if (! preg_match($this->tagpattern('body'), $this->htmlcontent, $matches)) {
             return false;
         }
@@ -172,13 +172,13 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         $this->bodyattributes = $this->single_line(preg_replace('/\s*id="[^"]*"/', '', $matches[1]));
         $this->bodycontent = $this->remove_blank_lines($matches[2]);
 
-        // fix self-closing <script /> tags, as they cause several browsers to ignore following content
+        // Fix self-closing <script /> tags, as they cause several browsers to ignore following content.
         $this->bodycontent = preg_replace('/(<script[^>]*)\/>/is', '$1></script>', $this->bodycontent);
 
         if (preg_match('/\s*onload="([^"]*)"/is', $this->bodyattributes, $matches, PREG_OFFSET_CAPTURE)) {
             $this->bodyattributes = substr_replace($this->bodyattributes, '', $matches[0][1], strlen($matches[0][0]));
             if ($this->usemoodletheme) {
-                // workaround to ensure javascript onload routine for task is always executed
+                // Workaround to ensure javascript onload routine for task is always executed
                 // $this->bodyattributes will only be inserted into the <body ...> tag
                 // if it is included in the theme/$CFG->theme/header.html,
                 // so some old or modified themes may not insert $this->bodyattributes
@@ -196,7 +196,6 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_comment($match) {
         $comment = $match[0];
@@ -215,7 +214,6 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
      * @uses $DB
      * @param xxx $quickfix (optional, default=false)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_links($quickfix = false) {
         global $DB;
@@ -257,7 +255,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         }
 
         if (empty($matches[1])) {
-            return false; // no urls found
+            return false; // No urls found.
         }
 
         $urls = array();
@@ -271,7 +269,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         }
 
         if (empty($urls)) {
-            return false; // no links to files in this course
+            return false; // No links to files in this course.
         }
 
         list($select, $params) = $DB->get_in_or_equal($urls);
@@ -286,7 +284,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
             foreach (array_reverse($matches[1]) as $match) {
                 // $match [0] old url, [1] offset [2] taskid
                 if (array_key_exists(2, $match)) {
-                    // it used to be possible to send the id of the next task back as the "redirect" parameter
+                    // It used to be possible to send the id of the next task back as the "redirect" parameter
                     // but that doesn't work any more bacuse of changes to view.php
                     // $params = array('taskattemptid'=>$this->TC->taskattemptid, 'redirect'=>$match[2]);
                     $params = array('id' => $this->TC->attempt->id, 'status' => STATUS_COMPLETED, 'redirect' => $match[2]);
@@ -299,8 +297,6 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
 
     /**
      * postprocessing
-     *
-     * @todo Finish documenting this function
      */
     public function postprocessing() {
         $this->fix_title_icons();
@@ -313,16 +309,14 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
 
     /**
      * fix_submissionform
-     *
-     * @todo Finish documenting this function
      */
     public function fix_submissionform() {
 
-        // remove previous submission form, if any
+        // Remove previous submission form, if any.
         $search = '/\s*(' . $this->BeginSubmissionForm . ')\s*(.*?)\s*(' . $this->EndSubmissionForm . ')/s';
         $this->bodycontent = preg_replace($search, '', $this->bodycontent);
 
-        // prepare form parameters and attributes
+        // Prepare form parameters and attributes.
         $params = array(
             'id' => $this->TC->create->attempt('task'),
             $this->scorefield => '0', 'detail'  => '0', 'status'   => mod_taskchain::STATUS_COMPLETED,
@@ -341,12 +335,12 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
             'id' => $this->formid, 'autocomplete' => 'off',
         );
 
-        // create submit button, if necessary
+        // Create submit button, if necessary.
         if (preg_match('/<input[^>]*type="submit"[^>]*>/is', $this->bodycontent)) {
-            // one or more (!) submit buttons already exist
+            // One or more (!) submit buttons already exist.
             $continuebutton = '';
         } else {
-            // prepare continue button
+            // Prepare continue button.
             $continuebutton = html_writer::empty_tag('input', array('type' => 'submit', 'value' => get_string('continue')));
             if ($this->usemoodletheme) {
                 $continuebutton = html_writer::tag('div', $continuebutton, array('class' => 'continuebutton'));
@@ -355,7 +349,7 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
             }
         }
 
-        // wrap submission form around main content
+        // Wrap submission form around main content.
         $this->bodycontent = ''
             . $this->BeginSubmissionForm . "\n"
             . $this->form_start('submit.php', $params, $attributes)

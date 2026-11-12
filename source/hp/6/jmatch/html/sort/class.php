@@ -43,29 +43,28 @@ class taskchain_source_hp_6_jmatch_html_sort extends taskchain_source_hp_6_jmatc
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (! preg_match('/\.html?$/', $this->file->get_filename())) {
-            // wrong file type
+            // Wrong file type.
             return false;
         }
 
         if (! $this->get_filecontents()) {
-            // empty or non-existant file
+            // Empty or non-existant file.
             return false;
         }
 
         if (strpos($this->filecontents, '<!-- JMatch_Sort v')) {
             if (strpos($this->filecontents, 'var hauteurUserDefined1')) {
                 if (strpos($this->filecontents, 'var largeurUserDefined2')) {
-                    // jmatch-sort
+                    // Jmatch-sort.
                     return true;
                 }
             }
         }
 
-        // not a jmatch-sort file
+        // Not a jmatch-sort file.
         return false;
     }
 }

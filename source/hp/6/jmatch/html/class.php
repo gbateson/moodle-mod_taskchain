@@ -43,16 +43,15 @@ class taskchain_source_hp_6_jmatch_html extends taskchain_source_hp_6_jmatch {
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (! preg_match('/\.html?$/', $this->file->get_filename())) {
-            // wrong file type
+            // Wrong file type.
             return false;
         }
 
         if (! $this->get_filecontents()) {
-            // empty or non-existant file
+            // Empty or non-existant file.
             return false;
         }
 
@@ -63,21 +62,21 @@ class taskchain_source_hp_6_jmatch_html extends taskchain_source_hp_6_jmatch {
 
         if (strpos($this->filecontents, '<div id="MainDiv" class="StdDiv">')) {
             if (strpos($this->filecontents, '<div id="MatchDiv" style="text-align: center;">')) {
-                // hp6 jmatch v6
+                // Hp6 jmatch v6.
                 return true;
             }
         }
 
         if (strpos($this->filecontents, '<div class="StdDiv" id="CheckButtonDiv">')) {
             if (strpos($this->filecontents, 'F = new Array();')) {
-                if (strpos($this->filecontents, 'D = new Array();')) { // overkill?
+                if (strpos($this->filecontents, 'D = new Array();')) { // Overkill?
                     // hp6 jmatch v6+ (drag and drop)
                     return true;
                 }
             }
         }
 
-        // not a jmatch file
+        // Not a jmatch file.
         return false;
     }
 }

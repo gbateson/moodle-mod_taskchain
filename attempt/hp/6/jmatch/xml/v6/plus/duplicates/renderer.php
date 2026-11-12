@@ -43,12 +43,11 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_duplicates_renderer extends 
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // prepend templates for this output format
+        // Prepend templates for this output format.
         array_unshift($this->templatesfolders, 'mod/taskchain/attempt/hp/6/jmatch/xml/v6/plus/duplicates/templates');
     }
 
@@ -56,13 +55,12 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_duplicates_renderer extends 
      * expand_DragArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_DragArray() {
         $this->set_jmatch_items();
         $str = '';
 
-        // simple array to map item keys and texts
+        // Simple array to map item keys and texts.
         $texts = array();
         foreach ($this->l_items as $i => $item) {
             $key = $item['key'];
@@ -86,7 +84,7 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_duplicates_renderer extends 
                     $keys[$key] = 'new Array(' . implode(',', $texts_keys) . ')';
                 }
             } else {
-                // drag item is fixed
+                // Drag item is fixed.
                 $keys[$key] = $key + 1;
             }
         }

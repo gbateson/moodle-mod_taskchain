@@ -38,6 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/html/renderer.p
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jmatch_html_flashcard_renderer extends mod_taskchain_attempt_hp_6_jmatch_html_renderer {
+    /** @var string */
     public $js_object_type = 'JMatchFlashcard';
 
     /**
@@ -45,12 +46,11 @@ class mod_taskchain_attempt_hp_6_jmatch_html_flashcard_renderer extends mod_task
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // replace standard jmatch.js with flashcard.js
+        // Replace standard jmatch.js with flashcard.js.
         $this->javascripts = preg_grep('/jmatch.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/taskchain/attempt/hp/6/jmatch/flashcard.js');
     }
@@ -68,7 +68,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_flashcard_renderer extends mod_task
      * fix_js_StartUp_DragAndDrop
      *
      * @param xxx $substr (passed by reference)
-     * @todo Finish documenting this function
      */
     public function fix_js_StartUp_DragAndDrop(&$substr) {
         $this->fix_js_StartUp_DragAndDrop_Flashcard($substr);
@@ -78,10 +77,9 @@ class mod_taskchain_attempt_hp_6_jmatch_html_flashcard_renderer extends mod_task
      * fix_mediafilter_onload_extra
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_mediafilter_onload_extra() {
-        // automatically show first item
+        // Automatically show first item.
         return $this->fix_mediafilter_onload_extra_Flashcard();
     }
 
@@ -89,10 +87,9 @@ class mod_taskchain_attempt_hp_6_jmatch_html_flashcard_renderer extends mod_task
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'DeleteItem,ShowItem';
         return $names;
@@ -104,7 +101,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_flashcard_renderer extends mod_task
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_DeleteItem(&$str, $start, $length) {
         $this->fix_js_DeleteItem_Flashcard($str, $start, $length);
@@ -116,7 +112,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_flashcard_renderer extends mod_task
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowItem(&$str, $start, $length) {
         $this->fix_js_ShowItem_Flashcard($str, $start, $length);
@@ -126,7 +121,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_flashcard_renderer extends mod_task
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
         return 'HP_send_results';
@@ -136,9 +130,8 @@ class mod_taskchain_attempt_hp_6_jmatch_html_flashcard_renderer extends mod_task
      * get_stop_function_args
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function get_stop_function_args() {
+    public function get_stop_function_args() {
         return $this->get_send_results_event();
     }
 }

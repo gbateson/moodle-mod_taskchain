@@ -35,94 +35,94 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_cache extends taskchain_base {
-    /** db field: id (primary key, default=null) */
+    /** @var mixed db field: id (primary key, default=null) */
     private $id                  = null;
 
-    /** db field: taskid (integer, default=0) */
+    /** @var int db field: taskid (integer, default=0) */
     private $taskid              = 0;
 
-    /** db field: slasharguments (string (1), default='') */
+    /** @var string db field: slasharguments (string (1), default='') */
     private $slasharguments      = '';
 
-    /** db field: taskchain_enableobfuscate (string (1), default='') */
+    /** @var string db field: taskchain_enableobfuscate (string (1), default='') */
     private $taskchain_enableobfuscate = '';
 
-    /** db field: taskchain_enableswf (string (1), default='') */
+    /** @var string db field: taskchain_enableswf (string (1), default='') */
     private $taskchain_enableswf = '';
 
-    /** db field: name (string (255), default='') */
+    /** @var string db field: name (string (255), default='') */
     private $name                = '';
 
-    /** db field: sourcefile (string (255), default='') */
+    /** @var string db field: sourcefile (string (255), default='') */
     private $sourcefile          = '';
 
-    /** db field: sourcetype (string (255), default='') */
+    /** @var string db field: sourcetype (string (255), default='') */
     private $sourcetype          = '';
 
-    /** db field: sourcelocation (integer, default=0) */
+    /** @var int db field: sourcelocation (integer, default=0) */
     private $sourcelocation      = 0;
 
-    /** db field: sourcelastmodified (string (255), default='') */
+    /** @var string db field: sourcelastmodified (string (255), default='') */
     private $sourcelastmodified  = '';
 
-    /** db field: sourceetag (string (255), default='') */
+    /** @var string db field: sourceetag (string (255), default='') */
     private $sourceetag          = '';
 
-    /** db field: configfile (string (255), default='') */
+    /** @var string db field: configfile (string (255), default='') */
     private $configfile          = '';
 
-    /** db field: configlocation (integer, default=0) */
+    /** @var int db field: configlocation (integer, default=0) */
     private $configlocation      = 0;
 
-    /** db field: configlastmodified (string (255), default='') */
+    /** @var string db field: configlastmodified (string (255), default='') */
     private $configlastmodified  = '';
 
-    /** db field: configetag (string (255), default='') */
+    /** @var string db field: configetag (string (255), default='') */
     private $configetag          = '';
 
-    /** db field: navigation (integer, default=0) */
+    /** @var int db field: navigation (integer, default=0) */
     private $navigation          = 0;
 
-    /** db field: title (integer, default=0) */
+    /** @var int db field: title (integer, default=0) */
     private $title               = 0;
 
-    /** db field: stopbutton (integer, default=0) */
+    /** @var int db field: stopbutton (integer, default=0) */
     private $stopbutton          = 0;
 
-    /** db field: stoptext (string (255), default='') */
+    /** @var string db field: stoptext (string (255), default='') */
     private $stoptext            = '';
 
-    /** db field: usefilters (integer, default=0) */
+    /** @var int db field: usefilters (integer, default=0) */
     private $usefilters          = 0;
 
-    /** db field: useglossary (integer, default=0) */
+    /** @var int db field: useglossary (integer, default=0) */
     private $useglossary         = 0;
 
-    /** db field: usemediafilter (string (255), default='') */
+    /** @var string db field: usemediafilter (string (255), default='') */
     private $usemediafilter      = '';
 
-    /** db field: studentfeedback (integer, default=0) */
+    /** @var int db field: studentfeedback (integer, default=0) */
     private $studentfeedback     = 0;
 
-    /** db field: studentfeedbackurl (string (255), default='') */
+    /** @var string db field: studentfeedbackurl (string (255), default='') */
     private $studentfeedbackurl  = '';
 
-    /** db field: timelimit (integer, default=-1) */
+    /** @var int db field: timelimit (integer, default=-1) */
     private $timelimit           = -1;
 
-    /** db field: delay3 (integer, default=-1) */
+    /** @var int db field: delay3 (integer, default=-1) */
     private $delay3              = -1;
 
-    /** db field: clickreporting (integer, default=0) */
+    /** @var int db field: clickreporting (integer, default=0) */
     private $clickreporting      = 0;
 
-    /** db field: content (string, default='') */
+    /** @var string db field: content (string, default='') */
     private $content             = '';
 
-    /** db field: timemodified (integer, default=0) */
+    /** @var int db field: timemodified (integer, default=0) */
     private $timemodified        = 0;
 
-    /** db field: md5key (string (32), default='') */
+    /** @var string db field: md5key (string (32), default='') */
     private $md5key              = '';
 
     /**

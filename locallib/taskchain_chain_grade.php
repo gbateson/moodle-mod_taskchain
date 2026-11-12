@@ -35,28 +35,28 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_chain_grade extends taskchain_base {
-    /** db field: id (primary key, default=null) */
+    /** @var mixed db field: id (primary key, default=null) */
     private $id                  = null;
 
-    /** db field: parenttype (integer, default=0) */
+    /** @var int db field: parenttype (integer, default=0) */
     private $parenttype          = 0;
 
-    /** db field: parentid (integer, default=0) */
+    /** @var int db field: parentid (integer, default=0) */
     private $parentid            = 0;
 
-    /** db field: userid (integer, default=0) */
+    /** @var int db field: userid (integer, default=0) */
     private $userid              = 0;
 
-    /** db field: grade (integer, default=0) */
+    /** @var int db field: grade (integer, default=0) */
     private $grade               = 0;
 
-    /** db field: status (integer, default=0) */
+    /** @var int db field: status (integer, default=0) */
     private $status              = 0;
 
-    /** db field: duration (integer, default=0) */
+    /** @var int db field: duration (integer, default=0) */
     private $duration            = 0;
 
-    /** db field: timemodified (integer, default=0) */
+    /** @var int db field: timemodified (integer, default=0) */
     private $timemodified        = 0;
 
     /**

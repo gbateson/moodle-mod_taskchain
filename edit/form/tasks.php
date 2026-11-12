@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/tasks.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_edit_tasks_form extends moodleform {
-    /** TaskChain form helper - see mod/taskchain/form/base.php **/
+    /** @var mixed TaskChain form helper - see mod/taskchain/form/base.php * */
     private $form_helper;
 
     /**
@@ -47,12 +47,12 @@ class mod_taskchain_edit_tasks_form extends moodleform {
     public function definition() {
         global $TC;
 
-        // set up TaskChain form helper
+        // Set up TaskChain form helper.
         $record = $TC->get_chain();
         $records = $TC->get_tasks();
         $this->form_helper = new taskchain_form_helper_tasks($this->_form, $TC->coursemodule->context, $record, $records);
 
-        // add form records
+        // Add form records.
         $this->form_helper->add_sections();
 
         // add standard buttons ("Save changes" and "Cancel")
@@ -78,7 +78,6 @@ class mod_taskchain_edit_tasks_form extends moodleform {
      * @param xxx $data (passed by reference)
      * @param xxx $files
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);

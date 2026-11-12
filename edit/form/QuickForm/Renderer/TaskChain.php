@@ -43,7 +43,7 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
     /**
      * Constructor
      */
-    function __construct() {
+    public function __construct() {
         if (method_exists('MoodleQuickForm_Renderer', '__construct')) {
             parent::__construct();
         } else {
@@ -57,13 +57,13 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
      *
      * @param object $header (passed by reference)
      */
-    function renderHeader(&$header) {
+    public function renderHeader(&$header) {
         global $SCRIPT;
         if ($name = $header->getName()) {
             if ($SCRIPT == '/mod/taskchain/edit/tasks.php' || $SCRIPT == '/mod/taskchain/edit/chains.php') {
                 // Moodle >= 2.5 adds a "id_" prefix to the header ids
                 // but this messages with the TaskChain CSS styles
-                // so we use the old "id" that had no prefix
+                // so we use the old "id" that had no prefix.
                 $header->updateAttributes(array('id' => $name));
             }
         }
@@ -77,19 +77,19 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
      * @param mixed $required
      * @param mixed $error
      */
-    function renderElement(&$element, $required, $error) {
+    public function renderElement(&$element, $required, $error) {
         if (method_exists($element, 'raiseError')) {
-            // on Moodle >= 2.3 the ids are OK
+            // On Moodle >= 2.3 the ids are OK.
         } else {
-            // on Moodle 2.0 - 2.1 we must fix the id
+            // On Moodle 2.0 - 2.1 we must fix the id
             // by default the id is something like "id_2696f9"
             // but we want "id_applydefaults_selectedtasks"
             // Note: Moodle 2.2 ids are OK, but it does not harm ...
             $type = $element->getType();
             if ($type == 'radio' || $type == 'checkbox') {
-                // basically, the id is "id_"  followed by the element name
+                // Basically, the id is "id_"  followed by the element name
                 // we also fix "[" and "]" e.g. sortorder[1] -> sortorder_1
-                // and for radio buttons, we append "_" and the element value
+                // and for radio buttons, we append "_" and the element value.
                 $id = 'id_' . $element->getName();
                 $id = strtr($id, array('[' => '_', ']' => ''));
                 if ($type == 'radio') {
@@ -103,7 +103,7 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
         // the standard QuickForm behavior does not transfer
         // incoming form values to the outgoing form,
         // so we try to fix it manually here, at least for
-        // "checkbox" and "radio" elements
+        // "checkbox" and "radio" elements.
 
         $type = $element->getType();
         if ($type == 'checkbox' || $type == 'radio') {
@@ -117,7 +117,7 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
             }
         }
 
-        // proceed as normal
+        // Proceed as normal.
         parent::renderElement($element, $required, $error);
     }
 
@@ -132,16 +132,16 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
      * @see      renderElement()
      * @return   string      Html for element
      */
-    function _prepareTemplate($name, $label, $required, $error, $type = null, $value = null) {
+    public function _prepareTemplate($name, $label, $required, $error, $type = null, $value = null) {
         global $mform;
         static $count = array();
 
-        // get standard html for this element using MoodleQuickForm_Renderer
+        // Get standard html for this element using MoodleQuickForm_Renderer.
         $html = parent::_prepareTemplate($name, $label, $required, $error);
 
-        // add field-specific class name
+        // Add field-specific class name.
         if ($name) {
-            // remove unwanted prefixes and suffixes from element name, to get CSS class
+            // Remove unwanted prefixes and suffixes from element name, to get CSS class.
             $search = array('/^selectfield_/', // leading "selectfield_"   (elements in the "#selects" row)
                             '/^defaultfield_/', // leading "defaultfield_"  (elements in the "#defaults" row)
                             '/(?:\\[\\w+\\])+$/', // trailing [99]            (elements in the "#record99" row)
@@ -149,12 +149,12 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
                             '/_label$/');          // trailing _label          (elements in the "#labels" row)
             $class = preg_replace($search, '', $name);
 
-            // insert new class name into HTML class attribute
+            // Insert new class name into HTML class attribute.
             $search = '/(?<=class=")[^"]*(?=")/';
             $html = preg_replace($search, '$0 ' . $class, $html, 1);
         }
 
-        // get $name and $value for this element
+        // Get $name and $value for this element
         // One day it may be possible to pass the $name and $value directly to this method,
         // but for now we have rely on the TaskChain mform object to fetch the information.
         if (isset($mform) && method_exists($mform, 'get_element')) {
@@ -169,7 +169,7 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
             }
         }
 
-        // make id unique for each radio element
+        // Make id unique for each radio element
         // The standard MoodleQuickForm radio elements all have the same id
         // which is the value of the first radio element appended to the element name.
         // This is not what we want, nor is it what I believe was intended, but anyway...,

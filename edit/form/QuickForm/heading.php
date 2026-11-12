@@ -37,19 +37,19 @@ require_once('HTML/QuickForm/static.php');
  */
 class MoodleQuickForm_heading extends HTML_QuickForm_static{
     /** @var string Form element type */
-    var $_elementTemplateType = 'warning'; // defined in lib/forms
+    public $_elementTemplateType = 'warning'; // Defined in lib/forms.
 
     /** @var string html for help button, if empty then no help */
-    var $_helpbutton = '';
+    public $_helpbutton = '';
 
     /** @var int heading level (1-6), default is null (=2) */
-    var $_level = '';
+    public $_level = '';
 
     /** @var string heading class, default is null (="main") */
-    var $_class = '';
+    public $_class = '';
 
     /** @var string heading css id, default is null (="") */
-    var $_cssid = '';
+    public $_cssid = '';
 
     /**
      * constructor
@@ -59,8 +59,8 @@ class MoodleQuickForm_heading extends HTML_QuickForm_static{
      * @param string $class heading class (optional, default=null)
      * @param string $cssid heading css id (optional, default=null)
      */
-    function __construct($text = null, $level = null, $class = null, $cssid = null) {
-        parent::__construct('', null, $text); // name='', label=null
+    public function __construct($text = null, $level = null, $class = null, $cssid = null) {
+        parent::__construct('', null, $text); // Name='', label=null.
         $this->_type  = 'heading';
         $this->_level = $level;
         $this->_class = $class;
@@ -70,8 +70,8 @@ class MoodleQuickForm_heading extends HTML_QuickForm_static{
     /*
      * Old constructor for Moodle <= 2.9
      */
-    function MoodleQuickForm_heading($text = null, $level = null, $class = null, $cssid = null) {
-        parent::HTML_QuickForm_static(null, null, $text); // name=null, label=null
+    public function MoodleQuickForm_heading($text = null, $level = null, $class = null, $cssid = null) {
+        parent::HTML_QuickForm_static(null, null, $text); // Name=null, label=null.
         $this->_type  = 'heading';
         $this->_level = $level;
         $this->_class = $class;
@@ -83,7 +83,7 @@ class MoodleQuickForm_heading extends HTML_QuickForm_static{
      *
      * @return string
      */
-    function toHtml() {
+    public function toHtml() {
         global $OUTPUT;
         return $OUTPUT->heading($this->_text, $this->_level, $this->_class, $this->_cssid);
     }
@@ -93,7 +93,7 @@ class MoodleQuickForm_heading extends HTML_QuickForm_static{
      *
      * @return string html for help button
      */
-    function getHelpButton() {
+    public function getHelpButton() {
         return $this->_helpbutton;
     }
 
@@ -102,7 +102,7 @@ class MoodleQuickForm_heading extends HTML_QuickForm_static{
      *
      * @return string
      */
-    function getElementTemplateType() {
+    public function getElementTemplateType() {
         return $this->_elementTemplateType;
     }
 }

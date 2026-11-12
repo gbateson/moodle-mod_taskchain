@@ -35,124 +35,124 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_task extends taskchain_base {
-    /** db field: id (primary key, default=null) */
+    /** @var mixed db field: id (primary key, default=null) */
     private $id                  = null;
 
-    /** db field: chainid (integer, default=0) */
+    /** @var int db field: chainid (integer, default=0) */
     private $chainid             = 0;
 
-    /** db field: name (string (255), default='') */
+    /** @var string db field: name (string (255), default='') */
     private $name                = '';
 
-    /** db field: sourcefile (string (255), default='') */
+    /** @var string db field: sourcefile (string (255), default='') */
     private $sourcefile          = '';
 
-    /** db field: sourcetype (string (255), default='') */
+    /** @var string db field: sourcetype (string (255), default='') */
     private $sourcetype          = '';
 
-    /** db field: sourcelocation (integer, default=0) */
+    /** @var int db field: sourcelocation (integer, default=0) */
     private $sourcelocation      = 0;
 
-    /** db field: configfile (string (255), default='') */
+    /** @var string db field: configfile (string (255), default='') */
     private $configfile          = '';
 
-    /** db field: configlocation (integer, default=0) */
+    /** @var int db field: configlocation (integer, default=0) */
     private $configlocation      = 0;
 
-    /** db field: outputformat (string (255), default='') */
+    /** @var string db field: outputformat (string (255), default='') */
     private $outputformat        = '';
 
-    /** db field: navigation (integer, default=0) */
+    /** @var int db field: navigation (integer, default=0) */
     private $navigation          = 0;
 
-    /** db field: title (integer, default=3) */
+    /** @var int db field: title (integer, default=3) */
     private $title               = 3;
 
-    /** db field: titletext (string (255), default='') */
+    /** @var string db field: titletext (string (255), default='') */
     private $titletext            = '';
 
-    /** db field: stopbutton (integer, default=0) */
+    /** @var int db field: stopbutton (integer, default=0) */
     private $stopbutton          = 0;
 
-    /** db field: stoptext (string (255), default='') */
+    /** @var string db field: stoptext (string (255), default='') */
     private $stoptext            = '';
 
-    /** db field: allowpaste (integer, default=0) */
+    /** @var int db field: allowpaste (integer, default=0) */
     private $allowpaste          = 0;
 
-    /** db field: usefilters (integer, default=0) */
+    /** @var int db field: usefilters (integer, default=0) */
     private $usefilters          = 0;
 
-    /** db field: useglossary (integer, default=0) */
+    /** @var int db field: useglossary (integer, default=0) */
     private $useglossary         = 0;
 
-    /** db field: usemediafilter (string (255), default='') */
+    /** @var string db field: usemediafilter (string (255), default='') */
     private $usemediafilter      = '';
 
-    /** db field: studentfeedback (integer, default=0) */
+    /** @var int db field: studentfeedback (integer, default=0) */
     private $studentfeedback     = 0;
 
-    /** db field: studentfeedbackurl (string (255), default='') */
+    /** @var string db field: studentfeedbackurl (string (255), default='') */
     private $studentfeedbackurl  = '';
 
-    /** db field: timeopen (integer, default=0) */
+    /** @var int db field: timeopen (integer, default=0) */
     private $timeopen            = 0;
 
-    /** db field: timeclose (integer, default=0) */
+    /** @var int db field: timeclose (integer, default=0) */
     private $timeclose           = 0;
 
-    /** db field: timelimit (integer, default=-1) */
+    /** @var int db field: timelimit (integer, default=-1) */
     private $timelimit           = -1;
 
-    /** db field: delay1 (integer, default=0) */
+    /** @var int db field: delay1 (integer, default=0) */
     private $delay1              = 0;
 
-    /** db field: delay2 (integer, default=0) */
+    /** @var int db field: delay2 (integer, default=0) */
     private $delay2              = 0;
 
-    /** db field: delay3 (integer, default=2) */
+    /** @var int db field: delay3 (integer, default=2) */
     private $delay3              = 2;
 
-    /** db field: password (string (255), default='') */
+    /** @var string db field: password (string (255), default='') */
     private $password            = '';
 
-    /** db field: subnet (string (255), default='') */
+    /** @var string db field: subnet (string (255), default='') */
     private $subnet              = '';
 
-    /** db field: allowresume (integer, default=0) */
+    /** @var int db field: allowresume (integer, default=0) */
     private $allowresume         = 0;
 
-    /** db field: reviewoptions (integer, default=0) */
+    /** @var int db field: reviewoptions (integer, default=0) */
     private $reviewoptions       = 0;
 
-    /** db field: attemptlimit (integer, default=0) */
+    /** @var int db field: attemptlimit (integer, default=0) */
     private $attemptlimit        = 0;
 
-    /** db field: scoremethod (integer, default=1) */
+    /** @var int db field: scoremethod (integer, default=1) */
     private $scoremethod         = 1;
 
-    /** db field: scoreignore (integer, default=0) */
+    /** @var int db field: scoreignore (integer, default=0) */
     private $scoreignore         = 0;
 
-    /** db field: scorelimit (integer, default=100) */
+    /** @var int db field: scorelimit (integer, default=100) */
     private $scorelimit          = 100;
 
-    /** db field: scoreweighting (integer, default=-1) */
+    /** @var int db field: scoreweighting (integer, default=-1) */
     private $scoreweighting      = -1;
 
-    /** db field: sortorder (integer, default=0) */
+    /** @var int db field: sortorder (integer, default=0) */
     private $sortorder           = 0;
 
-    /** db field: clickreporting (integer, default=0) */
+    /** @var int db field: clickreporting (integer, default=0) */
     private $clickreporting      = 0;
 
-    /** db field: discarddetails (integer, default=0) */
+    /** @var int db field: discarddetails (integer, default=0) */
     private $discarddetails      = 0;
 
-    /** object representing the task source file */
+    /** @var mixed object representing the task source file */
     public $source = null;
 
-    /** object representing the task config file */
+    /** @var mixed object representing the task config file */
     public $config = null;
 
     /**
@@ -860,12 +860,11 @@ class taskchain_task extends taskchain_base {
      * @uses $CFG
      * @uses $DB
      * @return source object representing the source file for this TaskChain
-     * @todo Finish documenting this function
      */
     public function get_source() {
         global $DB;
         if (empty($this->source)) {
-            // get sourcetype e.g. hp_6_jcloze_xml
+            // Get sourcetype e.g. hp_6_jcloze_xml.
             $file = $this->get_file('source');
             if (! $sourcetype = clean_param($this->sourcetype, PARAM_SAFEDIR)) {
                 throw new moodle_exception('missingsourcetype', 'taskchain');
@@ -884,7 +883,6 @@ class taskchain_task extends taskchain_base {
      *
      * @uses $DB
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_config() {
         global $DB;
@@ -921,7 +919,7 @@ class taskchain_task extends taskchain_base {
         $filearea = $type . 'file';
 
         if (empty($this->$typefile) && $type == 'config') {
-            return false; // ignore empty config file
+            return false; // Ignore empty config file.
         }
 
         $filename = basename($this->$typefile);
@@ -931,10 +929,10 @@ class taskchain_task extends taskchain_base {
 
         // require leading and trailing slash on $filepath
         if (substr($filepath, 0, 1) == '/' && substr($filepath, -1) == '/') {
-            // do nothing - $filepath is valid
+            // Do nothing - $filepath is valid.
         } else {
-            // fix filepath - shouldn't happen !!
-            // maybe leftover from a messy upgrade
+            // Fix filepath - shouldn't happen !!
+            // maybe leftover from a messy upgrade.
             if ($filepath == '.' || $filepath == '') {
                 $filepath = '/';
             } else {
@@ -949,9 +947,9 @@ class taskchain_task extends taskchain_base {
             return $file;
         }
 
-        // the source file is missing, probably this TaskChain
+        // The source file is missing, probably this TaskChain
         // has recently been upgraded/imported from Moodle 1.9
-        // so we are going to try to create the missing stored file
+        // so we are going to try to create the missing stored file.
 
         $file_record = array(
             'contextid' => $contextid, 'component' => 'mod_taskchain', 'filearea' => $filearea,
@@ -962,7 +960,7 @@ class taskchain_task extends taskchain_base {
         $filehash = sha1('/' . $coursecontextid . '/course/legacy/0' . $filepath . $filename);
 
         if ($file = $fs->get_file_by_hash($filehash)) {
-            // file exists in legacy course files
+            // File exists in legacy course files.
             if ($file = $fs->create_file_from_storedfile($file_record, $file)) {
                 return $file;
             }
@@ -970,13 +968,13 @@ class taskchain_task extends taskchain_base {
 
         $oldfilepath = $CFG->dataroot . '/' . $this->TC->course->id . $filepath . $filename;
         if (file_exists($oldfilepath)) {
-            // file exists on server's filesystem
+            // File exists on server's filesystem.
             if ($file = $fs->create_file_from_pathname($file_record, $oldfilepath)) {
                 return $file;
             }
         }
 
-        // file not found - shouldn't happen !!
+        // File not found - shouldn't happen !!
         return null;
         // throw new moodle_exception($type.'filenotfound', 'taskchain', '', $this->$typefile);
     }

@@ -38,22 +38,29 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_hp_6_renderer {
+    /** @var string */
     public $icon = 'pix/f/jcw.gif';
+    /** @var string */
     public $js_object_type = 'JCross';
 
+    /** @var string */
     public $templatefile = 'jcross6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList|ShowHideClueList';
 
-    // Glossary autolinking settings
+    /** @var string Glossary autolinking settings */
     public $headcontent_strings = 'Feedback|AcrossCaption|DownCaption|Correct|Incorrect|GiveHint|YourScoreIs';
+    /** @var string */
     public $headcontent_arrays = '';
 
+    /** @var array */
     public $response_text_fields = array(
-        'correct', 'wrong', // remove: ignored
+        'correct', 'wrong', // Remove: ignored.
     );
 
+    /** @var array */
     public $response_num_fields = array(
-        'score', 'hints', 'clues', 'checks', // remove: weighting
+        'score', 'hints', 'clues', 'checks', // Remove: weighting.
     );
 
     /**
@@ -61,7 +68,6 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
@@ -72,19 +78,16 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * filter_text_headcontent_search_array
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function filter_text_headcontent_search_array() {
-        return ''; // disable search for array names
+        return ''; // Disable search for array names.
     }
 
     /**
      * fix_headcontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_headcontent() {
-        // switch off auto complete on answer text boxes
+        // Switch off auto complete on answer text boxes.
         $search = '/(?<=<form method="post" action="" onsubmit="return false;")(?=>)/';
         $replace = ' autocomplete="off"';
         $this->headcontent = preg_replace($search, $replace, $this->headcontent, 1);
@@ -96,10 +99,9 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * fix_bodycontent
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
-        // we must add a false return value to clue links in order not to trigger the onbeforeunload event handler
+        // We must add a false return value to clue links in order not to trigger the onbeforeunload event handler.
         $search = '/(?<=' . '<a href="javascript:void\(0\);" class="GridNum" onclick="' . ')' . 'ShowClue\([^)]*\)' . '(?=' . '">' . ')/';
         $replace = '$0; return false;';
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent);
@@ -111,10 +113,9 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'TypeChars,ShowHint,ShowClue,CheckAnswers';
         return $names;
@@ -126,24 +127,23 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_Finish(&$str, $start, $length) {
         $name = 'Finish';
 
-        // remove the first occurrence of this function
+        // Remove the first occurrence of this function.
         $this->remove_js_function($str, $start, $length, $name);
 
-        // the JCross template file, jcross6.js_, contains an duplicate version
-        // of the Finish() function, so for completeness we remove that as well
+        // The JCross template file, jcross6.js_, contains an duplicate version
+        // of the Finish() function, so for completeness we remove that as well.
 
         list($start, $finish) = $this->locate_js_block('function', $name, $str);
         if ($finish) {
-            // remove the second occurrence of this function
+            // Remove the second occurrence of this function.
             $this->remove_js_function($str, $start, ($finish - $start), $name);
         }
 
-        // remove all delayed calls to this function
+        // Remove all delayed calls to this function
         // don't put this into hp/6/class.php because it breaks JQuiz !!
         // $search = "/\s*"."setTimeout\('$name\([^)]*\)', .*?\);/s";
         // $str = preg_replace($search, '', $str);
@@ -153,7 +153,6 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * fix_js_TypeChars_init
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_TypeChars_init() {
         return ''
@@ -177,7 +176,6 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * fix_js_TypeChars_obj
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_TypeChars_obj() {
         return 'CurrentBox';
@@ -189,12 +187,11 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowHint(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // intercept Hints
+        // Intercept Hints.
         if ($pos = strrpos($substr, '}')) {
             $append = "\n"
                 . "	if (OutString.length) {\n"
@@ -213,12 +210,11 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowClue(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // intercept Clues
+        // Intercept Clues.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
                 . "	// intercept this Clue\n"
@@ -231,7 +227,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
             $substr = substr_replace($substr, $insert, $pos + 1, 0);
         }
 
-        // stretch the canvas vertically down to cover the content, if any
+        // Stretch the canvas vertically down to cover the content, if any.
         if ($pos = strrpos($substr, '}')) {
             $substr = substr_replace($substr, '	StretchCanvasToCoverContent(true);' . "\n", $pos, 0);
         }
@@ -243,7 +239,6 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
         return 'CheckAnswers';
@@ -254,7 +249,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      *
      * @return xxx
      */
-    function expand_EnterCaption() {
+    public function expand_EnterCaption() {
         $caption = parent::expand_EnterCaption();
         return $this->TC->task->source->js_value_safe($caption, true);
     }
@@ -264,7 +259,7 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      *
      * @return xxx
      */
-    function expand_HintCaption() {
+    public function expand_HintCaption() {
         $caption = parent::expand_HintCaption();
         return $this->TC->task->source->js_value_safe($caption, true);
     }

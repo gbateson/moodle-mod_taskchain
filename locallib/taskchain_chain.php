@@ -35,103 +35,103 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_chain extends taskchain_base {
-    /** db field: id (primary key, default=null) */
+    /** @var mixed db field: id (primary key, default=null) */
     private $id                  = null;
 
-    /** db field: parenttype (integer, default=0) */
+    /** @var int db field: parenttype (integer, default=0) */
     private $parenttype          = 0;
 
-    /** db field: parentid (integer, default=0) */
+    /** @var int db field: parentid (integer, default=0) */
     private $parentid            = 0;
 
-    /** db field: entrycm (integer, default=0) */
+    /** @var int db field: entrycm (integer, default=0) */
     private $entrycm             = 0;
 
-    /** db field: entrygrade (integer, default=100) */
+    /** @var int db field: entrygrade (integer, default=100) */
     private $entrygrade          = 100;
 
-    /** db field: entrypage (integer, default=0) */
+    /** @var int db field: entrypage (integer, default=0) */
     private $entrypage           = 0;
 
-    /** db field: entrytext (string, default='') */
+    /** @var string db field: entrytext (string, default='') */
     private $entrytext           = '';
 
-    /** db field: entryformat (integer, default=0) */
+    /** @var int db field: entryformat (integer, default=0) */
     private $entryformat         = 0;
 
-    /** db field: entryoptions (integer, default=0) */
+    /** @var int db field: entryoptions (integer, default=0) */
     private $entryoptions        = 0;
 
-    /** db field: exitpage (integer, default=0) */
+    /** @var int db field: exitpage (integer, default=0) */
     private $exitpage            = 0;
 
-    /** db field: exittext (string, default='') */
+    /** @var string db field: exittext (string, default='') */
     private $exittext            = '';
 
-    /** db field: exitformat (integer, default=0) */
+    /** @var int db field: exitformat (integer, default=0) */
     private $exitformat          = 0;
 
-    /** db field: exitoptions (integer, default=0) */
+    /** @var int db field: exitoptions (integer, default=0) */
     private $exitoptions         = 0;
 
-    /** db field: exitcm (integer, default=0) */
+    /** @var int db field: exitcm (integer, default=0) */
     private $exitcm              = 0;
 
-    /** db field: exitgrade (integer, default=0) */
+    /** @var int db field: exitgrade (integer, default=0) */
     private $exitgrade           = 0;
 
-    /** db field: showpopup (integer, default=0) */
+    /** @var int db field: showpopup (integer, default=0) */
     private $showpopup           = 0;
 
-    /** db field: popupoptions (string (255), default='') */
+    /** @var string db field: popupoptions (string (255), default='') */
     private $popupoptions        = '';
 
-    /** db field: timeopen (integer, default=0) */
+    /** @var int db field: timeopen (integer, default=0) */
     private $timeopen            = 0;
 
-    /** db field: timeclose (integer, default=0) */
+    /** @var int db field: timeclose (integer, default=0) */
     private $timeclose           = 0;
 
-    /** db field: timelimit (integer, default=0) */
+    /** @var int db field: timelimit (integer, default=0) */
     private $timelimit           = 0;
 
-    /** db field: delay1 (integer, default=0) */
+    /** @var int db field: delay1 (integer, default=0) */
     private $delay1              = 0;
 
-    /** db field: delay2 (integer, default=0) */
+    /** @var int db field: delay2 (integer, default=0) */
     private $delay2              = 0;
 
-    /** db field: password (string (255), default='') */
+    /** @var string db field: password (string (255), default='') */
     private $password            = '';
 
-    /** db field: subnet (string (255), default='') */
+    /** @var string db field: subnet (string (255), default='') */
     private $subnet              = '';
 
-    /** db field: allowresume (integer, default=1) */
+    /** @var int db field: allowresume (integer, default=1) */
     private $allowresume         = 1;
 
-    /** db field: allowfreeaccess (integer, default=0) */
+    /** @var int db field: allowfreeaccess (integer, default=0) */
     private $allowfreeaccess     = 0;
 
-    /** db field: manualcompletion (integer, default=0) */
+    /** @var int db field: manualcompletion (integer, default=0) */
     private $manualcompletion    = 0;
 
-    /** db field: attemptlimit (integer, default=0) */
+    /** @var int db field: attemptlimit (integer, default=0) */
     private $attemptlimit        = 0;
 
-    /** db field: attemptgrademethod (integer, default=0) */
+    /** @var int db field: attemptgrademethod (integer, default=0) */
     private $attemptgrademethod  = 0;
 
-    /** db field: grademethod (integer, default=1) */
+    /** @var int db field: grademethod (integer, default=1) */
     private $grademethod         = 1;
 
-    /** db field: gradeignore (integer, default=0) */
+    /** @var int db field: gradeignore (integer, default=0) */
     private $gradeignore         = 0;
 
-    /** db field: gradelimit (integer, default=100) */
+    /** @var int db field: gradelimit (integer, default=100) */
     private $gradelimit          = 100;
 
-    /** db field: gradeweighting (integer, default=100) */
+    /** @var int db field: gradeweighting (integer, default=100) */
     private $gradeweighting      = 100;
 
     /** name of associated taskchain record */

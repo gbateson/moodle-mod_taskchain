@@ -42,7 +42,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_renderer extends mod_taskchain_attemp
      * expand_ItemArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ItemArray() {
         $q = 0;
@@ -63,7 +62,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_renderer extends mod_taskchain_attemp
                 $percent  = $this->TC->task->source->xml_value_int($tags, $answer . "['percent-correct'][0]['#']");
                 $include  = $this->TC->task->source->xml_value_int($tags, $answer . "['include-in-mc-options'][0]['#']");
                 if (strlen((string)$text)) {
-                    if ($aa == 0) { // first time only
+                    if ($aa == 0) { // First time only.
                         $str .= "\n";
                         $str .= "I[$qq] = new Array();\n";
                         $str .= "I[$qq][0] = $weighting;\n";
@@ -92,7 +91,6 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_renderer extends mod_taskchain_attemp
      * @param xxx $answer
      * @param xxx $a
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ItemArray_answertext($tags, $answer, $a) {
         return $this->TC->task->source->xml_value_js($tags, $answer . "['text'][0]['#']");

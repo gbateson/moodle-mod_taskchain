@@ -38,12 +38,11 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmix/xml/v6/renderer.p
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_renderer extends mod_taskchain_attempt_hp_6_jmix_xml_v6_renderer {
+    /** @var string */
     public $templatefile = 'djmix6.ht_';
 
     /**
      * fix_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
         $this->fix_bodycontent_DragAndDrop();

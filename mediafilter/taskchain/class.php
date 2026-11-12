@@ -47,24 +47,23 @@ class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
      * @param xxx $text
      * @param xxx $options (optional, default=array)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function mediaplugin_filter($taskchain, $text, $options = array()) {
         global $CFG, $PAGE;
 
         // Keep track of the id of the current task
         // so that eolas_fix.js is only included once in each task
-        // Note: the cron script calls this method for multiple tasks
+        // Note: the cron script calls this method for multiple tasks.
         static $eolas_fix_applied = 0;
 
         if (! is_string($text)) {
-            // non string data can not be filtered anyway
+            // Non string data can not be filtered anyway.
             return $text;
         }
-        $newtext = $text; // fullclone is slow and not needed here
+        $newtext = $text; // Fullclone is slow and not needed here.
 
         foreach (array_keys($this->media_filetypes) as $filetype) {
-            // set $adminsetting, the name of the $CFG setting, if any, which enables/disables filtering of this file type
+            // Set $adminsetting, the name of the $CFG setting, if any, which enables/disables filtering of this file type.
             $adminsetting = '';
             if (preg_match('/^[a-z]+$/', $filetype)) {
                 $taskchain_enable = 'taskchain_enable' . $filetype;
@@ -77,15 +76,15 @@ class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
                 }
             }
 
-            // set $search and $replace strings
+            // Set $search and $replace strings.
             $search = '/<a.*?href="([^"?>]*\.' . $filetype . '[^">]*)"[^>]*>.*?<\/a>/is';
             if ($adminsetting == '' || $CFG->$adminsetting) {
-                // filtering of this file type is allowed
+                // Filtering of this file type is allowed.
                 $callback = array($this, 'taskchain_mediaplugin_filter');
                 $callback = partial($callback, $filetype, $options);
                 $newtext = preg_replace_callback($search, $callback, $newtext, -1, $count);
             } else {
-                // filtering of this file type is disabled
+                // Filtering of this file type is disabled.
                 $replace = '$1<br />' . get_string('error_disabledfilter', 'mod_taskchain', $adminsetting);
                 $newtext = preg_replace($search, $replace, $newtext, -1, $count);
             }
@@ -96,12 +95,12 @@ class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
         }
 
         if (is_null($newtext) || $newtext == $text) {
-            // error or not filtered
+            // Error or not filtered.
             return $text;
         }
 
         if ($eolas_fix_applied == $taskchain->id) {
-            // do nothing - the external javascripts have already been included for this task
+            // Do nothing - the external javascripts have already been included for this task.
         } else {
             $PAGE->requires->js('/mod/taskchain/mediafilter/ufo.js', true);
             $PAGE->requires->js('/mod/taskchain/mediafilter/eolas_fix.js');
@@ -120,13 +119,12 @@ class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
      * @param xxx $options
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskchain_mediaplugin_filter($filetype, $options, $match) {
         $link = $match[0];
         $mediaurl = $match[1];
 
-        // get a valid $player name
+        // Get a valid $player name.
         if (isset($options['player'])) {
             $player = $options['player'];
         } else {
@@ -139,14 +137,14 @@ class taskchain_mediafilter_taskchain extends taskchain_mediafilter {
             $player = $this->defaultplayer;
         }
 
-        // merge player options
+        // Merge player options.
         if ($player == $this->defaultplayer) {
             $options = array_merge($this->players[$player]->options, $options);
         } else {
             $options = array_merge($this->players[$this->defaultplayer]->options, $this->players[$player]->options, $options);
         }
 
-        // generate content for required player
+        // Generate content for required player.
         $content = $this->players[$player]->generate($filetype, $link, $mediaurl, $options);
 
         return $content;

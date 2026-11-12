@@ -35,13 +35,18 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_mediaplayer_image extends taskchain_mediaplayer {
+    /** @var array */
     public $aliases = array('img');
+    /** @var array */
     public $media_filetypes = array('gif', 'jpg', 'png');
+    /** @var array */
     public $options = array(
         'width' => 0, 'height' => 0, 'build' => 0,
         'quality' => '', 'majorversion' => '', 'flashvars' => '',
     );
+    /** @var string */
     public $spantext = '';
+    /** @var bool */
     public $removelink = false;
 
     /**
@@ -52,7 +57,6 @@ class taskchain_mediaplayer_image extends taskchain_mediaplayer {
      * @param xxx $mediaurl
      * @param xxx $options
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function generate($filetype, $link, $mediaurl, $options) {
         $img = '<img src="' . $mediaurl . '"';

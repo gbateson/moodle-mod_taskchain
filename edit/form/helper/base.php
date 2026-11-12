@@ -124,7 +124,7 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/QuickForm/Renderer/TaskCh
 $target_renderer = 'TaskChain_MoodleQuickForm_Renderer';
 $default_renderer = '_HTML_QuickForm_default_renderer';
 if (isset($GLOBALS[$default_renderer]) && get_class($GLOBALS[$default_renderer]) == $target_renderer) {
-    // do nothing
+    // Do nothing.
 } else {
     $GLOBALS[$default_renderer] = new $target_renderer();
 }
@@ -139,57 +139,57 @@ unset($default_renderer, $target_renderer);
  * @package    mod_taskchain
  */
 abstract class taskchain_form_helper_base {
-    // all properties and get_xxx() and set_xxx() methods
+    // All properties and get_xxx() and set_xxx() methods
     // should be "private" so that access to properties
-    // is controlled by the __get() and __set() methods
+    // is controlled by the __get() and __set() methods.
 
     /** default text field size */
     const TEXT_FIELD_SIZE_LONG  = 40;
     const TEXT_FIELD_SIZE_SHORT = 15;
 
-    /** the text field size */
+    /** @var int the text field size */
     protected $text_field_size = 0;
 
-    /** reference to global $TC object */
+    /** @var mixed reference to global $TC object */
     protected $TC = null;
 
-    /** array to map each form section to an array of fields */
+    /** @var array array to map each form section to an array of fields */
     protected $sections = array();
 
-    /** the default sections/fields shown on forms for multiple records */
+    /** @var array the default sections/fields shown on forms for multiple records */
     protected $defaultsections = array();
 
-    /** default values for each field in this input form */
+    /** @var array default values for each field in this input form */
     protected $defaultvalues = array();
 
-    /** fields that are only used when adding a new record */
+    /** @var array fields that are only used when adding a new record */
     protected $addonlyfields = array();
 
-    /** the moodle form object which we are "helping" to manipulate */
+    /** @var mixed the moodle form object which we are "helping" to manipulate */
     protected $mform = null;
 
-    /** the current $context */
+    /** @var mixed the current $context */
     protected $context = null;
 
-    /** if this form is for a single field, this string holds the name of that field */
+    /** @var string if this form is for a single field, this string holds the name of that field */
     protected $singlefield = '';
 
-    /** the current database $record */
+    /** @var mixed the current database $record */
     protected $record = null;
 
-    /** type of record */
+    /** @var string type of record */
     protected $recordtype = '';
 
-    /** boolean switch denoting whether or not this $record is one of multiple child $records */
+    /** @var bool boolean switch denoting whether or not this $record is one of multiple child $records */
     protected $is_multiple = false;
 
-    /** boolean switch denoting whether or not this record is the default record */
+    /** @var bool boolean switch denoting whether or not this record is the default record */
     protected $is_default_record = false;
 
-    /** integer value of Bootstrap version */
+    /** @var int integer value of Bootstrap version */
     protected $bootstrap = 0;
 
-    /** string suffix to add to the form's CSS class */
+    /** @var string string suffix to add to the form's CSS class */
     protected $formclasssuffix = '';
 
     /**
@@ -199,7 +199,6 @@ abstract class taskchain_form_helper_base {
      * @param object $context a context record from the database
      * @param stdClass $record fields from record in the database
      * @param boolean $multiple (optional, default=false)
-     * @todo Finish documenting this function
      */
     public function __construct(&$mform, &$context, &$record, $is_multiple = false) {
         global $CFG, $TC, $OUTPUT;
@@ -216,7 +215,7 @@ abstract class taskchain_form_helper_base {
 
         // Themes in Moodle 2.5 to 3.6 use Bootstrap 2.3
         // Themes in Moodle 3.2 (and later) use Bootstrap 4.x
-        // The exact version of Bootstrap is available by search for 'Bootstrap v' in "style/moodle.css"
+        // The exact version of Bootstrap is available by search for 'Bootstrap v' in "style/moodle.css".
         if ($CFG->theme == 'boost') {
             $this->bootstrap = true;
         } else {
@@ -228,7 +227,7 @@ abstract class taskchain_form_helper_base {
         if ($field = optional_param('field', '', PARAM_ALPHANUM)) {
             foreach ($this->sections as $section => $fields) {
                 if ($section == 'hidden') {
-                    continue; // e.g. "id" field
+                    continue; // E.g. "id" field.
                 }
                 if (in_array($field, $fields)) {
                     $this->singlefield = $field;
@@ -247,11 +246,11 @@ abstract class taskchain_form_helper_base {
         if ($is_multiple == false) {
             $attributes = $mform->getAttributes();
 
-            // Get pageid e.g. mod-taskchain-edit-tasks
+            // Get pageid e.g. mod-taskchain-edit-tasks.
             $id = $TC->pageid;
 
             // Get pageclass e.g. mod-taskchain-edit and
-            // append suffix e.g. "record" or "records"
+            // append suffix e.g. "record" or "records".
             $class = $TC->pageclass;
             if ($this->formclasssuffix) {
                 $class .= '-' . $this->formclasssuffix;
@@ -284,7 +283,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param xxx $name
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function __get($name) {
         $method = 'get_' . $name;
@@ -300,7 +298,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param xxx $name
      * @param xxx $value
-     * @todo Finish documenting this function
      */
     public function __set($name, $value) {
         $method = 'set_' . $name;
@@ -374,7 +371,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param stdClass $data (passed by reference)
      * @return void may modify $this->record
-     * @todo Finish documenting this function
      */
     public function update_singlefield($data) {
         if ($field = $this->singlefield) {
@@ -385,8 +381,6 @@ abstract class taskchain_form_helper_base {
 
     /**
      * display_singlefield
-     *
-     * @todo Finish documenting this function
      */
     public function display_singlefield() {
         if ($field = $this->singlefield) {
@@ -422,7 +416,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $field the field name
      * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
-     * @todo Finish documenting this function
      */
     protected function get_defaultvalue($field) {
         $method = 'get_defaultvalue_' . $field;
@@ -442,7 +435,7 @@ abstract class taskchain_form_helper_base {
             return $this->defaultvalues[$field];
         }
         // throw new moodle_exception(get_class($this)." - missing default value: $field");
-        return null; // shouldn't happen !!
+        return null; // Shouldn't happen !!
     }
 
     /**
@@ -450,7 +443,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $field the field name
      * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
-     * @todo Finish documenting this function
      */
     protected function get_defaultvalue_template_source($field) {
         if ($this->is_add()) {
@@ -484,7 +476,6 @@ abstract class taskchain_form_helper_base {
      * get_context
      *
      * @return $this->context
-     * @todo Finish documenting this function
      */
     public function get_context() {
         return $this->context;
@@ -496,7 +487,6 @@ abstract class taskchain_form_helper_base {
      * @param integer $contextlevel
      * @param integer $instanceid (optional, default=0)
      * @return void, but will update $this->context
-     * @todo Finish documenting this function
      */
     public function set_context($contextlevel, $instanceid = 0) {
         $this->context = mod_taskchain::context($contextlevel, $instanceid);
@@ -507,7 +497,6 @@ abstract class taskchain_form_helper_base {
      *
      * @uses $CFG
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function set_type_text($field) {
         global $CFG;
@@ -523,7 +512,6 @@ abstract class taskchain_form_helper_base {
      * update_record
      *
      * @return void, but may update db
-     * @todo Finish documenting this function
      */
     public function update_record() {
         global $DB;
@@ -538,12 +526,12 @@ abstract class taskchain_form_helper_base {
             $stdclass = $this->record;
         }
 
-        // get records type(s) and record id
+        // Get records type(s) and record id.
         $type = $this->recordtype;
         $types = $this->recordtype . 's';
         $id = $this->get_fieldvalue('id');
 
-        // update main $TC record if necessary
+        // Update main $TC record if necessary.
         if (isset($this->TC->$type) && $this->TC->$type->get_id() == $id) {
             foreach (get_object_vars($stdclass) as $name => $value) {
                 $method = 'set_' . $name;
@@ -555,12 +543,12 @@ abstract class taskchain_form_helper_base {
             }
         }
 
-        // update record in $TC record array, if necessary
+        // Update record in $TC record array, if necessary.
         if (isset($this->TC->$types) && array_key_exists($id, $this->TC->$types)) {
             $this->TC->{$types}[$id] = $stdclass;
         }
 
-        // and finally, update the record in the DB
+        // And finally, update the record in the DB.
         $table = 'taskchain_' . $types;
         return $DB->update_record($table, $stdclass);
     }
@@ -569,7 +557,6 @@ abstract class taskchain_form_helper_base {
      * delete_record
      *
      * @return void, but may delete db
-     * @todo Finish documenting this function
      */
     public function delete_record() {
         global $DB;
@@ -578,7 +565,7 @@ abstract class taskchain_form_helper_base {
             return $this->record->delete();
         }
 
-        // get records type(s) and record id
+        // Get records type(s) and record id.
         $type = $this->recordtype;
         $types = $this->recordtype . 's';
         $id = $this->get_fieldvalue('id');
@@ -586,11 +573,11 @@ abstract class taskchain_form_helper_base {
         // delete any cached records of this $type(s)
         $this->TC->delete_cached_records($types, $type, array($id));
 
-        // delete form fields for this record
+        // Delete form fields for this record.
         $this->delete_form_elements($id);
 
-        // and finally, delete the record info from the DB
-        // specifically this is for "taskchain_delete_tasks"
+        // And finally, delete the record info from the DB
+        // specifically this is for "taskchain_delete_tasks".
         $deletefunction = 'taskchain_delete_' . $types;
         if (function_exists($deletefunction)) {
             $deletefunction($id);
@@ -599,8 +586,6 @@ abstract class taskchain_form_helper_base {
 
     /**
      * get_preferencelength
-     *
-     * @todo Finish documenting this function
      */
     protected function get_preferencelength($default = 255) {
         global $DB;
@@ -614,7 +599,7 @@ abstract class taskchain_form_helper_base {
             // (e.g. in Moodle 5.x, "user_preferences.value" is a TEXT field)
             return $columns[$field]->max_length;
         } else {
-            return $default; // shouldn't happen !!
+            return $default; // Shouldn't happen !!
         }
     }
 
@@ -623,7 +608,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param boolean (optional, default=false) $include fieldnames from $this->defaultfields array
      * @param boolean (optional, default=false) $exclude fieldnames only used when adding new records
-     * @todo Finish documenting this function
      */
     protected function get_preferencefields($include = false, $exclude = false) {
         // $method = 'preferences_fieldnames_'.$this->recordtype;
@@ -652,7 +636,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string the $field whose preference name will be returned
      * @param string $type (optional, default=null) the type of preference
-     * @todo Finish documenting this function
      */
     protected function get_preferencename($field) {
         $method = 'get_preferencename_' . $field;
@@ -670,7 +653,6 @@ abstract class taskchain_form_helper_base {
      * get_preference
      *
      * @param string name of required user preference $field
-     * @todo Finish documenting this function
      */
     protected function get_preference($field, $default = null) {
         $method = 'get_preference_' . $field;
@@ -686,7 +668,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $field the field name
      * @return string name of the preference setting for this $field
-     * @todo Finish documenting this function
      */
     protected function get_preferencename_columnlistid($field) {
         $type = $this->TC->get_columnlisttype();
@@ -698,7 +679,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $field the field name
      * @return mixed user preference for this field, or $this->defaultvalues[$field], or null
-     * @todo Finish documenting this function
      */
     protected function get_preference_columnlistid($field, $default = null) {
         $value = optional_param($field, null, PARAM_ALPHANUM);
@@ -716,7 +696,6 @@ abstract class taskchain_form_helper_base {
      * get_preferences
      *
      * @param array $selectedfields (optional, default=null)
-     * @todo Finish documenting this function
      */
     public function get_preferences($selectedfields = null) {
         $fields = $this->get_preferencefields(true);
@@ -739,7 +718,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param stdClass $data (passed by reference) recently submitted form $data
      * @param string name of required user preference $field
-     * @todo Finish documenting this function
      */
     protected function get_datavalue($data, $field) {
         $method = 'get_datavalue_' . $field;
@@ -757,7 +735,6 @@ abstract class taskchain_form_helper_base {
      * set_preferences
      *
      * @param stdClass $data (passed by reference)
-     * @todo Finish documenting this function
      */
     public function set_preferences($data) {
         $fields = $this->get_preferencefields(true, $this->is_update());
@@ -770,16 +747,16 @@ abstract class taskchain_form_helper_base {
                 continue;
             }
 
-            // make sure $value is not too long for "user_preferences.value" field
+            // Make sure $value is not too long for "user_preferences.value" field.
             if ($length > 0 && mod_taskchain::textlib('strlen', $value) > $length) {
                 $this->truncate_string($value, $length);
             }
 
-            // add this value to user preferences
+            // Add this value to user preferences.
             $name = $this->get_preferencename($field);
             $preferences[$name] = $value;
 
-            // update default value in form, if necessary
+            // Update default value in form, if necessary.
             $name = 'defaultfield_' . $field;
             if ($this->mform->elementExists($name)) {
                 $value = $this->format_fieldvalue($field, $value);
@@ -787,7 +764,7 @@ abstract class taskchain_form_helper_base {
             }
         }
 
-        // update this user's preferences
+        // Update this user's preferences.
         set_user_preferences($preferences);
     }
 
@@ -799,19 +776,19 @@ abstract class taskchain_form_helper_base {
      * @return void, but may reduce $str to required $length
      */
     protected function truncate_string(&$str, $length) {
-        // remove HTML comments
+        // Remove HTML comments.
         $str = preg_replace('/\<\!\-\-.*?\-\-\>\s*/s', '', $str);
 
-        // remove script|style blocks
+        // Remove script|style blocks.
         $str = preg_replace('/<(script|style)[^>]*>.*?<\/\1>\s*/is', '', $str);
 
-        // truncate $str to maximum $length
+        // Truncate $str to maximum $length.
         $str = mod_taskchain::textlib('substr', $str, 0, $length);
 
-        // remove incomplete trailing HTML tags
+        // Remove incomplete trailing HTML tags.
         $str = preg_replace('/<[^>]*$/s', '', $str);
 
-        // remove incomplete trailing HTML blocks
+        // Remove incomplete trailing HTML blocks.
         $tags = array('audio', 'embed', 'object', 'video', 'button'); // , 'form', 'table', 'dl', 'ol', 'ul'
         foreach ($tags as $tag) {
             $pos = -1;
@@ -824,12 +801,12 @@ abstract class taskchain_form_helper_base {
                     $pos += mod_taskchain::textlib('strlen', $match);
                 } else {
                     $str = mod_taskchain::textlib('substr', $str, 0, $pos);
-                    break; // finish while loop
+                    break; // Finish while loop.
                 }
             }
         }
 
-        // add closing tags
+        // Add closing tags.
         $tags = array('b', 'u', 'i', 'font', 'span', 'p', 'div');
         foreach ($tags as $tag) {
             $pos = -1;
@@ -842,12 +819,12 @@ abstract class taskchain_form_helper_base {
                     list($match, $pos) = $matches[0];
                     $pos += mod_taskchain::textlib('strlen', $match);
                 } else {
-                    $str .= "</$tag>"; // this may make the string too long again
+                    $str .= "</$tag>"; // This may make the string too long again.
                 }
             }
         }
 
-        // remove plain text chars to reduce length, if necessary
+        // Remove plain text chars to reduce length, if necessary.
         $i_max = mod_taskchain::textlib('strlen', $str) - 1;
         $state = 0; // 0=outside a tag, 1=within a tag
         for ($i = $i_max; $i > 0 && $i_max >= $length; $i--) {
@@ -856,7 +833,7 @@ abstract class taskchain_form_helper_base {
                 if ($char == '>') {
                     $state = 1;
                 } else {
-                    // decrease $i_max and remove char $i
+                    // Decrease $i_max and remove char $i.
                     $i_max--;
                     $str = mod_taskchain::textlib('substr', $str, 0, $i) .
                            mod_taskchain::textlib('substr', $str, $i + 1);
@@ -895,7 +872,7 @@ abstract class taskchain_form_helper_base {
             }
         }
         if (is_null($index) || empty($this->mform->_elements[$index])) {
-            return null; // element not found - shouldn't happen !!
+            return null; // Element not found - shouldn't happen !!
         }
         return $this->mform->_elements[$index];
     }
@@ -905,18 +882,17 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $section (optional, default = 'record')
      * @param string $insertBefore (optional, default = 'actionshdr')
-     * @todo Finish documenting this function
      */
     protected function locate_form_elements($section = 'record', $insertBefore = 'actionshdr') {
 
-        // the $start array maps $recordid to the $elementid of the first form
+        // The $start array maps $recordid to the $elementid of the first form
         // element for the $recordid (i.e. the "header" element for the record)
         $start = array();
 
-        // the $end array maps $recordid to the $elementid of the element
+        // The $end array maps $recordid to the $elementid of the element
         // immediately AFTER the last form element for the $recordid.
         // Usually this will be the "header" element of the next record
-        // but for the last record it will be the $insertBefore element
+        // but for the last record it will be the $insertBefore element.
         $end = array();
 
         // get a reference to $this->mform's element index
@@ -932,15 +908,15 @@ abstract class taskchain_form_helper_base {
             $start[$recordid] = $index[$name];
         }
 
-        // add element ids to $end array
+        // Add element ids to $end array.
         foreach ($start as $recordid1 => $elementid1) {
             $elementid = $index[$insertBefore];
             foreach ($start as $recordid2 => $elementid2) {
                 if ($recordid1 == $recordid2) {
-                    continue; // same row
+                    continue; // Same row.
                 }
                 if ($elementid1 > $elementid2) {
-                    continue; // earlier row
+                    continue; // Earlier row.
                 }
                 if ($elementid > $elementid2) {
                     $elementid = $elementid2;
@@ -949,7 +925,7 @@ abstract class taskchain_form_helper_base {
             $end[$recordid1] = $elementid;
         }
 
-        // all done
+        // All done.
         return array($start, $end);
     }
 
@@ -958,7 +934,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $id_or_name the id or name of the element to be removed from $this->mform
      * @param boolean $removeRules TRUE to remove rules, otherwise false
-     * @todo Finish documenting this function
      */
     protected function delete_form_element($id_or_name, $removeRules = true) {
         // we would like to use $this->mform->removeElement($elementname, $removeRules)
@@ -983,34 +958,34 @@ abstract class taskchain_form_helper_base {
             }
         }
         if ($elementid === null) {
-            return; // shoudn't happen !!
+            return; // Shoudn't happen !!
         }
 
-        // remove element from elements array
+        // Remove element from elements array.
         unset($this->mform->_elements[$elementid]);
 
         // get a reference to $this->mform's element index
         $index = &$this->mform->_elementIndex;
 
-        // remove/adjust references to element in main index and duplicate-name index
+        // Remove/adjust references to element in main index and duplicate-name index
         // (used for radio elements and other elements which have the duplicate names)
         $elementname = $element->getName();
         if (empty($this->mform->_duplicateIndex[$elementname])) {
             // element has unique name (the usual case for non-radio elements)
             unset($index[$elementname]);
         } else if ($index[$elementname] == $elementid) {
-            // radio set with this element referenced in main index
+            // Radio set with this element referenced in main index
             // this is the case that mform->removeElement() expects
             $index[$elementname] = array_shift($this->mform->_duplicateIndex[$elementname]);
         } else {
-            // radio set with this element NOT referenced in main index
+            // Radio set with this element NOT referenced in main index
             // this is the case that mform->removeElement() does not handle
             $array = &$this->mform->_duplicateIndex[$elementname];
             unset($array[array_search($elementid, $array)]);
             unset($array);
         }
 
-        // release the $index reference
+        // Release the $index reference.
         unset($index);
 
         // remove rules, if requested (but only if no remaining elements with this $elementname)
@@ -1027,7 +1002,6 @@ abstract class taskchain_form_helper_base {
      * @param mixed either an array of $recordids, or a single $recordid
      * @param string $section (optional, default='record')
      * @param string $insertBefore (optional, default='actionshdr')
-     * @todo Finish documenting this function
      */
     protected function delete_form_elements($recordids, $section = 'record', $insertBefore = 'actionshdr') {
 
@@ -1037,22 +1011,22 @@ abstract class taskchain_form_helper_base {
 
         list($start, $end) = $this->locate_form_elements($section, $insertBefore);
 
-        // main loop through the recordids
+        // Main loop through the recordids.
         foreach ($recordids as $recordid) {
             if (empty($start[$recordid]) || empty($end[$recordid])) {
-                continue; // shouldn't happen !!
+                continue; // Shouldn't happen !!
             }
 
             // now loop through all form elements,
             // and delete elements for this recordid
-            // i.e. between $start[$recordid] and $end[$recordid]
+            // i.e. between $start[$recordid] and $end[$recordid].
 
             foreach (array_keys($this->mform->_elements) as $elementid) {
                 if ($elementid < $start[$recordid]) {
-                    continue; // before start of record
+                    continue; // Before start of record.
                 }
                 if ($elementid >= $end[$recordid]) {
-                    break; // after end of record
+                    break; // After end of record.
                 }
 
                 // delete the element from $this->mform (remove rules too)
@@ -1067,33 +1041,32 @@ abstract class taskchain_form_helper_base {
      * @param array of sorted $recordids
      * @param string $section (optional, default = 'record')
      * @param string $insertBefore (optional, default = 'actionshdr')
-     * @todo Finish documenting this function
      */
     protected function sort_form_elements($recordids, $section = 'record', $insertBefore = 'actionshdr') {
 
         list($start, $end) = $this->locate_form_elements($section, $insertBefore);
 
-        // main loop through the recordids
+        // Main loop through the recordids.
         foreach ($recordids as $recordid) {
             if (empty($start[$recordid]) || empty($end[$recordid])) {
-                continue; // shouldn't happen !!
+                continue; // Shouldn't happen !!
             }
 
-            // now loop through all form elements, and move
-            // (copy-delete-insert) elements for this recordid
+            // Now loop through all form elements, and move
+            // (copy-delete-insert) elements for this recordid.
 
             foreach (array_keys($this->mform->_elements) as $elementid) {
                 if ($elementid < $start[$recordid]) {
-                    continue; // before start of record
+                    continue; // Before start of record.
                 }
                 if ($elementid >= $end[$recordid]) {
-                    break; // after end of record
+                    break; // After end of record.
                 }
 
                 // delete the element from $this->mform (don't remove rules)
                 $element = $this->delete_form_element($elementid, false);
 
-                // insert the $element in its proper place
+                // Insert the $element in its proper place.
                 $this->mform->insertElementBefore($element, $insertBefore);
                 unset($element);
             }
@@ -1109,7 +1082,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param array $data (passed by reference)
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     public function prepare_sections(&$data) {
         $fields = $this->get_preferencefields();
@@ -1131,7 +1103,6 @@ abstract class taskchain_form_helper_base {
      * @param string $section name of section
      * @param array $fields within this section
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function prepare_section(&$data, $section, $fields) {
         $method = 'prepare_section_' . $section;
@@ -1150,16 +1121,15 @@ abstract class taskchain_form_helper_base {
      * @param array $data (passed by reference)
      * @param string $field name of field
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function prepare_field(&$data, $field) {
         $method = 'prepare_field_' . $field;
         if (method_exists($this, $method)) {
             $this->$method($data);
         } else if (isset($data[$field])) {
-            // field has already be prepared
+            // Field has already be prepared.
         } else {
-            // copy value across from record
+            // Copy value across from record.
             $data[$field] = $this->get_originalvalue($field, '');
         }
     }
@@ -1173,27 +1143,26 @@ abstract class taskchain_form_helper_base {
      *
      * @return boolean $all (optional, default=false)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_sections($all = false) {
         if (empty($this->is_multiple) || $all) {
-            $id = 'all'; // single record form
+            $id = 'all'; // Single record form.
         } else {
-            // one of multiple records on the edit chains/tasks page
+            // One of multiple records on the edit chains/tasks page.
             $id = $this->get_preference('columnlistid');
         }
 
-        // all sections
+        // All sections.
         if ($id == 'all') {
             return $this->sections;
         }
 
-        // a specific section
+        // A specific section.
         if (array_key_exists($id, $this->sections)) {
             return array('general' => $this->sections['general'], $id => $this->sections[$id]);
         }
 
-        // get custom column lists
+        // Get custom column lists.
         $type = $this->TC->get_columnlisttype();
         $lists = $this->TC->get_columnlists($type, true);
 
@@ -1202,10 +1171,10 @@ abstract class taskchain_form_helper_base {
             $sections['general'] = $this->sections['general'];
         }
         if (array_key_exists($id, $lists)) {
-            // a custom column list
+            // A custom column list.
             $sections[$id] = $lists[$id];
         } else {
-            // use default sections
+            // Use default sections.
             $sections = array_merge($sections, $this->defaultsections);
         }
         return $sections;
@@ -1216,7 +1185,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $section name of section
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_sectionlabel($section) {
         $method = 'get_sectionlabel_' . $section;
@@ -1231,7 +1199,6 @@ abstract class taskchain_form_helper_base {
      * get_sectionlabel_filters
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_sectionlabel_filters() {
         return ''; // get_string('filters', 'admin');
@@ -1241,7 +1208,6 @@ abstract class taskchain_form_helper_base {
      * get_sectionlabel_actions
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_sectionlabel_actions() {
         return get_string('actions');
@@ -1252,7 +1218,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $section name of section
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_sectionlabel_hidden() {
         return '';
@@ -1263,7 +1228,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $field name of field
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_fieldlabel($field) {
         if ($this->singlefield) {
@@ -1282,13 +1246,12 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $field name of field
      * @return string
-     * @todo Finish documenting this function
      */
     protected function get_bootstrap_fieldlabel($field) {
         if ($this->bootstrap) {
             return $this->get_fieldlabel($field);
         }
-        return $this->get_fieldlabel($field); // Moodle <= 3.1
+        return $this->get_fieldlabel($field); // Moodle <= 3.1.
     }
 
     /**
@@ -1296,7 +1259,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $field name of field
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_fieldname($field) {
         $method = 'get_fieldname_' . $field;
@@ -1316,7 +1278,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $field name of field
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function get_fieldvalue($field) {
         if ($field == 'id' && $this->is_default_record()) {
@@ -1335,7 +1296,7 @@ abstract class taskchain_form_helper_base {
                 return $this->record->$field;
             }
         }
-        return null; // shouldn't happen !!
+        return null; // Shouldn't happen !!
     }
 
     /**
@@ -1344,7 +1305,6 @@ abstract class taskchain_form_helper_base {
      * @param string $field name of field
      * @param mixed  the new field $value
      * @return boolean true if record was updated, false otherwise
-     * @todo Finish documenting this function
      */
     protected function set_fieldvalue($field, $value) {
         $method = 'set_fieldvalue_' . $field;
@@ -1359,7 +1319,7 @@ abstract class taskchain_form_helper_base {
                 $this->record->$method($value);
             } else if (isset($this->record->$field)) {
                 $this->record->$field = $value;
-                // update DB record too ?
+                // Update DB record too ?
             }
         }
 
@@ -1378,14 +1338,12 @@ abstract class taskchain_form_helper_base {
 
     /**
      * add_sections
-     *
-     * @todo Finish documenting this function
      */
     public function add_sections() {
         $sections = $this->get_sections();
         foreach ($sections as $section => $fields) {
             $this->add_section($section, $fields);
-            // to make individual sections NOT collapsible, do this:
+            // To make individual sections NOT collapsible, do this:
             // if (method_exists($this->mform, 'setExpanded')) {
             // $this->mform->setExpanded($section.'hdr', true);
             // }
@@ -1401,7 +1359,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $section name of section
      * @param array $fields names of fields
-     * @todo Finish documenting this function
      */
     protected function add_section($section, $fields) {
         $method = 'add_section_' . $section;
@@ -1419,7 +1376,6 @@ abstract class taskchain_form_helper_base {
      * add_section_label
      *
      * @param string $section name of section
-     * @todo Finish documenting this function
      */
     protected function add_sectionlabel($section) {
         $method = 'add_sectionlabel_' . $section;
@@ -1435,7 +1391,6 @@ abstract class taskchain_form_helper_base {
      * add_section_label
      *
      * @param string $section name of section
-     * @todo Finish documenting this function
      */
     protected function add_sectionlabel_singlefield($section) {
         return '';
@@ -1446,7 +1401,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $section name of section
      * @param array $fields names of fields
-     * @todo Finish documenting this function
      */
     protected function add_section_headings($section, $fields) {
         $level = 1;
@@ -1485,12 +1439,11 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $section name of section
      * @param array $fields names of fields
-     * @todo Finish documenting this function
      */
     protected function add_section_hidden($section, $fields) {
         $params = array();
 
-        // set "id" field name: chainid OR taskid
+        // Set "id" field name: chainid OR taskid.
         $id = $this->recordtype . 'id';
 
         foreach ($fields as $field) {
@@ -1507,7 +1460,7 @@ abstract class taskchain_form_helper_base {
         foreach ($params as $name => $value) {
             if ($value) {
                 if ($name == 'sesskey') {
-                    continue; // sesskey will be added by mform
+                    continue; // Sesskey will be added by mform.
                 }
                 $this->mform->addElement('hidden', $name, $value);
                 if (is_numeric($value)) {
@@ -1524,14 +1477,13 @@ abstract class taskchain_form_helper_base {
      * add_field
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function add_field($field) {
         $method = 'add_field_' . $field;
         if (method_exists($this, $method)) {
             $this->$method($field);
         } else {
-            // default action is to add a text field
+            // Default action is to add a text field.
             $name = $this->get_fieldname($field);
             $label = $this->get_fieldlabel($field);
             $this->mform->addElement('text', $name, $label, array('size' => $this->text_field_size));
@@ -1546,7 +1498,6 @@ abstract class taskchain_form_helper_base {
      * @param string $field the field name
      * @param mixed $default
      * @param bool $advanced (optional, default=false)
-     * @todo Finish documenting this function
      */
     protected function add_template_yesno($field, $advanced = false) {
         $name = $this->get_fieldname($field);
@@ -1566,7 +1517,6 @@ abstract class taskchain_form_helper_base {
      * @param string $field the field name
      * @param mixed $default
      * @param bool $advanced (optional, default=false)
-     * @todo Finish documenting this function
      */
     protected function add_template_list($field, $advanced = false) {
         $name = $this->get_fieldname($field);
@@ -1592,7 +1542,6 @@ abstract class taskchain_form_helper_base {
      * @param array $data (passed by reference)
      * @param array $files (passed by reference)
      * @return void may modify $errors and $data
-     * @todo Finish documenting this function
      */
     public function validate_sections(&$errors, &$data, &$files) {
         $sections = $this->get_sections();
@@ -1610,7 +1559,6 @@ abstract class taskchain_form_helper_base {
      * @param string $section name of section
      * @param array $fields within this section
      * @return void may modify $errors and $data
-     * @todo Finish documenting this function
      */
     protected function validate_section(&$errors, &$data, &$files, $section, $fields) {
         $method = 'validate_section_' . $section;
@@ -1631,7 +1579,6 @@ abstract class taskchain_form_helper_base {
      * @param array $files (passed by reference)
      * @param string $field name of field
      * @return void may modify $errors and $data
-     * @todo Finish documenting this function
      */
     protected function validate_field(&$errors, &$data, &$files, $field) {
         $method = 'validate_field_' . $field;
@@ -1649,7 +1596,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param stdClass $data (passed by reference)
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     public function fix_sections($data) {
         $sections = $this->get_sections();
@@ -1665,7 +1611,6 @@ abstract class taskchain_form_helper_base {
      * @param string $section name of section
      * @param array $fields within this section
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function fix_section($data, $section, $fields) {
         $method = 'fix_section_' . $section;
@@ -1684,7 +1629,6 @@ abstract class taskchain_form_helper_base {
      * @param stdClass $data (passed by reference)
      * @param string $field name of field
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function fix_field($data, $field) {
         if ($this->is_multiple) {
@@ -1713,7 +1657,6 @@ abstract class taskchain_form_helper_base {
      * @param stdClass $data (passed by reference)
      * @param string $field name of field
      * @return void may modify $data
-     * @todo Finish documenting this function
      */
     protected function fix_template_notnull($data, $field, $default) {
         if (! isset($data->$field)) {
@@ -1729,8 +1672,6 @@ abstract class taskchain_form_helper_base {
     /**
      * Format (i.e. add to $this->mform) the "labels" section
      * of the form, including the heading and all the fields.
-     *
-     * @todo Finish documenting this function
      */
     protected function format_section_labels() {
         $this->format_sectionlabel('labels');
@@ -1749,8 +1690,6 @@ abstract class taskchain_form_helper_base {
 
     /**
      * format_section_defaults
-     *
-     * @todo Finish documenting this function
      */
     protected function format_section_defaults() {
         $this->format_sectionlabel('defaults');
@@ -1769,8 +1708,6 @@ abstract class taskchain_form_helper_base {
 
     /**
      * format_section_selects
-     *
-     * @todo Finish documenting this function
      */
     protected function format_section_selects() {
         $this->format_sectionlabel('selects');
@@ -1791,7 +1728,6 @@ abstract class taskchain_form_helper_base {
      * format_section_label
      *
      * @param string $section name of section
-     * @todo Finish documenting this function
      */
     protected function format_sectionlabel($section) {
         $method = 'format_sectionlabel_' . $section;
@@ -1807,11 +1743,10 @@ abstract class taskchain_form_helper_base {
      * format_sectionlabel_record
      *
      * @param string $section name of section
-     * @todo Finish documenting this function
      */
     protected function format_sectionlabel_record($section) {
         static $counter = 0;
-        $id = $section . $this->get_fieldvalue('id'); // e.g. "record99"
+        $id = $section . $this->get_fieldvalue('id'); // E.g. "record99".
         $text = get_string($this->recordtype . 'x', 'taskchain', ++$counter);
         $this->mform->addElement('header', $id, $text);
     }
@@ -1820,17 +1755,15 @@ abstract class taskchain_form_helper_base {
      * format_sectionlabel_hidden
      *
      * @param string $section name of section
-     * @todo Finish documenting this function
      */
     protected function format_sectionlabel_hidden($section) {
-        // do nothing
+        // Do nothing.
     }
 
     /**
      * format_labelfield
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_labelfield($field) {
         $method = 'format_labelfield_' . $field;
@@ -1845,8 +1778,6 @@ abstract class taskchain_form_helper_base {
 
     /**
      * format_labelfield_defaultrecord
-     *
-     * @todo Finish documenting this function
      */
     protected function format_labelfield_defaultrecord($field) {
         $text = $this->get_fieldlabel($field);
@@ -1855,8 +1786,6 @@ abstract class taskchain_form_helper_base {
 
     /**
      * format_labelfield_select
-     *
-     * @todo Finish documenting this function
      */
     protected function format_labelfield_selectrecord($field) {
         $text = $this->get_fieldlabel($field);
@@ -1865,8 +1794,6 @@ abstract class taskchain_form_helper_base {
 
     /**
      * format_headerfield
-     *
-     * @todo Finish documenting this function
      */
     protected function format_headerfield($field, $class, $text) {
         $label = $this->get_bootstrap_fieldlabel($field);
@@ -1876,20 +1803,16 @@ abstract class taskchain_form_helper_base {
 
     /**
      * format_labelfield_addtype
-     *
-     * @todo Finish documenting this function
      */
     protected function format_labelfield_addtype($field) {
-        // do nothing
+        // Do nothing.
     }
 
     /**
      * format_labelfield_tasknames
-     *
-     * @todo Finish documenting this function
      */
     protected function format_labelfield_tasknames($field) {
-        // do nothing
+        // Do nothing.
     }
 
     /**
@@ -1897,7 +1820,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string  $field name of field
      * @param boolean $addformid (optional, default=false)
-     * @todo Finish documenting this function
      */
     protected function ajax_edit_onclick($field, $addformid = false) {
         $id = $this->get_fieldvalue('id');
@@ -1919,7 +1841,6 @@ abstract class taskchain_form_helper_base {
      * format_fieldvalue
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_fieldvalue($field, $value) {
         global $CFG, $OUTPUT, $PAGE;
@@ -1928,7 +1849,7 @@ abstract class taskchain_form_helper_base {
         static $icon = null;
         if ($edit === null) {
             if ($this->bootstrap) {
-                $edit = false; // switch off editing for now.
+                $edit = false; // Switch off editing for now.
             } else if (defined('AJAX_SCRIPT') && AJAX_SCRIPT) {
                 $edit = (isset($_POST) && count($_POST));
             } else {
@@ -1938,10 +1859,10 @@ abstract class taskchain_form_helper_base {
                 }
             }
             if (file_exists($CFG->dirroot . '/pix/t/editstring.png')) {
-                // Moodle >= 2.3
+                // Moodle >= 2.3.
                 $icon = 't/editstring';
             } else {
-                // Moodle <= 2.2
+                // Moodle <= 2.2.
                 $icon = 't/edit';
             }
         }
@@ -1956,7 +1877,7 @@ abstract class taskchain_form_helper_base {
             $label = $this->get_fieldlabel($field);
             $types = $this->recordtype . 's';
 
-            $idfield = $this->recordtype . 'id'; // e.g. "chainid" or "taskid"
+            $idfield = $this->recordtype . 'id'; // E.g. "chainid" or "taskid".
             $idvalue = $this->get_fieldvalue('id');
             $params  = array($idfield => $idvalue, 'field' => $field);
             $href    = $this->TC->url->edit($types, $params);
@@ -1975,7 +1896,6 @@ abstract class taskchain_form_helper_base {
      * format_defaultfield
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_defaultfield($field) {
         $method = 'format_defaultfield_' . $field;
@@ -1992,17 +1912,15 @@ abstract class taskchain_form_helper_base {
      * format_defaultfield_id
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_defaultfield_id($field) {
-        // do nothing
+        // Do nothing.
     }
 
     /**
      * format_defaultfield_sortorder
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_defaultfield_sortorder($field) {
         $name = 'defaultfield_sortorder';
@@ -2013,7 +1931,6 @@ abstract class taskchain_form_helper_base {
      * format_defaultfield_edit
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_defaultfield_edit($field) {
         $name = 'defaultfield_' . $field;
@@ -2025,7 +1942,6 @@ abstract class taskchain_form_helper_base {
      * format_defaultfield_defaultrecord
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_defaultfield_defaultrecord($field) {
         $label = $this->get_bootstrap_fieldlabel($field);
@@ -2037,7 +1953,6 @@ abstract class taskchain_form_helper_base {
      * format_defaultfield_selectrecord
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_defaultfield_selectrecord($field) {
         $name = 'defaultfield_' . $field;
@@ -2048,7 +1963,6 @@ abstract class taskchain_form_helper_base {
      * format_selectfield
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_selectfield($field) {
         $method = 'format_selectfield_' . $field;
@@ -2069,17 +1983,15 @@ abstract class taskchain_form_helper_base {
      * format_selectfield_id
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_selectfield_id($field) {
-        // do nothing
+        // Do nothing.
     }
 
     /**
      * format_selectfield_sortorder
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_selectfield_sortorder($field) {
         $name = 'selectfield_' . $field;
@@ -2090,7 +2002,6 @@ abstract class taskchain_form_helper_base {
      * format_selectfield_edit
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_selectfield_edit($field) {
         $name = 'selectfield_' . $field;
@@ -2101,7 +2012,6 @@ abstract class taskchain_form_helper_base {
      * format_selectfield_default
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_selectfield_defaultrecord($field) {
         $name = 'selectfield_' . $field;
@@ -2112,7 +2022,6 @@ abstract class taskchain_form_helper_base {
      * format_selectfield_selectrecord
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_selectfield_selectrecord($field) {
         $elements = array(
@@ -2122,13 +2031,11 @@ abstract class taskchain_form_helper_base {
         $label = $this->get_bootstrap_fieldlabel($field);
         $text = ($label == '' ? '' : ' ');
         $this->mform->addGroup($elements, $field . '_elements', $label, $text, false);
-        // the javascript to selectall is initiated in the "add_field_action" method in "records.php"
+        // The javascript to selectall is initiated in the "add_field_action" method in "records.php".
     }
 
     /**
      * format_sections
-     *
-     * @todo Finish documenting this function
      */
     protected function format_sections() {
         $this->format_sectionlabel('record');
@@ -2143,7 +2050,6 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $section name of section
      * @param array $fields names of fields
-     * @todo Finish documenting this function
      */
     protected function format_section($section, $fields) {
         $method = 'format_section_' . $section;
@@ -2161,17 +2067,15 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $section name of section
      * @param array $fields names of fields
-     * @todo Finish documenting this function
      */
     protected function format_section_hidden($section, $fields) {
-        // do nothing
+        // Do nothing.
     }
 
     /**
      * format_field
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_field($field) {
         $method = 'format_field_' . $field;
@@ -2190,7 +2094,6 @@ abstract class taskchain_form_helper_base {
      * format_field_sortorder
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_field_sortorder($field) {
         $this->add_field_sortorder($field);
@@ -2200,7 +2103,6 @@ abstract class taskchain_form_helper_base {
      * format_field_edit
      *
      * @param string $field name of field
-     * @todo Finish documenting this function
      */
     protected function format_field_edit($field) {
         global $CFG, $output;
@@ -2240,7 +2142,7 @@ abstract class taskchain_form_helper_base {
                 } else if ($this->get_fieldvalue('parenttype') == mod_taskchain::PARENTTYPE_ACTIVITY && ($cm = get_coursemodule_from_instance('taskchain', $this->get_fieldvalue('parentid')))) {
                     $cmid = $cm->id;
                 } else {
-                    $cmid = 0; // shouldn't happen !!
+                    $cmid = 0; // Shouldn't happen !!
                 }
 
                 if ($cmid) {
@@ -2261,7 +2163,7 @@ abstract class taskchain_form_helper_base {
                 break;
 
             default:
-                $text = ''; // shouldn't happen !!
+                $text = ''; // Shouldn't happen !!
         }
 
         if ($text) {
@@ -2273,8 +2175,6 @@ abstract class taskchain_form_helper_base {
 
     /**
      * format_field_defaultrecord
-     *
-     * @todo Finish documenting this function
      */
     protected function format_field_defaultrecord($field) {
         $name = $this->get_fieldname($field);
@@ -2286,8 +2186,6 @@ abstract class taskchain_form_helper_base {
 
     /**
      * format_field_selectrecord
-     *
-     * @todo Finish documenting this function
      */
     protected function format_field_selectrecord($field) {
         $name = $this->get_fieldname($field);
@@ -2303,7 +2201,6 @@ abstract class taskchain_form_helper_base {
      * @param string $value of the field to be formatted
      * @param string $type (optional, default="") list of available strings
      * @return string human readable form of $field value
-     * @todo Finish documenting this function
      */
     protected function format_templatevalue_list() {
         $args = func_get_args();
@@ -2320,7 +2217,7 @@ abstract class taskchain_form_helper_base {
         if (array_key_exists($value, $list)) {
             return $list[$value];
         } else {
-            return $value; // unrecognized value - shouldn't happen !!
+            return $value; // Unrecognized value - shouldn't happen !!
         }
     }
 
@@ -2331,7 +2228,6 @@ abstract class taskchain_form_helper_base {
      * @param mixed value to be formatted
      * @param string $fmt (optional, default='strftimedatetime')
      * @param string $notime (optional, default='')
-     * @todo Finish documenting this function
      */
     protected function format_templatevalue_time($field, $value, $fmt = 'strftimedatetime', $notime = '') {
         if (empty($value)) {
@@ -2340,7 +2236,7 @@ abstract class taskchain_form_helper_base {
         if (is_numeric($value)) {
             return userdate($value, get_string($fmt));
         }
-        return $value; // probably $value has already been formatted - shouldn't happen !!
+        return $value; // Probably $value has already been formatted - shouldn't happen !!
     }
 
     /**
@@ -2350,7 +2246,6 @@ abstract class taskchain_form_helper_base {
      * @param mixed value to be formatted
      * @param string $fmt (optional, default='strftimedatetime')
      * @param string $notime (optional, default='')
-     * @todo Finish documenting this function
      */
     protected function format_templatevalue_timer($field, $value, $fmt = '', $notime = '') {
         if ($value > 0) {
@@ -2366,7 +2261,6 @@ abstract class taskchain_form_helper_base {
      * @param string $field to be formatted
      * @param string $value of the field to be formatted
      * @return string human readable form of $field value
-     * @todo Finish documenting this function
      */
     protected function format_templatevalue_yesno($field, $value) {
         return get_string(empty($value) ? 'no' : 'yes');
@@ -2383,7 +2277,6 @@ abstract class taskchain_form_helper_base {
      * @param integer $headlength (optional, default=16)
      * @param integer $taillength (optional, default=16)
      * @param string formatted name, possibly truncated to $textlength chars
-     * @todo Finish documenting this function
      */
     protected function format_longtext($text, $textlength = 40, $headlength = 16, $taillength = 16) {
         $text = format_string($text);
@@ -2402,7 +2295,6 @@ abstract class taskchain_form_helper_base {
      * add_action_buttons
      *
      * @return array($name => $text)
-     * @todo Finish documenting this function
      */
     protected function get_action_buttons() {
         return array();
@@ -2469,12 +2361,11 @@ abstract class taskchain_form_helper_base {
      *
      * @param string $objectname of javascript object
      * @return array
-     * @todo Finish documenting this function
      */
     protected function get_module_js($objectname) {
-        // determine fullpath of js file from $objectname
+        // Determine fullpath of js file from $objectname
         // e.g. if $objectname is "M.mod_taskchain_edit_form_helper_records",
-        // then $fullpath is "/mod/taskchain/edit/form/helper/records.js"
+        // then $fullpath is "/mod/taskchain/edit/form/helper/records.js".
         $fullpath = str_replace('_', '/', $objectname);
         $fullpath = preg_replace('/^.+(mod\/taskchain\/.*)/', '/$1.js', $fullpath);
         return array('name' => $objectname, 'fullpath' => $fullpath);

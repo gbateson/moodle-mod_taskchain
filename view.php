@@ -27,17 +27,17 @@
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
-// create object to represent this TaskChain activity
+// Create object to represent this TaskChain activity.
 $TC = new mod_taskchain();
 
-// Log this request
+// Log this request.
 mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'view', 'view.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
 $completion = new completion_info($TC->course);
 $completion->set_module_viewed($TC->coursemodule);
 
 if (! $TC->show_entrypage()) {
-    // go straight to attempt.php
+    // Go straight to attempt.php.
     redirect($TC->url->attempt());
 }
 
@@ -52,7 +52,7 @@ switch ($TC->action) {
         break;
 }
 
-// Set editing mode
+// Set editing mode.
 mod_taskchain::set_user_editing();
 
 // initialize $PAGE (and compute blocks)
@@ -73,12 +73,12 @@ if ($TC->can->attempt() || $TC->can->preview()) {
     echo $output->entrypage();
 } else {
     if (isguestuser()) {
-        // offer guests a choice of logging in or going back.
+        // Offer guests a choice of logging in or going back.
         if (function_exists('get_local_referer')) {
-            // Moodle >= 2.8
+            // Moodle >= 2.8.
             $referer = get_local_referer(false);
         } else {
-            // Moodle <= 2.7
+            // Moodle <= 2.7.
             $referer = get_referer(false);
         }
         $message = html_writer::tag('p', get_string('guestsno', 'mod_taskchain'));

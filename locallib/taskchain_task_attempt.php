@@ -35,58 +35,58 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_task_attempt extends taskchain_base {
-    /** db field: id (primary key, default=null) */
+    /** @var mixed db field: id (primary key, default=null) */
     private $id                  = null;
 
-    /** db field: taskid (integer, default=0) */
+    /** @var int db field: taskid (integer, default=0) */
     private $taskid              = 0;
 
-    /** db field: userid (integer, default=0) */
+    /** @var int db field: userid (integer, default=0) */
     private $userid              = 0;
 
-    /** db field: cnumber (integer, default=0) */
+    /** @var int db field: cnumber (integer, default=0) */
     private $cnumber             = 0;
 
-    /** db field: tnumber (integer, default=0) */
+    /** @var int db field: tnumber (integer, default=0) */
     private $tnumber             = 0;
 
-    /** db field: status (integer, default=1) */
+    /** @var int db field: status (integer, default=1) */
     private $status              = 1;
 
-    /** db field: penalties (integer, default=0) */
+    /** @var int db field: penalties (integer, default=0) */
     private $penalties           = 0;
 
-    /** db field: score (integer, default=0) */
+    /** @var int db field: score (integer, default=0) */
     private $score               = 0;
 
-    /** db field: duration (integer, default=0) */
+    /** @var int db field: duration (integer, default=0) */
     private $duration            = 0;
 
-    /** db field: starttime (integer, default=0) */
+    /** @var int db field: starttime (integer, default=0) */
     private $starttime           = 0;
 
-    /** db field: endtime (integer, default=0) */
+    /** @var int db field: endtime (integer, default=0) */
     private $endtime             = 0;
 
-    /** db field: resumestart (integer, default=0) */
+    /** @var int db field: resumestart (integer, default=0) */
     private $resumestart         = 0;
 
-    /** db field: resumefinish (integer, default=0) */
+    /** @var int db field: resumefinish (integer, default=0) */
     private $resumefinish        = 0;
 
-    /** db field: timestart (integer, default=0) */
+    /** @var int db field: timestart (integer, default=0) */
     private $timestart           = 0;
 
-    /** db field: timefinish (integer, default=0) */
+    /** @var int db field: timefinish (integer, default=0) */
     private $timefinish          = 0;
 
-    /** db field: clickreportid (integer, default=0) */
+    /** @var int db field: clickreportid (integer, default=0) */
     private $clickreportid       = 0;
 
-    /** integer flag signifying whether or not to redirect after storing results */
+    /** @var int integer flag signifying whether or not to redirect after storing results */
     public $redirect             = 0;
 
-    /** string to temporarily hold xml details returned from browser */
+    /** @var mixed string to temporarily hold xml details returned from browser */
     public $details              = null;
 
     /**

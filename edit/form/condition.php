@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/condition.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_edit_condition_form extends moodleform {
-    /** TaskChain form helper - see mod/taskchain/form/helper/base.php **/
+    /** @var mixed TaskChain form helper - see mod/taskchain/form/helper/base.php * */
     private $form_helper;
 
     /**
@@ -47,10 +47,10 @@ class mod_taskchain_edit_condition_form extends moodleform {
     public function definition() {
         global $TC;
 
-        // set up TaskChain form helper
+        // Set up TaskChain form helper.
         $this->form_helper = new taskchain_form_helper_condition($this->_form, $TC->coursemodule->context, $TC->condition);
 
-        // add form sections
+        // Add form sections.
         $this->form_helper->add_sections();
 
         // add standard buttons ("Save changes" and "Cancel")
@@ -76,7 +76,6 @@ class mod_taskchain_edit_condition_form extends moodleform {
      * @param xxx $data (passed by reference)
      * @param xxx $files
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);

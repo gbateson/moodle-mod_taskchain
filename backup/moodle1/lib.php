@@ -34,34 +34,34 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     /** maximum size of moodle.xml that can be read using file_get_contents (256 KB) */
     const SMALL_FILESIZE = 256000;
 
-    /** id of current context */
+    /** @var int id of current context */
     protected $contextid  = 0;
 
-    /** id of current course_module */
+    /** @var int id of current course_module */
     protected $moduleid   = 0;
 
-    /** id of current taskchain */
+    /** @var int id of current taskchain */
     protected $instanceid = 0;
 
-    /** id of current taskchain chain */
+    /** @var int id of current taskchain chain */
     protected $chainid = 0;
 
-    /** id of current taskchain condition */
+    /** @var int id of current taskchain condition */
     protected $conditionid = 0;
 
-    /** all <STRING> tags for the current chain */
+    /** @var array all <STRING> tags for the current chain */
     protected $strings = array();
 
-    /** all <RESPONSE> tags for the current task */
+    /** @var array all <RESPONSE> tags for the current task */
     protected $responses = array();
 
-    /** id of current task attempt */
+    /** @var int id of current task attempt */
     protected $attemptid = 0;
 
-    /** user id of current task attempt */
+    /** @var int user id of current task attempt */
     protected $attemptuserid = 0;
 
-    /** path below "$CFG->datadir/temp/" to current xml folder */
+    /** @var string path below "$CFG->datadir/temp/" to current xml folder */
     protected $xmlfolder  = '';
 
     /**
@@ -85,7 +85,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
             $this->convert_quizport_to_taskchain();
         }
 
-        // shortcut to TASKCHAIN tags
+        // Shortcut to TASKCHAIN tags.
         $taskchain = '/MOODLE_BACKUP/COURSE/MODULES/MOD/TASKCHAIN';
 
         return array(
@@ -95,20 +95,20 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
             new convert_path('taskchain_quiz', $taskchain . '/UNIT/QUIZZES/QUIZ'),
             new convert_path('taskchain_conditions', $taskchain . '/UNIT/QUIZZES/QUIZ/CONDITIONS'),
             new convert_path('taskchain_condition', $taskchain . '/UNIT/QUIZZES/QUIZ/CONDITIONS/CONDITION', array('renamefields' => array('conditionquizid' => 'conditiontaskid', 'nextquizid' => 'nexttaskid'))),
-            // the paths below this line contain the user info
+            // The paths below this line contain the user info.
             new convert_path('taskchain_quizscores', $taskchain . '/UNIT/QUIZZES/QUIZ/QUIZ_SCORES'),
             new convert_path('taskchain_quizscore', $taskchain . '/UNIT/QUIZZES/QUIZ/QUIZ_SCORES/QUIZ_SCORE', array('renamefields' => array('unumber' => 'cnumber'))),
             new convert_path('taskchain_quizattempts', $taskchain . '/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS'),
             new convert_path('taskchain_quizattempt', $taskchain . '/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT', array('renamefields' => array('unumber' => 'cnumber', 'qnumber' => 'tnumber'))),
             // RESPONSES need to be merged (by question id) and relocated
             // Moodle1: TASKCHAIN/.../QUIZ/QUIZ_ATETMPTS/QUIZ_ATTEMPT/RESPONSES
-            // Moodle2: TASKCHAIN/.../QUIZ/QUESTIONS/QUESTION/RESPONSES
+            // Moodle2: TASKCHAIN/.../QUIZ/QUESTIONS/QUESTION/RESPONSES.
             new convert_path('taskchain_response', $taskchain . '/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT/RESPONSES/RESPONSE'),
             new convert_path('taskchain_questions', $taskchain . '/UNIT/QUIZZES/QUIZ/QUESTIONS'),
             new convert_path('taskchain_question', $taskchain . '/UNIT/QUIZZES/QUIZ/QUESTIONS/QUESTION'),
             // STRINGS need to be merged and relocated
             // Moodle1: TASKCHAIN/UNIT/QUIZZES/QUIZ/STRINGS
-            // Moodle2: TASKCHAIN/STRINGS
+            // Moodle2: TASKCHAIN/STRINGS.
             new convert_path('taskchain_string', $taskchain . '/UNIT/QUIZZES/QUIZ/STRINGS/STRING', array('dropfields' => array('md5key'))),
             new convert_path('taskchain_unitattempts', $taskchain . '/UNIT/UNIT_ATTEMPTS'),
             new convert_path('taskchain_unitattempt', $taskchain . '/UNIT/UNIT_ATTEMPTS/UNIT_ATTEMPT', array('renamefields' => array('unumber' => 'cnumber'))),
@@ -123,7 +123,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function process_taskchain($data) {
         global $CFG;
 
-        // get the course module id and context id
+        // Get the course module id and context id.
         $this->instanceid = $data['id'];
         $currentcminfo    = $this->get_cminfo($this->instanceid);
 
@@ -132,12 +132,12 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
         $this->xmlfolder = 'activities/taskchain_' . $this->moduleid;
         $this->strings   = array();
 
-        // start writing taskchain.xml
+        // Start writing taskchain.xml.
         $this->open_xml_writer($this->xmlfolder . '/taskchain.xml');
         $this->xmlwriter->begin_tag('activity', array('id' => $this->instanceid, 'moduleid' => $this->moduleid, 'modulename' => 'taskchain', 'contextid' => $this->contextid));
         $this->xmlwriter->begin_tag('taskchain', array('id' => $this->instanceid));
 
-        // write out $data fields to the xml file
+        // Write out $data fields to the xml file.
         foreach ($data as $field => $value) {
             if ($field <> 'id') {
                 $this->xmlwriter->full_tag($field, $value);
@@ -151,7 +151,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
      * on_taskchain_end
      */
     public function on_taskchain_end() {
-        // add <STRINGS>
+        // Add <STRINGS>.
         if (count($this->strings)) {
             $this->xmlwriter->begin_tag('strings');
             foreach ($this->strings as $string) {
@@ -165,12 +165,12 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
             $this->strings = array();
         }
 
-        // close taskchain.xml
+        // Close taskchain.xml.
         $this->xmlwriter->end_tag('taskchain');
         $this->xmlwriter->end_tag('activity');
         $this->close_xml_writer();
 
-        // write inforef.xml
+        // Write inforef.xml.
         $this->open_xml_writer($this->xmlfolder . '/inforef.xml');
         $this->xmlwriter->begin_tag('inforef');
         $this->xmlwriter->begin_tag('fileref');
@@ -324,11 +324,11 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
         $this->xmlwriter->begin_tag('question');
     }
     public function process_taskchain_question($data) {
-        // add <QUESTION> fields
+        // Add <QUESTION> fields.
         foreach ($data as $field => $value) {
             $this->xmlwriter->full_tag($field, $value);
         }
-        // add <RESPONSES>, if necessary
+        // Add <RESPONSES>, if necessary.
         if ($id = $data['id']) {
             if (count($this->responses[$id])) {
                 $this->xmlwriter->begin_tag('responses');
@@ -427,7 +427,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
                 unset($backupinfo, $originalcourseinfo);
 
                 // if the URL is for a file in the original course files folder
-                // then convert it to a simple path, by removing the original base url
+                // then convert it to a simple path, by removing the original base url.
                 $search = '/^' . preg_quote($original_baseurl, '/') . '/';
                 if (preg_match($search, $data[$filearea])) {
                     $data[$filearea] = substr($data[$filearea], strlen($original_baseurl));
@@ -445,15 +445,15 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
                 $data[$filearea] = $filepath . $filename;
                 $path = 'course_files' . $filepath . $filename;
 
-                // get a fresh new file manager for this instance
+                // Get a fresh new file manager for this instance.
                 $this->fileman = $this->converter->get_file_manager($this->contextid, 'mod_taskchain');
 
-                // migrate taskchain file
+                // Migrate taskchain file.
                 $this->fileman->filearea = $filearea;
                 $this->fileman->itemid   = 0;
                 $id = $this->fileman->migrate_file($path, $filepath, $filename);
 
-                // get stashed taskchain $filerecord
+                // Get stashed taskchain $filerecord.
                 $filerecord = $this->fileman->converter->get_stash('files', $id);
             }
         }
@@ -483,7 +483,7 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
      */
     public function convert_quizport_to_taskchain() {
 
-        // these are the substitutions we want to make in moodle.xml
+        // These are the substitutions we want to make in moodle.xml.
         $search   = array('<NAME>quizport</NAME>', 'mod/quizport/', 'mod/quizport:', '<TYPE>quizport</TYPE>', '<NAME>mod_quizport_', '<NAME>quizport_', '<ITEMMODULE>quizport</ITEMMODULE>', '<MODTYPE>quizport</MODTYPE>', '<USEMEDIAFILTER>quizport</USEMEDIAFILTER>');
         $replace  = array('<NAME>taskchain</NAME>', 'mod/taskchain/', 'mod/taskchain:', '<TYPE>taskchain</TYPE>', '<NAME>mod_taskchain_', '<NAME>taskchain_', '<ITEMMODULE>taskchain</ITEMMODULE>', '<MODTYPE>taskchain</MODTYPE>', '<USEMEDIAFILTER>taskchain</USEMEDIAFILTER>');
 

@@ -40,7 +40,7 @@ class mod_taskchain_attempt_review {
      *
      * @return boolean
      */
-    static function show_question_text() {
+    public static function show_question_text() {
         return true;
     }
 
@@ -48,9 +48,8 @@ class mod_taskchain_attempt_review {
      * attempt_fields
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function attempt_fields() {
+    public static function attempt_fields() {
         return array('tnumber', 'score', 'penalties', 'status', 'duration', 'timestart');
     }
 
@@ -58,9 +57,8 @@ class mod_taskchain_attempt_review {
      * response_text_fields
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function response_text_fields() {
+    public static function response_text_fields() {
         return array('correct', 'ignored', 'wrong');
     }
 
@@ -68,9 +66,8 @@ class mod_taskchain_attempt_review {
      * response_num_fields
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function response_num_fields() {
+    public static function response_num_fields() {
         return array('score', 'weighting', 'hints', 'clues', 'checks');
     }
 
@@ -79,7 +76,7 @@ class mod_taskchain_attempt_review {
      *
      * @return boolean true if attempts can be reviewed, otherwise false
      */
-    static function provide_review() {
+    public static function provide_review() {
         return true;
     }
 
@@ -88,7 +85,7 @@ class mod_taskchain_attempt_review {
      *
      * @return boolean true if attempt can be reviewed, otherwise false
      */
-    static function can_reviewattempts() {
+    public static function can_reviewattempts() {
         return self::provide_review();
 
         // when $TC->task->reviewoptions are implemented,
@@ -97,7 +94,7 @@ class mod_taskchain_attempt_review {
         if (self::provide_review() && $TC->task->reviewoptions) {
             if ($attempt = $TC->get->attempt('task')) {
                 if ($TC->task->reviewoptions & mod_taskchain::REVIEW_DURINGATTEMPT) {
-                    // during attempt
+                    // During attempt.
                     if ($TC->taskattempt->status == mod_taskchain::STATUS_INPROGRESS) {
                         return true;
                     }
@@ -115,7 +112,7 @@ class mod_taskchain_attempt_review {
                     }
                 }
                 if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
-                    // after the task closes
+                    // After the task closes.
                     if ($TC->timeclose < $TC->time) {
                         return true;
                     }
@@ -136,24 +133,23 @@ class mod_taskchain_attempt_review {
      * @param xxx $TC
      * @param xxx $class
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function review($TC, $class) {
+    public static function review($TC, $class) {
         global $DB;
 
         // for the time-being we set this setting manually here
-        // but one day it will be settable in "mod/taskchain/mod_form.php"
+        // but one day it will be settable in "mod/taskchain/mod_form.php".
         $TC->task->reviewoptions = mod_taskchain::REVIEW_DURINGATTEMPT | mod_taskchain::REVIEW_AFTERATTEMPT | mod_taskchain::REVIEW_AFTERCLOSE;
 
         // set $reviewoptions to relevant part of $TC->task->reviewoptions
         $reviewoptions = 0;
         if ($TC->can_reviewallattempts()) {
-            // teacher can always review (anybody's) task attempts
+            // Teacher can always review (anybody's) task attempts.
             $reviewoptions = (mod_taskchain::REVIEW_AFTERATTEMPT | mod_taskchain::REVIEW_AFTERCLOSE);
         } else if ($TC->task->timeclose && $TC->task->timeclose > $TC->time) {
-            // task is closed
+            // Task is closed.
             if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
-                // user can review task attempt after task closes
+                // User can review task attempt after task closes.
                 $reviewoptions = ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE);
             } else if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT) {
                 return get_string('noreviewbeforeclose', 'mod_taskchain', userdate($TC->timeclose));
@@ -161,9 +157,9 @@ class mod_taskchain_attempt_review {
                 return get_string('noreview', 'mod_taskchain');
             }
         } else {
-            // task is still open
+            // Task is still open.
             if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT) {
-                // user can review task attempt while task is open
+                // User can review task attempt while task is open.
                 $reviewoptions = ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERATTEMPT);
             } else if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
                 return get_string('noreviewafterclose', 'mod_taskchain');
@@ -186,7 +182,7 @@ class mod_taskchain_attempt_review {
             $response_text_fields = array();
         }
 
-        // set flag to remove, if necessary, labels that show whether responses are correct or not
+        // Set flag to remove, if necessary, labels that show whether responses are correct or not.
         if (! ($reviewoptions & mod_taskchain::REVIEW_ANSWERS)) {
             $neutralize_text_fields = true;
         } else {
@@ -215,13 +211,13 @@ class mod_taskchain_attempt_review {
         foreach ($attempt_fields as $field) {
             $row = new html_table_row();
 
-            // add heading
+            // Add heading.
             $callback = array($class, 'format_attempt_heading');
             $text = call_user_func($callback, $field);
             $cell = new html_table_cell($text, array('class' => 'attemptfield'));
             $row->cells[] = $cell;
 
-            // add data
+            // Add data.
             $params = array($TC->taskattempt, $field, $strtimeformat);
             $callback = array($class, 'format_attempt_data');
             $text = call_user_func_array($callback, $params);
@@ -233,7 +229,7 @@ class mod_taskchain_attempt_review {
             $table->data[] = $row;
         }
 
-        // get questions and responses relevant to this task attempt
+        // Get questions and responses relevant to this task attempt.
         $questions = $DB->get_records('taskchain_questions', array('taskid' => $TC->task->id));
         $responses = $DB->get_records('taskchain_responses', array('attemptid' => $TC->taskattempt->id));
 
@@ -246,32 +242,32 @@ class mod_taskchain_attempt_review {
             $row->cells[] = $cell;
             $table->data[] = $row;
         } else {
-            // we have some responses, so print them
+            // We have some responses, so print them.
             foreach ($responses as $response) {
                 if (empty($questions[$response->questionid])) {
-                    continue; // invalid question id - shouldn't happen !!
+                    continue; // Invalid question id - shouldn't happen !!
                 }
 
-                // add separator
+                // Add separator.
                 if (count($table->data)) {
-                    $callback = array($class, 'add_separator'); // PHP 5.2
+                    $callback = array($class, 'add_separator'); // PHP 5.2.
                     call_user_func_array($callback, array(&$table, $question_colspan));
                 }
 
-                // question text
+                // Question text.
                 if (call_user_func(array($class, 'show_question_text'))) {
                     if ($text = mod_taskchain::get_question_text($questions[$response->questionid])) {
                         $text = s($text);
-                        $callback = array($class, 'add_question_text'); // PHP 5.2
+                        $callback = array($class, 'add_question_text'); // PHP 5.2.
                         call_user_func_array($callback, array(&$table, $text, $question_colspan));
                     }
                 }
 
-                // string fields
+                // String fields.
                 $neutral_text = '';
                 foreach ($response_text_fields as $field) {
                     if (empty($response->$field)) {
-                        continue; // shouldn't happen !!
+                        continue; // Shouldn't happen !!
                     }
 
                     $text = array();
@@ -283,25 +279,25 @@ class mod_taskchain_attempt_review {
                     unset($records);
 
                     if (! $text = implode(',', $text)) {
-                        continue; // skip empty rows
+                        continue; // Skip empty rows.
                     }
 
                     if ($neutralize_text_fields) {
                         $neutral_text .= ($neutral_text ? ',' : '') . $text;
                     } else {
-                        $callback = array($class, 'add_text_field'); // PHP 5.2
+                        $callback = array($class, 'add_text_field'); // PHP 5.2.
                         call_user_func_array($callback, array(&$table, $field, $text, $textfield_colspan));
                     }
                 }
                 if ($neutral_text) {
-                    $callback = array($class, 'add_text_field'); // PHP 5.2
+                    $callback = array($class, 'add_text_field'); // PHP 5.2.
                     call_user_func_array($callback, array(&$table, 'responses', $neutral_text, $textfield_colspan));
                 }
 
-                // numeric fields
+                // Numeric fields.
                 $row = new html_table_row();
                 foreach ($response_num_fields as $field) {
-                    $callback = array($class, 'add_num_field'); // PHP 5.2
+                    $callback = array($class, 'add_num_field'); // PHP 5.2.
                     call_user_func_array($callback, array(&$row, $field, $response->$field));
                 }
                 $table->data[] = $row;
@@ -316,9 +312,8 @@ class mod_taskchain_attempt_review {
      *
      * @param xxx $field
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function format_attempt_heading($field) {
+    public static function format_attempt_heading($field) {
         switch ($field) {
             case 'score':
                 return get_string('score', 'quiz');
@@ -336,9 +331,8 @@ class mod_taskchain_attempt_review {
      * @param xxx $field
      * @param xxx $strtimeformat
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function format_attempt_data($attempt, $field, $strtimeformat) {
+    public static function format_attempt_data($attempt, $field, $strtimeformat) {
         switch ($field) {
             case 'duration':
                 return (($duration = $attempt->$field) ? format_time($duration) : '');
@@ -356,9 +350,8 @@ class mod_taskchain_attempt_review {
      *
      * @param xxx $table (passed by reference)
      * @param xxx $colspan
-     * @todo Finish documenting this function
      */
-    static function add_separator(&$table, $colspan) {
+    public static function add_separator(&$table, $colspan) {
         $row = new html_table_row();
 
         $text = html_writer::tag('div', '', array('class' => 'tabledivider'));
@@ -375,9 +368,8 @@ class mod_taskchain_attempt_review {
      * @param xxx $table (passed by reference)
      * @param xxx $text
      * @param xxx $colspan
-     * @todo Finish documenting this function
      */
-    static function add_question_text(&$table, $text, $colspan) {
+    public static function add_question_text(&$table, $text, $colspan) {
         $row = new html_table_row();
 
         $cell = new html_table_cell($text, array('class' => 'questiontext'));
@@ -394,16 +386,15 @@ class mod_taskchain_attempt_review {
      * @param xxx $field
      * @param xxx $text
      * @param xxx $colspan
-     * @todo Finish documenting this function
      */
-    static function add_text_field(&$table, $field, $text, $colspan) {
+    public static function add_text_field(&$table, $field, $text, $colspan) {
         $row = new html_table_row();
 
-        // heading
+        // Heading.
         $cell = new html_table_cell(get_string($field, 'mod_taskchain'), array('class' => 'responsefield'));
         $row->cells[] = $cell;
 
-        // data
+        // Data.
         $cell = new html_table_cell($text, array('class' => 'responsevalue'));
         $cell->colspan = $colspan;
         $row->cells[] = $cell;
@@ -417,14 +408,13 @@ class mod_taskchain_attempt_review {
      * @param xxx $row (passed by reference)
      * @param xxx $field
      * @param xxx $value
-     * @todo Finish documenting this function
      */
-    static function add_num_field(&$row, $field, $value) {
-        // heading
+    public static function add_num_field(&$row, $field, $value) {
+        // Heading.
         $cell = new html_table_cell(get_string($field, 'mod_taskchain'), array('class' => 'responsefield'));
         $row->cells[] = $cell;
 
-        // data
+        // Data.
         $cell = new html_table_cell($value, array('class' => 'responsevalue'));
         $row->cells[] = $cell;
     }

@@ -85,11 +85,11 @@ class taskchain_base {
      *
      * @var integer
      */
-    const TEXTSOURCE_FILE             = 0; // was TEXTSOURCE_TASK
+    const TEXTSOURCE_FILE             = 0; // Was TEXTSOURCE_TASK.
     const TEXTSOURCE_FILENAME         = 1;
     const TEXTSOURCE_FILEPATH         = 2;
     const TEXTSOURCE_SPECIFIC         = 3;
-    const TEXTSOURCE_TASKNAME         = 4; // added 2017-03-18
+    const TEXTSOURCE_TASKNAME         = 4; // Added 2017-03-18.
     /**#@-*/
 
     /**#@+
@@ -98,12 +98,12 @@ class taskchain_base {
      *
      * @var integer
      */
-    const NAVIGATION_NONE             = 0; // was 6
-    const NAVIGATION_MOODLE           = 1; // was NAVIGATION_BAR
+    const NAVIGATION_NONE             = 0; // Was 6.
+    const NAVIGATION_MOODLE           = 1; // Was NAVIGATION_BAR.
     const NAVIGATION_FRAME            = 2;
-    const NAVIGATION_EMBED            = 3; // was NAVIGATION_IFRAME
+    const NAVIGATION_EMBED            = 3; // Was NAVIGATION_IFRAME.
     const NAVIGATION_ORIGINAL         = 4;
-    const NAVIGATION_TOPBAR           = 5; // was NAVIGATION_GIVEUP but that was replaced by stopbutton
+    const NAVIGATION_TOPBAR           = 5; // Was NAVIGATION_GIVEUP but that was replaced by stopbutton.
     /**#@-*/
 
     /**#@+
@@ -308,19 +308,19 @@ class taskchain_base {
 
     const CONDITIONTASKID_SAME        = -1;
     const CONDITIONTASKID_PREVIOUS    = -2;
-    const CONDITIONTASKID_NEXT1       = -3; // was NEXT
-    const CONDITIONTASKID_NEXT2       = -4; // was SKIP
+    const CONDITIONTASKID_NEXT1       = -3; // Was NEXT.
+    const CONDITIONTASKID_NEXT2       = -4; // Was SKIP.
     const CONDITIONTASKID_NEXT3       = -5;
     const CONDITIONTASKID_NEXT4       = -6;
     const CONDITIONTASKID_NEXT5       = -7;
-    const CONDITIONTASKID_UNSEEN      = -10; // was -5
-    const CONDITIONTASKID_UNANSWERED  = -11; // was -6
-    const CONDITIONTASKID_INCORRECT   = -12; // was -7
-    const CONDITIONTASKID_RANDOM      = -13; // was -8
-    const CONDITIONTASKID_MENUNEXT    = -20; // was -10 was -11
-    const CONDITIONTASKID_MENUNEXTONE = -21; // was -11
-    const CONDITIONTASKID_MENUALL     = -22; // was -12 was -10
-    const CONDITIONTASKID_MENUALLONE  = -23; // was -13
+    const CONDITIONTASKID_UNSEEN      = -10; // Was -5.
+    const CONDITIONTASKID_UNANSWERED  = -11; // Was -6.
+    const CONDITIONTASKID_INCORRECT   = -12; // Was -7.
+    const CONDITIONTASKID_RANDOM      = -13; // Was -8.
+    const CONDITIONTASKID_MENUNEXT    = -20; // Was -10 was -11.
+    const CONDITIONTASKID_MENUNEXTONE = -21; // Was -11.
+    const CONDITIONTASKID_MENUALL     = -22; // Was -12 was -10.
+    const CONDITIONTASKID_MENUALLONE  = -23; // Was -13.
     const CONDITIONTASKID_ENDOFCHAIN  = -99;
     /**#@-*/
 
@@ -399,10 +399,10 @@ class taskchain_base {
     const BODYSTYLES_MARGIN           = 0x08;
     /**#@-*/
 
-    /** reference back to global $TC object */
+    /** @var mixed reference back to global $TC object */
     public $TC = null;
 
-    /** debugging property to show methods in this class */
+    /** @var mixed debugging property to show methods in this class */
     protected $methods = null;
 
     /////////////////////////////////////////////////////////
@@ -438,7 +438,6 @@ class taskchain_base {
      *
      * @param xxx $name
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function __get($name) {
         $method = 'get_' . $name;
@@ -453,7 +452,6 @@ class taskchain_base {
      *
      * @param xxx $name
      * @param xxx $value
-     * @todo Finish documenting this function
      */
     public function __set($name, $value) {
         $method = 'set_' . $name;
@@ -520,12 +518,11 @@ class taskchain_base {
      * to_stdclass
      *
      * @return stdclass
-     * @todo Finish documenting this function
      */
     public function to_stdclass() {
         $stdclass = new stdclass();
 
-        // extract just the "get" methods for this object
+        // Extract just the "get" methods for this object.
         $methods = preg_grep('/^get_[a-z0-9]+$/', $this->get_methods());
 
         foreach ($methods as $method) {

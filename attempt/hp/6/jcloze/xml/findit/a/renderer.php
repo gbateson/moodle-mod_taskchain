@@ -38,6 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/xml/findit/rend
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_taskchain_attempt_hp_6_jcloze_xml_findit_renderer {
+    /** @var string */
     public $js_object_type = 'JClozeFindItA';
 
     /**
@@ -45,15 +46,14 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_taskch
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // prepend templates for this output format
+        // Prepend templates for this output format.
         array_unshift($this->templatesfolders, 'mod/taskchain/attempt/hp/6/jcloze/xml/findit/a/templates');
 
-        // replace standard jcloze.js with findit.a.js
+        // Replace standard jcloze.js with findit.a.js.
         $this->javascripts = preg_grep('/jcloze.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/taskchain/attempt/hp/6/jcloze/findit.a.js');
     }
@@ -62,7 +62,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_taskch
      * List of source types which this renderer can handle
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function sourcetypes() {
         return array('hp_6_jcloze_xml');
@@ -72,10 +71,9 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_taskch
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'CorrectChoice';
         return $names;
@@ -85,7 +83,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_taskch
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
         return 'CorrectChoice';
@@ -95,10 +92,9 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_taskch
      * get_stop_function_args
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_args() {
-        // the arguments required by CorrectChoice
+        // The arguments required by CorrectChoice.
         return 'null,' . mod_taskchain::STATUS_ABANDONED;
     }
 
@@ -106,10 +102,9 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_findit_a_renderer extends mod_taskch
      * get_stop_function_intercept
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_intercept() {
-        // standard call to HP.onclickCheck() is not needed in CorrectChoice
+        // Standard call to HP.onclickCheck() is not needed in CorrectChoice.
         return '';
     }
 }

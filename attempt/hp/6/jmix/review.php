@@ -42,9 +42,8 @@ class mod_taskchain_attempt_hp_6_jmix_review extends mod_taskchain_attempt_hp_6_
      * show_question_text
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function show_question_text() {
+    public static function show_question_text() {
         return true;
     }
 
@@ -52,9 +51,8 @@ class mod_taskchain_attempt_hp_6_jmix_review extends mod_taskchain_attempt_hp_6_
      * response_num_fields
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function response_num_fields() {
+    public static function response_num_fields() {
         return array('hints', 'checks');
     }
 }

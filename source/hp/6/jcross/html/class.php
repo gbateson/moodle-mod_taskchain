@@ -43,26 +43,25 @@ class taskchain_source_hp_6_jcross_html extends taskchain_source_hp_6_jcross {
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (! preg_match('/\.html?$/', $this->file->get_filename())) {
-            // wrong file type
+            // Wrong file type.
             return false;
         }
 
         if (! $this->get_filecontents()) {
-            // empty or non-existant file
+            // Empty or non-existant file.
             return false;
         }
 
         if (! strpos($this->filecontents, '<div id="MainDiv" class="StdDiv">')) {
-            // not an hp6 file
+            // Not an hp6 file.
             return false;
         }
 
         if (! strpos($this->filecontents, '<table class="CrosswordGrid">')) {
-            // not a jcross file
+            // Not a jcross file.
             return false;
         }
 

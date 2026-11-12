@@ -27,7 +27,7 @@
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
-$id = required_param('id', PARAM_INT);   // course
+$id = required_param('id', PARAM_INT);   // Course.
 
 if (! $course = $DB->get_record('course', array('id' => $id))) {
     throw new moodle_exception('invalidcourseid');
@@ -42,11 +42,11 @@ $PAGE->set_title($course->fullname);
 $PAGE->set_heading($course->shortname);
 $PAGE->navbar->add(get_string('modulenameplural', 'mod_taskchain'));
 
-/// Output starts here
+/// Output starts here.
 
 echo $OUTPUT->header();
 
-/// Get all the appropriate data
+/// Get all the appropriate data.
 
 if (! $taskchains = get_all_instances_in_course('taskchain', $course)) {
     echo $OUTPUT->heading(get_string('notaskchains', 'mod_taskchain'), 2);
@@ -55,13 +55,13 @@ if (! $taskchains = get_all_instances_in_course('taskchain', $course)) {
     die();
 }
 
-// get list of taskchain ids
+// Get list of taskchain ids.
 $taskchainids = array();
 foreach ($taskchains as $taskchain) {
     $taskchainids[] = $taskchain->id;
 }
 
-// get total number of attempts, users and details for these taskchains
+// Get total number of attempts, users and details for these taskchains.
 if (has_capability('mod/taskchain:reviewallattempts', $PAGE->context)) {
     $show_aggregates = true;
     $single_user = false;
@@ -82,7 +82,7 @@ if ($show_aggregates) {
     $params['parenttype'] = mod_taskchain::PARENTTYPE_ACTIVITY;
 
     if ($single_user) {
-        // restrict results to this user only
+        // Restrict results to this user only.
         $select .= ' AND tcg.userid=:userid';
         $params['userid'] = $USER->id;
     }
@@ -94,11 +94,11 @@ if ($show_aggregates) {
 $usesections = course_format_uses_sections($course->format);
 if ($usesections) {
     if (method_exists('course_modinfo', 'get_section_info_all')) {
-        // Moodle >= 2.3
+        // Moodle >= 2.3.
         $modinfo = get_fast_modinfo($course);
         $sections = $modinfo->get_section_info_all();
     } else {
-        // Moodle 2.0 - 2.2
+        // Moodle 2.0 - 2.2.
         $sections = get_all_sections($course->id);
     }
 }
@@ -142,9 +142,9 @@ foreach ($taskchains as $taskchain) {
     $row->cells[] = new html_table_cell($text);
 
     if (empty($aggregates[$taskchain->id]) || empty($aggregates[$taskchain->id]->attemptcount)) {
-        $row->cells[] = new html_table_cell('0'); // average score
-        $row->cells[] = new html_table_cell('0'); // max score
-        $row->cells[] = new html_table_cell('&nbsp;'); // reports
+        $row->cells[] = new html_table_cell('0'); // Average score.
+        $row->cells[] = new html_table_cell('0'); // Max score.
+        $row->cells[] = new html_table_cell('&nbsp;'); // Reports.
     } else {
         $href = new moodle_url('/mod/taskchain/report.php', array('id' => $taskchain->coursemodule));
         $params = array('href' => $href, 'class' => $class);
@@ -166,6 +166,6 @@ foreach ($taskchains as $taskchain) {
 echo $OUTPUT->heading(get_string('modulenameplural', 'mod_taskchain'), 2);
 echo html_writer::table($table);
 
-/// Finish the page
+/// Finish the page.
 
 echo $OUTPUT->footer();

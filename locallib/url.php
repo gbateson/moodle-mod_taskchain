@@ -40,7 +40,6 @@ class taskchain_url extends taskchain_base {
      *
      * @param xxx $framename (optional, default='')
      * @return moodle_url of this taskchain's attempt page
-     * @todo Finish documenting this function
      */
     public function attempt_frame($framename) {
         $params = array('framename' => $framename);
@@ -53,7 +52,6 @@ class taskchain_url extends taskchain_base {
      * @param xxx $framename (optional, default='')
      * @param xxx $cm (optional, default=null)
      * @return moodle_url of this taskchain's attempt page
-     * @todo Finish documenting this function
      */
     public function attempt($params = false) {
         $params = $this->TC->merge_params($params, null, 'coursemoduleid');
@@ -65,7 +63,6 @@ class taskchain_url extends taskchain_base {
      *
      * @param xxx $course (optional, default=null)
      * @return moodle_url of this taskchain's course page
-     * @todo Finish documenting this function
      */
     public function course($course = null) {
         if (is_null($course)) {
@@ -80,7 +77,6 @@ class taskchain_url extends taskchain_base {
      * @param string $type "chain", "chains", "columnlists", "condition", "task", "tasks"
      * @param array $params (optional, default=array())
      * @return moodle_url of one of this taskchain's edit pages
-     * @todo Finish documenting this function
      */
     public function edit($type, $params = array()) {
         switch ($type) {
@@ -103,7 +99,7 @@ class taskchain_url extends taskchain_base {
                 $id = 'conditionid';
                 break;
             default:
-                $id = ''; // shouldn't happen !!
+                $id = ''; // Shouldn't happen !!
         }
         $params = $this->TC->merge_params($params, null, $id);
         return new moodle_url('/mod/taskchain/edit/' . $type . '.php', $params);
@@ -114,7 +110,6 @@ class taskchain_url extends taskchain_base {
      *
      * @param xxx $course (optional, default=null)
      * @return moodle_url of this taskchain's course grade page
-     * @todo Finish documenting this function
      */
     public function grades($course = null) {
         if (is_null($course)) {
@@ -128,7 +123,6 @@ class taskchain_url extends taskchain_base {
      *
      * @param xxx $course (optional, default=null)
      * @return moodle_url of this course's taskchain index page
-     * @todo Finish documenting this function
      */
     public function index($course = null) {
         if (is_null($course)) {
@@ -143,7 +137,6 @@ class taskchain_url extends taskchain_base {
      * @param xxx $mode (optional, default='')
      * @param xxx $params (optional, default=null)
      * @return moodle_url of this taskchain's view page
-     * @todo Finish documenting this function
      */
     public function report($mode = '', $params = null) {
         if ($params === null) {
@@ -161,7 +154,6 @@ class taskchain_url extends taskchain_base {
      *
      * @param xxx $taskattempt (optional, default=null)
      * @return moodle_url of the review page for an attempt at a task
-     * @todo Finish documenting this function
      */
     public function review($taskattempt = null) {
         if ($taskattempt === null) {
@@ -175,7 +167,6 @@ class taskchain_url extends taskchain_base {
      *
      * @param xxx $taskattempt (optional, default=null)
      * @return moodle_url of this taskchain's attempt page
-     * @todo Finish documenting this function
      */
     public function submit($taskattempt = null) {
         if ($taskattempt === null) {
@@ -189,7 +180,6 @@ class taskchain_url extends taskchain_base {
      *
      * @param xxx $cm (optional, default=null)
      * @return moodle_url of this taskchain's view page
-     * @todo Finish documenting this function
      */
     public function view($cm = null, $params = null) {
         if ($params === null) {

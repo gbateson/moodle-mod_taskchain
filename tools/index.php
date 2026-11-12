@@ -39,7 +39,7 @@ require_capability('moodle/site:config', $context);
 // it is the path below $CFG->wwwroot of this script
 $PAGE->set_url($CFG->wwwroot . $SCRIPT);
 
-// set title
+// Set title.
 $title = get_string('toolsindex', 'mod_taskchain');
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
@@ -48,7 +48,7 @@ $PAGE->set_pagelayout('admin');
 echo $OUTPUT->header();
 echo $OUTPUT->box_start();
 
-// get path to this directory
+// Get path to this directory.
 $dirname = dirname($SCRIPT);
 $dirpath = $CFG->dirroot . $dirname;
 
@@ -61,7 +61,7 @@ foreach ($items as $item) {
         continue;
     }
     if ($item->isFile()) {
-        $files[] = "$item"; // convert $item to string
+        $files[] = "$item"; // Convert $item to string.
     }
 }
 sort($files);

@@ -31,7 +31,6 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @uses $DB
  * @return xxx
- * @todo Finish documenting this function
  */
 function mod_taskchain_uninstall() {
     global $DB;

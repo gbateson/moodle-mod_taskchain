@@ -38,10 +38,13 @@ require_once($CFG->dirroot . '/mod/taskchain/report/chaingrade/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_report_chaingrades_renderer extends mod_taskchain_report_chaingrade_renderer {
+    /** @var string */
     public $mode = 'chaingrades';
 
+    /** @var array */
     protected $headerfields = array();
 
+    /** @var array */
     public $tablecolumns = array(
         'chaingradegrade', 'chaingradestatus',
         'chaingradeduration', 'chaingradetimemodified',
@@ -49,10 +52,12 @@ class mod_taskchain_report_chaingrades_renderer extends mod_taskchain_report_cha
         'chainattemptgrade', 'chainattemptstatus',
         'chainattemptduration', 'chainattempttimemodified',
     );
+    /** @var bool */
     public $has_usercolumns = true;
 
-    /** id param name and table name */
+    /** @var string id param name and table name */
     public $id_param_name = 'chainid';
+    /** @var string */
     public $id_param_table = 'taskchain_chains';
 
     /**
@@ -65,7 +70,6 @@ class mod_taskchain_report_chaingrades_renderer extends mod_taskchain_report_cha
      * @param integer  $userid  (optional, default=0)
      * @param object   $record  (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function select_sql_record(&$select, &$from, &$where, &$params, $userid = 0, $record = null) {
         $from   = '{taskchain_chain_attempts} tc_chn_att ' .
@@ -73,7 +77,7 @@ class mod_taskchain_report_chaingrades_renderer extends mod_taskchain_report_cha
                   ' JOIN {taskchain_chain_grades} tc_chn_grd ON (tc_chn.parenttype  = tc_chn_grd.parenttype AND ' .
                                                                 'tc_chn.parentid    = tc_chn_grd.parentid AND ' .
                                                                 'tc_chn_att.userid  = tc_chn_grd.userid)';
-        // restrict sql to a specific chaingrade /user
+        // Restrict sql to a specific chaingrade /user.
         if ($record) {
             $where = 'tc_chn.id = ?';
             $params[] = $record->id;

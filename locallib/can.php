@@ -74,10 +74,13 @@ class taskchain_can extends taskchain_base {
     /** @var bool cache of the "moodle/site:accessallgroups" capability */
     private $canmoodlesiteaccessallgroups     = null;
 
-    /** switches to cache user's ability to start or resume an attempt */
+    /** @var mixed switches to cache user's ability to start or resume an attempt */
     public $canstarttaskattempts    = null;
+    /** @var mixed */
     public $canstartchainattempts   = null;
+    /** @var mixed */
     public $canresumetaskattempts   = null;
+    /** @var mixed */
     public $canresumechainattempts  = null;
 
     /** @var object current context */
@@ -115,7 +118,7 @@ class taskchain_can extends taskchain_base {
         }
     }
 
-    // we could remove the methods declared explicitly below
+    // We could remove the methods declared explicitly below
     // and use just the following __call function instead,
     // however this may make it harder to understand
     //
@@ -130,7 +133,6 @@ class taskchain_can extends taskchain_base {
      * @param xxx $name
      * @param xxx $params
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function __call($name, $params) {
         $propertyname = 'can' . $name;
@@ -138,7 +140,7 @@ class taskchain_can extends taskchain_base {
             $require = array_shift($params);
             return $this->can($name, $require);
         }
-        return false; // shouldn't happen
+        return false; // Shouldn't happen.
     }
 
     /////////////////////////////////////////////////////////
@@ -222,7 +224,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return boolean true if user can delete attempts; false otherwise
      */
-    function deleteattempts($require = false, $context = null) {
+    public function deleteattempts($require = false, $context = null) {
         return ($this->deleteallattempts(false, $context) || $this->deletemyattempts($require, $context));
     }
 
@@ -276,7 +278,7 @@ class taskchain_can extends taskchain_base {
      *
      * @return xxx
      */
-    function reviewattempts($require = false, $context = null) {
+    public function reviewattempts($require = false, $context = null) {
         return ($this->reviewallattempts(false, $context) || $this->reviewmyattempts($require, $context));
     }
 
@@ -295,14 +297,13 @@ class taskchain_can extends taskchain_base {
      * @param xxx $type "chain" or "task"
      * @param xxx $value (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function attempts($type, $value = null) {
         $field = 'can' . $type . 'attempts';
         if (is_null($value)) {
-            return $this->$field; // get
+            return $this->$field; // Get.
         } else {
-            $this->$field = $value; // set
+            $this->$field = $value; // Set.
         }
     }
 
@@ -312,9 +313,8 @@ class taskchain_can extends taskchain_base {
      * @param xxx $require (optional, default=false)
      * @param xxx $context (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function manageactivities($require = false, $context = null) {
+    public function manageactivities($require = false, $context = null) {
         return $this->can('moodle/course:manageactivities', $require, $context);
     }
 
@@ -323,10 +323,9 @@ class taskchain_can extends taskchain_base {
      *
      * @param xxx $context (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function accessallgroups($context = null) {
-        // get groupmode: 0=NOGROUPS, 1=VISIBLEGROUPS, 2=SEPARATEGROUPS
+    public function accessallgroups($context = null) {
+        // Get groupmode: 0=NOGROUPS, 1=VISIBLEGROUPS, 2=SEPARATEGROUPS.
         if (empty($this->TC->coursemodule)) {
             $groupmode = groups_get_course_groupmode($this->TC->course);
         } else {

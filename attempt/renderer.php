@@ -47,67 +47,69 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      */
     const USE_CACHE = true;
 
-    /** xml declaration */
+    /** @var mixed xml declaration */
     protected $xmldeclaration;
 
-    /** doctype tag */
+    /** @var mixed doctype tag */
     protected $doctype;
 
-    /** html tag attributes */
+    /** @var mixed html tag attributes */
     protected $htmlattributes;
 
-    /** head tag attributes */
+    /** @var mixed head tag attributes */
     protected $headattributes;
 
-    /** head content */
+    /** @var mixed head content */
     public $headcontent;
 
-    /** CSS styles */
+    /** @var mixed CSS styles */
     protected $styles;
 
-    /** Javascripts */
+    /** @var mixed Javascripts */
     protected $scripts;
 
-    /** body tag attributes */
+    /** @var mixed body tag attributes */
     protected $bodyattributes;
 
-    /** body content */
+    /** @var mixed body content */
     public $bodycontent;
 
-    /** name of html frame */
+    /** @var mixed name of html frame */
     protected $framename;
 
-    /** boolean flag indicating whether or not we should use the Moodle theme */
+    /** @var mixed boolean flag indicating whether or not we should use the Moodle theme */
     protected $usemoodletheme;
 
-    /** name of theme containiner */
+    /** @var mixed name of theme containiner */
     protected $themecontainer;
 
-    /** the id for the embedded object used for mod_taskchain::NAVIGATION_EMBED */
+    /** @var string the id for the embedded object used for mod_taskchain::NAVIGATION_EMBED */
     protected $embed_object_id  = 'taskchain_embed_object';
 
-    /** the onload function (in iframe.js) for the embedded object (if used) */
+    /** @var string the onload function (in iframe.js) for the embedded object (if used) */
     protected $embed_object_onload  = 'set_embed_object_height';
 
-    /** object to store the taskchain_cache record for the task */
+    /** @var mixed object to store the taskchain_cache record for the task */
     protected $cache;
 
-    /** boolean flag that indicates whether the cache content is uptodate or not */
+    /** @var mixed boolean flag that indicates whether the cache content is uptodate or not */
     protected $cache_uptodate;
 
-    /** external javascripts required for this attempt */
+    /** @var array external javascripts required for this attempt */
     protected $javascripts = array();
 
     /**
      * normally we fix the audio players immediately they have been created,
      * but it may be necessary to defer till page elements have been created,
      * and possibly shuffled/removed
+     * @var bool
      */
     protected $fix_audio_immediately = true;
 
     /**
      * these $CFG fields must match those in the "taskchain_cache" table
      * "wwwroot" is not stored explicitly because it is included in the md5key
+     * @var array
      */
     protected $cache_CFG_fields = array(
         'slasharguments', 'taskchain_bodystyles', 'taskchain_enableobfuscate', 'taskchain_enableswf',
@@ -116,6 +118,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
     /**
      * these fields in the task record must match those in the "taskchain_cache" table
      * "outputformat" is not stored explicitly because it is included in the md5key
+     * @var array
      */
     protected $cache_task_fields = array(
         'name', 'sourcefile', 'sourcetype', 'sourcelocation', 'configfile', 'configlocation', 'title',
@@ -123,7 +126,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         'studentfeedback', 'studentfeedbackurl', 'timelimit', 'delay3', 'clickreporting',
     );
 
-    /** these fields are treated as text fields */
+    /** @var array these fields are treated as text fields */
     public $cache_text_fields = array(
         'slasharguments', 'taskchain_enableobfuscate', 'taskchain_enableswf', 'name',
         'sourcefile', 'sourcetype', 'sourcelastmodified', 'sourceetag',
@@ -132,25 +135,35 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
     );
 
     /* these fields from the source and config file objects are stored in the cache */
+    /** @var array */
     public $cache_remote_fields = array(
         'lastmodified', 'etag',
     );
 
     /**
      * these fields will be serialized and then stored in the "content" field of the "taskchain_cache" table
+     * @var array
      */
     protected $cache_content_fields = array(
         'xmldeclaration', 'doctype', 'htmlattributes', 'headattributes', 'headcontent', 'bodyattributes', 'bodycontent',
     );
 
+    /** @var int */
     protected $chainid = 0;
+    /** @var int */
     protected $cnumber = 0;
+    /** @var int */
     protected $chaingradeid = 0;
+    /** @var int */
     protected $chainattemptid = 0;
 
+    /** @var int */
     protected $taskid = 0;
+    /** @var int */
     protected $tnumber = 0;
+    /** @var int */
     protected $taskscoreid = 0;
+    /** @var int */
     protected $taskattemptid = 0;
 
     /**
@@ -158,16 +171,15 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
 
         parent::__construct($page, $target);
 
-        // add js event API
+        // Add js event API.
         array_push($this->javascripts, 'mod/taskchain/attempt/event.js');
 
-        // set the frame name, if any
+        // Set the frame name, if any.
         $this->framename = optional_param('framename', '', PARAM_ALPHA);
 
         if (empty($this->TC->task)) {
@@ -230,7 +242,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @param taskchain object
      * @param xxx $cacheonly (optional, default=false)
      * @return string html
-     * @todo Finish documenting this function
      */
     public function render_attempt($cacheonly = false) {
 
@@ -261,23 +272,23 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                     die;
                 }
             }
-            // otherwise we print the "main" frame below
+            // Otherwise we print the "main" frame below.
 
-            // set basetag to ensure links and forms can escape from frame
+            // Set basetag to ensure links and forms can escape from frame.
             $basetag = $this->basetag();
         }
 
-        // try to get content from cache
+        // Try to get content from cache.
         $this->get_fields_from_cache();
 
         if ($cacheonly && $this->cache_uptodate) {
             return true;
         }
 
-        // do pre-processing, if required
+        // Do pre-processing, if required.
         $this->preprocessing();
 
-        // generate the main parts of the page
+        // Generate the main parts of the page.
         $this->set_xmldeclaration();
         $this->set_doctype();
         $this->set_htmlattributes();
@@ -293,7 +304,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             return true;
         }
 
-        // do post-processing, if required
+        // Do post-processing, if required.
         $this->postprocessing();
 
         if (! $this->bodycontent) {
@@ -311,18 +322,14 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
     /**
      * preprocessing
-     *
-     * @todo Finish documenting this function
      */
     protected function preprocessing() {
-        // pre-processing for this output format
-        // e.g. convert source to ideal format for this output format
+        // Pre-processing for this output format
+        // e.g. convert source to ideal format for this output format.
     }
 
     /**
      * set_xmldeclaration
-     *
-     * @todo Finish documenting this function
      */
     protected function set_xmldeclaration() {
         if (! isset($this->xmldeclaration)) {
@@ -332,8 +339,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
     /**
      * set_doctype
-     *
-     * @todo Finish documenting this function
      */
     protected function set_doctype() {
         if (! isset($this->doctype)) {
@@ -343,8 +348,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
     /**
      * set_htmlattributes
-     *
-     * @todo Finish documenting this function
      */
     protected function set_htmlattributes() {
         if (! isset($this->htmlattributes)) {
@@ -354,8 +357,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
     /**
      * set_headattributes
-     *
-     * @todo Finish documenting this function
      */
     protected function set_headattributes() {
         if (! isset($this->headattributes)) {
@@ -365,8 +366,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
     /**
      * set_headcontent
-     *
-     * @todo Finish documenting this function
      */
     protected function set_headcontent() {
         if (! isset($this->headcontent)) {
@@ -376,8 +375,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
     /**
      * set_bodyattributes
-     *
-     * @todo Finish documenting this function
      */
     protected function set_bodyattributes() {
         if (! isset($this->bodyattributes)) {
@@ -387,8 +384,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
     /**
      * set_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     protected function set_bodycontent() {
         if (! isset($this->bodycontent)) {
@@ -398,15 +393,13 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
     /**
      * postprocessing
-     *
-     * @todo Finish documenting this function
      */
     protected function postprocessing() {
-        // procesessing for this output format after content has been retrieved from cache
+        // Procesessing for this output format after content has been retrieved from cache
         // This is intended for fixes to $this->headcontent and $this->bodycontent,
         // that are not to be included in the cached data, e.g. $this->fix_title_icons()
         // If you want to fix $this->headcontent and $this->bodycontent before caching,
-        // add your own "set_bodycontent()" method
+        // add your own "set_bodycontent()" method.
         foreach ($this->javascripts as $script) {
             $this->page->requires->js('/' . $script, true);
         }
@@ -414,8 +407,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
     /**
      * fix_title
-     *
-     * @todo Finish documenting this function
      */
     public function fix_title() {
         if (preg_match($this->tagpattern('h2'), $this->bodycontent, $matches, PREG_OFFSET_CAPTURE)) {
@@ -428,11 +419,9 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
     /**
      * fix_title_icons
-     *
-     * @todo Finish documenting this function
      */
     public function fix_title_icons() {
-        // add task edit icons if the current user is a teacher/administrator
+        // Add task edit icons if the current user is a teacher/administrator.
         if ($this->TC->can->manage()) {
             if (preg_match($this->tagpattern('h2'), $this->bodycontent, $matches, PREG_OFFSET_CAPTURE)) {
                 // $matches: <h2 $matches[1]>$matches[2]</h2>
@@ -502,7 +491,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      *
      * @uses $CFG
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function basetag() {
         global $CFG;
@@ -512,14 +500,13 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             $framename = $CFG->framename;
         }
         return html_writer::empty_tag('base', array('target' => $framename, 'href' => ''));
-        // Note: href is required for strict xhtml
+        // Note: href is required for strict xhtml.
     }
 
     /**
      * fix_targets
      *
      * @uses $CFG
-     * @todo Finish documenting this function
      */
     public function fix_targets() {
         global $CFG;
@@ -587,7 +574,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         }
 
         if (empty($CFG->taskchain_frameheight)) {
-            $rows = 85; // default
+            $rows = 85; // Default.
         } else {
             $rows = $CFG->taskchain_frameheight;
         }
@@ -630,12 +617,12 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * an <iframe> in IE and an <object> in other browsers
      */
     public function print_embed_object_page() {
-        // external javascript to adjust height of iframe
+        // External javascript to adjust height of iframe.
         $this->page->requires->js('/mod/taskchain/attempt/iframe.js', true);
 
         echo $this->header();
 
-        // set object attributes
+        // Set object attributes.
         $id = $this->embed_object_id;
         $width = '100%';
         $height = '100%';
@@ -643,7 +630,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         $src = $this->TC->url->attempt_frame('main');
 
         // print the html element to hold the embedded html page
-        // Note: the iframe in IE needs a "name" attribute for the resizing to work
+        // Note: the iframe in IE needs a "name" attribute for the resizing to work.
         echo '<!--[if IE]>' . "\n";
         echo '<iframe name="' . $id . '" id="' . $id . '" src="' . $src . '" width="' . $width . '" height="' . $height . '"></iframe>' . "\n";
         echo '<![endif]-->' . "\n";
@@ -651,8 +638,8 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         echo '<object id="' . $id . '" type="text/html" data="' . $src . '" width="' . $width . '" height="' . $height . '"></object>' . "\n";
         echo '<!--> <![endif]-->' . "\n";
 
-        // javascript to add onload event handler - we do this here because
-        // an object tag should have no onload attribute in XHTML 1.0 Strict
+        // Javascript to add onload event handler - we do this here because
+        // an object tag should have no onload attribute in XHTML 1.0 Strict.
         echo '<script type="text/javascript">' . "\n";
         echo '//<![CDATA[' . "\n";
         echo "var obj = document.getElementById('$id');\n";
@@ -681,7 +668,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      *
      * @uses $CFG
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_cache_md5key() {
         global $CFG;
@@ -694,7 +680,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @uses $CFG
      * @uses $DB
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_fields_from_cache() {
         global $CFG, $DB;
@@ -703,15 +688,15 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             return $this->cache_uptodate;
         }
 
-        // assume cache is not up-to-date
+        // Assume cache is not up-to-date.
         $this->cache_uptodate = false;
 
         if (empty($CFG->taskchain_enablecache)) {
-            return false; // cache not enabled
+            return false; // Cache not enabled.
         }
 
         if (! static::USE_CACHE) {
-            return false; // this renderer doesn't use a cache
+            return false; // This renderer doesn't use a cache.
         }
 
         $select = 'taskid = ? AND md5key = ?';
@@ -727,11 +712,11 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         }
         foreach ($this->cache_task_fields as $field) {
             if ($this->cache->$field != $this->TC->task->$field) {
-                return false; // task settings have changed
+                return false; // Task settings have changed.
             }
         }
 
-        // custom fields
+        // Custom fields.
         $fileareas = array('source', 'config');
         foreach ($fileareas as $filearea) {
             if (isset($this->TC->task->$filearea) && $this->TC->task->$filearea) {
@@ -740,11 +725,11 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 $lastmodified = $this->cache->{$filearea . 'lastmodified'};
                 $etag         = $this->cache->{$filearea . 'etag'};
                 if ($timemodified < $this->TC->task->$filearea->filemtime($lastmodified, $etag)) {
-                    return false; // file has been modified
+                    return false; // File has been modified.
                 }
                 if (method_exists($this->TC->task->$filearea->file, 'get_repository_id')) {
                     if ($repositoryid != $this->TC->task->$filearea->file->get_repository_id()) {
-                        return false; // file repository id has changed
+                        return false; // File repository id has changed.
                     }
                 }
             }
@@ -758,13 +743,13 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 $this->cache->timemodified,
             );
             if ($DB->record_exists_select('log', $select, $params)) {
-                return false; // glossary entries (for this course) have been modified
+                return false; // Glossary entries (for this course) have been modified.
             }
         }
 
         // if we get this far then the cache content is uptodate
 
-        // transfer cache content to this task object
+        // Transfer cache content to this task object.
         $content = unserialize(base64_decode($this->cache->content));
         foreach ($this->cache_content_fields as $field) {
             $this->$field = $content->$field;
@@ -779,39 +764,38 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @uses $CFG
      * @uses $DB
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function set_fields_in_cache() {
         global $CFG, $DB;
 
         if (empty($CFG->taskchain_enablecache)) {
-            return; // cache not enabled
+            return; // Cache not enabled.
         }
 
         if ($this->cache_uptodate) {
-            return; // cache is already uptodate
+            return; // Cache is already uptodate.
         }
 
         if (! $this->cache) {
             $this->cache = new stdClass();
         }
 
-        // add special fields to cache record
+        // Add special fields to cache record.
         $this->cache->taskid = $this->TC->task->id;
         $this->cache->md5key = $this->get_cache_md5key();
         $this->cache->timemodified = time();
 
-        // transfer $CFG fields to cache record
+        // Transfer $CFG fields to cache record.
         foreach ($this->cache_CFG_fields as $field) {
             $this->cache->$field = trim($CFG->$field);
         }
 
-        // transfer task fields to cache record
+        // Transfer task fields to cache record.
         foreach ($this->cache_task_fields as $field) {
             $this->cache->$field = $this->TC->task->$field;
         }
 
-        // transfer remote access fields to cache record
+        // Transfer remote access fields to cache record.
         foreach ($this->cache_remote_fields as $field) {
             $sourcefield = 'source' . $field;
             $configfield = 'config' . $field;
@@ -821,7 +805,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
         $fileareas = array('source', 'config');
         foreach ($fileareas as $filearea) {
-            $this->cache->{$filearea . 'repositoryid'} = 0; // default
+            $this->cache->{$filearea . 'repositoryid'} = 0; // Default.
             if (isset($this->TC->task->$filearea->file)) {
                 if (method_exists($this->TC->task->$filearea->file, 'get_repository_id')) {
                     if ($repositoryid = $this->TC->task->$filearea->file->get_repository_id()) {
@@ -831,16 +815,16 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             }
         }
 
-        // create content object
+        // Create content object.
         $content = new stdClass();
         foreach ($this->cache_content_fields as $field) {
             $content->$field = $this->$field;
         }
 
-        // serialize the $content object
+        // Serialize the $content object.
         $this->cache->content = base64_encode(serialize($content));
 
-        // add / update the cache record
+        // Add / update the cache record.
         if (isset($this->cache->id)) {
             if (! $DB->update_record('taskchain_cache', $this->cache)) {
                 throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_cache');
@@ -851,7 +835,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             }
         }
 
-        // cache record was successfully updated/inserted
+        // Cache record was successfully updated/inserted.
         $this->cache_uptodate = true;
         return $this->cache_uptodate;
     }
@@ -860,7 +844,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * get_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_name() {
         return $this->TC->task->source->get_name();
@@ -870,7 +853,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * get_title
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_title() {
         switch ($this->TC->task->title & mod_taskchain::TITLE_SOURCE) {
@@ -890,7 +872,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 $title = format_string($this->TC->task->name);
                 break;
             default:
-                $title = ''; // shouldn't happen !!
+                $title = ''; // Shouldn't happen !!
         }
 
         if ($this->TC->task->title & mod_taskchain::TITLE_CHAINNAME) {
@@ -918,32 +900,30 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
     // utility functions to indicate whether user can resume, restart  //
     /////////////////////////////////////////////////////////////////////
 
-    // does this output format allow task attempts to be resumed?
+    // Does this output format allow task attempts to be resumed?
 
     /**
      * provide_resume
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function provide_resume() {
         return false;
     }
 
-    // does this output format allow a clickreport
-    // show a click trail of what students clicked
+    // Does this output format allow a clickreport
+    // show a click trail of what students clicked.
 
     /**
      * provide_clickreport
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function provide_clickreport() {
         return false;
     }
 
-    // can the current chain/task attempt be paused and resumed later?
+    // Can the current chain/task attempt be paused and resumed later?
 
     /**
      * can_resume
@@ -951,7 +931,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @uses $this->TC
      * @param xxx $type
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function can_resume($type) {
         if ($type == 'chain' || ($type == 'task' && $this->provide_resume())) {
@@ -962,7 +941,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         return false;
     }
 
-    // can the current chain/task be restarted after the current attempt finishes?
+    // Can the current chain/task be restarted after the current attempt finishes?
 
     /**
      * can_restart
@@ -970,7 +949,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @uses $this->TC
      * @param xxx $type
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function can_restart($type) {
         if (isset($this->TC->$type) && $this->TC->$type->attemptlimit) {
@@ -987,7 +965,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * can_continue
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function can_continue() {
         if ($this->can_resume('chain')) {
@@ -1008,7 +985,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * can_clickreport
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function can_clickreport() {
         if ($this->provide_clickreport() && isset($this->TC) && $this->TC->task->clickreporting) {
@@ -1027,10 +1003,9 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      *
      * @param xxx $str
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function remove_blank_lines($str) {
-        // standardize line endings and remove trailing white space and blank lines
+        // Standardize line endings and remove trailing white space and blank lines.
         return preg_replace('/\s+[\r\n]/s', "\n", $str);
     }
 
@@ -1039,7 +1014,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      *
      * @param xxx $str
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function single_line($str) {
         return trim(preg_replace('/\s+/s', ' ', $str));
@@ -1054,7 +1028,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @param xxx $before (optional, default='')
      * @param xxx $after (optional, default='')
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function tagpattern($tag, $attribute = '', $returncontent = true, $before = '', $after = '') {
         // $0 : entire match
@@ -1087,7 +1060,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_css_definitions($match) {
         global $CFG;
@@ -1096,10 +1068,10 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         $css_selector = $match[1];
         $css_definition = $match[2];
 
-        // standardize indent to a single tab
+        // Standardize indent to a single tab.
         $css_definition = preg_replace('/^[\t ]*(?=[^\n\r\t ])/m', "\t", $css_definition);
 
-        // additional CSS for list items
+        // Additional CSS for list items.
         $listitem_css = '';
 
         $selectors = array();
@@ -1107,30 +1079,30 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             if ($selector = trim($selector)) {
                 switch (true) {
                     case preg_match('/^html\b/i', $selector):
-                        // leave "html" as it is
+                        // Leave "html" as it is.
                         $selectors[] = "$selector";
                         break;
 
                     case preg_match('/^body\b/i', $selector):
-                        // by default, we do nothing here, so that
-                        // HP styles do not affect the Moodle theme
+                        // By default, we do nothing here, so that
+                        // HP styles do not affect the Moodle theme.
 
                         // if this site is set to enable HP body styles
-                        // we replace "body" with the container element
+                        // we replace "body" with the container element.
 
                         if (empty($CFG->taskchain_bodystyles)) {
                             $bodystyles = 0;
                         } else {
-                            // reduce body styles using logical OR
+                            // Reduce body styles using logical OR.
                             $callback = array($this, 'fix_css_reduce_bodystyles');
                             $bodystyles = explode(',', $CFG->taskchain_bodystyles);
                             $bodystyles = array_reduce($bodystyles, $callback, 0);
                         }
 
-                        // remove font, margin, backgroud and color from the css definition
+                        // Remove font, margin, backgroud and color from the css definition.
                         $search = array();
                         if (! ($bodystyles & mod_taskchain::BODYSTYLES_BACKGROUND)) {
-                            // background-color, background-image
+                            // Background-color, background-image.
                             $search[] = '(?:background[a-z-]*)';
                         }
                         if (! ($bodystyles & mod_taskchain::BODYSTYLES_COLOR)) {
@@ -1138,11 +1110,11 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                             $search[] = '(?:color[a-z-]*)';
                         }
                         if (! ($bodystyles & mod_taskchain::BODYSTYLES_FONT)) {
-                            // font-size, font-family
+                            // Font-size, font-family.
                             $search[] = '(?:font[a-z-]*)';
                         }
                         if (! ($bodystyles & mod_taskchain::BODYSTYLES_MARGIN)) {
-                            // margin-left, margin-right
+                            // Margin-left, margin-right.
                             $search[] = '(?:margin[a-z-]*)';
                         }
                         if ($search = implode('|', $search)) {
@@ -1155,7 +1127,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                         break;
 
                     default:
-                        // we need to do some special processing of CSS for list items
+                        // We need to do some special processing of CSS for list items
                         // override standard Moodle 2.0 setting of li {list-style-type }
                         if (preg_match('/(ol|ul)([.#]\w+)?$/', $selector)) {
                             // CSS for a list ("ol" or "ul")
@@ -1164,8 +1136,8 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                                 $listitem_css .= "\n$container $selector li {\n" . $matches[0] . ";\n}";
                             }
                         } else {
-                            // we need to override the Moodle theme's background-image of buttons
-                            // because these have hitherto played an important role in HP styles
+                            // We need to override the Moodle theme's background-image of buttons
+                            // because these have hitherto played an important role in HP styles.
                             $count = 0;
                             $selector = preg_replace('/\.FuncButton/', 'button$0', $selector, -1, $count);
                             if ($count && strpos($css_definition, 'background-image') === false) {
@@ -1173,7 +1145,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                             }
                         }
 
-                        // restrict other CSS selectors to affect only the content of the container element
+                        // Restrict other CSS selectors to affect only the content of the container element.
                         $selectors[] = "$container $selector";
                 }
             }
@@ -1191,9 +1163,8 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @param xxx $carry
      * @param xxx $item
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function fix_css_reduce_bodystyles($carry, $item) {
+    public function fix_css_reduce_bodystyles($carry, $item) {
         return ($carry | $item);
     }
 
@@ -1203,9 +1174,8 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @param xxx $onload
      * @param xxx $script_tags (optional, default=false)
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function fix_onload($onload, $script_tags = false) {
+    public function fix_onload($onload, $script_tags = false) {
         static $taskid = 0;
 
         $str = '';
@@ -1213,9 +1183,9 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             $str .= "\n" . '<script type="text/javascript">' . "\n" . "//<![CDATA[\n";
         }
         if ($taskid && $taskid == $this->TC->task->id) {
-            // do nothing
+            // Do nothing.
         } else {
-            // only do this once per task
+            // Only do this once per task.
             $taskid = $this->TC->task->id;
 
             if ($this->TC->task->allowpaste) {
@@ -1261,8 +1231,8 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
                 . "HP_add_listener(window, 'load', HP_setup_input_and_textarea);\n"
 
-                // ensure keydown (not keypress) event handler is assigned
-                // to prevent leaving page when user hits delete key
+                // Ensure keydown (not keypress) event handler is assigned
+                // to prevent leaving page when user hits delete key.
                 . "if (window.SuppressBackspace) {\n"
                 . "	HP_add_listener(window, 'keydown', SuppressBackspace);\n"
                 . "}\n";
@@ -1286,7 +1256,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      *
      * @uses $CFG
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_mediafilter() {
         global $CFG;
@@ -1339,7 +1308,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                             // if (substr($matches[1], 0, $strlen_wwwroot)==$CFG->wwwroot) {
                             // $this->page->requires->js(substr($matches[1], $strlen_wwwroot), $inhead);
                             // $remove = true;
-                            // } else
+                            // } else.
                             if ($inhead) {
                                 // leave this script where it is (i.e. in the head)
                             } else {
@@ -1381,7 +1350,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             }
 
             // put all the inline javascript into one single function called "taskchain_mediafilter_loader()",
-            // which also loads up any deferred js, and force this function to be run when the page has loaded
+            // which also loads up any deferred js, and force this function to be run when the page has loaded.
             $onload = 'taskchain_mediafilter_loader()';
             $search = '/(\/\/<!\[CDATA\[)(.*)(\/\/\]\]>)/s';
             $replace = '$1' . "\n"
@@ -1389,19 +1358,19 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 . 'function ' . $onload . '{'
                 . '$2'
                 // ."\n"
-                . $deferred_js // load deferred scripts, if any
+                . $deferred_js // Load deferred scripts, if any.
                 . $this->fix_mediafilter_onload_extra()
                 . '}' . "\n"
                 . $this->fix_onload($onload)
                 . '$3';
             $mediafilter->js_inline = preg_replace($search, $replace, $mediafilter->js_inline, 1);
 
-            // append the inline javascripts to the end of the bodycontent
+            // Append the inline javascripts to the end of the bodycontent.
             $this->bodycontent .= $mediafilter->js_inline;
         }
 
         if ($mediafilter->js_external) {
-            // append the external javascripts to the head content
+            // Append the external javascripts to the head content.
             $this->headcontent .= $mediafilter->js_external;
         }
     }
@@ -1410,7 +1379,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * fix_audio_loader
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_audio_loader() {
         return ''
@@ -1430,7 +1398,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * fix_mediafilter_onload_extra
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_mediafilter_onload_extra() {
         return '';
@@ -1441,24 +1408,23 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      *
      * @param xxx $str (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_relativeurls($str = null) {
-        // elements of the regular expression which will search for the URLs
+        // Elements of the regular expression which will search for the URLs.
 
-        // tags may be present in a number of formats:
+        // Tags may be present in a number of formats:
         // * plain ascii text     : < ... >
         // * javascript unicode   : \u003C ... \u003CE
         // * html entities        : &lt; ... &gt;
         // * html entities in xml : &amp;#x003C; ... &amp;#x003E;
-        $tagopen = '(?:(<)|(\\\\u003C)|(&lt;)|(&amp;#x003C;))'; // left angle bracket
+        $tagopen = '(?:(<)|(\\\\u003C)|(&lt;)|(&amp;#x003C;))'; // Left angle bracket.
         $tagclose = '(?(2)>|(?(3)\\\\u003E|(?(4)&gt;|(?(5)&amp;#x003E;))))'; // right angle bracket (to match left angle bracket)
 
-        $space = '\s+'; // at least one space
+        $space = '\s+'; // At least one space.
         $equals = '\s*=\s*'; // equals sign (+ white space)
-        $anychar = '(?:[^>]*?)'; // any character
+        $anychar = '(?:[^>]*?)'; // Any character.
 
-        // quotes around the attribute value may appear in a number of formats:
+        // Quotes around the attribute value may appear in a number of formats:
         // * plain ascii text     : " ... "
         // : ' ... '
         // * escaped javascript   : \" ... \"
@@ -1467,13 +1433,13 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         // : &apos; ... &apos;
         // * html entities in xml : &amp;quot; ... &amp;quot;
         // : &amp;apos; ... &amp;apos;
-        $quoteopen  = '("|\\\\"|&quot;|&amp;quot;' . "|'|\\\\'|&apos;|&amp;apos;" . ')'; // open quote
+        $quoteopen  = '("|\\\\"|&quot;|&amp;quot;' . "|'|\\\\'|&apos;|&amp;apos;" . ')'; // Open quote.
         $quoteclose = '\\6'; // close quote (to match open quote)
         $url        = '.*?'; // chars between quotes (non-greedy)
 
-        // define which attributes of which HTML tags to search for URLs
+        // Define which attributes of which HTML tags to search for URLs.
         $tags = array(
-            // tag  =>  attribute containing url
+            // Tag  =>  attribute containing url.
             'a'      => 'href',
             'area'   => 'href', // <area href="sun.htm" ... shape="..." coords="..." />
             'embed'  => 'src',
@@ -1484,7 +1450,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             'object' => 'data',
             'param'  => 'value',
             'script' => 'src',
-            '(?:audio|source|track|video)' => 'src', // HTML5
+            '(?:audio|source|track|video)' => 'src', // HTML5.
             '(?:table|th|td)' => 'background',
             '[a-z]+' => 'style',
         );
@@ -1510,13 +1476,13 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             return $str;
         }
 
-        // replace relative URLs in stylesheets
+        // Replace relative URLs in stylesheets.
         $search = '/' . '(<style[^>]*>)' . '(.*?)' . '(<\/style>)' . '/is';
         $callback = array($this, 'convert_urls_css');
         $this->headcontent = preg_replace_callback($search, $callback, $this->headcontent);
         $this->bodycontent = preg_replace_callback($search, $callback, $this->bodycontent);
 
-        // replace relative URLs in <a ... onclick="window.open('...')...">...</a>
+        // Replace relative URLs in <a ... onclick="window.open('...')...">...</a>.
         $search = '/' . '(' . 'onclick="' . "window.open\('" . ')' . "([^']*)" . '(' . "'[^\)]*\);return false;" . '")' . '/is';
         $callback = array($this, 'convert_url');
         $this->bodycontent = preg_replace_callback($search, $callback, $this->bodycontent);
@@ -1527,7 +1493,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function convert_urls_css($match) {
         $before = $match[1];
@@ -1546,7 +1511,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @return xxx
      */
     public function convert_url_param($match) {
-        // make sure the param "name" attribute is one we know about
+        // Make sure the param "name" attribute is one we know about.
         $quote = $match[6];
         $search = "/name\s*=\s*$quote(?:data|movie|src|url|FlashVars)$quote/i";
         if (preg_match($search, $match[0])) {
@@ -1561,7 +1526,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function convert_url_relative($match) {
         if (is_string($match)) {
@@ -1576,35 +1540,35 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
         switch (true) {
             case preg_match('/^' . '\w+=[^&]+' . '(' . '&((amp;#x0026;)?amp;)?' . '\w+=[^&]+)*' . '$/', $url):
-                // catch <PARAM name="FlashVars" value="TheSound=soundfile.mp3">
-                // ampersands can appear as "&", "&amp;" or "&amp;#x0026;amp;"
+                // Catch <PARAM name="FlashVars" value="TheSound=soundfile.mp3">
+                // ampersands can appear as "&", "&amp;" or "&amp;#x0026;amp;".
                 $query = $url;
                 $url = '';
                 $fragment = '';
                 break;
 
             case preg_match('/^' . '([^?]*)' . '((?:\?[^#]*)?)' . '((?:#.*)?)' . '$/', $url, $matches):
-                // parse the $url into $matches
+                // Parse the $url into $matches
                 // [1] path
                 // [2] query string, if any
-                // [3] anchor fragment, if any
+                // [3] anchor fragment, if any.
                 $url = $matches[1];
                 $query = $matches[2];
                 $fragment = $matches[3];
                 break;
 
             default:
-                // there appears to be no query or fragment in this url
+                // There appears to be no query or fragment in this url.
                 $query = '';
                 $fragment = '';
         } // end switch
 
-        // convert the filepath part of the url
+        // Convert the filepath part of the url.
         if ($url) {
             $url = $this->convert_url($url);
         }
 
-        // convert urls, if any, in the query string
+        // Convert urls, if any, in the query string.
         if ($query) {
             $search = '/' . '((?:file|song_url|src|thesound|mp3)=)([^&]+)(&|$)/is';
             $callback = array($this, 'convert_url');
@@ -1621,7 +1585,6 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
      * @uses $CFG
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function convert_url($match) {
         global $CFG;
@@ -1658,7 +1621,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         // %taskfiles% is not needed, because this is the default behavior for a relative URL
         // $url = str_replace('%taskfiles%', $CFG->wwwroot.'/'.$baseurl, $url);
 
-        // substitute %wwwroot%, %sitepage/files%, %coursepage/files%, %modulepage/files%
+        // Substitute %wwwroot%, %sitepage/files%, %coursepage/files%, %modulepage/files%.
         $replace_pairs = array(
             '%wwwroot%' => $CFG->wwwroot,
             '%sitepage%' => $CFG->wwwroot . '/course/view.php?id=' . SITEID,
@@ -1675,26 +1638,26 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             return $before . $url . $after;
         }
 
-        // get the subdirectory, $dir, of the task $sourcefile
+        // Get the subdirectory, $dir, of the task $sourcefile.
         $dir = dirname($sourcefile);
 
         if ($baseurl == '' && preg_match('/^https?:\/\//', $dir)) {
             $url = $dir . '/' . $url;
         } else {
-            // remove leading "./" and "../"
+            // Remove leading "./" and "../".
             while (preg_match('/^(\.{1,2})\/(.*)$/', $url, $matches)) {
                 if ($matches[1] == '..') {
                     $dir = dirname($dir);
                 }
                 $url = $matches[2];
             }
-            // add subdirectory, $dir, to $baseurl, if necessary
+            // Add subdirectory, $dir, to $baseurl, if necessary.
             if ($dir == '' || $dir == '/' || $dir == '.' || $dir == '..') {
-                // do nothing
+                // Do nothing.
             } else {
                 $baseurl .= '/' . trim($dir, '/');
             }
-            // prefix $url with $baseurl
+            // Prefix $url with $baseurl.
             $url = "$baseurl/$url";
         }
 

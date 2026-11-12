@@ -42,9 +42,8 @@ class mod_taskchain_attempt_hp_storage extends mod_taskchain_attempt_storage {
      * provide_review
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function provide_review() {
+    public static function provide_review() {
         return true;
     }
 }

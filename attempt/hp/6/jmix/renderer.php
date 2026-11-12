@@ -38,18 +38,24 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_6_renderer {
+    /** @var string */
     public $icon = 'pix/f/jmx.gif';
+    /** @var string */
     public $js_object_type = 'JMix';
 
+    /** @var string */
     public $templatefile = 'jmix6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList|SegmentArray|AnswerArray';
 
-    // Glossary autolinking settings
+    /** @var string Glossary autolinking settings */
     public $headcontent_strings = 'CorrectResponse|IncorrectResponse|ThisMuchCorrect|TheseAnswersToo|YourScoreIs|NextCorrect|Segments';
+    /** @var string */
     public $headcontent_arrays = '';
 
+    /** @var array */
     public $response_num_fields = array(
-        'score', 'hints', 'checks', // remove: weighting, clues
+        'score', 'hints', 'checks', // Remove: weighting, clues.
     );
 
     /**
@@ -57,7 +63,6 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
@@ -68,18 +73,17 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * fix_headcontent
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_headcontent() {
         $this->fix_headcontent_DragAndDrop();
 
-        // change number of drop lines if required (there is no setting for
+        // Change number of drop lines if required (there is no setting for
         // this in the JMix application but it can be set in a cfg file)
         if ($drop_total = $this->expand_DropTotal()) {
             $this->headcontent = preg_replace('/(?<=var DropTotal = )\d+(?=;)/', $drop_total, $this->headcontent, 1);
         }
 
-        // we must add a false return value to segment links in order not to trigger the onbeforeunload event handler
+        // We must add a false return value to segment links in order not to trigger the onbeforeunload event handler
         // (this is only really required on v6 output format)
         $search = '/(?<=' . 'onclick="' . ')' . 'AddSegment\(\[SegmentNumber\]\)' . '(?=' . '"' . ')/';
         $replace = '$0' . '; return false;';
@@ -91,7 +95,6 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      *
      * @param xxx $prefix (optional, default='')
      * @param xxx $suffix (optional, default='')
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent_DragAndDrop($prefix = '', $suffix = '') {
         $search = '/for \(var i=0; i<DropTotal; i\+\+\)\{.*?\}/s';
@@ -107,7 +110,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             . "		myParentNode = obj[obj.length - 1].parentNode;\n"
                     // handle situation where script is running after page has loaded (e.g. Boost theme)
             . "		if (myParentNode.tagName.toLowerCase()=='body') {\n"
-                        // locate Check Buttons of Feedback div
+                        // Locate Check Buttons of Feedback div.
             . "			myNextNode = document.getElementById('CheckButtonDiv');\n"
             . "			if (myNextNode) {\n"
             . "				myNextNode = myNextNode.nextSibling;\n"
@@ -117,7 +120,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             . "			if (myNextNode) {\n"
             . "				myParentNode = myNextNode.parentNode;\n"
             . "			} else {\n"
-                            // desperate search for other expected elements !!
+                            // Desperate search for other expected elements !!
             . "				myParentNode = document.getElementById('InstructionsDiv');\n"
             . "				if (myParentNode) {\n"
             . "					myParentNode = myParentNode.parentNode;\n"
@@ -206,17 +209,17 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      *
      * @return xxx
      */
-    function fix_navigation_buttons() {
+    public function fix_navigation_buttons() {
         parent::fix_navigation_buttons();
 
-        // replace location.reload() in <button class="FuncButton" ... onclick="location.reload()" ...">
-        // with javascript code to return all tiles/segments to their starting positions
+        // Replace location.reload() in <button class="FuncButton" ... onclick="location.reload()" ...">
+        // with javascript code to return all tiles/segments to their starting positions.
         $search = '/(?<=' . 'onclick=")location.reload\(\);?' . '(?=")/';
         if (strpos(get_class($this), '_plus_')) {
-            // Drag and Drop
+            // Drag and Drop.
             $replace = 'for (var i=0; i<Cds.length; i++) Cds[i].GoHome(); return false;';
         } else {
-            // clickety-click
+            // Clickety-click.
             $replace = 'GuessSequence = new Array();' .
                        'BuildCurrGuess();' .
                        'BuildExercise();' .
@@ -231,15 +234,14 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
         // Note that the drag functions get added twice to the html
         // once from hp6card.js_ (this is actually the JMatch version)
         // and once from djmix6.js_. Consequently, we need to process
-        // these functions twice: once to delete, and then again to modify
+        // these functions twice: once to delete, and then again to modify.
         $drag = 'beginDrag,doDrag,endDrag';
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . "CardSetHTML,$drag,CheckAnswer,TimesUp,WriteToGuess,$drag,SetInitialPositions";
         return $names;
@@ -250,7 +252,6 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * for drag-and-drop JMatch and JMix
      *
      * @return string
-     * @todo Finish documenting this function
      */
     public function get_beginDrag_target() {
         return 'Cds[CurrDrag]';
@@ -262,12 +263,11 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_TimesUp(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // make sure we get the latest GuessSequence
+        // Make sure we get the latest GuessSequence.
         $search = '	CheckAnswer(0);';
         if ($pos = strpos($substr, $search)) {
             $insert = ''
@@ -304,14 +304,13 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckAnswer(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // remove the premature "return" if there is no guesses, because this function
+        // Remove the premature "return" if there is no guesses, because this function
         // is also called for the "Give Up" button and the onbeforeunload() event handler
-        // and in those cases we need to continue and return the results to Moodle
+        // and in those cases we need to continue and return the results to Moodle.
         $search = ''
             . '/(if \(GuessSequence\.length < 1\)\{)' // $1
             . '(.*?)' // $2
@@ -320,12 +319,12 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             . '/s';
         $substr = preg_replace($search, '$1$2$3', $substr, 1);
 
-        // encapsulate the main body of the function code in an "if" block
+        // Encapsulate the main body of the function code in an "if" block.
         $search = ''
-            . '/(?<=var AllDone = false;)' // look behind
+            . '/(?<=var AllDone = false;)' // Look behind.
             . '(.*?)'
             . '(\s*)'
-            . '(?=if \(\(AllDone == true\)\|\|\(TimeOver == true\)\)\{)' // look ahead
+            . '(?=if \(\(AllDone == true\)\|\|\(TimeOver == true\)\)\{)' // Look ahead.
             . '/s';
         if (preg_match($search, $substr, $matches, PREG_OFFSET_CAPTURE)) {
             $replace = "\n"
@@ -335,7 +334,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             $substr = substr_replace($substr, $replace, $matches[1][1], strlen($matches[1][0]));
         }
 
-        // add other changes as per CheckAnswers in other type of HP task
+        // Add other changes as per CheckAnswers in other type of HP task.
         $this->fix_js_CheckAnswers($substr, 0, strlen($substr));
 
         // this must come after call to $this->fix_js_CheckAnswers()
@@ -354,7 +353,6 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_WriteToGuess(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -371,22 +369,21 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * fix_js_StartUp_DragAndDrop
      *
      * @param xxx $substr (passed by reference)
-     * @todo Finish documenting this function
      */
     public function fix_js_StartUp_DragAndDrop(&$substr) {
 
-        // fix top and left of drag area
+        // Fix top and left of drag area.
         $this->fix_js_StartUp_DragAndDrop_DragArea($substr);
 
-        // restrict width of drop lines
+        // Restrict width of drop lines.
         $search = 'L[i].SetL(LeftColPos);';
         if ($pos = strpos($substr, $search)) {
             $insert = "\n\t\t" . 'L[i].SetW(DivWidth - 40);';
             $substr = substr_replace($substr, $insert, $pos + strlen($search), 0);
         }
 
-        // position the prefix tile on the left of the top drop line
-        // and the suffix tile on the right of the bottom drop line
+        // Position the prefix tile on the left of the top drop line
+        // and the suffix tile on the right of the bottom drop line.
         $search = 'SetInitialPositions();';
         if ($pos = strpos($substr, $search)) {
             $insert = "\n"
@@ -440,7 +437,7 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             $substr = substr_replace($substr, $insert, $pos + strlen($search), 0);
         }
 
-        // stretch the canvas vertically down
+        // Stretch the canvas vertically down.
         if ($pos = strrpos($substr, '}')) {
             $insert = ''
             . "	var b = 0;\n"
@@ -478,10 +475,10 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * @param xxx $start
      * @param xxx $length
      */
-    function fix_js_SetInitialPositions(&$str, $start, $length) {
+    public function fix_js_SetInitialPositions(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // prevent error on Boost-based themes
+        // Prevent error on Boost-based themes.
         if ($pos = strpos($substr, '(RowWidth + Cds[i].GetW() + 5) < DivWidth')) {
             $insert = 'RowWidth==0 || ';
             $substr = substr_replace($substr, $insert, $pos, 0);
@@ -494,7 +491,6 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * get_stop_onclick
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_onclick() {
         return ''
@@ -511,7 +507,6 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
         return 'CheckAnswer';
@@ -521,7 +516,6 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * get_stop_function_args
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_args() {
         return 'HP.EVENT_ABANDONED';
@@ -531,7 +525,6 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
      * get_stop_function_intercept
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_intercept() {
         return "\n"

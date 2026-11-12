@@ -38,14 +38,19 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_hp_6_renderer {
+    /** @var string */
     public $icon = 'pix/f/jcl.gif';
+    /** @var string */
     public $js_object_type = 'JCloze';
 
+    /** @var string */
     public $templatefile = 'jcloze6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList';
 
-    // Glossary autolinking settings
+    /** @var string Glossary autolinking settings */
     public $headcontent_strings = 'Feedback|Correct|Incorrect|GiveHint|YourScoreIs|Guesses|(?:I\[\d+\]\[[12]\])';
+    /** @var string */
     public $headcontent_arrays = '';
 
     /**
@@ -53,7 +58,6 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
@@ -64,10 +68,9 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'TypeChars,ShowHint,ShowClue,CheckAnswers,CompileGuesses';
         return $names;
@@ -77,7 +80,6 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * fix_js_TypeChars_init
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_TypeChars_init() {
         return ''
@@ -92,7 +94,6 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * fix_js_TypeChars_obj
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_TypeChars_obj() {
         return 'obj';
@@ -104,12 +105,11 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowHint(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // intercept Hints
+        // Intercept Hints.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
                 . "	// intercept this Hint\n"
@@ -130,18 +130,17 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowClue(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // the argument for this function has different names in different output formats
+        // The argument for this function has different names in different output formats
         // ItemNum : JCloze  + Rottmeier DropDown
         // GapId   : Find It (a) + (b) + ANCT-Scan
         // ClueNum : JCross (has its own fix function)
-        // so it is safest to refer to it using "ShowClue.arguments[0]"
+        // so it is safest to refer to it using "ShowClue.arguments[0]".
 
-        // intercept Clues
+        // Intercept Clues.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
                 . "	// intercept this Clue\n"
@@ -158,7 +157,6 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CompileGuesses(&$str, $start, $length) {
         $this->remove_js_function($str, $start, $length, 'CompileGuesses');
@@ -168,14 +166,13 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
         return 'CheckAnswers';
     }
 
-    // the following functions are required by Michael Rottmeier output formats
-    // they are put here so that they can be shared between the xml and html source files
+    // The following functions are required by Michael Rottmeier output formats
+    // they are put here so that they can be shared between the xml and html source files.
 
     // ========
     // DropDown
@@ -187,7 +184,6 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_Show_Solution(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -208,10 +204,9 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_Markup_Text(&$str, $start, $length) {
-        // fix Markup_Text so it identifies individual incorrect words that were clicked
+        // Fix Markup_Text so it identifies individual incorrect words that were clicked.
         $replace = ''
             . "function Markup_Text(Node){\n"
             . "	if (Node && Node.childNodes) {\n"
@@ -323,12 +318,11 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckText(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // intercept Hints and add a 3rd parameter to the CheckText function
+        // Intercept Hints and add a 3rd parameter to the CheckText function.
         if ($pos = strpos($substr, '{')) {
             $insert = ''
                 . "function CheckText(GapState,GapId,GapValue){\n"
@@ -347,7 +341,6 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_Build_GapText(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -369,7 +362,7 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
         $substr = preg_replace($search, $replace, $substr, 1);
 
         if ($endpos = strrpos($substr, '}')) {
-            // optimize gap creation and unhide Cloze text when gaps have been set up
+            // Optimize gap creation and unhide Cloze text when gaps have been set up.
             $search = "var ClozeBody = document.getElementById('ClozeBody');";
             if ($pos = strrpos($substr, $search)) {
                 // FindIt(a)+(b)
@@ -380,7 +373,7 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
                 $len = $endpos - $pos;
                 $tab = '';
             } else {
-                // DropDown
+                // DropDown.
                 $len = 0;
                 $tab = "\t";
                 $pos = $endpos;
@@ -474,7 +467,6 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowSolution(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -497,7 +489,6 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_Get_WrongGapContent(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -515,7 +506,6 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_TimesUp(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -548,12 +538,11 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CorrectChoice(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // make sure GapId is valid
+        // Make sure GapId is valid.
         $search = '/' . '(\s*)(GapList[^;]*;)(.*)(Show_GapSolution[^;]*;)/s';
         $replace = '$1'
             . "if (typeof(GapId)=='number' && GapList[GapId]){" . '$1'
@@ -562,7 +551,7 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
             . '}';
         $substr = preg_replace($search, $replace, $substr, 1);
 
-        // add changes as per CheckAnswers in other type of HP task
+        // Add changes as per CheckAnswers in other type of HP task.
         $this->fix_js_CheckAnswers($substr, 0, strlen($substr));
 
         $str = substr_replace($str, $substr, $start, $length);
@@ -578,12 +567,11 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_Show_GlossContent(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // intercept onmouseover and store as a "Check" on this item
+        // Intercept onmouseover and store as a "Check" on this item.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
                 . "	// intercept this Check\n"
@@ -595,7 +583,7 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
         $substr = $this->fix_js_if_then_else($substr);
         $substr = $this->fix_js_clientXY($substr, 'Pos.X', 'Evt');
 
-        // remove the following lines
+        // Remove the following lines.
         $search = array('/var Pos = .*;/',
                         '/Pos\\.(X|Y) = .*;/',
                         '/var VertPos = .*;/',
@@ -606,7 +594,7 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
         );
         $substr = preg_replace($search, '', $substr);
 
-        // improve readability and robustness of code to update feedback element
+        // Improve readability and robustness of code to update feedback element.
         $search = "\tdocument.getElementById('FeedbackContent').innerHTML = '<p>' + I[id][2] + '</p>';";
         if ($pos = strpos($substr, $search)) {
             $insert = "\tvar FContent = document.getElementById('FeedbackContent');\n" .
@@ -620,8 +608,8 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
             $substr = substr_replace($substr, $insert, $pos, strlen($search));
         }
 
-        // we must position the feedback AFTER making it visible
-        // also use setOffset(), instead of FDiv.style.left/top
+        // We must position the feedback AFTER making it visible
+        // also use setOffset(), instead of FDiv.style.left/top.
         $search = "FDiv.style.display = 'block';";
         if ($pos = strpos($substr, $search)) {
             $insert = "\n" .
@@ -646,7 +634,6 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_Add_GlossFunctionality(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -664,14 +651,13 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowElements(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         // remove HP's fix for alleged bug on FF (Mac)
         // HP's fix makes the screen flicker as the objects' style display is toggled
-        // and tests on FF 2 and 3 show that the alleged bug is no longer an issue
+        // and tests on FF 2 and 3 show that the alleged bug is no longer an issue.
         $search = "/\s*if \(C.mac && C.gecko\) \{Els\[i\]\.style\.display = '[^']*';\}/s";
         $substr = preg_replace($search, '', $substr);
 

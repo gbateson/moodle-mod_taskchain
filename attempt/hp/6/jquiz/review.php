@@ -42,9 +42,8 @@ class mod_taskchain_attempt_hp_6_jquiz_review extends mod_taskchain_attempt_hp_6
      * attempt_fields
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function attempt_fields() {
+    public static function attempt_fields() {
         return array('tnumber', 'score', 'status', 'duration', 'timestart');
     }
 
@@ -52,9 +51,8 @@ class mod_taskchain_attempt_hp_6_jquiz_review extends mod_taskchain_attempt_hp_6
      * response_num_fields
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function response_num_fields() {
+    public static function response_num_fields() {
         return array('score', 'weighting', 'hints', 'checks');
     }
 }

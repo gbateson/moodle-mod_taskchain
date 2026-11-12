@@ -44,7 +44,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_autoadvance_renderer extend
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_StartUp(&$str, $start, $length) {
         $this->jcloze_autoadvance_fix_js_StartUp($str, $start, $length);
@@ -56,7 +55,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_autoadvance_renderer extend
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function jcloze_autoadvance_gapid() {
         return '^GapSpan([0-9]+)$';
@@ -68,7 +66,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_autoadvance_renderer extend
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function jcloze_autoadvance_gaptype() {
         return 'span';
@@ -80,15 +77,14 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_autoadvance_renderer extend
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckExStatus(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // do standard fixes to this function
+        // Do standard fixes to this function.
         parent::fix_js_CheckExStatus($substr, 0, $length);
 
-        // javascript regexp to match id of a Gap
+        // Javascript regexp to match id of a Gap.
         $gapid = $this->jcloze_autoadvance_gapid();
 
         $search = '	if (ExStatus){';
@@ -166,7 +162,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_autoadvance_renderer extend
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_headcontent() {
         global $CFG;
@@ -184,11 +179,10 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_autoadvance_renderer extend
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
 
-        // adjust indentation
+        // Adjust indentation.
         $search = '/<form id="Cloze"[^>]*>\s*<div class="ClozeBody"[^>]*>\s*<ol[^>]*>(.*?)<\/ol>\s*<\/div>\s*<\/form>/is';
         if (preg_match($search, $this->bodycontent, $matches, PREG_OFFSET_CAPTURE)) {
             $match = $matches[1][0];
@@ -202,7 +196,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_autoadvance_renderer extend
             $this->bodycontent = substr_replace($this->bodycontent, $match, $start, $length);
         }
 
-        // continue with usual rottmeier adjustments
+        // Continue with usual rottmeier adjustments.
         $this->fix_bodycontent_rottmeier(true);
     }
 
@@ -212,10 +206,9 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_autoadvance_renderer extend
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent_listitem($match) {
-        // match contains a single <li> listitem
+        // Match contains a single <li> listitem.
         $starttag = $match[1];
         $content  = $match[2];
         $endtag   = $match[3];
@@ -228,7 +221,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_autoadvance_renderer extend
                 $start = $lines[0][$i][1];
                 $length = strlen($match);
 
-                $indent = strlen($lines[1][$i][0]); // count asterisks
+                $indent = strlen($lines[1][$i][0]); // Count asterisks.
                 $match = '<div class="indent' . $indent . '">' . $lines[2][$i][0] . '</div>';
 
                 $content = substr_replace($content, $match, $start, $length);

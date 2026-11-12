@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
+// Get parent class.
 require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/xml/renderer.php');
 
 /**
@@ -37,6 +37,7 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/xml/renderer.ph
  */
 class mod_taskchain_attempt_hp_6_jmatch_xml_sort_renderer extends mod_taskchain_attempt_hp_6_jmatch_xml_renderer {
     // public $js_object_type = 'JMatchSort';
+    /** @var string */
     public $templatefile = 'djmatch6.ht_';
 
     /**
@@ -44,12 +45,11 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_sort_renderer extends mod_taskchain_
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // prepend templates for this output format
+        // Prepend templates for this output format.
         array_unshift($this->templatesfolders, 'mod/taskchain/attempt/hp/6/jmatch/xml/sort/templates');
     }
 

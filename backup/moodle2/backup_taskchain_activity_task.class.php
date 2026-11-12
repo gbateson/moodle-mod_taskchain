@@ -42,7 +42,7 @@ class backup_taskchain_activity_task extends backup_activity_task {
      * Define (add) particular settings this activity can have
      */
     protected function define_my_settings() {
-        // No particular settings for this activity
+        // No particular settings for this activity.
     }
 
     /**
@@ -59,18 +59,17 @@ class backup_taskchain_activity_task extends backup_activity_task {
      * @uses $CFG
      * @param xxx $content
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function encode_content_links($content) {
         global $CFG;
 
         $wwwroot = preg_quote($CFG->wwwroot, '/');
 
-        // Link to the list of taskchains
+        // Link to the list of taskchains.
         $search = '/(' . $wwwroot . '\/mod\/taskchain\/index.php\?id\=)([0-9]+)/';
         $content = preg_replace($search, '$@TASKCHAININDEX*$2@$', $content);
 
-        // Link to taskchain view by moduleid
+        // Link to taskchain view by moduleid.
         $search = '/(' . $wwwroot . '\/mod\/taskchain\/view.php\?id\=)([0-9]+)/';
         $content = preg_replace($search, '$@TASKCHAINVIEWBYID*$2@$', $content);
 

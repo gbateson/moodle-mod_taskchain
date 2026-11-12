@@ -241,10 +241,10 @@ class taskchain_available extends taskchain_base {
      * @return array
      */
     public static function mediafilters_list() {
-        $plugins = get_list_of_plugins('mod/taskchain/mediafilter'); // sorted
+        $plugins = get_list_of_plugins('mod/taskchain/mediafilter'); // Sorted.
 
         if (in_array('moodle', $plugins)) {
-            // make 'moodle' the first element in the plugins array
+            // Make 'moodle' the first element in the plugins array.
             unset($plugins[array_search('moodle', $plugins)]);
             array_unshift($plugins, 'moodle');
         }
@@ -326,7 +326,6 @@ class taskchain_available extends taskchain_base {
      *
      * @param xxx $sourcetype
      * @return array
-     * @todo Finish documenting this function
      */
     public static function outputformats_list($sourcetype) {
         $strman = get_string_manager();
@@ -335,11 +334,11 @@ class taskchain_available extends taskchain_base {
         if ($sourcetype) {
             $classes = mod_taskchain::get_classes('taskchainattempt', 'renderer.php', 'mod_', '_renderer');
             foreach ($classes as $class) {
-                // use call_user_func() to prevent syntax error in PHP 5.2.x
+                // Use call_user_func() to prevent syntax error in PHP 5.2.x.
                 $sourcetypes = call_user_func(array($class, 'sourcetypes'));
                 if (in_array($sourcetype, $sourcetypes)) {
-                    // mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer
-                    // strip prefix, "mod_taskchain_attempt_", and suffix, "_renderer"
+                    // Mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer
+                    // strip prefix, "mod_taskchain_attempt_", and suffix, "_renderer".
                     $outputformat = substr($class, 22, -9);
                     if ($strman->string_exists('outputformat_' . $outputformat, 'taskchain')) {
                         $outputformats[$outputformat] = $strman->get_string('outputformat_' . $outputformat, 'mod_taskchain');
@@ -355,9 +354,9 @@ class taskchain_available extends taskchain_base {
 
         switch (count($outputformats)) {
             case 0:
-                return $best; // shouldn't happen !!
+                return $best; // Shouldn't happen !!
             case 1:
-                return $outputformats; // unusual ?!
+                return $outputformats; // Unusual ?!
             default:
                 return $best + $outputformats;
         }
@@ -398,7 +397,7 @@ class taskchain_available extends taskchain_base {
                 'feedback'  => self::REVIEW_FEEDBACK,
             );
         }
-        return array(); // shoudn't happen
+        return array(); // Shoudn't happen.
     }
 
 

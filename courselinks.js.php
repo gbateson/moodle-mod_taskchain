@@ -43,20 +43,19 @@ if (file_exists($CFG->dirroot . '/course/format/lib.php')) {
  * @uses $DB
  * @uses $USER
  * @return xxx
- * @todo Finish documenting this function
  */
 function print_courselinks() {
     global $CFG, $DB, $PAGE, $USER;
 
     $tab = str_repeat(' ', 4);
-    $nl = "\n"; // newline
+    $nl = "\n"; // Newline.
 
-    // sanity check
+    // Sanity check.
     if (! isset($USER->id)) {
         return false;
     }
 
-    // use course id to fetch course record and context
+    // Use course id to fetch course record and context.
     if (! $id = optional_param('id', 0, PARAM_INT)) {
         return false;
     }
@@ -92,14 +91,14 @@ function print_courselinks() {
         }
     }
 
-    // Add the editing switch
+    // Add the editing switch.
     $name = 'isediting';
     $value = ($PAGE->user_is_editing() ? 'true' : 'false');
 
     echo $nl;
     echo "{$tab}TC.$name = $value;{$nl}";
 
-    // Add other config settings
+    // Add other config settings.
     foreach ($config as $name => $value) {
         $value = optional_param($name, $value, PARAM_ALPHANUM);
         if ($name == 'gradelinecolor' && preg_match('/^[A-F0-9]+$/', $value)) {
@@ -116,30 +115,30 @@ function print_courselinks() {
         if (function_exists('course_get_format')) {
             $format = course_get_format($course);
             if (method_exists($format, 'get_last_section_number')) {
-                // Moodle >= 3.3
+                // Moodle >= 3.3.
                 $numsections = $format->get_last_section_number();
             } else {
-                // Moodle 2.3 to 3.2
+                // Moodle 2.3 to 3.2.
                 $options = $format->get_format_options();
                 if (isset($options['numsections'])) {
                     $numsections = $options['numsections'];
                 }
             }
         } else {
-            // Moodle <= 2.2
+            // Moodle <= 2.2.
             $numsections = $course->numsections;
         }
     }
 
     if ($sectionnum = optional_param('section', 0, PARAM_INT)) {
-        // specific section requested
+        // Specific section requested.
     } else if (isset($_SERVER['HTTP_REFERER']) && preg_match('/section=([0-9]+)/', $_SERVER['HTTP_REFERER'], $matches)) {
         $sectionnum = $matches[1];
     } else if (isset($USER->display[$course->id])) {
-        // Moodle <= 2.2
+        // Moodle <= 2.2.
         $sectionnum = $USER->display[$course->id];
     } else {
-        // Moodle >= 2.3
+        // Moodle >= 2.3.
         $name = 'taskchain_navigation_' . $course->id;
         $sectionnum = get_user_preferences($name, 0);
     }
@@ -155,36 +154,36 @@ function print_courselinks() {
     $show_modules = preg_replace('/[^a-z,]/', '', strtolower($show_modules));
     if ($show_modules) {
         if ($show_modules == 'all') {
-            // do nothing
+            // Do nothing.
         } else {
-            $show_modules = explode(',', $show_modules); // convert to array
-            $show_modules = array_filter($show_modules); // remove blanks
+            $show_modules = explode(',', $show_modules); // Convert to array.
+            $show_modules = array_filter($show_modules); // Remove blanks.
         }
     }
 
     if (! $modinfo = get_fast_modinfo($course->id)) {
-        return false; // no activities ?!
+        return false; // No activities ?!
     }
 
     if (has_capability('moodle/grade:viewall', $course->context)) {
         // teacher (or admin)
         $showaverages = optional_param('showaverages', 0, PARAM_INT);
     } else {
-        // student
+        // Student.
         if (empty($course->showgrades)) {
-            return false; // this course doesn't show grades to students
+            return false; // This course doesn't show grades to students.
         }
         if (! has_capability('moodle/grade:view', $course->context)) {
-            return false; // user cannot view grade items - unusual !!
+            return false; // User cannot view grade items - unusual !!
         }
         $showaverages = false;
     }
 
     if ($showaverages) {
-        // a teacher - or at least someone who can view all users' grades
+        // A teacher - or at least someone who can view all users' grades.
         $userids = array();
 
-        // get groupmode: 0=NOGROUPS, 1=VISIBLEGROUPS, 2=SEPARATEGROUPS
+        // Get groupmode: 0=NOGROUPS, 1=VISIBLEGROUPS, 2=SEPARATEGROUPS.
         $groupmode = groups_get_course_groupmode($course);
 
         // Get the current group and grouping for this course.
@@ -197,7 +196,7 @@ function print_courselinks() {
         }
 
         if ($groupingid == 0 && $groupid == 0 && $accessallgroups) {
-            // user can access all student users in the course
+            // User can access all student users in the course.
             $select = 'ra.id, ra.userid';
             $from   = '{role_assignments} ra JOIN {role} r ON ra.roleid = r.id';
             $where  = 'ra.contextid = :contextid AND r.shortname = :shortname';
@@ -206,21 +205,21 @@ function print_courselinks() {
                 $userids = array_values($records);
             }
         } else {
-            // user can only see members in groups to which (s)he belongs
+            // User can only see members in groups to which (s)he belongs
             // (e.g. non-editing teacher when groups are separate)
             $groupids = 'SELECT id FROM {groups} WHERE courseid = :courseid';
             $params = array('courseid' => $course->id);
             if ($groupid) {
-                // a specific group
+                // A specific group.
                 $groupids .= ' AND id = :groupid';
                 $params['groupid'] = $groupid;
             } else if ($groupingid) {
-                // a specific grouping
+                // A specific grouping.
                 $groupids .= ' AND id IN (SELECT id FROM {groupings_groups} WHERE groupingid = :groupingid)';
                 $params['groupingid'] = $groupingid;
             }
             if ($accessallgroups == false) {
-                // user can only see members in groups to which (s)he belongs
+                // User can only see members in groups to which (s)he belongs
                 // (e.g. non-editing teacher when groups are separate)
                 $groupids = 'SELECT groupid FROM {groups_members} WHERE userid = :userid AND groupid IN (' . $groupids . ')';
                 $params['userid'] = $USER->id;
@@ -235,10 +234,10 @@ function print_courselinks() {
     }
 
     if (empty($userids)) {
-        return false; // no users in groups ?!
+        return false; // No users in groups ?!
     }
 
-    // resource mods are always hidden
+    // Resource mods are always hidden.
     $hide_modules = array('label', 'book', 'folder', 'imscp', 'page', 'resource', 'url');
     // (plugin_supports('mod', $cm->modname, FEATURE_MOD_ARCHETYPE, MOD_ARCHETYPE_OTHER) == MOD_ARCHETYPE_RESOURCE);
 
@@ -253,9 +252,9 @@ function print_courselinks() {
             if (in_array($cm->modname, $hide_modules)) {
                 $zero_grade = true;
             } else if ($show_modules === 'all') {
-                // do nothing
+                // Do nothing.
             } else if (in_array($cm->modname, $show_modules)) {
-                // do nothing
+                // Do nothing.
             } else {
                 $zero_grade = true;
             }
@@ -263,16 +262,16 @@ function print_courselinks() {
 
         if ($show_grade) {
             if (class_exists('\core_availability\info_module')) {
-                // Moodle >= 2.7
+                // Moodle >= 2.7.
                 $visible_for_user = \core_availability\info_module::is_user_visible($cm);
             } else {
-                // Moodle <= 2.6
+                // Moodle <= 2.6.
                 $visible_for_user = coursemodule_visible_for_user($cm);
             }
             if ($showaverages || $zero_grade || $visible_for_user == false) {
-                 // do nothing
+                 // Do nothing.
             } else {
-                // check activity-specific capabilities
+                // Check activity-specific capabilities.
                 $assessed = '';
                 $capability = '';
                 switch ($cm->modname) {
@@ -309,9 +308,9 @@ function print_courselinks() {
                     case 'workshop':
                         $capability = 'submit';
                         break;
-                    case 'lesson':      // do nothing
-                    case 'scorm':       // do nothing
-                    default:            // do nothing
+                    case 'lesson':      // Do nothing.
+                    case 'scorm':       // Do nothing.
+                    default:            // Do nothing.
                 }
 
                 if ($capability) {
@@ -330,7 +329,7 @@ function print_courselinks() {
                 echo $nl;
             }
             if ($visible_for_user) {
-                // get this user's grade for this activity
+                // Get this user's grade for this activity.
                 if (! $zero_grade) {
                     $grades = grade_get_grades($course->id, 'mod', $cm->modname, $cm->instance, $userids);
                     if (empty($grades->items[0]->grademax) || floatval($grades->items[0]->grademax) == 0) {

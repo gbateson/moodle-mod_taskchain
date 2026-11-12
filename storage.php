@@ -54,7 +54,7 @@ class mod_taskchain_storage {
     const durationstartfield = 'timestart';
     const durationfinishfield = 'timefinish';
 
-    // functions to store responses returned from browser
+    // Functions to store responses returned from browser.
 
     /**
      * store
@@ -62,37 +62,36 @@ class mod_taskchain_storage {
      * @uses $CFG
      * @uses $DB
      * @param xxx $TC
-     * @todo Finish documenting this function
      */
     public static function store($TC) {
         global $CFG, $DB;
 
         if (empty($TC->taskattempt)) {
-            return; // no attempt record - shouldn't happen !!
+            return; // No attempt record - shouldn't happen !!
         }
 
         if ($TC->taskattempt->userid != $TC->userid) {
-            return; // wrong userid - shouldn't happen !!
+            return; // Wrong userid - shouldn't happen !!
         }
 
-        // update task attempt fields using incoming data
+        // Update task attempt fields using incoming data.
         $TC->taskattempt->score    = max(0, optional_param(self::scorefield, 0, PARAM_INT));
         $TC->taskattempt->status   = max(0, optional_param('status', 0, PARAM_INT));
         $TC->taskattempt->redirect = max(0, optional_param('redirect', 0, PARAM_INT));
         $TC->taskattempt->details  = optional_param(self::detailsfield, '', PARAM_RAW);
 
         // time values, e.g. "2008-09-12 16:18:18 +0900",
-        // need to be converted to numeric date stamps
+        // need to be converted to numeric date stamps.
         $timefields = array('starttime', 'endtime');
         foreach ($timefields as $timefield) {
-            $TC->taskattempt->$timefield = 0; // default
+            $TC->taskattempt->$timefield = 0; // Default.
             if ($time = optional_param($timefield, '', PARAM_RAW)) {
-                // make sure the timezone has a "+" sign
+                // Make sure the timezone has a "+" sign
                 // Note: sometimes it gets stripped (by optional_param?)
                 $time = preg_replace('/(?<= )\d{4}$/', '+$0', trim($time));
 
-                // convert $time to numeric date stamp
-                // PHP4 gives -1 on error, whereas PHP5 give false
+                // Convert $time to numeric date stamp
+                // PHP4 gives -1 on error, whereas PHP5 give false.
                 $time = strtotime($time);
 
                 if ($time && $time > 0) {
@@ -102,11 +101,11 @@ class mod_taskchain_storage {
         }
         unset($timefields, $timefield, $time);
 
-        // set finish times
+        // Set finish times.
         $TC->taskattempt->timefinish = $TC->time;
         $TC->taskattempt->resumefinish = $TC->time;
 
-        // increment task attempt duration
+        // Increment task attempt duration.
         $startfield = self::durationstartfield; // "starttime" or "resumestart"
         $finishfield = self::durationfinishfield; // "endtime" or "resumefinish"
         $duration = ($TC->taskattempt->$finishfield - $TC->taskattempt->$startfield);
@@ -118,38 +117,38 @@ class mod_taskchain_storage {
         // set clickreportid, (for click reporting)
         $TC->taskattempt->clickreportid = $TC->taskattempt->id;
 
-        // check if there are any previous results stored for this attempt
+        // Check if there are any previous results stored for this attempt
         // this could happen if ...
         // - the task has been resumed
-        // - clickreporting is enabled for this task
+        // - clickreporting is enabled for this task.
         if ($DB->get_field('taskchain_task_attempts', 'timefinish', array('id' => $TC->taskattempt->id))) {
             if (self::can_clickreport($TC)) {
-                // add task attempt record for each form submission
-                // records are linked via the "clickreportid" field
+                // Add task attempt record for each form submission
+                // records are linked via the "clickreportid" field.
 
-                // update timemodified and status in previous records in this clickreportid group
+                // Update timemodified and status in previous records in this clickreportid group.
                 $params = array('clickreportid' => $TC->taskattempt->clickreportid);
                 $DB->set_field('taskchain_task_attempts', 'timemodified', $TC->time, $params);
                 $DB->set_field('taskchain_task_attempts', 'status', $TC->taskattempt->status, $params);
 
-                // add new attempt record
+                // Add new attempt record.
                 unset($TC->taskattempt->id);
                 if (! $TC->taskattempt->id = $DB->insert_record('taskchain_task_attempts', $TC->taskattempt->to_stdclass())) {
                     throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_task_attempts');
                 }
             } else {
-                // remove previous responses for this attempt, if required
+                // Remove previous responses for this attempt, if required
                 // (N.B. this does NOT remove the attempt record, just the responses)
                 $params = array('attemptid' => $TC->taskattempt->id);
                 $DB->delete_records('taskchain_responses', $params);
             }
         }
 
-        // add details of this task attempt, if required
+        // Add details of this task attempt, if required
         // "taskchain_storedetails" is set by administrator
         // Site Admin -> Modules -> Activities -> TaskChain
         if ($CFG->taskchain_storedetails) {
-            // delete/update/add the details record
+            // Delete/update/add the details record.
             $params = array('attemptid' => $TC->taskattempt->id);
             if ($DB->record_exists('taskchain_details', $params)) {
                 $DB->set_field('taskchain_details', 'details', $TC->taskattempt->details, $params);
@@ -165,10 +164,10 @@ class mod_taskchain_storage {
             }
         }
 
-        // add details of this attempt
+        // Add details of this attempt.
         self::store_details($TC->taskattempt);
 
-        // update the attempt record
+        // Update the attempt record.
         if (! $DB->update_record('taskchain_task_attempts', $TC->taskattempt->to_stdclass())) {
             throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_task_attempts');
         }
@@ -196,7 +195,7 @@ class mod_taskchain_storage {
             }
         }
 
-        // regrade the task to take account of the latest task attempt score
+        // Regrade the task to take account of the latest task attempt score.
         $TC->regrade_task();
     }
 
@@ -204,22 +203,21 @@ class mod_taskchain_storage {
      * store_details
      *
      * @param xxx $attempt
-     * @todo Finish documenting this function
      */
     public static function store_details($attempt) {
 
-        // parse the attempt details as xml
+        // Parse the attempt details as xml.
         $details = taskchain_xmlize($attempt->details);
-        $question_number; // initially unset
+        $question_number; // Initially unset.
         $question = false;
         $response  = false;
 
         $i = 0;
         while (isset($details[self::xmlresultstag]['#']['fields']['0']['#']['field'][$i]['#'])) {
-            // shortcut to field
+            // Shortcut to field.
             $field = &$details[self::xmlresultstag]['#']['fields']['0']['#']['field'][$i]['#'];
 
-            // extract field name and data
+            // Extract field name and data.
             if (isset($field['fieldname'][0]['#']) && is_string($field['fieldname'][0]['#'])) {
                 $name = $field['fieldname'][0]['#'];
             } else {
@@ -231,56 +229,56 @@ class mod_taskchain_storage {
                 $data = '';
             }
 
-            // parse the field name into $matches
+            // Parse the field name into $matches
             // [1] task type
-            // [2] attempt detail name
+            // [2] attempt detail name.
             if (preg_match('/^(\w+?)_(\w+)$/', $name, $matches)) {
                 $tasktype = strtolower($matches[1]);
                 $name = strtolower($matches[2]);
 
-                // parse the attempt detail $name into $matches
+                // Parse the attempt detail $name into $matches
                 // [1] question number
-                // [2] question detail name
+                // [2] question detail name.
                 if (preg_match('/^q(\d+)_(\w+)$/', $name, $matches)) {
                     $num = $matches[1];
                     $name = strtolower($matches[2]);
-                    // not needed Moodle 2.0 and later
+                    // Not needed Moodle 2.0 and later
                     // $data = addslashes($data);
 
-                    // adjust JCross question numbers
+                    // Adjust JCross question numbers.
                     if (preg_match('/^(across|down)(.*)$/', $name, $matches)) {
-                        $num .= '_' . $matches[1]; // e.g. 01_across, 02_down
+                        $num .= '_' . $matches[1]; // E.g. 01_across, 02_down.
                         $name = $matches[2];
                         if (substr($name, 0, 1) == '_') {
-                            $name = substr($name, 1); // remove leading '_'
+                            $name = substr($name, 1); // Remove leading '_'.
                         }
                     }
 
                     if (isset($question_number) && $question_number == $num) {
-                        // do nothing - this response is for the same question as the previous response
+                        // Do nothing - this response is for the same question as the previous response.
                     } else {
                         // store previous question / response (if any)
                         self::add_response($attempt, $question, $response);
 
-                        // initialize question object
+                        // Initialize question object.
                         $question = new stdClass();
                         $question->name = '';
                         $question->text = '';
                         $question->taskid = $attempt->taskid;
 
-                        // initialize response object
+                        // Initialize response object.
                         $response = new stdClass();
                         $response->attemptid = $attempt->id;
 
-                        // update question number
+                        // Update question number.
                         $question_number = $num;
                     }
 
-                    // adjust field name and value, and set question type
+                    // Adjust field name and value, and set question type
                     // (may not be necessary one day)
                     // taskchain_adjust_response_field($tasktype, $question, $num, $name, $data);
 
-                    // add $data to the question/response details
+                    // Add $data to the question/response details.
                     switch ($name) {
                         case 'name':
                         case 'type':
@@ -304,11 +302,11 @@ class mod_taskchain_storage {
                             $response->$name = intval($data);
                             break;
                     }
-                } else { // attempt details
+                } else { // Attempt details
                     // adjust field name and value
                     // taskchain_adjust_response_field($tasktype, $question, $num='', $name, $data);
 
-                    // add $data to the attempt details
+                    // Add $data to the attempt details.
                     if ($name == 'penalties') {
                         $attempt->$name = intval($data);
                     }
@@ -318,7 +316,7 @@ class mod_taskchain_storage {
             $i++;
         } // end while
 
-        // add the final question and response, if any
+        // Add the final question and response, if any.
         self::add_response($attempt, $question, $response);
     }
 
@@ -329,38 +327,37 @@ class mod_taskchain_storage {
      * @param xxx $attempt (passed by reference)
      * @param xxx $question (passed by reference)
      * @param xxx $response (passed by reference)
-     * @todo Finish documenting this function
      */
     public static function add_response(&$attempt, &$question, &$response) {
         global $DB;
 
         if (! $question || ! $response || ! isset($question->name)) {
-            // nothing to add
+            // Nothing to add.
             return;
         }
 
         $loopcount = 1;
         $questionname = $question->name;
 
-        // loop until we are able to add the response record
+        // Loop until we are able to add the response record.
         $looping = true;
         while ($looping) {
             $question->md5key = md5($question->name);
             if (! $question->id = $DB->get_field('taskchain_questions', 'id', array('taskid' => $attempt->taskid, 'md5key' => $question->md5key))) {
-                // add question record
+                // Add question record.
                 if (! $question->id = $DB->insert_record('taskchain_questions', $question)) {
                     throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_questions');
                 }
             }
 
             if ($DB->record_exists('taskchain_responses', array('attemptid' => $attempt->id, 'questionid' => $question->id))) {
-                // there is already a response to this question for this attempt
+                // There is already a response to this question for this attempt
                 // probably because this task has two questions with the same text
                 // e.g. Which one of these answers is correct?
 
                 // To workaround this, we create new question names
                 // e.g. Which one of these answers is correct? (2)
-                // until we get a question name for which there is no response yet on this attempt
+                // until we get a question name for which there is no response yet on this attempt.
 
                 $loopcount++;
                 $question->name = "$questionname ($loopcount)";
@@ -369,11 +366,11 @@ class mod_taskchain_storage {
                 // tasks which allow questions to be shuffled or omitted.
                 // As yet, there is no workaround for such cases.
             } else {
-                // no response found to this question in this attempt
-                // so we can proceed
+                // No response found to this question in this attempt
+                // so we can proceed.
                 $response->questionid = $question->id;
 
-                // add response record
+                // Add response record.
                 if (! $response->id = $DB->insert_record('taskchain_responses', $response)) {
                     throw new moodle_exception('error_insertrecord', 'taskchain', '', 'taskchain_responses');
                 }
@@ -387,7 +384,6 @@ class mod_taskchain_storage {
      * does this output format allow task attempts to be reviewed?
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function provide_review() {
         return false;
@@ -398,7 +394,6 @@ class mod_taskchain_storage {
      * does this output format allow task attempts to be resumed?
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function provide_resume() {
         return false;
@@ -410,7 +405,6 @@ class mod_taskchain_storage {
      * show a click trail of what students clicked
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function provide_clickreport() {
         return false;
@@ -422,13 +416,12 @@ class mod_taskchain_storage {
      *
      * @param xxx $TC
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function can_review($TC) {
         if (self::provide_review() && $TC->task->reviewoptions) {
             if ($attempt = $TC->get_taskattempt()) {
                 if ($TC->task->reviewoptions & mod_taskchain::REVIEW_DURINGATTEMPT) {
-                    // during attempt
+                    // During attempt.
                     if ($attempt->status == mod_taskchain::STATUS_INPROGRESS) {
                         return true;
                     }
@@ -446,7 +439,7 @@ class mod_taskchain_storage {
                     }
                 }
                 if ($TC->task->reviewoptions & mod_taskchain::REVIEW_AFTERCLOSE) {
-                    // after the task closes
+                    // After the task closes.
                     if ($TC->task->timeclose < $TC->time) {
                         return true;
                     }
@@ -463,7 +456,6 @@ class mod_taskchain_storage {
      * @param xxx $TC
      * @param xxx $type
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function can_resume($TC, $type) {
         if ($type == 'chain' || ($type == 'task' && self::provide_resume())) {
@@ -481,7 +473,6 @@ class mod_taskchain_storage {
      * @param xxx $TC
      * @param xxx $type
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function can_restart($TC, $type) {
         if (isset($TC->$type) && $TC->$type->attemptlimit) {
@@ -499,7 +490,6 @@ class mod_taskchain_storage {
      *
      * @param xxx $TC
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function can_continue($TC) {
         if (self::can_resume($TC, 'chain')) {
@@ -521,7 +511,6 @@ class mod_taskchain_storage {
      *
      * @param xxx $TC
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function can_clickreport($TC) {
         if (self::provide_clickreport() && isset($TC->task) && $TC->task->clickreporting) {

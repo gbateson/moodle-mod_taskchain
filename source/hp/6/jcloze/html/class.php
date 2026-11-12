@@ -43,36 +43,35 @@ class taskchain_source_hp_6_jcloze_html extends taskchain_source_hp_6_jcloze {
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (! preg_match('/\.html?$/', $this->file->get_filename())) {
-            // wrong file type
+            // Wrong file type.
             return false;
         }
 
         if (! $this->get_filecontents()) {
-            // empty or non-existant file
+            // Empty or non-existant file.
             return false;
         }
 
         if (! strpos($this->filecontents, '<div id="MainDiv" class="StdDiv">')) {
-            // not an hp6 file
+            // Not an hp6 file.
             return false;
         }
 
         if (! strpos($this->filecontents, '<div id="ClozeDiv">')) {
-            // not a jcloze file
+            // Not a jcloze file.
             return false;
         }
 
         if (strpos($this->filecontents, 'function Create_StateArray()')) {
-            // a Rottmeier DropDown or FindIt file
+            // A Rottmeier DropDown or FindIt file.
             return false;
         }
 
         if (strpos($this->filecontents, 'function Add_GlossFunctionality()')) {
-            // a Rottmeier JGloss file
+            // A Rottmeier JGloss file.
             return false;
         }
 

@@ -49,8 +49,6 @@ class mod_taskchain_attempt_hp_6_jmatch_html_sort_renderer extends mod_taskchain
 
     /**
      * fix_headcontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_headcontent() {
         $this->fix_headcontent_DragAndDrop();

@@ -38,16 +38,20 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_hp_6_renderer {
+    /** @var string */
     public $js_object_type = 'Rhubarb';
 
+    /** @var string */
     public $templatefile = 'rhubarb6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList|FreeWordsArray|WordsArray';
 
-    // Glossary autolinking settings
+    /** @var string Glossary autolinking settings */
     public $headcontent_strings = 'strFinished|YourScoreIs|strTimesUp';
+    /** @var string */
     public $headcontent_arrays = 'Words';
 
-    // TexToys do not have a SubmissionTimeout variable
+    /** @var bool TexToys do not have a SubmissionTimeout variable */
     public $hasSubmissionTimeout = false;
 
     /**
@@ -55,7 +59,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
@@ -64,11 +67,9 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
 
     /**
      * fix_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
-        // switch off auto complete on Rhubarb text boxes
+        // Switch off auto complete on Rhubarb text boxes.
         $search = '/<form id="Rhubarb"([^>]*)>/';
         if (preg_match($search, $this->bodycontent, $matches, PREG_OFFSET_CAPTURE)) {
             $match = $matches[1][0];
@@ -84,10 +85,9 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'TypeChars,Hint,CheckWord,CheckFinished,TimesUp';
         return $names;
@@ -99,7 +99,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_TimesUp(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -118,7 +117,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * fix_js_TypeChars_init
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_TypeChars_init() {
         return "	var obj = document.getElementById('Guess');\n";
@@ -128,7 +126,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * fix_js_TypeChars_obj
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_TypeChars_obj() {
         return 'obj';
@@ -140,12 +137,11 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_Hint(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // intercept Hints
+        // Intercept Hints.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
                 . "	if (! AllDone) {\n"
@@ -164,12 +160,11 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckWord(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // intercept Hints
+        // Intercept Hints.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
                 . "	if (! AllDone && InputWord.length) {\n"
@@ -188,7 +183,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckFinished(&$str, $start, $length) {
         parent::fix_js_CheckAnswers($str, $start, $length);
@@ -198,10 +192,9 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * get_stop_function_intercept
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_intercept() {
-        // intercept is not required in the giveup function of Rhubarb
+        // Intercept is not required in the giveup function of Rhubarb
         // because the checks are intercepted by CheckFinished (see above)
         return '';
     }
@@ -210,7 +203,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
         return 'CheckFinished';
@@ -220,7 +212,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * get_stop_function_args
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_args() {
         return 'HP.EVENT_ABANDONED';
@@ -230,7 +221,6 @@ class mod_taskchain_attempt_hp_6_rhubarb_renderer extends mod_taskchain_attempt_
      * get_stop_function_search
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_search() {
         return '/\s*if \((Done) == true\)(\{.*?)\}/s';

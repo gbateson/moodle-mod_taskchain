@@ -41,28 +41,38 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
     /**
      * delay fix for audio loader until tiles have
      * been created, shuffled and possibly deleted
+     * @var bool
      */
     protected $fix_audio_immediately = false;
 
+    /** @var string */
     public $icon = 'pix/f/jmt.gif';
+    /** @var string */
     public $js_object_type = 'JMatch';
 
+    /** @var string */
     public $templatefile = 'jmatch6.ht_';
+    /** @var string */
     public $templatestrings = 'PreloadImageList|QsToShow|FixedArray|DragArray';
 
+    /** @var array */
     public $l_items = array();
+    /** @var array */
     public $r_items = array();
 
-    // Glossary autolinking settings
+    /** @var string Glossary autolinking settings */
     public $headcontent_strings = 'CorrectResponse|IncorrectResponse|YourScoreIs|F|D';
+    /** @var string */
     public $headcontent_arrays = '';
 
+    /** @var array */
     public $response_text_fields = array(
-        'correct', 'wrong', // remove: ignored
+        'correct', 'wrong', // Remove: ignored.
     );
 
+    /** @var array */
     public $response_num_fields = array(
-        'checks', // remove: score, weighting, hints, clues
+        'checks', // Remove: score, weighting, hints, clues.
     );
 
     /**
@@ -70,7 +80,6 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
@@ -79,8 +88,6 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
 
     /**
      * fix_headcontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_headcontent() {
         $this->fix_headcontent_DragAndDrop();
@@ -88,11 +95,9 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
 
     /**
      * fix_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
-        // remove instructions if they are not required
+        // Remove instructions if they are not required.
         $search = '/\s*<div id="InstructionsDiv" class="StdDiv">\s*<div id="Instructions">\s*<\/div>\s*<\/div>/s';
         $this->bodycontent = preg_replace($search, '', $this->bodycontent, 1);
 
@@ -105,17 +110,14 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_WriteToInstructions(&$str, $start, $length) {
-        // remove this function from JMatch as it is not used
+        // Remove this function from JMatch as it is not used.
         $str = substr_replace($str, '', $start, $length);
     }
 
     /**
      * fix_bodycontent_DragAndDrop
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent_DragAndDrop() {
         $search = '/for \(var i=0; i<F\.length; i\+\+\)\{.*?\}/s';
@@ -183,14 +185,13 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * fix_js_StartUp_DragAndDrop
      *
      * @param xxx $substr (passed by reference)
-     * @todo Finish documenting this function
      */
     public function fix_js_StartUp_DragAndDrop(&$substr) {
 
-        // fix top and left of drag area
+        // Fix top and left of drag area.
         $this->fix_js_StartUp_DragAndDrop_DragArea($substr);
 
-        // stretch the canvas vertically down
+        // Stretch the canvas vertically down.
         if ($pos = strrpos($substr, '}')) {
             $insert = ''
             . "	var b = 0;\n"
@@ -230,10 +231,9 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'CardSetHTML,beginDrag,doDrag,endDrag,CheckAnswers';
         return $names;
@@ -243,7 +243,6 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
         return 'CheckAnswers';
@@ -254,7 +253,6 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * for drag-and-drop JMatch and JMix
      *
      * @return string
-     * @todo Finish documenting this function
      */
     public function get_beginDrag_target() {
         return 'DC[CurrDrag]';
@@ -264,14 +262,13 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * fix_js_StartUp_DragAndDrop_Flashcard
      *
      * @param xxx $substr (passed by reference)
-     * @todo Finish documenting this function
      */
     public function fix_js_StartUp_DragAndDrop_Flashcard(&$substr) {
 
-        // fix top and left of drag area
+        // Fix top and left of drag area.
         $this->fix_js_StartUp_DragAndDrop_DragArea($substr);
 
-        // stretch the canvas vertically down
+        // Stretch the canvas vertically down.
         if ($pos = strrpos($substr, '}')) {
             $insert = ''
             . "	var canvas = document.getElementById('$this->themecontainer');\n"
@@ -293,7 +290,6 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * fix_mediafilter_onload_extra_Flashcard
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_mediafilter_onload_extra_Flashcard() {
         return ''
@@ -312,7 +308,6 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_DeleteItem_Flashcard(&$str, $start, $length) {
         $event = $this->get_send_results_event();
@@ -348,7 +343,6 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowItem_Flashcard(&$str, $start, $length) {
 
@@ -371,11 +365,9 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
 
     /**
      * fix_title_rottmeier_JMemori
-     *
-     * @todo Finish documenting this function
      */
     public function fix_title_rottmeier_JMemori() {
-        // extract the current title
+        // Extract the current title.
         $search = '/(<span class="ExerciseTitle">)\s*(.*?)\s*(<\/span>)/is';
         if (preg_match($search, $this->bodycontent, $matches)) {
             $title = $this->get_title();
@@ -393,12 +385,11 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_WriteFeedback_JMemori(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // replace code for hiding elements
+        // Replace code for hiding elements.
         $search = '/(\s*)if \(is\.ie\){.*?}.*?}.*?}/s';
         $replace = '$1'
             . "ShowElements(false, 'input');" . '$1'
@@ -411,7 +402,7 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
             . "}";
         $substr = preg_replace($search, $replace, $substr, 1);
 
-        // add ShowElements() function
+        // Add ShowElements() function.
         $substr = ''
             . "function ShowElements(Show, TagName, ContainerToReverse){\n"
             . "	if (ContainerToReverse) {\n"
@@ -453,14 +444,13 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_HideFeedback_JMemori(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         parent::fix_js_HideFeedback($substr, 0, strlen($substr));
 
-        // replace code for showing elements
+        // Replace code for showing elements.
         $search = '/(\s*)if \(is\.ie\){.*?}.*?}.*?}/s';
         $replace = '$1'
             . "ShowElements(true, 'input');" . '$1'
@@ -482,7 +472,6 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowSolution_JMemori(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -499,7 +488,6 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckPair_JMemori(&$str, $start, $length) {
         $substr = substr($str, $start, $length);

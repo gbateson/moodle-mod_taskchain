@@ -43,7 +43,6 @@ class taskchain_source_hp_6_jcloze_html_findit extends taskchain_source_hp_6_jcl
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         return false;

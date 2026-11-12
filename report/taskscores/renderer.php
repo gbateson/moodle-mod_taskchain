@@ -38,10 +38,12 @@ require_once($CFG->dirroot . '/mod/taskchain/report/taskscore/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_report_taskscores_renderer extends mod_taskchain_report_taskscore_renderer {
+    /** @var string */
     public $mode = 'taskscores';
 
-    /** id param name and table name */
+    /** @var string id param name and table name */
     public $id_param_name = 'taskid';
+    /** @var string */
     public $id_param_table = 'taskchain_tasks';
 
     /**
@@ -54,7 +56,6 @@ class mod_taskchain_report_taskscores_renderer extends mod_taskchain_report_task
      * @param  integer  $userid  (optional, default=0)
      * @param  object   $record  (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function select_sql_record(&$select, &$from, &$where, &$params, $userid = 0, $record = null) {
         $from = '{taskchain_task_attempts} tc_tsk_att ' .
@@ -62,7 +63,7 @@ class mod_taskchain_report_taskscores_renderer extends mod_taskchain_report_task
                 ' JOIN {taskchain_task_scores} tc_tsk_scr ON (tc_tsk_scr.taskid = tc_tsk.id AND ' .
                                                              'tc_tsk_scr.userid = tc_tsk_att.userid)';
 
-        // restrict sql to a specific taskscore /user
+        // Restrict sql to a specific taskscore /user.
         if ($record) {
             $where  = 'tc_tsk.id = ?';
             $params = array($record->id);

@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/columnlists.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_edit_columnlists_form extends moodleform {
-    /** TaskChain form helper - see mod/taskchain/form/helper/base.php **/
+    /** @var mixed TaskChain form helper - see mod/taskchain/form/helper/base.php * */
     private $form_helper;
 
     /**
@@ -47,7 +47,7 @@ class mod_taskchain_edit_columnlists_form extends moodleform {
     public function definition() {
         global $TC;
 
-        // set up TaskChain form helper
+        // Set up TaskChain form helper.
         $type = $TC->get_columnlisttype();
         $lists = $TC->get_columnlists($type);
         switch ($type) {
@@ -58,14 +58,14 @@ class mod_taskchain_edit_columnlists_form extends moodleform {
                 $context = $TC->coursemodule->context;
                 break;
             default:
-                $context = null; // shouldn't happen !!
+                $context = null; // Shouldn't happen !!
         }
         $this->form_helper = new taskchain_form_helper_columnlists($this->_form, $context, $type);
 
-        // add form sections
+        // Add form sections.
         $this->form_helper->add_sections();
 
-        // add action buttons
+        // Add action buttons.
         $this->form_helper->add_action_buttons();
     }
 
@@ -88,7 +88,6 @@ class mod_taskchain_edit_columnlists_form extends moodleform {
      * @param xxx $data (passed by reference)
      * @param xxx $files
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);

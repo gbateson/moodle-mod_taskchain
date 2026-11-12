@@ -38,14 +38,15 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/records.php');
  * @package    mod_taskchain
  */
 class taskchain_form_helper_chains extends taskchain_form_helper_records {
+    /** @var string */
     protected $recordtype = 'course';
+    /** @var string */
     protected $recordstype = 'chain';
+    /** @var array */
     protected $actions = array('applydefaults' => true);
 
     /**
      * add_action_applydefaults_details
-     *
-     * @todo Finish documenting this function
      */
     protected function add_action_applydefaults_details() {
         $field = 'applydefaults';
@@ -77,7 +78,7 @@ class taskchain_form_helper_chains extends taskchain_form_helper_records {
             $filtername = 'filter' . $filter;
             $filterlabel = $this->get_fieldlabel($filter);
             $name_filter = $this->get_fieldname($field . '_' . $filtername);
-            $name_disabled = ''; // may be set below
+            $name_disabled = ''; // May be set below.
 
             if ($filter == 'coursename') {
                 $courseid = $this->TC->get_courseid();
@@ -128,7 +129,6 @@ class taskchain_form_helper_chains extends taskchain_form_helper_records {
      *
      * @return array taskchains $ids of records to be selected
      * @return array ($select, $from, $where, $params) to be passed to $DB->get_records_sql()
-     * @todo Finish documenting this function
      */
     protected function get_filter_sql($ids) {
         global $DB;
@@ -147,9 +147,8 @@ class taskchain_form_helper_chains extends taskchain_form_helper_records {
      * get_filter_params
      *
      * @return array ($formfield => $dbfield) of params to pass to $this->get_filter()
-     * @todo Finish documenting this function
      */
-    function get_filter_params($field) {
+    public function get_filter_params($field) {
         return array($field . '_filteractivityname' => 'tc.name');
     }
 }

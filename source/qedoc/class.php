@@ -43,26 +43,24 @@ class taskchain_source_qedoc extends taskchain_source {
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
-        // e.g. http://www.qedoc.net/library/PLJUB_019.zip
+        // E.g. http://www.qedoc.net/library/PLJUB_019.zip.
         $search = '/http:\/\/www\.qedoc.(?:com|net)\/library\/\w+\.zip/i';
-        if (preg_match($search, $this->file->get_source())) { // url ?
+        if (preg_match($search, $this->file->get_source())) { // Url ?
             return true;
         } else {
             return false;
         }
 
         // Note: we may want to detect the following as well:
-        // http://www.qedoc.net/qqp/jnlp/PLJUB_019.jnlp
+        // http://www.qedoc.net/qqp/jnlp/PLJUB_019.jnlp.
     }
 
     /**
      * get_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_name() {
         return $this->file->get_filename();
@@ -72,7 +70,6 @@ class taskchain_source_qedoc extends taskchain_source {
      * get_title
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_title() {
         return $this->file->get_filename();

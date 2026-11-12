@@ -38,30 +38,29 @@ require_once($CFG->dirroot . '/mod/taskchain/source/html/class.php');
  * @package    mod_taskchain
  */
 class taskchain_source_html_xerte extends taskchain_source_html {
-    // properties of the icon for this source file type
-    var $icon = 'mod/taskchain/file/html/xerte/icon.gif';
+    /** @var string properties of the icon for this source file type */
+    public $icon = 'mod/taskchain/file/html/xerte/icon.gif';
 
-    // xmlized content of template.xml
-    var $template_xml = null;
+    /** @var mixed xmlized content of template.xml */
+    public $template_xml = null;
 
     /**
      * returns taskchain_file object if $filename is a task file, or false otherwise
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (! preg_match('/\.html?$/', $this->file->get_filename())) {
-            // not an html file
+            // Not an html file.
             return false;
         }
         if (! $this->get_filecontents()) {
-            // empty or non-existant file
+            // Empty or non-existant file.
             return false;
         }
 
-        // Xerte Flash format
+        // Xerte Flash format.
         if (preg_match('/<script[^>]*src\s*=\s*"[^"]*rloObject.js"[^>]*>/', $this->filecontents)) {
             // myRLO = new rloObject('800','600','template.rlt');
             // myRLO = new rloObject('800','600','numbers_3.rlo');
@@ -70,13 +69,13 @@ class taskchain_source_html_xerte extends taskchain_source_html {
             return preg_match($search, $this->filecontents);
         }
 
-        // Xerte HTML5 offline format
+        // Xerte HTML5 offline format.
         if (preg_match('/<script[^>]*src\s*=\s*"[^"]*offlinesupport.js"[^>]*>/', $this->filecontents)) {
             $search = '/<body[^"]*onload\s*=\s*"XTInitialise\(\);"[^"]*onbeforeunload\s*=\s*"XTTerminate\(\);"[^>]*>/';
             return preg_match($search, $this->filecontents);
         }
 
-        // not a recognized Xerte file
+        // Not a recognized Xerte file.
         return false;
     }
 
@@ -84,7 +83,6 @@ class taskchain_source_html_xerte extends taskchain_source_html {
      * get_template_xml
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_template_xml() {
         if (is_null($this->template_xml)) {
@@ -99,7 +97,6 @@ class taskchain_source_html_xerte extends taskchain_source_html {
      * @param xxx $tags
      * @param xxx $default (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_template_value($tags, $default = null) {
         $value = $this->get_template_xml();
@@ -119,7 +116,6 @@ class taskchain_source_html_xerte extends taskchain_source_html {
      * get_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_name() {
         $tags = array('learningObject', '@', 'name');
@@ -133,7 +129,6 @@ class taskchain_source_html_xerte extends taskchain_source_html {
      * get_displayMode
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_displayMode() {
         $tags = array('learningObject', '@', 'displayMode');
@@ -144,7 +139,6 @@ class taskchain_source_html_xerte extends taskchain_source_html {
      * get_entrytext
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_entrytext() {
         return '';
@@ -154,7 +148,6 @@ class taskchain_source_html_xerte extends taskchain_source_html {
      * get_entrytext
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_exittext() {
         return '';

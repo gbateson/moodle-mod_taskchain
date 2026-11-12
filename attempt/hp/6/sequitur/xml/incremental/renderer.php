@@ -42,7 +42,6 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_incremental_renderer extends mod_t
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
         $names = parent::get_js_functionnames();

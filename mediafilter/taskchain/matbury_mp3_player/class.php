@@ -35,13 +35,18 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_mediaplayer_matbury_mp3_player extends taskchain_mediaplayer {
+    /** @var array */
     public $aliases = array('matbury');
+    /** @var string */
     public $playerurl = 'matbury_mp3_player/matbury_mp3_player.swf';
+    /** @var string */
     public $flashvars_paramname = 'mp3url';
+    /** @var array */
     public $more_options = array(
         'width' => 200, 'height' => 18, 'majorversion' => 9, 'build' => 115,
         'timesToPlay' => 1, 'showPlay' => 'true', 'waitToPlay' => 'true',
     );
+    /** @var array */
     public $flashvars = array(
         'timesToPlay' => PARAM_INT, 'showPlay' => PARAM_ALPHANUM, 'waitToPlay' => PARAM_ALPHANUM,
     );

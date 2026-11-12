@@ -62,51 +62,72 @@ function taskchain_get_mediaplugin_filter($context, $localconfig = array()) {
  * @package    mod_taskchain
  */
 class taskchain_mediafilter {
-    // media filetypes that this filter can handle
-    // this initial list is of the file types that Moodle's standard mediaplugin can handle
-    // media file types specified by individual media players will be added to this list
+    /**
+     * media filetypes that this filter can handle
+     * this initial list is of the file types that Moodle's standard mediaplugin can handle
+     * media file types specified by individual media players will be added to this list
+     *
+     * @var array
+     */
     public $media_filetypes = array(
         // any params allowed (flash audio/video, html5 audio/video)
-        'aac' => 'any', 'f4v' => 'any', 'flv' => 'any', 'm4a' => 'any', 'm4v' => 'any',
-        'mp4' => 'any', 'oga' => 'any', 'ogg' => 'any', 'ogv' => 'any', 'webm' => 'any',
-        // only "d=WIDTHxHEIGHT" param allowed in moodle filter
+        // (Note: m4a, m4v and mp4 were also listed here, but they are overridden below)
+        'aac' => 'any', 'f4v' => 'any', 'flv' => 'any',
+        'oga' => 'any', 'ogg' => 'any', 'ogv' => 'any', 'webm' => 'any',
+        // Only "d=WIDTHxHEIGHT" param allowed in moodle filter.
         'avi' => 'size', 'm4v' => 'size', 'm4a' => 'size', 'mov' => 'size',
         'mp4' => 'size', 'mpeg' => 'size', 'mpg' => 'size', 'swf' => 'size', 'wmv' => 'size',
-        // no params allowed in moodle filter
+        // No params allowed in moodle filter.
         'mp3' => 'none', 'ra' => 'none', 'ram' => 'none', 'rm' => 'none', 'rv' => 'none',
     );
 
+    /** @var string */
     public $param_names = 'movie|song_url|src|url';
-    // wmp        : url
-    // quicktime  : src
-    // realplayer : src
-    // flash      : movie
-    // other      : song_url
+    /**
+     * wmp        : url
+     * quicktime  : src
+     * realplayer : src
+     * flash      : movie
+     * other      : song_url
+     *
+     * @var string
+     */
 
     public $tagopen = '(?:(<)|(\\\\u003C))'; // left angle-bracket (uses two parenthese)
-    public $tagchars = '(?(1)[^>]|(?(2).(?!\\\\u003E)))*?';  // string of chars inside the tag
+    /** @var string string of chars inside the tag */
+    public $tagchars = '(?(1)[^>]|(?(2).(?!\\\\u003E)))*?';  // String of chars inside the tag.
+    /** @var string right angle-bracket (to match the left one) */
     public $tagclose = '(?(1)>|(?(2)\\\\u003E))'; // right angle-bracket (to match the left one)
+    /** @var string another left angle-bracket (to match the first one) */
     public $tagreopen = '(?(1)<|(?(2)\\\\u003C))'; // another left angle-bracket (to match the first one)
     // $tagopen = '(?:(<)|(&lt;)|(&amp;#x003C;))';
     // $tagclose = '(?(2)>|(?(3)&gt;|(?(4)&amp;#x003E;)))';
 
+    /** @var string */
     public $link_search = '';
+    /** @var string */
     public $object_search = '';
+    /** @var array */
     public $object_searches = array();
 
+    /** @var string */
     public $js_inline = '';
+    /** @var string */
     public $js_external = '';
 
+    /** @var array */
     public $players  = array();
+    /** @var string */
     public $defaultplayer = 'moodle';
 
+    /** @var array */
     public $moodle_flashvars = array('waitForPlay', 'autoPlay', 'buffer');
     // bgColour, btnColour, btnBorderColour,
     // iconColour, iconOverColour,
     // trackColour, handleColour, loaderColour,
-    // waitForPlay, autoPlay, buffer
+    // waitForPlay, autoPlay, buffer.
 
-    // constructor function
+    // Constructor function.
 
     /**
      * __construct
@@ -121,14 +142,14 @@ class taskchain_mediafilter {
         $flashvars_paramnames = array();
         $querystring_paramname = array();
 
-        $players = get_list_of_plugins('mod/taskchain/mediafilter/taskchain'); // sorted
+        $players = get_list_of_plugins('mod/taskchain/mediafilter/taskchain'); // Sorted.
         foreach ($players as $player) {
             $filepath = $CFG->dirroot . '/mod/taskchain/mediafilter/taskchain/' . $player . '/class.php';
             if (file_exists($filepath) && include_once($filepath)) {
                 $playerclass = 'taskchain_mediaplayer_' . $player;
                 $this->players[$player] = new $playerclass();
 
-                // note the names urls in flashvars and querystring
+                // Note the names urls in flashvars and querystring.
                 if ($name = $this->players[$player]->flashvars_paramname) {
                     $flashvars_paramnames[$name] = true;
                 }
@@ -136,12 +157,12 @@ class taskchain_mediafilter {
                     $querystring_paramnames[$name] = true;
                 }
 
-                // add aliases to this player
+                // Add aliases to this player.
                 foreach ($this->players[$player]->aliases as $alias) {
                     $this->players[$alias] =&$this->players[$player];
                 }
 
-                // add any new media file types
+                // Add any new media file types.
                 foreach ($this->players[$player]->media_filetypes as $filetype) {
                     if (! array_key_exists($filetype, $this->media_filetypes)) {
                         $this->media_filetypes[$filetype] = '';
@@ -153,32 +174,32 @@ class taskchain_mediafilter {
         $filetypes = implode('|', array_keys($this->media_filetypes));
         $filepath = '[^"' . "'?]*" . '\.(' . $filetypes . ')[^"' . "']*";
 
-        // detect backslash before double quotes and slashes within JavaScript
+        // Detect backslash before double quotes and slashes within JavaScript.
         $escape = '(?:\\\\)?';
 
-        // search string to extract <a> tags
+        // Search string to extract <a> tags.
         $this->link_search = '/' . $this->tagopen . 'a' . '\s+' . $this->tagchars . 'href=' . $escape . '"(' . $filepath . ')' . $escape . '"' . $this->tagchars . $this->tagclose . '.*?' . $this->tagreopen . $escape . '\/a' . $this->tagclose . '/is';
 
-        // search string to extract <object> or <embed> tags
+        // Search string to extract <object> or <embed> tags.
         $this->object_search = '/' . $this->tagopen . '(object|embed)' . '\s' . $this->tagchars . $this->tagclose . '(.*?)(?:' . $this->tagreopen . '(?:\\\\)?' . '\/\3' . $this->tagclose . ')+/is';
 
-        // search Flashvars with specific names
+        // Search Flashvars with specific names
         // $flashvars_paramnames e.g. TheSound
-        // e.g. param name="Flashvars" value="TheSound=abc.mp3"
+        // e.g. param name="Flashvars" value="TheSound=abc.mp3".
         if ($flashvars_paramnames = implode('|', array_keys($flashvars_paramnames))) {
             $this->object_searches[] = '/' . $this->tagopen . 'param' . '\s+' . $this->tagchars . 'name=' . $escape . '"FlashVars' . $escape . '"' . $this->tagchars . 'value=' . $escape . '"(?:' . $flashvars_paramnames . ')=(' . $filepath . ')' . $escape . '"' . $this->tagchars . $this->tagclose . '/is';
         }
 
-        // html tags and attributes to search for urls
+        // Html tags and attributes to search for urls.
         $tags = array(
             'object' => 'data', 'embed' => 'src', 'a' => 'href',
         );
 
-        // search for specific querystrings
+        // Search for specific querystrings
         // e.g. param name="movie" value="player.swf?mp3=abc.mp3"
         // e.g. object data="player.swf?mp3=abc.mp3"
         // e.g. embed src="player.swf?mp3=abc.mp3"
-        // e.g. a href="player.swf?mp3=abc.mp3"
+        // e.g. a href="player.swf?mp3=abc.mp3".
         if ($querystring_paramnames = implode('|', array_keys($querystring_paramnames))) {
             $querystring_filepath = '[^"' . "'?]*" . '\?[^"' . "']*(?:$querystring_paramnames)=($filepath)" . '[^"' . "']*";
 
@@ -190,11 +211,11 @@ class taskchain_mediafilter {
             }
         }
 
-        // search for full urls
+        // Search for full urls
         // e.g. param name="movie" value="abc.mp3"
         // e.g. object data="mp3=abc.mp3"
         // e.g. embed src="abc=abc.mp3"
-        // e.g. a href="abc=abc.mp3"
+        // e.g. a href="abc=abc.mp3".
         if ($this->param_names) {
             $this->object_searches[] = '/' . $this->tagopen . 'param' . '\s+' . $this->tagchars . 'name=' . $escape . '"(?:' . $this->param_names . ')' . $escape . '"' . $this->tagchars . 'value=' . $escape . '"(' . $filepath . ')' . $escape . '"' . $this->tagchars . $this->tagclose . '/is';
         }
@@ -202,16 +223,16 @@ class taskchain_mediafilter {
             $this->object_searches[] = '/' . $this->tagopen . $tag . '\s+' . $this->tagchars . $attribute . '=' . $escape . '"(' . $filepath . ')' . $escape . '"' . $this->tagchars . $this->tagclose . '.*?' . $this->tagreopen . $escape . '\/' . $tag . $this->tagclose . '/is';
         }
 
-        // check player settings
+        // Check player settings.
         $names = array_keys($this->players);
         foreach ($names as $name) {
-            // convert  player url to absolute url
+            // Convert  player url to absolute url.
             $player = &$this->players[$name];
             if ($player->playerurl && ! preg_match('/^(?:https?:)?\/+/i', $player->playerurl)) {
                 $player->playerurl = $CFG->wwwroot . '/mod/taskchain/mediafilter/taskchain/' . $player->playerurl;
             }
 
-            // set basic flashvars settings
+            // Set basic flashvars settings.
             $options = &$player->options;
             if (is_null($options['flashvars'])) {
                 if (empty($THEME->filter_mediaplugin_colors)) {
@@ -222,7 +243,7 @@ class taskchain_mediafilter {
                         . 'trackColour=cccccc&' . 'handleColour=ffffff&'
                         . 'loaderColour=ffffff&' . 'waitForPlay=yes';
                 } else {
-                    // You can set this up in your theme/xxx/config.php
+                    // You can set this up in your theme/xxx/config.php.
                     $options['flashvars'] = $THEME->filter_mediaplugin_colors;
                 }
                 $options['flashvars'] = htmlspecialchars($options['flashvars']);
@@ -303,7 +324,7 @@ class taskchain_mediafilter {
         }
         $url = preg_replace($search, '$1', $url, 1);
 
-        // create new media player for this media file
+        // Create new media player for this media file.
         $player = $this->get_defaultplayer($url, $filetype);
         if ($player == 'moodle' && isset($this->media_filetypes[$filetype])) {
             $allow = $this->media_filetypes[$filetype];
@@ -327,7 +348,7 @@ class taskchain_mediafilter {
      * @param xxx $text
      */
     public function fix_specials($text, $output) {
-        // search for [url   player   width   height   options]
+        // Search for [url   player   width   height   options]
         // url : the (relative or absolute) url of the media file
         // player : string of alpha chars (underscore and hyphen are also allowed)
         // "img" or "image" : insert an <img> tag for this url
@@ -338,7 +359,7 @@ class taskchain_mediafilter {
         // width : the required display width (e.g. 50 or 50px or 10em)
         // height : the required display height (e.g. 25 or 25px or 5em)
         // options : xx OR xx= OR xx=abc123 OR xx="a b c 1 2 3"
-        // Note: only url is required; others values are optional
+        // Note: only url is required; others values are optional.
         $filetypes = implode('|', array_keys($this->media_filetypes));
         $search = ''
             . '/\[\s*'
@@ -371,11 +392,11 @@ class taskchain_mediafilter {
         $options = trim($match[5]);
         $space = trim($match[6]);
 
-        // convert $url to $absoluteurl
+        // Convert $url to $absoluteurl.
         $absoluteurl = $output->convert_url_relative($url);
         // $absoluteurl = $output->convert_url($url, '');
 
-        // set height equal to width, if necessary
+        // Set height equal to width, if necessary.
         if ($width && ! $height) {
             $height = $width;
         }
@@ -395,7 +416,7 @@ class taskchain_mediafilter {
         // $options_array will be passed to mediaplugin_filter
         $options_array = array();
 
-        // add $player, $width and $height to $option_array
+        // Add $player, $width and $height to $option_array.
         if ($player == 'movie' || $player == 'object') {
             $options_array['movie'] = $absoluteurl;
             $options_array['skipmediaurl'] = true;
@@ -413,7 +434,7 @@ class taskchain_mediafilter {
             $options_array['height'] = $height;
         }
 
-        // transfer $options to $option_array
+        // Transfer $options to $option_array.
         if (preg_match_all('/([^ =\]]+)(=((?:\\\\?"[^"]*")|\w*))?/s', $options, $matches)) {
             $i_max = count($matches[0]);
             for ($i = 0; $i < $i_max; $i++) {
@@ -421,12 +442,12 @@ class taskchain_mediafilter {
                 if ($matches[2][$i]) {
                     $options_array[$name] = trim($matches[3][$i], '"\\');
                 } else {
-                    $options_array[$name] = true; // boolean switch
+                    $options_array[$name] = true; // Boolean switch.
                 }
             }
         }
 
-        // remove trailing space if player is to be centered or hidden
+        // Remove trailing space if player is to be centered or hidden.
         if (! empty($options_array['center']) || ! empty($options_array['hide'])) {
             $space = '';
         }
@@ -476,12 +497,12 @@ class taskchain_mediafilter {
             $unicode = $options['unicode'];
         }
 
-        // set player default, if necessary
+        // Set player default, if necessary.
         if (empty($options['player']) || empty($this->players[$options['player']])) {
             $options['player'] = $this->defaultplayer;
         }
 
-        // hide player if required
+        // Hide player if required.
         if (array_key_exists('hide', $options)) {
             if ($options['hide']) {
                 $options['width'] = 1;
@@ -495,15 +516,15 @@ class taskchain_mediafilter {
             unset($options['center']);
         }
 
-        // call filter to add media player
+        // Call filter to add media player.
         if (empty($options['movie']) && $options['player'] == 'moodle') {
             $filter = taskchain_get_mediaplugin_filter($TC->coursemodule->context, array());
             $object = $filter->filter($link);
 
             if ($object == $link) {
-                // do nothing
+                // Do nothing.
             } else if ($eolas_fix_applied == $TC->task->id) {
-                // eolas_fix.js and ufo.js have already been added for this task
+                // Eolas_fix.js and ufo.js have already been added for this task.
             } else {
                 if ($eolas_fix_applied == 0) {
                     // 1st quiz - eolas_fix.js was added by filter/mediaplugin/filter.php
@@ -533,20 +554,20 @@ class taskchain_mediafilter {
             $object = $this->mediaplugin_filter($TC->taskchain, $link, $options);
         }
 
-        // center content if required
+        // Center content if required.
         if (array_key_exists('iconlink', $options)) {
             if ($options['iconlink'] && preg_match('/href="([^"]*)"/', $link, $matches)) {
-                // create audio icon
+                // Create audio icon.
                 if (method_exists($PAGE->theme, 'image_url')) {
-                    $image_url = 'image_url'; // Moodle >= 3.3
+                    $image_url = 'image_url'; // Moodle >= 3.3.
                 } else {
-                    $image_url = 'pix_url'; // Moodle <= 3.2
+                    $image_url = 'pix_url'; // Moodle <= 3.2.
                 }
                 $img = $PAGE->theme->$image_url('f/audio', 'core')->out();
                 $style = 'border-style: none; border-left: 4px solid transparent;';
                 $img = html_writer::empty_tag('img', array('src' => $img, 'title' => 'audio', 'style' => $style));
 
-                // append link to audio
+                // Append link to audio.
                 $onclick = "this.target='iconlink'; " .
                            "var w = Math.min(600, screen.width); " .
                            "var h = Math.min(60, screen.height); " .
@@ -561,7 +582,7 @@ class taskchain_mediafilter {
             unset($options['iconlink'], $matches, $onclick, $img, $style);
         }
 
-        // center content if required
+        // Center content if required.
         if (array_key_exists('center', $options)) {
             if ($options['center']) {
                 $object = '<div style="text-align:center;">' . $object . '</div>';
@@ -570,35 +591,35 @@ class taskchain_mediafilter {
         }
 
         // if required, remove the link contained in the object tag
-        // Note: strcmp() returns true if strings are different
+        // Note: strcmp() returns true if strings are different.
         $player = $options['player'];
         if ($this->players[$player]->removelink && strcmp($object, $link)) {
             $search = '/<a href="[^"]*"[^>]*>[^<]*<\/a>\s*/is';
             $object = preg_replace($search, '', $object);
         }
 
-        // extract the external javascripts
+        // Extract the external javascripts.
         $search = '/\s*<script[^>]*src[^>]*>.*?<\/script>\s*/is';
         if (preg_match_all($search, $object, $scripts, PREG_OFFSET_CAPTURE)) {
             foreach (array_reverse($scripts[0]) as $script) {
                 // $script: [0] = matched string, [1] = offset to start of string
                 // remove the javascript from the player
                 $object = substr_replace($object, "\n", $script[1], strlen($script[0]));
-                // store this javascript so it can be run later
+                // Store this javascript so it can be run later.
                 $this->js_external = trim($script[0]) . "\n" . $this->js_external;
             }
         }
 
-        // extract the inline javascripts
+        // Extract the inline javascripts.
         $search = '/\s*<script[^>]*>.*?<\/script>\s*/is';
         if (preg_match_all($search, $object, $scripts, PREG_OFFSET_CAPTURE)) {
             foreach (array_reverse($scripts[0]) as $script) {
                 list($script, $start) = $script;
-                // remove the script from the player
+                // Remove the script from the player.
                 $object = substr_replace($object, "\n", $start, strlen($script));
                 // format the script (helps readability of the html source)
                 $script = $this->format_script($script);
-                // store this javascript so it can be run later
+                // Store this javascript so it can be run later.
                 if ($this->js_inline) {
                     $this->js_inline .= "\n";
                 }
@@ -606,12 +627,12 @@ class taskchain_mediafilter {
             }
         }
 
-        // remove white space between tags, standardize other white space to a single space
+        // Remove white space between tags, standardize other white space to a single space.
         $object = preg_replace('/(?<=>)\s+(?=<)/', '', $object);
         $object = preg_replace('/\s+/', ' ', $object);
 
         if ($unicode) {
-            // encode angle brackets as javascript $unicode
+            // Encode angle brackets as javascript $unicode.
             $object = str_replace('<', '\\u003C', $object);
             $object = str_replace('>', '\\u003E', $object);
             // $object = str_replace('&amp;', '&', $object);
@@ -652,8 +673,8 @@ class taskchain_mediafilter {
         $flashvars = $match[2];
         $after  = $match[3];
 
-        // entities_to_utf8() is required undo the call to htmlentities(), see MDL-5223
-        // this is necessary to allow waitForPlay and autoPlay to be effective on Firefox
+        // Entities_to_utf8() is required undo the call to htmlentities(), see MDL-5223
+        // this is necessary to allow waitForPlay and autoPlay to be effective on Firefox.
         $flashvars = mod_taskchain::textlib('entities_to_utf8', $flashvars);
 
         $vars = explode('&', $flashvars);
@@ -675,7 +696,7 @@ class taskchain_mediafilter {
      * @return xxx
      */
     public function format_script($str) {
-        // fix indents
+        // Fix indents.
         $str = preg_replace('/^ +/m', "\t", $str);
 
         // format FO (Flash Object) properties (one property per line)
@@ -708,7 +729,7 @@ class taskchain_mediafilter {
      * @return xxx
      */
     public function mediaplugin_filter($taskchain, $text, $options = array()) {
-        // this function should be overloaded by the subclass
+        // This function should be overloaded by the subclass.
         return $text;
     }
 }
@@ -721,18 +742,28 @@ class taskchain_mediafilter {
  * @since     Moodle 2.0
  */
 class taskchain_mediaplayer {
+    /** @var array */
     public $aliases = array();
+    /** @var string */
     public $playerurl = '';
+    /** @var array */
     public $flashvars = array();
+    /** @var string */
     public $flashvars_paramname = '';
+    /** @var string */
     public $querystring_paramname = '';
+    /** @var array */
     public $options = array(
         'width' => 0, 'height' => 0, 'build' => 40,
         'quality' => 'high', 'majorversion' => '6', 'flashvars' => null,
     );
+    /** @var array */
     public $more_options = array();
+    /** @var array */
     public $media_filetypes = array();
+    /** @var string */
     public $spantext = '';
+    /** @var bool */
     public $removelink = true;
 
     /**
@@ -751,12 +782,11 @@ class taskchain_mediaplayer {
      * @param xxx $mediaurl
      * @param xxx $options
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function generate($filetype, $link, $mediaurl, $options) {
         global $CFG;
 
-        // cache language strings
+        // Cache language strings.
         static $str = null;
         if (! isset($str)) {
             $str = new stdClass();
@@ -769,14 +799,14 @@ class taskchain_mediaplayer {
         static $id_count = 0;
         $id = str_replace('taskchain_mediaplayer_', '', get_class($this)) . '_' . time() . sprintf('%02d', ($id_count++));
 
-        // add movie id to $options, if necessary
+        // Add movie id to $options, if necessary
         // this is required in order to allow Flash addCallback on IE
         // 2009/11/30 - it is not necessary for IE8, maybe not necessary at all
         // if (! isset($options['id'])) {
         // $options['id'] = 'ufo_'.$id;
         // }
 
-        // add movie url to $options, if necessary
+        // Add movie url to $options, if necessary.
         if (! isset($options['movie'])) {
             $options['movie'] = $this->playerurl;
             if ($this->querystring_paramname) {
@@ -784,18 +814,18 @@ class taskchain_mediaplayer {
             }
         }
 
-        // do we need to make sure the mediaurl is added to flashvars?
+        // Do we need to make sure the mediaurl is added to flashvars?
         if ($this->flashvars_paramname && empty($options['skipmediaurl'])) {
             $find_mediaurl = true;
         } else {
             $find_mediaurl = false;
         }
 
-        // get list of option names to be cleaned
+        // Get list of option names to be cleaned.
         $search = '/^player|playerurl|querystring_paramname|flashvars_paramname|skipmediaurl$/i';
         $names = preg_grep($search, array_keys($options), PREG_GREP_INVERT);
 
-        // clean the options
+        // Clean the options.
         foreach ($names as $name) {
             switch ($name) {
                 case 'id':
@@ -804,17 +834,17 @@ class taskchain_mediaplayer {
                     break;
 
                 case 'movie':
-                    // clean_param() will reject url if it contains spaces
+                    // Clean_param() will reject url if it contains spaces.
                     $options[$name] = str_replace(' ', '%20', $options[$name]);
                     $options[$name] = clean_param($options[$name], PARAM_URL);
                     break;
 
                 case 'flashvars':
-                    // split flashvars into an array
+                    // Split flashvars into an array.
                     $flashvars = str_replace('&amp;', '&', $options[$name]);
                     $flashvars = explode('&', $flashvars);
 
-                    // loop through $flashvars, cleaning as we go
+                    // Loop through $flashvars, cleaning as we go.
                     $options[$name] = array();
                     $found_mediaurl = false;
                     foreach ($flashvars as $flashvar) {
@@ -833,13 +863,13 @@ class taskchain_mediaplayer {
                         }
                     }
 
-                    // add media url to flashvars, if necessary
+                    // Add media url to flashvars, if necessary.
                     if ($find_mediaurl && ! $found_mediaurl) {
                         $n = $this->flashvars_paramname;
                         $options[$name][$n] = clean_param($mediaurl, PARAM_URL);
                     }
 
-                    // add flashvars values passed via $options
+                    // Add flashvars values passed via $options.
                     foreach ($this->flashvars as $n => $type) {
                         if (isset($options[$n])) {
                             $options[$name][$n] = clean_param($options[$n], $type);
@@ -847,13 +877,13 @@ class taskchain_mediaplayer {
                         }
                     }
 
-                    // rebuild $flashvars
+                    // Rebuild $flashvars.
                     $flashvars = array();
                     foreach ($options[$name] as $n => $v) {
                         $flashvars[] = "$n=" . $v; // urlencode($v);
                     }
 
-                    // join $namevalues back together
+                    // Join $namevalues back together.
                     $options[$name] = implode('&', $flashvars);
                     unset($flashvars);
                     break;
@@ -920,7 +950,6 @@ class taskchain_mediaplayer {
      * @uses $CFG
      * @param xxx $str
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function obfuscate_js($str) {
         global $CFG;

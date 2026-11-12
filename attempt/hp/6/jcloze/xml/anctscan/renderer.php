@@ -38,6 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jcloze/xml/renderer.ph
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskchain_attempt_hp_6_jcloze_xml_renderer {
+    /** @var string */
     public $js_object_type = 'JCloze_ANCT_Scan';
 
     /**
@@ -45,15 +46,14 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // prepend templates for this output format
+        // Prepend templates for this output format.
         array_unshift($this->templatesfolders, 'mod/taskchain/attempt/hp/6/jcloze/xml/anctscan/templates');
 
-        // replace standard jcloze.js with dropdown.js
+        // Replace standard jcloze.js with dropdown.js.
         $this->javascripts = preg_grep('/jcloze.js/', $this->javascripts, PREG_GREP_INVERT);
         array_push($this->javascripts, 'mod/taskchain/attempt/hp/6/jcloze/anctscan.js');
     }
@@ -71,10 +71,9 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'CheckExStatus,DownTime,TimesUp';
         return $names;
@@ -86,12 +85,11 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckExStatus(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // add changes as per CheckAnswers in other type of HP task
+        // Add changes as per CheckAnswers in other type of HP task.
         $this->fix_js_CheckAnswers($substr, 0, $length);
 
         $str = substr_replace($str, $substr, $start, $length);
@@ -103,7 +101,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_DownTime(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -119,7 +116,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_TimesUp(&$str, $start, $length) {
         $this->remove_js_function($str, $start, $length, 'TimesUp');
@@ -129,7 +125,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
         return 'CheckExStatus';
@@ -139,7 +134,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * get_stop_function_search
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_search() {
         return '/\s*if \((ExStatus)\)({.*?)}/s';
@@ -149,7 +143,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
      * get_stop_function_intercept
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_intercept() {
         // do not add standard onclickCheck()
@@ -158,8 +151,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_anctscan_renderer extends mod_taskch
 
     /**
      * fix_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
         $this->fix_bodycontent_rottmeier(true);

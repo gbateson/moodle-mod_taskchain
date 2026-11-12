@@ -23,23 +23,23 @@
  * @since      Moodle 2.0
  */
 
-// set $TC object
+// Set $TC object.
 
 /** Include required files */
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 require_once($CFG->dirroot . '/mod/taskchain/edit/form/chains.php');
 
-// create object to represent this TaskChain activity
+// Create object to represent this TaskChain activity.
 $TC = new mod_taskchain();
 
-// get rebuild_course_cache() from "course/lib.php"
+// Get rebuild_course_cache() from "course/lib.php"
 // (needed if "showpopup" or "popupoptions" change)
 require_once($CFG->dirroot . '/course/lib.php');
 
 mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editchains', 'edit/chains.php?id=' . $TC->course->id);
 
-// Set editing mode
+// Set editing mode.
 mod_taskchain::set_user_editing();
 
 // initialize $PAGE (and compute blocks)
@@ -57,21 +57,21 @@ $output = $PAGE->get_renderer('mod_taskchain');
 $mform = new mod_taskchain_edit_chains_form();
 $newdata = $mform->get_data();
 
-// get all chains (and taskchains) in this course
+// Get all chains (and taskchains) in this course.
 $TC->get_chains();
 
 if ($setasdefault = optional_param('setasdefault', 0, PARAM_INT)) {
     if ($TC->get_chains() && array_key_exists($setasdefault, $TC->chains)) {
         taskchain_set_preferences('chain', $TC->chains[$setasdefault]);
     } else {
-        $setasdefault = 0; // invalid $setasdefault - shouldn't happen !!
+        $setasdefault = 0; // Invalid $setasdefault - shouldn't happen !!
     }
 }
 
-// display the page
+// Display the page.
 echo $output->header();
 
-// display the form
+// Display the form.
 $mform->display();
 
 echo $output->footer();

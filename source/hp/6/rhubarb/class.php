@@ -38,7 +38,10 @@ require_once($CFG->dirroot . '/mod/taskchain/source/hp/6/class.php');
  * @package    mod_taskchain
  */
 class taskchain_source_hp_6_rhubarb extends taskchain_source_hp_6 {
+    /** @var string */
     public $icon = 'mod/taskchain/file/hp/6/rhubarb/rhb.gif';
+    /** @var string */
     public $hbs_software = 'textoys';
+    /** @var string */
     public $hbs_tasktype = 'rhubarb';
 }

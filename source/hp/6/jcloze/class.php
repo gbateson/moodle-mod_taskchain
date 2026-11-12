@@ -38,7 +38,10 @@ require_once($CFG->dirroot . '/mod/taskchain/source/hp/6/class.php');
  * @package    mod_taskchain
  */
 class taskchain_source_hp_6_jcloze extends taskchain_source_hp_6 {
+    /** @var string */
     public $icon = 'pix/f/jcl.gif';
+    /** @var string */
     public $hbs_software = 'hotpot';
+    /** @var string */
     public $hbs_tasktype = 'jcloze';
 }

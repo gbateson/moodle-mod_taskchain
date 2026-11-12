@@ -38,6 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/source/hp/6/jmix/class.php');
  * @package    mod_taskchain
  */
 class taskchain_source_hp_6_jmix_xml extends taskchain_source_hp_6_jmix {
+    /** @var string */
     public $best_outputformat = 'hp_6_jmix_xml_v6_plus';
 
     /**
@@ -45,7 +46,6 @@ class taskchain_source_hp_6_jmix_xml extends taskchain_source_hp_6_jmix {
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (preg_match('/\.jmx$/', $this->file->get_filename())) {

@@ -43,7 +43,6 @@ class taskchain_source_hp_6_jquiz_xml extends taskchain_source_hp_6_jquiz {
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (preg_match('/\.jqz$/', $this->file->get_filename())) {

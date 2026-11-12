@@ -29,10 +29,10 @@ require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
 $TC = new mod_taskchain();
 
-// Log this request
+// Log this request.
 mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'submit', 'view.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
-// Set editing mode
+// Set editing mode.
 mod_taskchain::set_user_editing();
 
 // initialize $PAGE (and compute blocks)
@@ -40,7 +40,7 @@ $PAGE->set_url($TC->url->submit());
 $PAGE->set_title($TC->taskchain->name);
 $PAGE->set_heading($TC->course->fullname);
 
-// check chain visibility, network address, password and popup
+// Check chain visibility, network address, password and popup.
 if ($error = $TC->require_chain_access()) {
     $TC->print_error($error);
 }
@@ -50,7 +50,7 @@ if ($error = $TC->require_chain_availability()) {
     $TC->print_error($error);
 }
 
-// check whether user can submit to this chain and task attempt
+// Check whether user can submit to this chain and task attempt.
 if ($error = $TC->require_chain_cansubmit()) {
     $TC->print_error($error);
 }
@@ -59,7 +59,7 @@ if ($error = $TC->require_task_cansubmit()) {
 }
 
 // get renderer subtype (e.g. attempt_hp_6_jcloze_xml)
-// and load the appropriate storage class for this attempt
+// and load the appropriate storage class for this attempt.
 $subtype = $TC->get_attempt_subtype();
 $TC->load_class($subtype, 'storage.php');
 
@@ -72,23 +72,23 @@ call_user_func(array($storage, 'store'), $TC);
 $TC->taskchain->gradelimit = $TC->chain->gradelimit;
 $TC->taskchain->gradeweighting = $TC->chain->gradeweighting;
 
-// update grades for this user
+// Update grades for this user.
 taskchain_update_grades($TC->taskchain, $USER->id);
 
-// update completion, if necessary
+// Update completion, if necessary.
 $completion = new completion_info($TC->course);
 $TC->update_completion_state($completion);
 
 // do the stuff the $TC->task->output->redirect() used to do
 
 if ($TC->task->delay3 == mod_taskchain::TIME_DISABLE || $TC->taskattempt->status == mod_taskchain::STATUS_INPROGRESS || $TC->taskattempt->redirect == 0) {
-    // we need some check here to see if the user is trying to navigate away
-    // from the page in which case we should just die and not send the header
+    // We need some check here to see if the user is trying to navigate away
+    // from the page in which case we should just die and not send the header.
     header("HTTP/1.0 204 No Response");
     // Note: don't use header("Status: 204"); because it can confuse PHP+FastCGI
-    // http://moodle.org/mod/forum/discuss.php?d=108330
+    // http://moodle.org/mod/forum/discuss.php?d=108330.
     die;
-    // script will die here
+    // Script will die here.
 }
 
 if ($TC->taskattempt->status == mod_taskchain::STATUS_ABANDONED) {
@@ -112,10 +112,10 @@ if ($TC->taskattempt->status == mod_taskchain::STATUS_ABANDONED) {
                 . '//]]>' . "\n"
                 . "</script>\n";
             close_window();
-            // script will die here
+            // Script will die here.
         } else {
             redirect($url);
-            // script will die here
+            // Script will die here.
         }
     }
 
@@ -131,12 +131,12 @@ $TC->cache_available_task = array();
 
 $TC->set_preferred_pagelayout($PAGE);
 
-// decide which task to show
+// Decide which task to show.
 if ($error = $TC->require_next_task()) {
     $TC->print_error($error);
 }
 
-// create the renderer for this attempt
+// Create the renderer for this attempt.
 $output = $PAGE->get_renderer('mod_taskchain');
 
 if ($TC->get_taskid() != mod_taskchain::CONDITIONTASKID_ENDOFCHAIN) {
@@ -148,11 +148,11 @@ if ($TC->get_taskid() != mod_taskchain::CONDITIONTASKID_ENDOFCHAIN) {
 // if we don't need an exit page, go straight back to the next activity or course page (or retry this taskchain)
 if (! $TC->has_exitpage()) {
     if ($TC->require_exitgrade() && $TC->chainattempt->grade < $TC->chain->exitgrade) {
-        // score was not good enough, so do automatic retry
+        // Score was not good enough, so do automatic retry.
         redirect($TC->url->attempt());
     }
     if ($exitcm = $TC->get_cm('exit')) {
-        // display next activity
+        // Display next activity.
         redirect($TC->url->view($exitcm));
     } else {
         // return to course page
@@ -170,12 +170,12 @@ if ($TC->can->attempt() || $TC->can->preview()) {
     echo $output->exitpage();
 } else {
     if (isguestuser()) {
-        // offer guests a choice of logging in or going back.
+        // Offer guests a choice of logging in or going back.
         if (function_exists('get_local_referer')) {
-            // Moodle >= 2.8
+            // Moodle >= 2.8.
             $referer = get_local_referer(false);
         } else {
-            // Moodle <= 2.7
+            // Moodle <= 2.7.
             $referer = get_referer(false);
         }
         $message = html_writer::tag('p', get_string('guestsno', 'mod_taskchain'));

@@ -38,12 +38,11 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/xml/v6/renderer
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jmatch_xml_v6_plus_renderer extends mod_taskchain_attempt_hp_6_jmatch_xml_v6_renderer {
+    /** @var string */
     public $templatefile = 'djmatch6.ht_';
 
     /**
      * fix_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
         $this->fix_bodycontent_DragAndDrop();

@@ -38,20 +38,19 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/html/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_html_renderer {
-    // source file types with which this output format can be used
-    var $filetypes = array('html_xerte');
+    /** @var array source file types with which this output format can be used */
+    public $filetypes = array('html_xerte');
 
     /**
      * constructor function
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // forcibly disable mediafilters
+        // Forcibly disable mediafilters.
         $this->TC->task->set_usemediafilter('');
     }
 
@@ -59,7 +58,6 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
      * preprocessing
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function preprocessing() {
         if ($this->cache_uptodate) {
@@ -71,7 +69,7 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
         }
 
         if (! $this->TC->task->source->get_filecontents()) {
-            // empty source file - shouldn't happen !!
+            // Empty source file - shouldn't happen !!
             return false;
         }
 
@@ -80,7 +78,7 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
             $this->TC->task->source->filecontents = substr_replace($this->TC->task->source->filecontents, $insert, $pos, 0);
         }
 
-        // replace external javascript with modified inline javascript
+        // Replace external javascript with modified inline javascript.
         $search = '/(?<!<\!-- )<script[^>]*src\s*=\s*"([^"]*)"[^>]*>\s*<\/script>/';
         $callback = array($this, 'preprocessing_xerte_js');
         $this->TC->task->source->filecontents = preg_replace_callback($search, $callback, $this->TC->task->source->filecontents);
@@ -93,19 +91,18 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function preprocessing_xerte_js($match) {
 
-        // clean filename
+        // Clean filename.
         $filename = $match[1];
         if ($pos = strpos($filename, '?')) {
             $filename = substr($filename, 0, $pos);
         }
 
-        // special processing for js files
+        // Special processing for js files.
         switch ($filename) {
-            // HTML5 files
+            // HTML5 files.
             case 'offline/js/offlinesupport.js':
             case 'offline/offline_engine_en-GB.js':
             case 'offline/offline_template.js':
@@ -134,7 +131,7 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
             case 'offline/js/mathjax/MathJax.js':
                 return $match[0];
 
-            // Flash files
+            // Flash files.
             case 'js/rlohelper.js':
             case 'js/xttracking_noop.js':
             case 'rloObject.js':
@@ -143,41 +140,41 @@ class mod_taskchain_attempt_html_xerte_renderer extends mod_taskchain_attempt_ht
             // default: echo "unknown file: '$filename'";
         }
 
-        // set baseurl
+        // Set baseurl.
         $baseurl = $this->TC->task->source->baseurl;
         if ($pos = strrpos($this->TC->task->source->filepath, '/')) {
             $baseurl .= substr($this->TC->task->source->filepath, 0, $pos);
         }
         $baseurl .= '/';
 
-        // get javascript from external file
+        // Get javascript from external file.
         $js = $this->TC->task->source->get_sibling_filecontents($match[1]);
 
-        // several search-and-replace fixes
+        // Several search-and-replace fixes
         // - add style to center the Flash Object
         // - convert MainPreloader.swf to absolute URL
-        // - break up "script" strings to prevent unwanted TaskChain postprocessing
+        // - break up "script" strings to prevent unwanted TaskChain postprocessing.
         $search = array(
-            'style="' . "padding:0px; width:' + rloWidth + 'px; height:' + rloHeight + 'px;" . '"', // NEW
-            'style="' . "width:' + rloWidth + 'px; height:' + rloHeight + 'px; " . '"', // OLD
-            'var FileLocation = xmlPath;', // NEW
-            'var FileLocation = getLocation();', // OLD
+            'style="' . "padding:0px; width:' + rloWidth + 'px; height:' + rloHeight + 'px;" . '"', // NEW.
+            'style="' . "width:' + rloWidth + 'px; height:' + rloHeight + 'px; " . '"', // OLD.
+            'var FileLocation = xmlPath;', // NEW.
+            'var FileLocation = getLocation();', // OLD.
             'MainPreloader.swf',
             'script', 'Script', 'SCRIPT',
         );
         $replace = array(
-            'style="' . "padding:0px; width:' + rloWidth + 'px; height:' + rloHeight + 'px; margin:auto;" . '"', // NEW
-            'style="' . "width:' + rloWidth + 'px; height:' + rloHeight + 'px; margin:auto;" . '"', // OLD
-            "var FileLocation = '$baseurl';", // NEW
-            "var FileLocation = '$baseurl';", // OLD
+            'style="' . "padding:0px; width:' + rloWidth + 'px; height:' + rloHeight + 'px; margin:auto;" . '"', // NEW.
+            'style="' . "width:' + rloWidth + 'px; height:' + rloHeight + 'px; margin:auto;" . '"', // OLD.
+            "var FileLocation = '$baseurl';", // NEW.
+            "var FileLocation = '$baseurl';", // OLD.
             $baseurl . 'MainPreloader.swf',
             "scr' + 'ipt", "Scr' + 'ipt", "SCR' + 'IPT",
         );
 
         if ($this->TC->task->source->get_displayMode() == 'fill window') {
-            // remove "id" to prevent resizing of Flash object
+            // Remove "id" to prevent resizing of Flash object
             // there might be another way to do this
-            // e.g. using js to stretch canvas area
+            // e.g. using js to stretch canvas area.
             $search[] = 'id="' . "rlo' + rloID + '" . '"';
             $replace[] = '';
         }

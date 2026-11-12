@@ -97,7 +97,7 @@ abstract class base extends \core\event\base {
         if ($this->contextlevel == CONTEXT_MODULE) {
             $cmid = $this->contextinstanceid;
         } else {
-            $cmid = 0; // shouldn't happen !!
+            $cmid = 0; // Shouldn't happen !!
         }
         $a = (object)array('courseid'      => $this->courseid,
                            'cmid'          => $cmid,
@@ -128,7 +128,7 @@ abstract class base extends \core\event\base {
         foreach ($this->my_get_legacy_records() as $record) {
             list($name, $table, $id) = $record;
             if ($name == 'course' || $name == 'taskchain') {
-                continue; // not required in the URL
+                continue; // Not required in the URL.
             }
             if ($name == 'cm') {
                 $params['id'] = $id;

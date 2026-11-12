@@ -38,6 +38,7 @@ require_once($CFG->dirroot . '/mod/taskchain/source/hp/6/jmatch/class.php');
  * @package    mod_taskchain
  */
 class taskchain_source_hp_6_jmatch_xml extends taskchain_source_hp_6_jmatch {
+    /** @var string */
     public $best_outputformat = 'hp_6_jmatch_xml_v6_plus';
 
     /**

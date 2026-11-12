@@ -29,10 +29,10 @@ require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
 $TC = new mod_taskchain();
 
-// write to log
+// Write to log.
 mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'attempt', 'view.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
 
-// Set editing mode
+// Set editing mode.
 mod_taskchain::set_user_editing();
 
 // initialize $PAGE (and compute blocks)
@@ -45,7 +45,7 @@ if (class_exists('\\core\\output\\activity_header')) {
     $PAGE->activityheader->set_attrs(['hidecompletion' => true]);
 }
 
-// check chain visibility, network address, password and popup
+// Check chain visibility, network address, password and popup.
 if ($error = $TC->require_chain_access()) {
     $TC->print_error($error);
 }
@@ -55,19 +55,19 @@ if ($error = $TC->require_chain_availability()) {
     $TC->print_error($error);
 }
 
-// decide which task to show
+// Decide which task to show.
 if ($error = $TC->require_next_task()) {
     $TC->print_error($error);
 }
 
-// allow the TaskChain activity to set its preferred page layout
+// Allow the TaskChain activity to set its preferred page layout.
 $TC->set_preferred_pagelayout($PAGE);
 
-// load attempt renderer for current task
+// Load attempt renderer for current task.
 $subtype = $TC->get_attempt_subtype();
 $TC->load_class($subtype, 'renderer.php');
 
-// create the renderer for this attempt
+// Create the renderer for this attempt.
 $output = $PAGE->get_renderer('mod_taskchain', $subtype);
 
 // print access warnings, if required

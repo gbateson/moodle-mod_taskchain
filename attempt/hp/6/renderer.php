@@ -48,10 +48,10 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     const FILTER_ACTION_REMOVE = -1;
     /**#@-*/
 
-    /** string ID of the navigation bar */
+    /** @var string string ID of the navigation bar */
     protected $navbarid = '';
 
-    /** List of images to preload */
+    /** @var mixed List of images to preload */
     protected $PreloadImageList;
 
     /**
@@ -59,12 +59,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // prepend templates for this output format
+        // Prepend templates for this output format.
         array_unshift($this->templatesfolders, 'mod/taskchain/attempt/hp/6/templates');
     }
 
@@ -72,7 +71,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * fix_headcontent_DragAndDrop for JMix and JMatch
      */
     public function fix_headcontent_DragAndDrop() {
-        // replace one line functions that get and set positions of positionable elements
+        // Replace one line functions that get and set positions of positionable elements.
         $search = array(
             '/(?<=function CardGetL).*/',
             '/(?<=function CardGetT).*/',
@@ -99,13 +98,13 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         );
         $this->headcontent = preg_replace($search, $replace, $this->headcontent, 1);
 
-        // force box sizing to include border and padding
-        // then we don't have to worry about "strict" HTML
+        // Force box sizing to include border and padding
+        // then we don't have to worry about "strict" HTML.
         $search = '/(div\\.CardStyle\\s*\\{.*?)(?=\\})/s';
         $replace = '$1' . "\t" . 'box-sizing: border-box;' . "\n";
         $this->headcontent = preg_replace($search, $replace, $this->headcontent, 1);
 
-        // remove previous fix for "content-box" sizing
+        // Remove previous fix for "content-box" sizing
         // 12 = border-left (1px) + padding-left (5px)
         // + border-right (1px) + padding-right (5px)
         $search = '/(Highest|WidestRight)-12;/';
@@ -117,7 +116,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * fix_headcontent_rottmeier
      *
      * @param xxx $type (optional, default='')
-     * @todo Finish documenting this function
      */
     public function fix_headcontent_rottmeier($type = '') {
 
@@ -129,9 +127,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 break;
 
             case 'findit':
-                // get position of last </style> tag and
+                // Get position of last </style> tag and
                 // insert CSS to make <b> and <em> tags bold
-                // even within GapSpans added by javascript
+                // even within GapSpans added by javascript.
                 $search = '</style>';
                 if ($pos = strrpos($this->headcontent, $search)) {
                     $insert = "\n"
@@ -151,7 +149,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 break;
 
             case 'jintro':
-                // add TimeOver variable, so we can use standard detection of task completion
+                // Add TimeOver variable, so we can use standard detection of task completion.
                 if ($pos = strpos($this->headcontent, 'var Score = 0;')) {
                     $insert = "var TimeOver = false;\n";
                     $this->headcontent = substr_replace($this->headcontent, $insert, $pos, 0);
@@ -159,7 +157,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 break;
 
             case 'jmemori':
-                // add TimeOver variable, so we can use standard detection of task completion
+                // Add TimeOver variable, so we can use standard detection of task completion.
                 if ($pos = strpos($this->headcontent, 'var Score = 0;')) {
                     $insert = "var TimeOver = false;\n";
                     $this->headcontent = substr_replace($this->headcontent, $insert, $pos, 0);
@@ -171,7 +169,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 $search = '/(?<![\w.$\'"])M(?![\w$])(?!\.(?!length\b))/';
                 $this->headcontent = preg_replace($search, 'JMemoriM', $this->headcontent);
 
-                // override table border collapse from standard Moodle styles
+                // Override table border collapse from standard Moodle styles.
                 if ($pos = strrpos($this->headcontent, '</style>')) {
                     $insert = ''
                         . '#' . $this->themecontainer . ' form table' . "\n"
@@ -189,12 +187,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * fix_bodycontent_rottmeier
      *
      * @param xxx $hideclozeform (optional, default=false)
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent_rottmeier($hideclozeform = false) {
-        // fix left aligned instructions in Rottmeier-based formats
+        // Fix left aligned instructions in Rottmeier-based formats
         // JCloze: DropDown, FindIt(a)+(b), JGloss
-        // JMatch: JMemori
+        // JMatch: JMemori.
         $search = '/<p id="Instructions">(.*?)<\/p>/is';
         $replace = '<div id="Instructions">$1</div>';
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent);
@@ -211,7 +208,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
         // return a comma-separated list of js functions to be "fixed".
@@ -227,18 +223,17 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_Client(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // refine detection of Chrome browser
+        // Refine detection of Chrome browser.
         $search = 'this.geckoVer < 20020000';
         if ($pos = strpos($substr, $search)) {
             $substr = substr_replace($substr, 'this.geckoVer > 10000000 && ', $pos, 0);
         }
 
-        // add detection of Chrome browser
+        // Add detection of Chrome browser.
         $search = '/(\s*)if \(this\.min == false\)\{/s';
         $replace = '$1'
             . "this.chrome = (this.ua.indexOf('Chrome') > 0);" . '$1'
@@ -258,7 +253,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowElements(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -278,13 +272,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_PageDim(&$str, $start, $length) {
         if ($this->usemoodletheme) {
-            $obj = "document.getElementById('$this->themecontainer')"; // moodle
+            $obj = "document.getElementById('$this->themecontainer')"; // Moodle.
         } else {
-            $obj = "document.getElementsByTagName('body')[0]"; // original
+            $obj = "document.getElementsByTagName('body')[0]"; // Original.
         }
         $replace = ''
             . "function setOffset(obj, type, value){\n"
@@ -398,7 +391,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_GetViewportHeight(&$str, $start, $length) {
         $replace = ''
@@ -435,8 +427,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $length
      * @return xxx
      */
-    function fix_js_SuppressBackspace(&$str, $start, $length) {
-        // could also check "window.InTextBox" which is HP's standard way of detecting INPUT and TEXTAREA
+    public function fix_js_SuppressBackspace(&$str, $start, $length) {
+        // Could also check "window.InTextBox" which is HP's standard way of detecting INPUT and TEXTAREA.
         $replace = ''
             . "function SuppressBackspace(evt) {\n"
             . "	if (evt==null) {\n"
@@ -452,7 +444,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             . "	if (evt.keyCode != 8) {\n"
             . "		return true;\n" // not the delete key
             . "	}\n"
-            . "	if (evtTarget.nodeType==3) {\n" // Safari quirk
+            . "	if (evtTarget.nodeType==3) {\n" // Safari quirk.
             . "		evtTarget = evtTarget.parentNode;\n"
             . "	}\n"
             . "	if (evtTarget.tagName=='INPUT' || evtTarget.tagName=='TEXTAREA') {\n"
@@ -468,7 +460,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             . "}\n";
         $str = substr_replace($str, $replace, $start, $length);
 
-        // remove standard HP code that assigns event keypress/keydown handler
+        // Remove standard HP code that assigns event keypress/keydown handler.
         $offset = $start + strlen($replace);
         list($start, $finish) = $this->locate_js_block('if', 'C.ie', $str, true, $offset);
 
@@ -485,13 +477,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $start
      * @param xxx $length
      * @param xxx $function
-     * @todo Finish documenting this function
      */
     public function remove_js_function(&$str, $start, $length, $function) {
-        // remove this function
+        // Remove this function.
         $str = substr_replace($str, '', $start, $length);
 
-        // remove all direct calls to this function
+        // Remove all direct calls to this function.
         $search = '/\s*' . $function . '\([^)]*\);/s';
         $str = preg_replace($search, '', $str);
     }
@@ -503,7 +494,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_TrimString(&$str, $start, $length) {
         $replace = ''
@@ -524,7 +514,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_TypeChars(&$str, $start, $length) {
         if ($obj = $this->fix_js_TypeChars_obj()) {
@@ -563,7 +552,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * fix_js_TypeChars_init
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_TypeChars_init() {
         return '';
@@ -573,7 +561,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * fix_js_TypeChars_obj
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_TypeChars_obj() {
         return '';
@@ -585,7 +572,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_SendResults(&$str, $start, $length) {
         $this->remove_js_function($str, $start, $length, 'SendResults');
@@ -597,7 +583,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_GetUserName(&$str, $start, $length) {
         $this->remove_js_function($str, $start, $length, 'GetUserName');
@@ -609,7 +594,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_Finish(&$str, $start, $length) {
         $this->remove_js_function($str, $start, $length, 'Finish');
@@ -621,13 +605,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_PreloadImages(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // fix issue in IE8 which sometimes doesn't have Image object in popups
-        // http://moodle.org/mod/forum/discuss.php?d=134510
+        // Fix issue in IE8 which sometimes doesn't have Image object in popups
+        // http://moodle.org/mod/forum/discuss.php?d=134510.
         $search = "Imgs[i] = new Image();";
         if ($pos = strpos($substr, $search)) {
             $replace = "Imgs[i] = (window.Image ? new Image() : document.createElement('img'));";
@@ -644,7 +627,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_WriteToInstructions(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -672,15 +654,14 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowMessage(&$str, $start, $length) {
-        // the ShowMessage function is used by all HP6 tasks
+        // The ShowMessage function is used by all HP6 tasks.
 
         $substr = substr($str, $start, $length);
 
-        // only show feedback if the required HTML elements exist
-        // this prevents JavaScript errors which block the returning of the task results to Moodle
+        // Only show feedback if the required HTML elements exist
+        // this prevents JavaScript errors which block the returning of the task results to Moodle.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
                 . "	// check required HTML elements exist\n"
@@ -690,7 +671,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             $substr = substr_replace($substr, $insert, $pos + 1, 0);
         }
 
-        // hide <embed> elements on Chrome browser
+        // Hide <embed> elements on Chrome browser.
         $search = "/(\s*)ShowElements\(true, 'object', 'FeedbackContent'\);/s";
         $replace = ''
             . '$0' . '$1'
@@ -700,11 +681,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             . "}";
         $substr = preg_replace($search, $replace, $substr, 1);
 
-        // fix "top" setting to position FeedbackDiv
+        // Fix "top" setting to position FeedbackDiv.
         if ($this->usemoodletheme) {
-            $canvas = "document.getElementById('$this->themecontainer')"; // moodle
+            $canvas = "document.getElementById('$this->themecontainer')"; // Moodle.
         } else {
-            $canvas = "document.getElementsByTagName('body')[0]"; // original
+            $canvas = "document.getElementsByTagName('body')[0]"; // Original.
         }
         $search = "/FDiv.style.top = [^;]*;(\s*)(FDiv.style.display = [^;]*;)/s";
         $replace = ''
@@ -713,7 +694,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             . '$1' . "setOffset(FDiv, 'Top', Math.max(t, TopSettingWithScrollOffset(30)));";
         $substr = preg_replace($search, $replace, $substr, 1);
 
-        // append link to student feedback form, if necessary
+        // Append link to student feedback form, if necessary.
         if ($this->TC->task->studentfeedback) {
             $search = '/(\s*)var Output = [^;]*;/';
             $replace = ''
@@ -733,7 +714,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_RemoveBottomNavBarForIE(&$str, $start, $length) {
         $replace = ''
@@ -754,7 +734,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * fix_js_StartUp_DragAndDrop
      *
      * @param xxx $substr (passed by reference)
-     * @todo Finish documenting this function
      */
     public function fix_js_StartUp_DragAndDrop(&$substr) {
         // fixes for Drag and Drop (JMatch and JMix)
@@ -764,7 +743,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * fix_js_StartUp_DragAndDrop_DragArea
      *
      * @param xxx $substr (passed by reference)
-     * @todo Finish documenting this function
      */
     public function fix_js_StartUp_DragAndDrop_DragArea(&$substr) {
         // fix LeftCol (=left side of drag area)
@@ -784,12 +762,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_StartUp(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // ensure StartUp is not called more than once
+        // Ensure StartUp is not called more than once.
         if ($pos = strpos($substr, '{')) {
             $insert = "\n"
                 . "	if (window.StartedUp) {\n"
@@ -851,24 +828,24 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 . "	window.HP = new " . $this->js_object_type . "($sendallclicks,$ajax);\n"
                 . "\n"
                 . "	// define event handlers to try to send results if quiz finishes unexpectedly\n"
-                . "	HP_add_listener(window, 'beforeunload', HP_send_results);\n" // modern browsers
-                . "	HP_add_listener(window, 'pagehide', HP_send_results);\n"     // modern browsers that don't allow actions in "onbeforeunload"
-                . "	HP_add_listener(window, 'unload', HP_send_results);\n"       // old browsers that don't have "onbeforeunload" or "pagehide"
+                . "	HP_add_listener(window, 'beforeunload', HP_send_results);\n" // Modern browsers.
+                . "	HP_add_listener(window, 'pagehide', HP_send_results);\n"     // Modern browsers that don't allow actions in "onbeforeunload".
+                . "	HP_add_listener(window, 'unload', HP_send_results);\n"       // Old browsers that don't have "onbeforeunload" or "pagehide".
                 . "\n";
             $substr = substr_replace($substr, $append, $pos, 0);
         }
 
-        // stretch the canvas vertically down, if there is a reading
+        // Stretch the canvas vertically down, if there is a reading.
         if ($pos = strrpos($substr, '}')) {
             // Reading is contained in <div class="LeftContainer">
             // MainDiv is contained in <div class="RightContainer">
             // when there is a reading. Otherwise, MainDiv is not contained.
-            // ReadingDiv is used to show different reading for each question
+            // ReadingDiv is used to show different reading for each question.
             if ($this->usemoodletheme) {
-                $canvas = "document.getElementById('$this->themecontainer')"; // moodle
+                $canvas = "document.getElementById('$this->themecontainer')"; // Moodle
                 // $canvas = "document.getElementById('page-mod-taskchain-attempt')"
             } else {
-                $canvas = "document.getElementsByTagName('body')[0]"; // original
+                $canvas = "document.getElementsByTagName('body')[0]"; // Original.
             }
             $id = $this->embed_object_id;
             $onload = $this->embed_object_onload;
@@ -902,55 +879,55 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 . "				i_max--;\n"
                 . "			}\n"
                 . "		}\n"
-                        // get BOTTOM of each TALL element
+                        // Get BOTTOM of each TALL element.
                 . "		var b = 0;\n"
                 . "		for (var i=0; i<i_max; i++){\n"
                 . "			var obj = document.getElementById(ids[i]);\n"
                 . "			b = Math.max(b, getOffset(obj, 'Bottom'));\n"
                 . "		}\n"
-                        // set TALL elements to standard height
+                        // Set TALL elements to standard height.
                 . "		if (b){\n"
                 . "			for (var i=0; i<i_max; i++){\n"
                 . "				var obj = document.getElementById(ids[i]);\n"
                 . "				setOffset(obj, 'Bottom', b);\n"
                 . "			}\n"
                 . "		}\n"
-                        // get BOTTOM of last JMix drop line
+                        // Get BOTTOM of last JMix drop line.
                 . "		if (window.DropTotal) {\n"
                 . "			var obj = document.getElementById('Drop'+(DropTotal-1));\n"
                 . "			if (obj) {\n"
                 . "				b = Math.max(b, getOffset(obj, 'Bottom'));\n"
                 . "			}\n"
                 . "		}\n"
-                        // get BOTTOM of last JMix segment
+                        // Get BOTTOM of last JMix segment.
                 . "		if (window.Segments) {\n"
                 . "			var obj = document.getElementById('D'+(Segments.length-1));\n"
                 . "			if (obj) {\n"
                 . "				b = Math.max(b, getOffset(obj, 'Bottom'));\n"
                 . "			}\n"
                 . "		}\n"
-                        // get BOTTOM of last JMatch fixed element
+                        // Get BOTTOM of last JMatch fixed element.
                 . "		if (window.F) {\n"
                 . "			var obj = document.getElementById('F'+(F.length-1));\n"
                 . "			if (obj) {\n"
                 . "				b = Math.max(b, getOffset(obj, 'Bottom'));\n"
                 . "			}\n"
                 . "		}\n"
-                        // get BOTTOM of last JMatch draggable element
+                        // Get BOTTOM of last JMatch draggable element.
                 . "		if (window.D) {\n"
                 . "			var obj = document.getElementById('D'+(D.length-1));\n"
                 . "			if (obj) {\n"
                 . "				b = Math.max(b, getOffset(obj, 'Bottom'));\n"
                 . "			}\n"
                 . "		}\n"
-                        // get BOTTOM of last JMatch Flashcard table
+                        // Get BOTTOM of last JMatch Flashcard table.
                 . "		if (window.JMatchFlashcard) {\n"
                 . "			var obj = canvas.querySelector('.FlashcardTable');\n"
                 . "			if (obj) {\n"
                 . "				b = Math.max(b, getOffset(obj, 'Bottom'));\n"
                 . "			}\n"
                 . "		}\n"
-                        // set BOTTOM of role=main element
+                        // Set BOTTOM of role=main element.
                 . "		var obj = canvas.querySelector('[role=main]');\n"
                 . "		if (obj){\n"
                 . "			setOffset(obj, 'Bottom', b);\n"
@@ -972,7 +949,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 . "		}\n"
                 . "	}\n";
             if ($this->TC->task->navigation == mod_taskchain::NAVIGATION_EMBED) {
-                // stretch container object/iframe
+                // Stretch container object/iframe.
                 $insert .= ''
                     . "	if (parent.$onload) {\n"
                     . "		parent.$onload(null, parent.document.getElementById('" . $this->embed_object_id . "'));\n"
@@ -990,12 +967,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_HideFeedback(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // unhide <embed> elements on Chrome browser
+        // Unhide <embed> elements on Chrome browser.
         $search = "/(\s*)ShowElements\(true, 'object'\);/s";
         $replace = ''
             . '$0$1'
@@ -1008,7 +984,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         if ($this->TC->task->delay3 == mod_taskchain::TIME_AFTEROK) {
             $replace = '$1' . 'HP_send_results(HP.EVENT_SENDVALUES);' . '$2';
         } else {
-            $replace = ''; // i.e. remove this if-block
+            $replace = ''; // I.e. remove this if-block.
         }
         $substr = preg_replace($search, $replace, $substr, 1);
 
@@ -1021,7 +997,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_ShowSpecialReadingForQuestion(&$str, $start, $length) {
         $replace = ''
@@ -1112,22 +1087,21 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckAnswers(&$str, $start, $length) {
         // JCloze, JCross, JMatch : CheckAnswers
         // JMix : CheckAnswer
-        // JQuiz : CheckFinished
+        // JQuiz : CheckFinished.
         $substr = substr($str, $start, $length);
 
-        // intercept Checks, if necessary
+        // Intercept Checks, if necessary.
         if ($insert = $this->get_stop_function_intercept()) {
             if ($pos = strpos($substr, '{')) {
                 $substr = substr_replace($substr, $insert, $pos + 1, 0);
             }
         }
 
-        // add extra argument to function - so it can be called from the "Give Up" button
+        // Add extra argument to function - so it can be called from the "Give Up" button.
         $name = $this->get_stop_function_name();
         $search = '/(function ' . $name . '\()(.*?)(\))/s';
         $callback = array($this, 'fix_js_CheckAnswers_arguments');
@@ -1146,7 +1120,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckAnswers_arguments($match) {
         if (empty($match[2])) {
@@ -1160,7 +1133,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * get_stop_onclick
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_onclick() {
         if ($name = $this->get_stop_function_name()) {
@@ -1174,10 +1146,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * get_stop_function_confirm
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_confirm() {
-        // Note: "&&" in onclick must be encoded as html-entities for strict XHTML
+        // Note: "&&" in onclick must be encoded as html-entities for strict XHTML.
         return ''
             . "confirm("
             . "'" . $this->TC->task->source->js_value_safe(get_string('confirmstop', 'mod_taskchain'), true) . "'"
@@ -1190,10 +1161,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * get_stop_function_name
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_name() {
-        // the name of the javascript function into which the "give up" code should be inserted
+        // The name of the javascript function into which the "give up" code should be inserted.
         return '';
     }
 
@@ -1201,10 +1171,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * get_stop_function_args
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_args() {
-        // the arguments required by the javascript function which the stop_function() code calls
+        // The arguments required by the javascript function which the stop_function() code calls.
         return 'HP.EVENT_ABANDONED';
     }
 
@@ -1212,10 +1181,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * get_stop_function_intercept
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_intercept() {
-        // JMix and JQuiz each have their own version of this function
+        // JMix and JQuiz each have their own version of this function.
         return "\n"
             . "	// intercept this Check\n"
             . "	HP.onclickCheck();\n";
@@ -1225,7 +1193,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * get_stop_function_search
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_search() {
         // JCloze : AllCorrect || Finished
@@ -1240,7 +1207,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * get_stop_function_replace
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_stop_function_replace() {
         // $1 : name of the "all correct/done" variable
@@ -1284,7 +1250,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_CardSetHTML(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -1302,25 +1267,24 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_beginDrag(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
         if (strpos($str, 'function beginDrag', $start + $length)) {
-            $substr = ''; // remove first occurrence of this function
+            $substr = ''; // Remove first occurrence of this function.
         } else {
-            // add event handlers for touch screens
+            // Add event handlers for touch screens.
             $search = '/(\s*)([a-z]+).on(mouse[a-z]+)=([a-z]+Drag);?/s';
             // $replace = '$1$2.onmouse$3 = $4;$1$2.touch$3 = $4;';
             $replace = '$1HP_add_listener($2, \'$3\', $4);';
             $substr = preg_replace($search, $replace, $substr);
 
-            // detect drag position for mouse AND touch
+            // Detect drag position for mouse AND touch.
             if ($target = $this->get_beginDrag_target()) {
                 $substr = $this->fix_js_clientXY($substr, $target);
             }
 
-            // disable scrolling on touch screens
+            // Disable scrolling on touch screens.
             $substr = $this->fix_js_disable_event($substr);
 
             if ($pos = strpos($substr, '{')) {
@@ -1345,7 +1309,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * for drag-and-drop JMatch and JMix
      *
      * @return string
-     * @todo Finish documenting this function
      */
     public function get_beginDrag_target() {
         return '';
@@ -1359,20 +1322,19 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_doDrag(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
         if (strpos($str, 'function doDrag', $start + $length)) {
-             $substr = ''; // remove first occurrence of this function
+             $substr = ''; // Remove first occurrence of this function.
         } else {
             // reformat single line if (C.ie){...}else{...}
             $substr = $this->fix_js_if_then_else($substr);
 
-            // detect drag position for mouse AND touch
+            // Detect drag position for mouse AND touch.
             $substr = $this->fix_js_clientXY($substr, 'var difX');
 
-            // disable scrolling on touch screens
+            // Disable scrolling on touch screens.
             $substr = $this->fix_js_disable_event($substr);
         }
         $str = substr_replace($str, $substr, $start, $length);
@@ -1386,24 +1348,23 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_endDrag(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         if (strpos($str, 'function endDrag', $start + $length)) {
-            $substr = ''; // remove first occurrence of this function
+            $substr = ''; // Remove first occurrence of this function.
         } else {
             // reformat single line if (C.ie){...}else{...}
             $substr = $this->fix_js_if_then_else($substr);
 
-            // add event handlers for touch screens
+            // Add event handlers for touch screens.
             $search = '/(\s*)([a-z]+).on(mouse[a-z]+)=([a-z]+);?/';
             // $replace = '$1$2.onmouse$3=$4;$1$2.touch$3=$4;';
             $replace = '$1HP_remove_listener($2, \'$3\', doDrag);';
             $substr = preg_replace($search, $replace, $substr);
 
-            // disable scrolling on touch screens
+            // Disable scrolling on touch screens.
             $substr = $this->fix_js_disable_event($substr);
         }
 
@@ -1420,15 +1381,14 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param string $x (optional, default="x")
      * @param string $y (optional, default="y")
      * @return string
-     * @todo Finish documenting this function
      */
     public function fix_js_clientXY($str, $target, $e = 'Ev', $x = 'x', $y = 'y') {
-        // replace Ev.client(X|Y) with "x" and "y" variables
+        // Replace Ev.client(X|Y) with "x" and "y" variables.
         $search = array("$e.clientX", "$e.clientY");
         $replace = array($x, $y);
         $str = str_replace($search, $replace, $str);
 
-        // set "x" and "y" for mouse or touch device
+        // Set "x" and "y" for mouse or touch device.
         $search = '/(\s*)' . preg_quote($target, '/') . '/s';
         $replace = '$1' . "if ($e.changedTouches) {" .
                    '$1' . "	var $x = $e.changedTouches[0].clientX;" .
@@ -1448,7 +1408,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param string $str
      * @return string
-     * @todo Finish documenting this function
      */
     public function fix_js_if_then_else($str) {
         $search = '/(\s*)if *\(C.ie\) *\{(.*?);?\}[\n\r\t ]*else *\{(.*?);?\}/is';
@@ -1465,7 +1424,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $substr (passed by reference)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_disable_event($substr) {
         $search = '/return (true|false);/';
@@ -1491,17 +1449,16 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * fix_navigation_buttons
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_navigation_buttons() {
         if ($this->TC->task->navigation == mod_taskchain::NAVIGATION_ORIGINAL) {
-            // replace relative URLs in <button class="NavButton" ... onclick="location='...'">
+            // Replace relative URLs in <button class="NavButton" ... onclick="location='...'">.
             $search = '/' . '(?<=' . 'onclick="' . "location='" . ')' . "([^']*)" . '(?=' . "'; return false;" . '")' . '/is';
             $callback = array($this, 'convert_url_navbutton');
             $this->bodycontent = preg_replace_callback($search, $callback, $this->bodycontent);
 
-            // replace history.back() in <button class="NavButton" ... onclick="history.back(); ...">
-            // with a link to the course page
+            // Replace history.back() in <button class="NavButton" ... onclick="history.back(); ...">
+            // with a link to the course page.
             $params = array('id' => $this->TC->course->id);
             $search = '/' . '(?<=' . 'onclick=")' . 'history\.back\(\)' . '(?=; return false;")' . '/';
             $replace = "location='" . new moodle_url('/course/view.php', $params) . "'";
@@ -1511,8 +1468,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
     /**
      * fix_TimeLimit
-     *
-     * @todo Finish documenting this function
      */
     public function fix_TimeLimit() {
         if ($this->TC->task->timelimit > 0) {
@@ -1523,8 +1478,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
     /**
      * fix_SubmissionTimeout
-     *
-     * @todo Finish documenting this function
      */
     public function fix_SubmissionTimeout() {
         if ($this->TC->task->delay3 == mod_taskchain::TIME_TEMPLATE) {
@@ -1536,24 +1489,24 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             }
         } else {
             if ($this->TC->task->delay3 >= 0) {
-                $timeout = $this->TC->task->delay3 * 1000; // milliseconds
+                $timeout = $this->TC->task->delay3 * 1000; // Milliseconds.
             } else {
-                $timeout = 0; // i.e. immediately
+                $timeout = 0; // I.e. immediately.
             }
         }
         if (is_null($timeout)) {
-            return; // nothing to do
+            return; // Nothing to do.
         }
         if ($this->hasSubmissionTimeout) {
-            // remove HPNStartTime
+            // Remove HPNStartTime.
             $search = '/var HPNStartTime\b[^;]*?;\s*/';
             $this->headcontent = preg_replace($search, '', $this->headcontent, 1);
 
-            // reset the value of SubmissionTimeout
+            // Reset the value of SubmissionTimeout.
             $search = '/(?<=var SubmissionTimeout = )\d+(?=;)/';
             $this->headcontent = preg_replace($search, $timeout, $this->headcontent, 1);
         } else {
-            // Rhubarb, Sequitur and Quandary
+            // Rhubarb, Sequitur and Quandary.
             $search = '/var FinalScore = 0;/';
             $replace = '$0' . "\n" . 'var SubmissionTimeout = ' . $timeout . ';';
             $this->headcontent = preg_replace($search, $replace, $this->headcontent, 1);
@@ -1562,18 +1515,16 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
     /**
      * fix_navigation
-     *
-     * @todo Finish documenting this function
      */
     public function fix_navigation() {
         if ($this->TC->task->navigation == mod_taskchain::NAVIGATION_ORIGINAL) {
-            // do nothing - leave navigation as it is
+            // Do nothing - leave navigation as it is.
             return;
         }
 
-        // insert the stop button, if required
+        // Insert the stop button, if required.
         if ($this->TC->task->stopbutton) {
-            // replace top nav buttons with a single stop button
+            // Replace top nav buttons with a single stop button.
             switch ($this->TC->task->stopbutton) {
                 case mod_taskchain::STOPBUTTON_LANGPACK: // = 1
                     if ($pos = strpos($this->TC->task->stoptext, '_')) {
@@ -1583,17 +1534,17 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     } else if ($this->TC->task->stoptext) {
                         $stoptext = get_string($this->TC->task->stoptext);
                     } else {
-                        $stoptext = ''; // shouldn't happen !!
+                        $stoptext = ''; // Shouldn't happen !!
                     }
                     break;
                 case mod_taskchain::STOPBUTTON_SPECIFIC: // = 2
                     $stoptext = $this->TC->task->stoptext;
                     break;
-                default: // shouldn't happen !!
+                default: // Shouldn't happen !!
                     $stoptext = $this->TC->task->stoptext;
             }
             if (trim($stoptext) == '') {
-                $stoptext = get_string('giveup', 'mod_taskchain'); // default
+                $stoptext = get_string('giveup', 'mod_taskchain'); // Default.
             }
             $confirm = get_string('confirmstop', 'mod_taskchain');
             // $search = '/<!-- BeginTopNavButtons -->'.'.*?'.'<!-- EndTopNavButtons -->/s';
@@ -1611,7 +1562,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             $this->bodycontent = preg_replace($search, $replace, $this->bodycontent, 1);
         }
 
-        // remove (remaining) navigation buttons
+        // Remove (remaining) navigation buttons.
         $search = '/<!-- Begin(Top|Bottom)NavButtons -->' . '.*?' . '<!-- End' . '\\1' . 'NavButtons -->/s';
         $this->bodycontent = preg_replace($search, '', $this->bodycontent);
     }
@@ -1621,7 +1572,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @uses $CFG
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_filters() {
         global $CFG;
@@ -1649,7 +1599,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             $filters[$filter] = $action;
         }
 
-        // decide whether to keep, add or remove the glossary filter
+        // Decide whether to keep, add or remove the glossary filter.
         $filter = 'glossary';
         if ($this->TC->task->useglossary) {
             if (array_key_exists($filter, $filters)) {
@@ -1661,14 +1611,14 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             $filters[$filter] = self::FILTER_ACTION_REMOVE;
         }
 
-        // remove "mediaplugins" because it duplicates
-        // work done by "usemediafilter" setting
+        // Remove "mediaplugins" because it duplicates
+        // work done by "usemediafilter" setting.
         if (array_key_exists('mediaplugin', $filters)) {
             $filters['mediaplugin'] = self::FILTER_ACTION_REMOVE;
         }
 
-        // remove "asciimath" because it does not
-        // behave like a filter is supposed to behave
+        // Remove "asciimath" because it does not
+        // behave like a filter is supposed to behave.
         if (array_key_exists('asciimath', $filters)) {
             $filters['asciimath'] = self::FILTER_ACTION_REMOVE;
         }
@@ -1709,7 +1659,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             $newactives = array();
         }
 
-        // restore old filters
+        // Restore old filters.
         foreach ($oldactives as $id => $active) {
             filter_set_local_state($active->filter, $context->id, $active->active);
             if (isset($newactives[$id])) {
@@ -1717,7 +1667,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             }
         }
 
-        // remove new filters
+        // Remove new filters.
         foreach ($newactives as $id => $active) {
             filter_set_local_state($active->filter, $context->id, TEXTFILTER_INHERIT);
         }
@@ -1726,9 +1676,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         // tidy up
         ////////////////////////////////////////////////
 
-        // fix unwanted conversions by the Moodle's Tex filter
+        // Fix unwanted conversions by the Moodle's Tex filter
         // http://moodle.org/mod/forum/discuss.php?d=68435
-        // http://tracker.moodle.org/browse/MDL-7849
+        // http://tracker.moodle.org/browse/MDL-7849.
         if (preg_match('/jcross|jmix/', get_class($this))) {
             $search = '/(?<=replace\(\/)' . '<a[^>]*><img[^>]*class="texrender"[^>]*title="(.*?)"[^>]*><\/a>' . '(?=\/g)/is';
             $replace = '\[' . '$1' . '\]';
@@ -1738,8 +1688,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
     /**
      * filter_text_headcontent
-     *
-     * @todo Finish documenting this function
      */
     public function filter_text_headcontent() {
         if ($names = $this->headcontent_strings) {
@@ -1759,7 +1707,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function filter_text_headcontent_array($match) {
         // I[q][0][a] = new Array('JQuiz answer text', 'feedback', 0, 0, 0)
@@ -1777,16 +1724,15 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function filter_text_headcontent_string($match) {
         // var YourScoreIs = 'Your score is';
         // I[q][1][a][2] = 'JCloze clue';
 
         static $replace_pairs = array(
-            // backslashes and quotes
+            // Backslashes and quotes.
             '\\\\' => '\\', "\\'" => "'", '\\"' => '"',
-            // newlines
+            // Newlines.
             '\\n' => "\n",
             // other (closing tag is for XHTML compliance)
             '\\0' => "\0", '<\\/' => '</',
@@ -1796,17 +1742,17 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         $str    = $match[count($match) - 2];
         $after  = $match[count($match) - 1];
 
-        // unescape backslashes, quote and newlines
+        // Unescape backslashes, quote and newlines.
         $str = strtr($str, $replace_pairs);
 
-        // convert javascript unicode
+        // Convert javascript unicode.
         $search = '/\\\\u([0-9a-f]{4})/i';
         $str = $this->filter_text_to_utf8($str, $search);
 
-        // convert dec, hex and named entities to unicode chars
+        // Convert dec, hex and named entities to unicode chars.
         $str = mod_taskchain::textlib('entities_to_utf8', $str, true);
 
-        // fix relative urls
+        // Fix relative urls.
         $str = $this->fix_relativeurls($str);
 
         // filter string,
@@ -1822,7 +1768,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $str
      * @param xxx $search
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function filter_text_to_utf8($str, $search) {
         if (preg_match_all($search, $str, $matches, PREG_OFFSET_CAPTURE)) {
@@ -1839,28 +1784,26 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
     /**
      * filter_text_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     public function filter_text_bodycontent() {
 
-        // prevent faulty conversion of HTML entities with leading zero in Moodle <= 2.5
-        // specifically, this affects non-breaking spaces (&#0160;) in a JCloze WordList
+        // Prevent faulty conversion of HTML entities with leading zero in Moodle <= 2.5
+        // specifically, this affects non-breaking spaces (&#0160;) in a JCloze WordList.
         if (mod_taskchain::textlib('entities_to_utf8', '&#0160;') == 'p') {
             $this->bodycontent = preg_replace('/(?<=&#)0+([0-9]+)(?=;)/', '$1', $this->bodycontent);
         }
 
-        // convert entities to utf8
+        // Convert entities to utf8.
         $this->bodycontent = mod_taskchain::textlib('entities_to_utf8', $this->bodycontent);
 
-        // fix faulty conversion of non-breaking space (&nbsp;) in Moodle <= 2.1
+        // Fix faulty conversion of non-breaking space (&nbsp;) in Moodle <= 2.1.
         $twobyte = chr(194) . chr(160);
         $fourbyte = chr(195) . chr(130) . $twobyte;
         if (mod_taskchain::textlib('entities_to_utf8', '&nbsp;') == $fourbyte) {
             $this->bodycontent = str_replace($fourbyte, $twobyte, $this->bodycontent);
         }
 
-        // we will skip these tags and everything they contain
+        // We will skip these tags and everything they contain.
         $tags = array('audio'  => '</audio>',
                       'button' => '</button>',
                       'embed'  => '</embed>',
@@ -1871,15 +1814,15 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                       '!--'    => '-->',
                       ''       => '>');
 
-        // cache the lengths of the tag strings
+        // Cache the lengths of the tag strings.
         $len = array();
         foreach ($tags as $tag => $end) {
             $len[$tag] = strlen($tag);
             $len[$end] = strlen($end);
         }
 
-        // array to store start and end positions
-        // of $texts passed to the Moodle filters
+        // Array to store start and end positions
+        // of $texts passed to the Moodle filters.
         $texts = array();
 
         // detect start and end of all $texts[$i] = $ii;
@@ -1901,7 +1844,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                             if ($ii = strpos($this->bodycontent, $end, $ii + $len[$tag])) {
                                 $ii += $len[$end];
                             } else {
-                                $ii = $i_max; // no end tag - shouldn't happen !!
+                                $ii = $i_max; // No end tag - shouldn't happen !!
                             }
                             break; // foreach loop
                         }
@@ -1915,7 +1858,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         // reverse the $texts array (preserve keys)
         $texts = array_reverse($texts, true);
 
-        // cache the $filter and $context objects
+        // Cache the $filter and $context objects.
         $filter = filter_manager::instance();
         $context = $this->TC->coursemodule->context;
 
@@ -1927,18 +1870,18 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         // specify chars to be trimmed (whitespace and punctuation)
         $trimchars = "\0\t\n\r !\"#$%&'()*+,-./:;<=>?@[\\]^_`{¦}~\x0B";
 
-        // filter all $texts
+        // Filter all $texts.
         foreach ($texts as $i => $ii) {
             $len = ($ii - $i);
             $text = substr($this->bodycontent, $i, $len);
-            // ignore strings that contain only whitespace and punctuation
+            // Ignore strings that contain only whitespace and punctuation.
             if (trim($text, $trimchars)) {
                 $text = $filter->filter_text($text, $context);
                 $this->bodycontent = substr_replace($this->bodycontent, $text, $i, $len);
             }
         }
 
-        // convert back to HTML entities
+        // Convert back to HTML entities.
         $this->bodycontent = mod_taskchain::textlib('utf8_to_entities', $this->bodycontent);
     }
 
@@ -1947,10 +1890,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @uses $CFG
      * @uses $USER
-     * @todo Finish documenting this function
      */
     public function fix_feedbackform() {
-        // we are aiming to generate the following javascript to send to the client
+        // We are aiming to generate the following javascript to send to the client
         // FEEDBACK = new Array();
         // FEEDBACK[0] = ''; // url of feedback page/script
         // FEEDBACK[1] = ''; // array of array('teachername', 'value');
@@ -1962,14 +1904,14 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         // FEEDBACK[7] = ''; // 'Title'
         // FEEDBACK[8] = ''; // 'Teacher'
         // FEEDBACK[9] = ''; // 'Message'
-        // FEEDBACK[10] = ''; // 'Close this window'
+        // FEEDBACK[10] = ''; // 'Close this window'.
 
         global $CFG, $USER;
 
         $feedback = array();
         switch ($this->TC->task->studentfeedback) {
             case mod_taskchain::FEEDBACK_NONE:
-                // do nothing - feedback form is not required
+                // Do nothing - feedback form is not required.
                 break;
 
             case mod_taskchain::FEEDBACK_WEBPAGE:
@@ -1991,8 +1933,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     $feedback[1] = $teachers;
                     $feedback[2] = "'" . addslashes_js(fullname($USER)) . "'";
                     $feedback[3] = "'" . addslashes_js($USER->email) . "'";
-                    $feedback[4] = 500; // width
-                    $feedback[5] = 300; // height
+                    $feedback[4] = 500; // Width.
+                    $feedback[5] = 300; // Height.
                 } else {
                     // no teachers (or no feedback url)
                     $this->TC->task->studentfeedback = mod_taskchain::FEEDBACK_NONE;
@@ -2011,7 +1953,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 switch (count($cmids)) {
                     case 0:
                         $this->TC->task->studentfeedback = mod_taskchain::FEEDBACK_NONE;
-                        break; // no forums !!
+                        break; // No forums !!
                     case 1:
                         $feedback[0] = "'" . $CFG->httpswwwroot . '/mod/forum/view.php?id=' . $cmids[0] . "'";
                         break;
@@ -2029,8 +1971,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 if ($teachers) {
                     $feedback[0] = "'$CFG->httpswwwroot/message/index.php?user2='";
                     $feedback[1] = $teachers;
-                    $feedback[4] = 400; // width
-                    $feedback[5] = 500; // height
+                    $feedback[4] = 400; // Width.
+                    $feedback[5] = 500; // Height.
                 } else {
                     // no teachers (or no Moodle messaging)
                     $this->TC->task->studentfeedback = mod_taskchain::FEEDBACK_NONE;
@@ -2038,17 +1980,17 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 break;
 
             default:
-                // unrecognized feedback setting, so reset it to something valid
+                // Unrecognized feedback setting, so reset it to something valid.
                 $this->TC->task->studentfeedback = mod_taskchain::FEEDBACK_NONE;
         }
         if ($this->TC->task->studentfeedback == mod_taskchain::FEEDBACK_NONE) {
-            // do nothing - feedback form is not required
+            // Do nothing - feedback form is not required.
         } else {
-            // complete remaining feedback fields
+            // Complete remaining feedback fields.
             if ($this->TC->task->studentfeedback == mod_taskchain::FEEDBACK_MOODLEFORUM) {
                 $feedback[6] = "'" . addslashes_js(get_string('feedbackdiscuss', 'mod_taskchain')) . "'";
             } else {
-                // FEEDBACK_WEBPAGE, FEEDBACK_FORMMAIL, FEEDBACK_MOODLEMESSAGING
+                // FEEDBACK_WEBPAGE, FEEDBACK_FORMMAIL, FEEDBACK_MOODLEMESSAGING.
                 $feedback[6] = "'" . addslashes_js(get_string('feedbacksendmessage', 'mod_taskchain')) . "'";
             }
             $feedback[7] = "'" . addslashes_js(get_string('feedback')) . "'";
@@ -2072,7 +2014,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * get_feedback_teachers
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_feedback_teachers() {
         $teachers = get_users_by_capability($this->TC->course->context, 'mod/taskchain:reviewallattempts');
@@ -2092,23 +2033,19 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         if ($details = implode(', ', $details)) {
             return 'new Array(' . $details . ')';
         } else {
-            return ''; // no teachers
+            return ''; // No teachers.
         }
     }
 
     /**
      * fix_reviewoptions
-     *
-     * @todo Finish documenting this function
      */
     public function fix_reviewoptions() {
-        // enable / disable review options
+        // Enable / disable review options.
     }
 
     /**
      * fix_submissionform
-     *
-     * @todo Finish documenting this function
      */
     public function fix_submissionform() {
 
@@ -2149,7 +2086,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * fix_mediafilter_onload_extra
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_mediafilter_onload_extra() {
         return ''
@@ -2158,13 +2094,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             . '	}' . "\n";
     }
 
-    // captions and messages
+    // Captions and messages.
 
     /**
      * expand_AlsoCorrect
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_AlsoCorrect() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',also-correct');
@@ -2174,7 +2109,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_BottomNavBar
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_BottomNavBar() {
         return $this->expand_NavBar('BottomNavBar');
@@ -2184,7 +2118,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_CapitalizeFirst
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_CapitalizeFirst() {
         return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',capitalize-first-letter');
@@ -2194,7 +2127,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_CheckCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_CheckCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,check-caption');
@@ -2204,7 +2136,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ContentsURL
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ContentsURL() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,contents-url');
@@ -2214,7 +2145,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_CorrectIndicator
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_CorrectIndicator() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,correct-indicator');
@@ -2224,7 +2154,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Back
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Back() {
         return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,global,include-back');
@@ -2234,7 +2163,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_BackCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_BackCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,back-caption');
@@ -2244,7 +2172,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_CaseSensitive
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_CaseSensitive() {
         return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',case-sensitive');
@@ -2254,7 +2181,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ClickToAdd
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ClickToAdd() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',click-to-add');
@@ -2264,7 +2190,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ClueCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ClueCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,clue-caption');
@@ -2274,7 +2199,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Clues
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Clues() {
         // Note: WinTaskChain6 uses "include-clues", but JavaTaskChainatoes6 uses "include-clue" (missing "s")
@@ -2285,7 +2209,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Contents
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Contents() {
         return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,global,include-contents');
@@ -2295,7 +2218,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ContentsCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ContentsCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,contents-caption');
@@ -2305,7 +2227,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Correct
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Correct() {
         if ($this->TC->task->source->hbs_tasktype == 'jcloze') {
@@ -2320,7 +2241,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_DeleteCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_DeleteCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',delete-caption');
@@ -2330,7 +2250,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_DublinCoreMetadata
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_DublinCoreMetadata() {
         $dc = '';
@@ -2360,7 +2279,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_EMail
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_EMail() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,email');
@@ -2371,7 +2289,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * this string only used in resultsp6sendresults.js_ which is not required in Moodle
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_EscapedExerciseTitle() {
         return $this->TC->task->source->xml_value_js('data,title');
@@ -2381,7 +2298,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ExBGColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ExBGColor() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,ex-bg-color');
@@ -2391,7 +2307,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ExerciseSubtitle
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ExerciseSubtitle() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',exercise-subtitle');
@@ -2401,7 +2316,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ExerciseTitle
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ExerciseTitle() {
         return $this->TC->task->source->xml_value('data,title');
@@ -2411,7 +2325,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_FontFace
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_FontFace() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,font-face');
@@ -2421,7 +2334,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_FontSize
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_FontSize() {
         $value = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,font-size');
@@ -2432,7 +2344,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_FormMailURL
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_FormMailURL() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,formmail-url');
@@ -2443,7 +2354,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @uses $CFG
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_FullVersionInfo() {
         global $CFG;
@@ -2454,10 +2364,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_FuncLightColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_FuncLightColor() {
-        // top-left of buttons
+        // Top-left of buttons.
         $color = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,ex-bg-color');
         return $this->expand_halfway_color($color, '#ffffff');
     }
@@ -2466,10 +2375,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_FuncShadeColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_FuncShadeColor() {
-        // bottom right of buttons
+        // Bottom right of buttons.
         $color = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,ex-bg-color');
         return $this->expand_halfway_color($color, '#000000');
     }
@@ -2478,7 +2386,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_GiveHint
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_GiveHint() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',next-correct-letter');
@@ -2488,7 +2395,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_GraphicURL
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_GraphicURL() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,graphic-url');
@@ -2498,7 +2404,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_GuessCorrect
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_GuessCorrect() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',guess-correct');
@@ -2508,7 +2413,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_GuessIncorrect
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_GuessIncorrect() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',guess-incorrect');
@@ -2518,7 +2422,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_HeaderCode
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_HeaderCode() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,header-code');
@@ -2528,7 +2431,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Hint
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Hint() {
         return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-hint');
@@ -2538,7 +2440,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_HintCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_HintCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,hint-caption');
@@ -2548,7 +2449,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Incorrect
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Incorrect() {
         if ($this->TC->task->source->hbs_tasktype == 'jcloze') {
@@ -2563,7 +2463,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_IncorrectIndicator
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_IncorrectIndicator() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,incorrect-indicator');
@@ -2573,7 +2472,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Instructions
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Instructions() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',instructions');
@@ -2583,7 +2481,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSBrowserCheck
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSBrowserCheck() {
         return $this->expand_template('hp6browsercheck.js_');
@@ -2593,7 +2490,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSButtons
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSButtons() {
         return $this->expand_template('hp6buttons.js_');
@@ -2603,7 +2499,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSCard
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSCard() {
         return $this->expand_template('hp6card.js_');
@@ -2613,7 +2508,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSCheckShortAnswer
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSCheckShortAnswer() {
         return $this->expand_template('hp6checkshortanswer.js_');
@@ -2623,7 +2517,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSHotPotNet
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSHotPotNet() {
         return $this->expand_template('hp6hotpotnet.js_');
@@ -2633,7 +2526,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSSendResults
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSSendResults() {
         return $this->expand_template('hp6sendresults.js_');
@@ -2643,7 +2535,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSShowMessage
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSShowMessage() {
         return $this->expand_template('hp6showmessage.js_');
@@ -2653,7 +2544,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSTimer
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSTimer() {
         return $this->expand_template('hp6timer.js_');
@@ -2663,7 +2553,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSUtilities
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSUtilities() {
         return $this->expand_template('hp6utilities.js_');
@@ -2673,7 +2562,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_LastQCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_LastQCaption() {
         $caption = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,last-q-caption');
@@ -2684,7 +2572,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_LinkColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_LinkColor() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,link-color');
@@ -2694,7 +2581,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NamePlease
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NamePlease() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,name-please');
@@ -2705,7 +2591,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $navbarid (optional, default='')
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NavBar($navbarid = '') {
         $this->navbarid = $navbarid;
@@ -2718,7 +2603,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NavBarID
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NavBarID() {
         // $this->navbarid is set in "$this->expand_NavBar"
@@ -2729,7 +2613,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NavBarJS
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NavBarJS() {
         return $this->expand_NavButtons();
@@ -2739,7 +2622,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NavButtons
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NavButtons() {
         return ($this->expand_Back() || $this->expand_NextEx() || $this->expand_Contents());
@@ -2749,10 +2631,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NavTextColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NavTextColor() {
-        // might be 'title-color' ?
+        // Might be 'title-color' ?
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,text-color');
     }
 
@@ -2760,7 +2641,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NavBarColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NavBarColor() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,nav-bar-color');
@@ -2770,7 +2650,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NavLightColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NavLightColor() {
         $color = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,nav-bar-color');
@@ -2781,7 +2660,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NavShadeColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NavShadeColor() {
         $color = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,nav-bar-color');
@@ -2792,7 +2670,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NextCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NextCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',next-caption');
@@ -2802,13 +2679,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NextCorrect
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NextCorrect() {
         if ($this->TC->task->source->hbs_tasktype == 'jquiz') {
-            $tag = 'next-correct-letter'; // jquiz
+            $tag = 'next-correct-letter'; // Jquiz.
         } else {
-            $tag = 'next-correct-part'; // jmix
+            $tag = 'next-correct-part'; // Jmix.
         }
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',' . $tag);
     }
@@ -2817,7 +2693,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NextEx
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NextEx() {
         return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,global,include-next-ex');
@@ -2827,7 +2702,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NextExCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NextExCaption() {
         $caption = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,next-ex-caption');
@@ -2838,7 +2712,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NextQCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NextQCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,next-q-caption');
@@ -2848,7 +2721,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_NextExURL
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_NextExURL() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',next-ex-url');
@@ -2858,7 +2730,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_OKCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_OKCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,ok-caption');
@@ -2868,7 +2739,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_PageBGColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_PageBGColor() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,page-bg-color');
@@ -2878,7 +2748,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_PlainTitle
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_PlainTitle() {
         return $this->TC->task->source->xml_value('data,title');
@@ -2888,7 +2757,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_PreloadImages
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_PreloadImages() {
         $value = $this->expand_PreloadImageList();
@@ -2899,7 +2767,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_PreloadImageList
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_PreloadImageList() {
         if (! isset($this->PreloadImageList)) {
@@ -2907,14 +2774,14 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
             $images = array();
 
-            // extract all src values from <img> tags in the xml file
+            // Extract all src values from <img> tags in the xml file.
             $search = '/&amp;#x003C;img.*?src=&quot;(.*?)&quot;.*?&amp;#x003E;/is';
             if (preg_match_all($search, $this->TC->task->source->filecontents, $matches)) {
                 $images = array_merge($images, $matches[1]);
             }
 
-            // extract all urls from TaskChain's [square bracket] notation
-            // e.g. [%sitefiles%/images/screenshot.jpg image 350 265 center]
+            // Extract all urls from TaskChain's [square bracket] notation
+            // e.g. [%sitefiles%/images/screenshot.jpg image 350 265 center].
             $search = '/\[' . "([^\?\]]*\.(?:jpg|gif|png)(?:\?[^ \t\r\n\]]*)?)" . '[^\]]*' . '\]/s';
             if (preg_match_all($search, $this->TC->task->source->filecontents, $matches)) {
                 $images = array_merge($images, $matches[1]);
@@ -2932,7 +2799,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Reading
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Reading() {
         return $this->TC->task->source->xml_value_int('data,reading,include-reading');
@@ -2942,7 +2808,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ReadingText
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ReadingText() {
         $title = $this->expand_ReadingTitle();
@@ -2958,7 +2823,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ReadingTitle
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ReadingTitle() {
         $value = $this->TC->task->source->xml_value('data,reading,reading-title');
@@ -2969,7 +2833,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Restart
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Restart() {
         return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-restart');
@@ -2979,7 +2842,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_RestartCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_RestartCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,restart-caption');
@@ -2989,17 +2851,15 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Scorm12
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Scorm12() {
-        return false; // HP scorm functionality is always disabled in Moodle
+        return false; // HP scorm functionality is always disabled in Moodle.
     }
 
     /**
      * expand_Seconds
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Seconds() {
         return $this->TC->task->source->xml_value('data,timer,seconds');
@@ -3009,10 +2869,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_SendResults
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_SendResults() {
-        return false; // send results (via formmail) is always disabled in Moodle
+        return false; // Send results (via formmail) is always disabled in Moodle
         // $tags = $this->TC->task->source->hbs_software.'-config-file,'.$this->TC->task->source->hbs_tasktype.',send-email';
         // return $this->TC->task->source->xml_value($tags);
     }
@@ -3021,7 +2880,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShowAllQuestionsCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShowAllQuestionsCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,show-all-questions-caption');
@@ -3031,7 +2889,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShowAnswer
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShowAnswer() {
         return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-show-answer');
@@ -3041,7 +2898,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_SolutionCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_SolutionCaption() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,solution-caption');
@@ -3051,7 +2907,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShowOneByOneCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShowOneByOneCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,show-one-by-one-caption');
@@ -3061,7 +2916,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_StyleSheet
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_StyleSheet() {
         return $this->expand_template('hp6.cs_');
@@ -3071,7 +2925,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_TextColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_TextColor() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,text-color');
@@ -3081,7 +2934,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_TheseAnswersToo
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_TheseAnswersToo() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',also-correct');
@@ -3091,7 +2943,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ThisMuch
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ThisMuch() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',this-much-correct');
@@ -3101,14 +2952,13 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Timer
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Timer() {
         if ($this->TC->task->timelimit < 0) {
-            // use setting in source file
+            // Use setting in source file.
             return $this->TC->task->source->xml_value_int('data,timer,include-timer');
         } else {
-            // override setting in source file
+            // Override setting in source file.
             return $this->TC->task->timelimit;
         }
     }
@@ -3117,7 +2967,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_TimesUp
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_TimesUp() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,times-up');
@@ -3127,7 +2976,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_TitleColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_TitleColor() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,title-color');
@@ -3137,7 +2985,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_TopNavBar
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_TopNavBar() {
         return $this->expand_NavBar('TopNavBar');
@@ -3147,7 +2994,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Undo
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Undo() {
         return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-undo');
@@ -3157,7 +3003,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_UndoCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_UndoCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,undo-caption');
@@ -3167,7 +3012,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_UserDefined1
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_UserDefined1() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,user-string-1');
@@ -3177,7 +3021,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_UserDefined2
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_UserDefined2() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,user-string-2');
@@ -3187,7 +3030,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_UserDefined3
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_UserDefined3() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,user-string-3');
@@ -3197,7 +3039,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_VLinkColor
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_VLinkColor() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,vlink-color');
@@ -3207,7 +3048,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_YourScoreIs
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_YourScoreIs() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,your-score-is');
@@ -3217,16 +3057,15 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Keypad
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Keypad() {
         $str = '';
         if ($this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-keypad')) {
-            // these characters must always be in the keypad
+            // These characters must always be in the keypad.
             $chars = array();
             $this->add_keypad_chars($chars, $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,keypad-characters'));
 
-            // append other characters used in the answers
+            // Append other characters used in the answers.
             switch ($this->TC->task->source->hbs_tasktype) {
                 case 'jcloze':
                     $tags = 'data,gap-fill,question-record';
@@ -3258,11 +3097,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 }
             }
 
-            // remove duplicate characters and sort
+            // Remove duplicate characters and sort.
             $chars = array_unique($chars);
             usort($chars, array($this, 'taskchain_keypad_chars_sort'));
 
-            // create keypad buttons for each character
+            // Create keypad buttons for each character.
             foreach ($chars as $char) {
                 $str .= '<button onclick="' . "TypeChars('" . $this->TC->task->source->js_value_safe($char, true) . "');" . 'return false;">' . $char . '</button>';
             }
@@ -3275,7 +3114,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $chars (passed by reference)
      * @param xxx $text
-     * @todo Finish documenting this function
      */
     public function add_keypad_chars(&$chars, $text) {
         if (preg_match_all('/&[^;]+;/', $text, $more_chars)) {
@@ -3289,7 +3127,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $a_char
      * @param xxx $b_char
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskchain_keypad_chars_sort($a_char, $b_char) {
         $a_value = $this->taskchain_keypad_char_value($a_char);
@@ -3300,7 +3137,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         if ($a_value > $b_value) {
             return 1;
         }
-        // values are equal
+        // Values are equal.
         return 0;
     }
 
@@ -3309,20 +3146,19 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $char
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskchain_keypad_char_value($char) {
 
-        // ordinal value of char
+        // Ordinal value of char.
         $char = mod_taskchain::textlib('entities_to_utf8', $char);
         if (class_exists('core_text')) {
-            // Moodle >= 2.6
+            // Moodle >= 2.6.
             $ord = mod_taskchain::textlib('utf8ord', $char);
         } else {
-            // Moodle <= 2.5
+            // Moodle <= 2.5.
             $ord = mod_taskchain::textlib('convert', $char, 'UTF-8', 'UCS-4BE');
             $ord = unpack('N', $ord);
-            $ord = reset($ord); // get first char
+            $ord = reset($ord); // Get first char.
         }
 
         // lowercase letters (plain or accented)
@@ -3330,87 +3166,86 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             return ($ord - 31) + ($ord / 1000);
         }
 
-        // subscripts and superscripts
+        // Subscripts and superscripts.
         switch ($ord) {
             case 0x2070:
-                return 48.1; // super 0 = ord('0') + 0.1
+                return 48.1; // Super 0 = ord('0') + 0.1.
             case 0x00B9:
-                return 49.1; // super 1
+                return 49.1; // Super 1.
             case 0x00B2:
-                return 50.1; // super 2
+                return 50.1; // Super 2.
             case 0x00B3:
-                return 51.1; // super 3
+                return 51.1; // Super 3.
             case 0x2074:
-                return 52.1; // super 4
+                return 52.1; // Super 4.
             case 0x2075:
-                return 53.1; // super 5
+                return 53.1; // Super 5.
             case 0x2076:
-                return 54.1; // super 6
+                return 54.1; // Super 6.
             case 0x2077:
-                return 55.1; // super 7
+                return 55.1; // Super 7.
             case 0x2078:
-                return 56.1; // super 8
+                return 56.1; // Super 8.
             case 0x2079:
-                return 57.1; // super 9
+                return 57.1; // Super 9.
 
             case 0x207A:
-                return 43.1; // super
+                return 43.1; // Super.
             case 0x207B:
-                return 45.1; // super -
+                return 45.1; // Super -.
             case 0x207C:
                 return 61.1; // super =
             case 0x207D:
-                return 40.1; // super (
+                return 40.1; // Super (.
             case 0x207E:
                 return 41.1; // super )
             case 0x207F:
-                return 110.1; // super n
+                return 110.1; // Super n.
 
             case 0x2080:
-                return 47.9; // sub 0 = ord('0') - 0.1
+                return 47.9; // Sub 0 = ord('0') - 0.1.
             case 0x2081:
-                return 48.9; // sub 1
+                return 48.9; // Sub 1.
             case 0x2082:
-                return 49.9; // sub 2
+                return 49.9; // Sub 2.
             case 0x2083:
-                return 50.9; // sub 3
+                return 50.9; // Sub 3.
             case 0x2084:
-                return 51.9; // sub 4
+                return 51.9; // Sub 4.
             case 0x2085:
-                return 52.9; // sub 5
+                return 52.9; // Sub 5.
             case 0x2086:
-                return 53.9; // sub 6
+                return 53.9; // Sub 6.
             case 0x2087:
-                return 54.9; // sub 7
+                return 54.9; // Sub 7.
             case 0x2088:
-                return 55.9; // sub 8
+                return 55.9; // Sub 8.
             case 0x2089:
-                return 56.9; // sub 9
+                return 56.9; // Sub 9.
 
             case 0x208A:
-                return 42.9; // sub +
+                return 42.9; // Sub +.
             case 0x208B:
-                return 44.9; // sub -
+                return 44.9; // Sub -.
             case 0x208C:
                 return 60.9; // sub =
             case 0x208D:
-                return 39.9; // sub (
+                return 39.9; // Sub (.
             case 0x208E:
                 return 40.9; // sub )
             case 0x208F:
-                return 109.9; // sub n
+                return 109.9; // Sub n.
         }
 
         return $ord;
     }
 
-    // JCloze
+    // JCloze.
 
     /**
      * expand_JSJCloze6
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSJCloze6() {
         return $this->expand_template('jcloze6.js_');
@@ -3420,12 +3255,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ClozeBody
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ClozeBody() {
         $str = '';
 
-        // get drop down list of words, if required
+        // Get drop down list of words, if required.
         $dropdownlist = '';
         if ($this->use_DropDownList()) {
             $this->set_WordList();
@@ -3434,24 +3268,24 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             }
         }
 
-        // cache clues flag and caption
+        // Cache clues flag and caption.
         $includeclues = $this->expand_Clues();
         $cluecaption = $this->expand_ClueCaption();
 
-        // detect if cloze starts with gap
+        // Detect if cloze starts with gap.
         if (strpos($this->TC->task->source->filecontents, '<gap-fill><question-record>')) {
             $startwithgap = true;
         } else {
             $startwithgap = false;
         }
 
-        // initialize loop values
+        // Initialize loop values.
         $i = 0;
         $tags = 'data,gap-fill';
         $open_text = "$tags,open-text";
         $question_record = "$tags,question-record";
 
-        // loop through text and gaps
+        // Loop through text and gaps.
         $looping = true;
         while ($looping) {
             $gap = '';
@@ -3462,12 +3296,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 if ($this->use_DropDownList()) {
                     $gap .= '<select id="Gap' . $i . '"><option value=""></option>' . $dropdownlist . '</select>';
                 } else {
-                    // minimum gap size
+                    // Minimum gap size.
                     if (! $gapsize = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',minimum-gap-size')) {
                         $gapsize = 6;
                     }
 
-                    // increase gap size to length of longest answer for this gap
+                    // Increase gap size to length of longest answer for this gap.
                     $a = 0;
                     while (($answer = $item . "['answer'][$a]['#']") && $this->TC->task->source->xml_value($question_record, $answer)) {
                         $answertext = $this->TC->task->source->xml_value($question_record, $answer . "['text'][0]['#']");
@@ -3497,12 +3331,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 }
                 $i++;
             } else {
-                // no text or gap, so force end of loop
+                // No text or gap, so force end of loop.
                 $looping = false;
             }
         }
         if ($i == 0) {
-            // oops, no gaps found!
+            // Oops, no gaps found!
             return $this->TC->task->source->xml_value($tags);
         } else {
             return $str;
@@ -3511,18 +3345,15 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
     /**
      * expand_ItemArray
-     *
-     * @todo Finish documenting this function
      */
     public function expand_ItemArray() {
-        // this method is overridden by JCloze and JQuiz output formats
+        // This method is overridden by JCloze and JQuiz output formats.
     }
 
     /**
      * expand_WordList
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_WordList() {
         $str = '';
@@ -3537,7 +3368,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * include_WordList
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function include_WordList() {
         return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-word-list');
@@ -3547,7 +3377,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * use_DropDownList
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function use_DropDownList() {
         return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',use-drop-down-list');
@@ -3555,17 +3384,15 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
     /**
      * set_WordList
-     *
-     * @todo Finish documenting this function
      */
     public function set_WordList() {
 
         if (isset($this->wordlist)) {
-            // do nothing
+            // Do nothing.
         } else {
             $this->wordlist = array();
 
-            // is the wordlist required
+            // Is the wordlist required.
             if ($this->include_WordList() || $this->use_DropDownList()) {
                 $q = 0;
                 $tags = 'data,gap-fill,question-record';
@@ -3589,13 +3416,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         }
     }
 
-    // jcross
+    // Jcross.
 
     /**
      * expand_JSJCross6
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSJCross6() {
         return $this->expand_template('jcross6.js_');
@@ -3605,7 +3431,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_CluesAcrossLabel
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_CluesAcrossLabel() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',clues-across');
@@ -3615,7 +3440,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_CluesDownLabel
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_CluesDownLabel() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',clues-down');
@@ -3625,7 +3449,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_EnterCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_EnterCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',enter-caption');
@@ -3635,7 +3458,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShowHideClueList
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShowHideClueList() {
         $value = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-clue-list');
@@ -3646,7 +3468,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_CluesDown
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_CluesDown() {
         return $this->expand_jcross_clues('D');
@@ -3656,7 +3477,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_CluesAcross
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_CluesAcross() {
         return $this->expand_jcross_clues('A');
@@ -3667,7 +3487,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $direction
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_jcross_clues($direction) {
         // $direction: A(cross) or D(own)
@@ -3683,9 +3502,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 $aword = $this->get_jcross_aword($row, $r, $r_max, $c, $c_max);
                 $dword = $this->get_jcross_dword($row, $r, $r_max, $c, $c_max);
                 if ($aword || $dword) {
-                    $clue_i++; // increment clue index
+                    $clue_i++; // Increment clue index.
 
-                    // get the definition for this word
+                    // Get the definition for this word.
                     $def = '';
                     $word = ($direction == 'A') ? $aword : $dword;
                     $word = mod_taskchain::textlib('utf8_to_entities', $word);
@@ -3712,7 +3531,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_LetterArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_LetterArray() {
         $row = null;
@@ -3735,7 +3553,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_GuessArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_GuessArray() {
         $row = null;
@@ -3754,7 +3571,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ClueNumArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ClueNumArray() {
         $row = null;
@@ -3762,7 +3578,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         $c_max = 0;
         $this->get_jcross_grid($row, $r_max, $c_max);
 
-        $i = 0; // clue index
+        $i = 0; // Clue index.
         $str = '';
         for ($r = 0; $r <= $r_max; $r++) {
             $str .= "CL[$r] = new Array(";
@@ -3775,7 +3591,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 if (empty($aword) && empty($dword)) {
                     $str .= 0;
                 } else {
-                    $i++; // increment the clue index
+                    $i++; // Increment the clue index.
                     $str .= $i;
                 }
             }
@@ -3788,7 +3604,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_GridBody
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_GridBody() {
         $row = null;
@@ -3809,7 +3624,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     if (empty($aword) && empty($dword)) {
                         $str .= '<td class="LetterOnlyCell"><span id="L_' . $r . '_' . $c . '">&nbsp;</span></td>';
                     } else {
-                        $i++; // increment clue index
+                        $i++; // Increment clue index.
                         $str .= '<td class="NumLetterCell"><a href="javascript:void(0);" class="GridNum" onclick="ShowClue(' . $i . ',' . $r . ',' . $c . ')">' . $i . '</a><span class="NumLetterCellText" id="L_' . $r . '_' . $c . '" onclick="ShowClue(' . $i . ',' . $r . ',' . $c . ')">&nbsp;&nbsp;&nbsp;</span></td>';
                     }
                 }
@@ -3825,7 +3640,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $rows (passed by reference)
      * @param xxx $r_max (passed by reference)
      * @param xxx $c_max (passed by reference)
-     * @todo Finish documenting this function
      */
     public function get_jcross_grid(&$rows, &$r_max, &$c_max) {
         $r_max = 0;
@@ -3854,7 +3668,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $c
      * @param xxx $c_max
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_jcross_dword(&$row, $r, $r_max, $c, $c_max) {
         $str = '';
@@ -3873,7 +3686,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $c
      * @param xxx $c_max
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_jcross_aword(&$row, $r, $r_max, $c, $c_max) {
         $str = '';
@@ -3893,7 +3705,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $c_max
      * @param xxx $go_down (optional, default=false)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_jcross_word(&$row, $r, $r_max, $c, $c_max, $go_down = false) {
         $str = '';
@@ -3908,13 +3719,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         return $str;
     }
 
-    // jmatch
+    // Jmatch.
 
     /**
      * expand_JSJMatch6
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSJMatch6() {
         return $this->expand_template('jmatch6.js_');
@@ -3924,7 +3734,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSDJMatch6
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSDJMatch6() {
         return $this->expand_template('djmatch6.js_');
@@ -3934,7 +3743,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSFJMatch6
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSFJMatch6() {
         return $this->expand_template('fjmatch6.js_');
@@ -3944,7 +3752,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShuffleQs
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShuffleQs() {
         return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',shuffle-questions');
@@ -3954,7 +3761,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_QsToShow
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_QsToShow() {
         $i = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',show-limited-questions');
@@ -3983,7 +3789,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_MatchDivItems
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_MatchDivItems() {
         $this->set_jmatch_items();
@@ -4000,7 +3805,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 // Note: if the 'text' contains an image, it could be added as the background image of the option
                 // http://www.small-software-utilities.com/design/91/html-select-with-background-image-or-icon-next-to-text/
                 // ... or of an optgroup ...
-                // http://ask.metafilter.com/16153/Images-in-HTML-select-form-elements
+                // http://ask.metafilter.com/16153/Images-in-HTML-select-form-elements.
             }
         }
 
@@ -4022,7 +3827,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_FixedArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_FixedArray() {
         $this->set_jmatch_items();
@@ -4039,7 +3843,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_DragArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_DragArray() {
         $this->set_jmatch_items();
@@ -4057,7 +3860,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Slide
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Slide() {
         // return true if any JMatch drag-and-drop RH items are fixed and therefore need to slide to the LHS
@@ -4072,8 +3874,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
     /**
      * set_jmatch_items
-     *
-     * @todo Finish documenting this function
      */
     public function set_jmatch_items() {
         if (count($this->l_items)) {
@@ -4090,8 +3890,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             $r_text = $this->TC->task->source->xml_value($tags, $r_item . "['text'][0]['#']");
             $r_fixed = $this->TC->task->source->xml_value_int($tags, $r_item . "['fixed'][0]['#']");
 
-            // typically all right-hand items are unique, but there may be duplicates
-            // in which case we want the key of the first item containing this text
+            // Typically all right-hand items are unique, but there may be duplicates
+            // in which case we want the key of the first item containing this text.
             for ($key = 0; $key < $i; $key++) {
                 if (isset($this->r_items[$key]) && $this->r_items[$key]['text'] == $r_text) {
                     break;
@@ -4105,7 +3905,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             }
             if (strlen($l_text)) {
                 $this->l_items[] = array('key' => $key, 'text' => $l_text, 'fixed' => $l_fixed);
-                $addright = true; // force right item to be added
+                $addright = true; // Force right item to be added.
             }
             if ($addright) {
                 $this->r_items[] = array('key' => $key, 'text' => $r_text, 'fixed' => $r_fixed);
@@ -4119,27 +3919,26 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $items (passed by reference)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function shuffle_jmatch_items(&$items) {
-        // get moveable items
+        // Get moveable items.
         $moveable_keys = array();
         for ($i = 0; $i < count($items); $i++) {
             if (! $items[$i]['fixed']) {
                 $moveable_keys[] = $i;
             }
         }
-        // shuffle moveable items
+        // Shuffle moveable items.
         $this->seed_random_number_generator();
         shuffle($moveable_keys);
 
         $keys = array();
         for ($i = 0, $ii = 0; $i < count($items); $i++) {
             if ($items[$i]['fixed']) {
-                // fixed items stay where they are
+                // Fixed items stay where they are.
                 $keys[] = $i;
             } else {
-                // moveable items are inserted in a shuffled order
+                // Moveable items are inserted in a shuffled order.
                 $keys[] = $moveable_keys[$ii++];
             }
         }
@@ -4148,8 +3947,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
     /**
      * seed_random_number_generator
-     *
-     * @todo Finish documenting this function
      */
     public function seed_random_number_generator() {
         static $seeded = false;
@@ -4159,13 +3956,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         }
     }
 
-    // JMatch flash card
+    // JMatch flash card.
 
     /**
      * expand_TRows
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_TRows() {
         $str = '';
@@ -4177,13 +3973,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         return $str;
     }
 
-    // jmix
+    // Jmix.
 
     /**
      * expand_JSJMix6
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSJMix6() {
         return $this->expand_template('jmix6.js_');
@@ -4193,7 +3988,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSFJMix6
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSFJMix6() {
         return $this->expand_template('fjmix6.js_');
@@ -4203,7 +3997,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_JSDJMix6
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSDJMix6() {
         return $this->expand_template('djmix6.js_');
@@ -4213,18 +4006,17 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_Punctuation
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_Punctuation() {
         $chars = array();
 
-        // RegExp pattern to match HTML entity
+        // RegExp pattern to match HTML entity.
         $pattern = '/&#x([0-9A-F]+);/i';
 
         // entities for all punctutation except '&#;' (because they are used in html entities)
         $entities = $this->jmix_encode_punctuation('!"$%' . "'" . '()*+,-./:<=>?@[\]^_`{|}~');
 
-        // xml tags for JMix segments and alternate answers
+        // Xml tags for JMix segments and alternate answers.
         $punctuation_tags = array(
             'data,jumbled-order-exercise,main-order,segment',
             'data,jumbled-order-exercise,alternate',
@@ -4233,30 +4025,30 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             // get next segment (or alternate answer)
             $i = 0;
             while ($value = $this->TC->task->source->xml_value($tags, "[$i]['#']")) {
-                // convert low-ascii punctuation to entities
+                // Convert low-ascii punctuation to entities.
                 $value = strtr($value, $entities);
 
-                // extract all hex HTML entities
+                // Extract all hex HTML entities.
                 if (preg_match_all($pattern, $value, $matches)) {
-                    // loop through hex entities
+                    // Loop through hex entities.
                     $m_max = count($matches[0]);
                     for ($m = 0; $m < $m_max; $m++) {
-                        // convert to hex string to number
+                        // Convert to hex string to number
                         // eval('$hex=0x'.$matches[1][$m].';');
                         $hex = hexdec($matches[1][$m]);
 
-                        // is this a punctuation character?
+                        // Is this a punctuation character?
                         if (
-                            ($hex >= 0x0020 && $hex <= 0x00BF) || // ascii punctuation
-                            ($hex >= 0x2000 && $hex <= 0x206F) || // general punctuation
-                            ($hex >= 0x3000 && $hex <= 0x303F) || // CJK punctuation
-                            ($hex >= 0xFE30 && $hex <= 0xFE4F) || // CJK compatability
-                            ($hex >= 0xFE50 && $hex <= 0xFE6F) || // small form variants
+                            ($hex >= 0x0020 && $hex <= 0x00BF) || // Ascii punctuation.
+                            ($hex >= 0x2000 && $hex <= 0x206F) || // General punctuation.
+                            ($hex >= 0x3000 && $hex <= 0x303F) || // CJK punctuation.
+                            ($hex >= 0xFE30 && $hex <= 0xFE4F) || // CJK compatability.
+                            ($hex >= 0xFE50 && $hex <= 0xFE6F) || // Small form variants.
                             ($hex >= 0xFF00 && $hex <= 0xFF40) || // halfwidth and fullwidth forms (1)
                             ($hex >= 0xFF5B && $hex <= 0xFF65) || // halfwidth and fullwidth forms (2)
                             ($hex >= 0xFFE0 && $hex <= 0xFFEE)    // halfwidth and fullwidth forms (3)
                         ) {
-                            // add this character
+                            // Add this character.
                             $chars[] = $matches[0][$m];
                         }
                     }
@@ -4274,22 +4066,21 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_OpenPunctuation
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_OpenPunctuation() {
         $chars = array();
 
         // unicode punctuation designations (pi="initial quote", ps="open")
         // http://www.sql-und-xml.de/unicode-database/pi.html
-        // http://www.sql-und-xml.de/unicode-database/ps.html
+        // http://www.sql-und-xml.de/unicode-database/ps.html.
         $pi = '0022|0027|00AB|2018|201B|201C|201F|2039';
         $ps = '0028|005B|007B|0F3A|0F3C|169B|201A|201E|2045|207D|208D|2329|23B4|2768|276A|276C|276E|2770|2772|2774|27E6|27E8|27EA|2983|2985|2987|2989|298B|298D|298F|2991|2993|2995|2997|29D8|29DA|29FC|3008|300A|300C|300E|3010|3014|3016|3018|301A|301D|FD3E|FE35|FE37|FE39|FE3B|FE3D|FE3F|FE41|FE43|FE47|FE59|FE5B|FE5D|FF08|FF3B|FF5B|FF5F|FF62';
         $pattern = '/(&#x(' . $pi . '|' . $ps . ');)/i';
 
-        // HMTL entities of opening punctuation
+        // HMTL entities of opening punctuation.
         $entities = $this->jmix_encode_punctuation('"' . "'" . '(<[{');
 
-        // xml tags for JMix segments and alternate answers
+        // Xml tags for JMix segments and alternate answers.
         $punctuation_tags = array(
             'data,jumbled-order-exercise,main-order,segment',
             'data,jumbled-order-exercise,alternate',
@@ -4314,7 +4105,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $str
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function jmix_encode_punctuation($str) {
         $entities = array();
@@ -4351,14 +4141,13 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $more_values (optional, default=array)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_SegmentArray($more_values = array()) {
 
         $segments = array();
         $values = array();
 
-        // XML tags to the start of a segment
+        // XML tags to the start of a segment.
         $tags = 'data,jumbled-order-exercise,main-order,segment';
 
         $i = 0;
@@ -4406,7 +4195,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_AnswerArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_AnswerArray() {
 
@@ -4414,7 +4202,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         $values = array();
         $escapedvalues = array();
 
-        // XML tags to the start of a segment
+        // XML tags to the start of a segment.
         $tags = 'data,jumbled-order-exercise,main-order,segment';
 
         $i = 0;
@@ -4433,14 +4221,14 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             $i++;
         }
 
-        // start the answers array
+        // Start the answers array.
         $a = 0;
         $str = 'Answers[' . ($a++) . '] = new Array(' . implode(',', $segments) . ");\n";
 
-        // pattern to match the next part of an alternate answer
+        // Pattern to match the next part of an alternate answer.
         $pattern = '/^(' . implode('|', $escapedvalues) . ')\s*/i';
 
-        // XML tags to the start of an alternate answer
+        // XML tags to the start of an alternate answer.
         $tags = 'data,jumbled-order-exercise,alternate';
 
         $i = 0;
@@ -4452,7 +4240,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     $segments[] = $key + 1;
                     $value = substr($value, strlen($matches[0]));
                 } else {
-                    // invalid alternate sequence - shouldn't happen !!
+                    // Invalid alternate sequence - shouldn't happen !!
                     $segments = array();
                     break;
                 }
@@ -4469,7 +4257,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_RemainingWords
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_RemainingWords() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',remaining-words');
@@ -4479,19 +4266,17 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_DropTotal
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_DropTotal() {
         return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,global,drop-total');
     }
 
-    // JQuiz
+    // JQuiz.
 
     /**
      * expand_JSJQuiz6
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_JSJQuiz6() {
         return $this->expand_template('jquiz6.js_');
@@ -4501,33 +4286,32 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_QuestionOutput
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_QuestionOutput() {
-        // start question list
+        // Start question list.
         $str = '<ol class="QuizQuestions" id="Questions">' . "\n";
 
         $q = 0;
         $tags = 'data,questions,question-record';
         while (($question = "[$q]['#']") && $this->TC->task->source->xml_value($tags, $question) && ($answers = $question . "['answers'][0]['#']") && $this->TC->task->source->xml_value($tags, $answers)) {
-            // get question
+            // Get question.
             $question_text = $this->TC->task->source->xml_value($tags, $question . "['question'][0]['#']");
             $question_type = $this->TC->task->source->xml_value_int($tags, $question . "['question-type'][0]['#']");
 
             switch ($question_type) {
-                case 1: // MULTICHOICE:
+                case 1: // MULTICHOICE:.
                     $textbox = false;
                     $liststart = '<ol class="MCAnswers">' . "\n";
                     break;
-                case 2: // SHORTANSWER:
+                case 2: // SHORTANSWER:.
                     $textbox = true;
                     $liststart = '';
                     break;
-                case 3: // HYBRID:
+                case 3: // HYBRID:.
                     $textbox = true;
                     $liststart = '<ol class="MCAnswers" id="Q_' . $q . '_Hybrid_MC" style="display: none;">' . "\n";
                     break;
-                case 4: // MULTISELECT:
+                case 4: // MULTISELECT:.
                     $textbox = false;
                     $liststart = '<ol class="MSelAnswers">' . "\n";
                     break;
@@ -4536,7 +4320,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     $liststart = '';
             }
             if ($textbox == false && $liststart == '') {
-                continue; // unknown question type
+                continue; // Unknown question type.
             }
 
             // Skip unknown question types.
@@ -4549,7 +4333,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
             // check we have a question (or at least one answer)
             if (strlen($question_text) || strlen($first_answer_text)) {
-                // start question
+                // Start question.
                 $str .= '<li class="QuizQuestion" id="Q_' . $q . '" style="display: none;">';
                 $str .= '<p class="QuestionText">' . $question_text . '</p>';
 
@@ -4560,7 +4344,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     $str .= '<div class="ShortAnswer" id="Q_' . $q . '_SA"><form method="post" action="" onsubmit="return false;"><div>';
                     $str .= $prefix;
                     if ($size <= 25) {
-                        // text box
+                        // Text box.
                         $str .= '<input type="text" id="Q_' . $q . '_Guess" onfocus="TrackFocus(' . "'" . 'Q_' . $q . '_Guess' . "'" . ')" onblur="LeaveGap()" class="ShortAnswerBox" size="' . $size . '"></input>';
                     } else {
                         // textarea (29 cols wide)
@@ -4593,12 +4377,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                         $text = $this->TC->task->source->xml_value($tags, $answer . "['text'][0]['#']");
                         if (strlen((string)$text)) {
                             if ($question_type == 1 || $question_type == 3) {
-                                // MULTICHOICE or HYBRID: button
+                                // MULTICHOICE or HYBRID: button.
                                 if ($this->TC->task->source->xml_value_int($tags, $answer . "['include-in-mc-options'][0]['#']")) {
                                     $str .= '<li id="Q_' . $q . '_' . $aa . '"><button class="FuncButton" onfocus="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseover="FuncBtnOver(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" id="Q_' . $q . '_' . $aa . '_Btn" onclick="CheckMCAnswer(' . $q . ',' . $aa . ',this)">&nbsp;&nbsp;?&nbsp;&nbsp;</button>&nbsp;&nbsp;' . $text . '</li>' . "\n";
                                 }
                             } else if ($question_type == 4) {
-                                // MULTISELECT: checkbox
+                                // MULTISELECT: checkbox.
                                 $str .= '<li id="Q_' . $q . '_' . $aa . '"><form method="post" action="" onsubmit="return false;"><div><input type="checkbox" id="Q_' . $q . '_' . $aa . '_Chk" class="MSelCheckbox" />' . $text . '</div></form></li>' . "\n";
                             }
                             $aa++;
@@ -4606,23 +4390,23 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                         $a++;
                     }
 
-                    // finish answer list
+                    // Finish answer list.
                     $str .= '</ol>';
 
                     if ($question_type == 4) {
-                        // MULTISELECT: check button
+                        // MULTISELECT: check button.
                         $caption = $this->expand_CheckCaption();
                         $str .= $this->expand_jquiz_button($caption, "CheckMultiSelAnswer($q)");
                     }
                 }
 
-                // finish question
+                // Finish question.
                 $str .= "</li>\n";
             }
             $q++;
         } // end while $question
 
-        // finish question list and finish
+        // Finish question list and finish.
         return $str . "</ol>\n";
     }
 
@@ -4634,7 +4418,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $q
      * @param xxx $defaultsize (optional, default=9)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_jquiz_textbox_details($tags, $answers, $q, $defaultsize = 9) {
         $prefix = '';
@@ -4658,7 +4441,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @param xxx $caption
      * @param xxx $onclick
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_jquiz_button($caption, $onclick) {
         return '<button class="FuncButton" onfocus="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseover="FuncBtnOver(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="' . $onclick . '">' . $caption . '</button>';
@@ -4668,7 +4450,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_MultiChoice
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_MultiChoice() {
         return $this->jquiz_has_question_type(1);
@@ -4678,7 +4459,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShortAnswer
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShortAnswer() {
         return $this->jquiz_has_question_type(2);
@@ -4688,7 +4468,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_MultiSelect
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_MultiSelect() {
         return $this->jquiz_has_question_type(4);
@@ -4699,10 +4478,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      *
      * @param xxx $type
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function jquiz_has_question_type($type) {
-        // does this JQuiz have any questions of the given $type?
+        // Does this JQuiz have any questions of the given $type?
         $q = 0;
         $tags = 'data,questions,question-record';
         while (($question = "[$q]['#']") && $this->TC->task->source->xml_value($tags, $question)) {
@@ -4720,7 +4498,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_CompletedSoFar
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_CompletedSoFar() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,completed-so-far');
@@ -4730,7 +4507,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ContinuousScoring
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ContinuousScoring() {
         return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',continuous-scoring');
@@ -4740,7 +4516,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_CorrectFirstTime
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_CorrectFirstTime() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,correct-first-time');
@@ -4750,7 +4525,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ExerciseCompleted
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ExerciseCompleted() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,exercise-completed');
@@ -4760,7 +4534,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShowCorrectFirstTime
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShowCorrectFirstTime() {
         return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',show-correct-first-time');
@@ -4770,7 +4543,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShuffleAs
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShuffleAs() {
         return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',shuffle-answers');
@@ -4780,7 +4552,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_DefaultRight
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_DefaultRight() {
         return $this->expand_GuessCorrect();
@@ -4790,7 +4561,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_DefaultWrong
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_DefaultWrong() {
         return $this->expand_GuessIncorrect();
@@ -4800,7 +4570,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShowAllQuestionsCaptionJS
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShowAllQuestionsCaptionJS() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,show-all-questions-caption');
@@ -4810,7 +4579,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShowOneByOneCaptionJS
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShowOneByOneCaptionJS() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,show-one-by-one-caption');
@@ -4820,7 +4588,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_CorrectList
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_CorrectList() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',correct-answers');
@@ -4830,7 +4597,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_HybridTries
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_HybridTries() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',short-answer-tries-on-hybrid-q');
@@ -4840,7 +4606,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_PleaseEnter
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_PleaseEnter() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',enter-a-guess');
@@ -4850,7 +4615,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_PartlyIncorrect
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_PartlyIncorrect() {
         return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',partly-incorrect');
@@ -4860,7 +4624,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShowAnswerCaption
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShowAnswerCaption() {
         return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',show-answer-caption');
@@ -4870,7 +4633,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_ShowAlsoCorrect
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ShowAlsoCorrect() {
         return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,global,show-also-correct');
@@ -4882,7 +4644,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_isRTL
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_isRTL() {
         // this may require some clever detection of RTL languages (e.g. Hebrew)
@@ -4894,7 +4655,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_isLTR
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_isLTR() {
         if ($this->expand_isRTL()) {
@@ -4908,7 +4668,6 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * expand_RTLText
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_RTLText() {
         return $this->expand_isRTL();

@@ -42,7 +42,6 @@ class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_keypress_renderer extends mod_
      * fix_bodycontent
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
         parent::fix_bodycontent_DragAndDrop();

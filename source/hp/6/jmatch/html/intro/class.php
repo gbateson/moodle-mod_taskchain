@@ -43,41 +43,40 @@ class taskchain_source_hp_6_jmatch_html_intro extends taskchain_source_hp_6_jmat
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (! preg_match('/\.html?$/', $this->file->get_filename())) {
-            // wrong file type
+            // Wrong file type.
             return false;
         }
 
         if (! $this->get_filecontents()) {
-            // empty or non-existant file
+            // Empty or non-existant file.
             return false;
         }
 
         if (! strpos($this->filecontents, '<div class="Feedback" id="DivIntroPage">')) {
-            // not a jmatch-intro file
+            // Not a jmatch-intro file.
             return false;
         }
 
         if (strpos($this->filecontents, '<div id="MainDiv" class="StdDiv">')) {
             if (strpos($this->filecontents, '<div id="MatchDiv" align="center">')) {
-                // jmatch-intro v6
+                // Jmatch-intro v6.
                 return true;
             }
         }
 
         if (strpos($this->filecontents, '<div class="StdDiv" id="CheckButtonDiv">')) {
             if (strpos($this->filecontents, 'F = new Array();')) {
-                if (strpos($this->filecontents, 'D = new Array();')) { // overkill?
+                if (strpos($this->filecontents, 'D = new Array();')) { // Overkill?
                     // jmatch-intro v6+ (drag and drop)
                     return true;
                 }
             }
         }
 
-        // not a jmatch-intro file
+        // Not a jmatch-intro file.
         return false;
     }
 }

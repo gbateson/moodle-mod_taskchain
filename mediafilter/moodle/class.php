@@ -49,14 +49,14 @@ class taskchain_mediafilter_moodle extends taskchain_mediafilter {
         global $CFG, $PAGE;
         static $eolas_fix_applied = 0;
 
-        // insert media players using Moodle's standard mediaplugin filter
+        // Insert media players using Moodle's standard mediaplugin filter.
         $filter = taskchain_get_mediaplugin_filter($taskchain->context, array());
         $newtext = $filter->filter($text);
 
         if ($newtext == $text) {
-            // do nothing
+            // Do nothing.
         } else if ($eolas_fix_applied == $taskchain->id) {
-            // eolas_fix.js and ufo.js have already been added for this task
+            // Eolas_fix.js and ufo.js have already been added for this task.
         } else {
             if ($eolas_fix_applied == 0) {
                 // 1st task - eolas_fix.js was added by filter/mediaplugin/filter.php

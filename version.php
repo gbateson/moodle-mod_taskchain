@@ -23,7 +23,7 @@
  * @since      Moodle 2.0
  */
 
-// prevent direct access to this script
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
 if (empty($CFG)) {
@@ -31,16 +31,16 @@ if (empty($CFG)) {
 }
 
 if (isset($CFG->yui3version) && version_compare($CFG->yui3version, '3.15.0') < 0) {
-    $plugin = new stdClass(); // Moodle <= 2.6
+    $plugin = new stdClass(); // Moodle <= 2.6.
 }
 
 $plugin->cron      = 0; // 60
 $plugin->component = 'mod_taskchain';
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->requires  = 2010112400; // Moodle 2.0
-$plugin->version   = 2026111222;
-$plugin->release   = '2026-11-12 (22)';
+$plugin->requires  = 2010112400; // Moodle 2.0.
+$plugin->version   = 2026111223;
+$plugin->release   = '2026-11-12 (23)';
 
 if (isset($CFG->yui3version) && version_compare($CFG->yui3version, '3.15.0') < 0) {
-    $module = clone($plugin); // Moodle <= 2.6
+    $module = clone($plugin); // Moodle <= 2.6.
 }

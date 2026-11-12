@@ -51,11 +51,10 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
      * fix_bodycontent
      *
      * @return void, but may update $this->bodycontent
-     * @todo Finish documenting this function
      */
-    function fix_bodycontent() {
-        // remove current text from each answer button
-        // and replace it with the text from the answer
+    public function fix_bodycontent() {
+        // Remove current text from each answer button
+        // and replace it with the text from the answer.
         $search = '/(<li id="Q_\d+_\d+">)(<button[^>]*>)(.*?)(<\/button>)(.*?)(<\/li>)/';
         $replace = '$1$2$5$4$6';
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent);
@@ -66,9 +65,8 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
      * fix_headcontent
      *
      * @return void, but may update $this->headcontent
-     * @todo Finish documenting this function
      */
-    function fix_headcontent() {
+    public function fix_headcontent() {
         $search = '/ol.MCAnswers\{.*?\}/s';
         $replace = ''
             . "ol.MCAnswers{\n"
@@ -81,7 +79,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
             . "}\n";
         $this->headcontent = preg_replace($search, $replace, $this->headcontent, 1);
 
-        // accept all answers as "correct" answers, so that Finished gets set to true
+        // Accept all answers as "correct" answers, so that Finished gets set to true.
         $search = "/(I\[\d\]\[3\]\[\d\] = new Array\('.*',\d,)0(\d\);)/";
         $replace = '$1,1,$2';
         // $this->headcontent = preg_replace($search, $replace, $this->headcontent);
@@ -93,10 +91,9 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function get_js_functionnames() {
-        // start list of function names
+    public function get_js_functionnames() {
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'FuncBtnDown';
         return $names;
@@ -108,9 +105,8 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
-    function fix_js_FuncBtnDown(&$str, $start, $length) {
+    public function fix_js_FuncBtnDown(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
         if ($pos = strrchr($substr, '}')) {
             $insert = ''
@@ -127,9 +123,8 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
-    function fix_js_WriteToInstructions(&$str, $start, $length) {
+    public function fix_js_WriteToInstructions(&$str, $start, $length) {
         $str = substr_replace($str, 'function WriteToInstructions(Feedback) {}', $start, $length);
     }
 
@@ -139,9 +134,8 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
-    function fix_js_ShowMessage(&$str, $start, $length) {
+    public function fix_js_ShowMessage(&$str, $start, $length) {
         $str = substr_replace($str, 'function ShowMessage(Feedback) {}', $start, $length);
     }
 
@@ -151,9 +145,8 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
-    function fix_js_CheckMCAnswer(&$str, $start, $length) {
+    public function fix_js_CheckMCAnswer(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         parent::fix_js_CheckFinished($substr, 0, $length);
@@ -170,9 +163,8 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_intro_renderer extends mod_taskcha
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
-    function fix_js_CheckFinished(&$str, $start, $length) {
+    public function fix_js_CheckFinished(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
         parent::fix_js_CheckFinished($substr, 0, $length);

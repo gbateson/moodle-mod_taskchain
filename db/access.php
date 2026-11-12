@@ -25,7 +25,7 @@
 
 $capabilities = array(
 
-    // ability to add a new TaskChain to the course.
+    // Ability to add a new TaskChain to the course.
     'mod/taskchain:addinstance' => array(
         'riskbitmask'  => RISK_XSS,
         'captype'      => 'write',
@@ -50,7 +50,7 @@ $capabilities = array(
         ),
     ),
 
-    // ability to delete anyone's attempts at a TaskChain
+    // Ability to delete anyone's attempts at a TaskChain.
     'mod/taskchain:deleteallattempts' => array(
         'riskbitmask'  => RISK_DATALOSS,
         'captype'      => 'write',
@@ -62,7 +62,7 @@ $capabilities = array(
         ),
     ),
 
-    // ability to delete one's own attempts at a TaskChain
+    // Ability to delete one's own attempts at a TaskChain.
     'mod/taskchain:deletemyattempts' => array(
         'riskbitmask'  => RISK_DATALOSS,
         'captype'      => 'write',
@@ -81,7 +81,7 @@ $capabilities = array(
     // 'archetypes'   => array()
     // ),
 
-    // ability to edit the TaskChain settings
+    // Ability to edit the TaskChain settings.
     'mod/taskchain:manage' => array(
         'riskbitmask'  => RISK_SPAM,
         'captype'      => 'write',
@@ -93,7 +93,7 @@ $capabilities = array(
     ),
 
     // ability to preview a TaskChain as a teacher (and submit results)
-    // access restrictions, such as open/close time, will be ignored
+    // access restrictions, such as open/close time, will be ignored.
     'mod/taskchain:preview' => array(
         'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,
@@ -104,7 +104,7 @@ $capabilities = array(
         ),
     ),
 
-    // ability to regrade attempts at a TaskChain
+    // Ability to regrade attempts at a TaskChain.
     'mod/taskchain:regrade' => array(
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'write',
@@ -116,7 +116,7 @@ $capabilities = array(
         ),
     ),
 
-    // ability to view anyone's attempts at a TaskChain
+    // Ability to view anyone's attempts at a TaskChain.
     'mod/taskchain:reviewallattempts' => array(
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',
@@ -128,7 +128,7 @@ $capabilities = array(
         ),
     ),
 
-    // ability to view one's own attempts at a TaskChain
+    // Ability to view one's own attempts at a TaskChain.
     'mod/taskchain:reviewmyattempts' => array(
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',
@@ -141,7 +141,7 @@ $capabilities = array(
         ),
     ),
 
-    // ability to view the entry page for a TaskChain
+    // Ability to view the entry page for a TaskChain.
     'mod/taskchain:view' => array(
         'captype'      => 'read',
         'contextlevel' => CONTEXT_MODULE,

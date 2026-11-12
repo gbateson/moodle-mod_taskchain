@@ -38,53 +38,54 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
-    /** file name of main template e.g. jcloze6.ht_ */
+    /** @var string file name of main template e.g. jcloze6.ht_ */
     protected $templatefile = '';
 
-    /** special template strings to be expanded */
+    /** @var string special template strings to be expanded */
     protected $templatestrings = '';
 
-    /** templates folders (relative to Moodle dirroot) */
+    /** @var array templates folders (relative to Moodle dirroot) */
     protected $templatesfolders = array();
 
-    /** type of javascript object to collect task results from browser */
+    /** @var string type of javascript object to collect task results from browser */
     protected $js_object_type = '';
 
-    // the id/name of the of the form which returns results to the browser
+    /** @var string the id/name of the of the form which returns results to the browser */
     protected $formid = 'store';
 
-    // the name of the score field in the results returned form the browser
+    /** @var string the name of the score field in the results returned form the browser */
     protected $scorefield = 'mark';
 
     /* results form field that holds the start time of the attempt */
+    /** @var string */
     protected $durationstartfield = 'starttime';
 
     /* results form field that holds the end time of the attempt */
+    /** @var string */
     protected $durationfinishfield = 'endtime';
 
     // starttime/endtime are recorded by the client (and may not be trustworthy)
     // resumestart/resumefinish are recorded by the server (but include transfer time to and from client)
 
-    /** the raw html content, either straight from an html file, or generated from an xml file */
+    /** @var mixed the raw html content, either straight from an html file, or generated from an xml file */
     protected $htmlcontent;
 
-    /** names of javascript string variables which can be passed through Glossary autolinking filter, if enabled */
+    /** @var string names of javascript string variables which can be passed through Glossary autolinking filter, if enabled */
     protected $headcontent_strings = '';
 
-    /** names of javascript array variables which can be passed through Glossary autolinking filter, if enabled */
+    /** @var string names of javascript array variables which can be passed through Glossary autolinking filter, if enabled */
     protected $headcontent_arrays = '';
 
-    /** Submission timeout for HP tasks (TexToys do not have this) */
+    /** @var bool Submission timeout for HP tasks (TexToys do not have this) */
     protected $hasSubmissionTimeout = true;
 
-    // basic initialization
+    // Basic initialization.
 
     /**
      * constructor function
      *
      * @param $page
      * @param $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
@@ -96,15 +97,13 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
 
     /**
      * set_xmldeclaration
-     *
-     * @todo Finish documenting this function
      */
     public function set_xmldeclaration() {
         // for IE6 we must *not* send an xmldeclaration; for other browsers we can
-        // see http://moodle.org/mod/forum/discuss.php?d=73309
+        // see http://moodle.org/mod/forum/discuss.php?d=73309.
         if (! isset($this->xmldeclaration)) {
             if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6')) {
-                // do not set xml declaration for IE6 otherwise it goes into quirks mode
+                // Do not set xml declaration for IE6 otherwise it goes into quirks mode
                 // TODO: check behavior if ($this->page->theme->name()=='custom_corners')
                 $this->xmldeclaration = '';
             } else {
@@ -117,38 +116,37 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      * set_htmlcontent
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function set_htmlcontent() {
         if (isset($this->htmlcontent)) {
-            // htmlcontent has already been set
+            // Htmlcontent has already been set.
             return true;
         }
         $this->htmlcontent = '';
 
         if (! $this->TC->task->get_source()) {
-            // could not access source file
+            // Could not access source file.
             return false;
         }
 
         if (! $this->TC->task->source->get_filecontents()) {
-            // empty source file - shouldn't happen !!
+            // Empty source file - shouldn't happen !!
             return false;
         }
 
-        // html files
+        // Html files.
         if ($this->TC->task->source->is_html()) {
             $this->htmlcontent = &$this->TC->task->source->filecontents;
             return true;
         }
 
-        // xml files
+        // Xml files.
         if (! $this->TC->task->source->xml_get_filecontents()) {
-            // could not create xml tree - shouldn't happen !!
+            // Could not create xml tree - shouldn't happen !!
             return false;
         }
         if (! $this->xml_set_htmlcontent()) {
-            // could not create html from xml - shouldn't happen !!
+            // Could not create html from xml - shouldn't happen !!
             return false;
         }
 
@@ -159,13 +157,12 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      * xml_set_htmlcontent
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function xml_set_htmlcontent() {
 
-        // get the xml source
+        // Get the xml source.
         if (! $this->TC->task->source->xml_get_filecontents()) {
-            // could not detect Hot Potatoes task type in xml file - shouldn't happen !!
+            // Could not detect Hot Potatoes task type in xml file - shouldn't happen !!
             return false;
         }
 
@@ -174,7 +171,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         }
 
         if (! $this->htmlcontent = $this->expand_template($this->templatefile)) {
-            // some problem accessing the main template for this task type
+            // Some problem accessing the main template for this task type.
             return false;
         }
 
@@ -182,7 +179,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
             $this->expand_strings($this->htmlcontent, '/\[(' . $this->templatestrings . ')\]/is');
         }
 
-        // all done
+        // All done.
         return true;
     }
 
@@ -191,7 +188,6 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      *
      * @uses $CFG
      * @uses $this->TC
-     * @todo Finish documenting this function
      */
     public function set_headcontent() {
         global $CFG;
@@ -202,20 +198,20 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         $this->headcontent = '';
 
         if (! $this->set_htmlcontent()) {
-            // could not locate/generate html content
+            // Could not locate/generate html content.
             return;
         }
 
-        // extract contents of first <head> tag
+        // Extract contents of first <head> tag.
         if (preg_match($this->tagpattern('head'), $this->htmlcontent, $matches)) {
             $this->headcontent = $matches[2];
         }
 
         if ($this->usemoodletheme) {
-            // remove the title from the <head>
+            // Remove the title from the <head>.
             $this->headcontent = preg_replace($this->tagpattern('title'), '', $this->headcontent);
         } else {
-            // replace <title> with current name of this task
+            // Replace <title> with current name of this task.
             $title = '<title>' . $this->get_title() . '</title>' . "\n";
             $this->headcontent = preg_replace($this->tagpattern('title'), $title, $this->headcontent);
 
@@ -251,11 +247,11 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                 $callback = array($this, 'fix_css_definitions');
                 $this->styles = preg_replace_callback($search, $callback, $this->styles);
 
-                // the following is not necessary for standard HP styles, but may required to handle some custom styles
+                // The following is not necessary for standard HP styles, but may required to handle some custom styles.
                 $this->styles = str_replace('TheBody', $this->themecontainer, $this->styles);
             }
 
-            // remove comments /* ... */
+            // Remove comments /* ... */.
             $this->styles = preg_replace('/[\n\r]*[\t ]*\/\*.*?\*\//s', '', $this->styles);
 
             $this->styles = $this->remove_blank_lines($this->styles);
@@ -272,7 +268,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
             if ($this->usemoodletheme) {
                 $this->scripts = str_replace('TheBody', $this->themecontainer, $this->scripts);
             }
-            // fix various javascript functions
+            // Fix various javascript functions.
             $names = $this->get_js_functionnames();
             $this->fix_js_functions($names);
 
@@ -284,17 +280,17 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
             }
             $this->scripts = $this->remove_blank_lines($this->scripts);
 
-            // standardize "} else {" and "} else if" formatting
+            // Standardize "} else {" and "} else if" formatting.
             $this->scripts = preg_replace('/\}\s*else\s*(\{|if)/s', '} else $1', $this->scripts);
 
-            // standardize indentation to use tabs
+            // Standardize indentation to use tabs.
             $this->scripts = str_replace('        ', "\t", $this->scripts);
         }
 
-        // remove blank lines
+        // Remove blank lines.
         $this->headcontent = $this->remove_blank_lines($this->headcontent);
 
-        // put each <meta> tag on its own line
+        // Put each <meta> tag on its own line.
         $this->headcontent = preg_replace('/' . '([^\n])' . '(<\w+)' . '/', '$1' . "\n" . '$2', $this->headcontent);
 
         // convert self closing tags to explictly closed tags (self-closing not allowed in xhtml 1.1)
@@ -303,29 +299,26 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         // append styles and scripts to the end of the $this->headcontent
         $this->headcontent .= $this->styles . $this->scripts;
 
-        // do any other fixes for the headcontent
+        // Do any other fixes for the headcontent.
         $this->fix_headcontent_beforeonunload();
         $this->fix_headcontent();
     }
 
     /**
      * fix_headcontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_headcontent() {
-        // this function is a hook that can be used by sub classes to fix up the headcontent
+        // This function is a hook that can be used by sub classes to fix up the headcontent.
     }
 
     /**
      * fix_headcontent_beforeonunload
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_headcontent_beforeonunload() {
 
-        // warn user about consequences of navigating away from this page
+        // Warn user about consequences of navigating away from this page.
         switch ($this->can_continue()) {
             case mod_taskchain::CONTINUE_RESUMETASK:
                 $onbeforeunload = get_string('canresumetask', 'mod_taskchain', format_string($this->TC->task->name));
@@ -340,7 +333,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                 $onbeforeunload = get_string('abandonchain', 'mod_taskchain');
                 break;
             default:
-                $onbeforeunload = ''; // shouldn't happen !!
+                $onbeforeunload = ''; // Shouldn't happen !!
         }
         if ($onbeforeunload) {
             $search = "/(\s*)window\.(?:hotpotunload|onunload|HP) = /s";
@@ -361,7 +354,6 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      * fix_headcontent_rottmeier
      *
      * @param xxx $type (optional, default='')
-     * @todo Finish documenting this function
      */
     public function fix_headcontent_rottmeier($type = '') {
     }
@@ -371,85 +363,84 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      *
      * @param xxx $str
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_comment($str) {
         $out = '';
 
-        // the parse state
+        // The parse state
         // 0 : javascript code
         // 1 : single-quoted string
         // 2 : double-quoted string
         // 3 : single line comment
-        // 4 : multi-line comment
+        // 4 : multi-line comment.
         $state = 0;
 
         $strlen = strlen($str);
         $i = 0;
         while ($i < $strlen) {
             switch ($state) {
-                case 1: // single-quoted string
+                case 1: // Single-quoted string.
                     $out .= $str[$i];
                     switch ($str[$i]) {
                         case "\\":
-                            $i++; // skip next char
+                            $i++; // Skip next char.
                             $out .= $str[$i];
                             break;
                         case "\n":
                         case "\r":
                         case "'":
-                            $state = 0; // end of this string
+                            $state = 0; // End of this string.
                             break;
                     }
                     break;
 
-                case 2: // double-quoted string
+                case 2: // Double-quoted string.
                     $out .= $str[$i];
                     switch ($str[$i]) {
                         case "\\":
-                            $i++; // skip next char
+                            $i++; // Skip next char.
                             $out .= $str[$i];
                             break;
                         case "\n":
                         case "\r":
                         case '"':
-                            $state = 0; // end of this string
+                            $state = 0; // End of this string.
                             break;
                     }
                     break;
 
-                case 3: // single line comment
+                case 3: // Single line comment.
                     if ($str[$i] == "\n" || $str[$i] == "\r") {
-                        $state = 0; // end of this comment
+                        $state = 0; // End of this comment.
                         $out .= $str[$i];
                     }
                     break;
 
-                case 4: // multi-line comment
+                case 4: // Multi-line comment.
                     if ($str[$i] == '*' && $str[$i + 1] == '/') {
-                        $state = 0; // end of this comment
+                        $state = 0; // End of this comment.
                         $i++;
                     }
                     break;
 
-                case 0: // plain old JavaScript code
+                case 0: // Plain old JavaScript code.
                 default:
                     switch ($str[$i]) {
                         case "'":
                             $out .= $str[$i];
-                            $state = 1; // start of single quoted string
+                            $state = 1; // Start of single quoted string.
                             break;
 
                         case '"':
                             $out .= $str[$i];
-                            $state = 2; // start of double quoted string
+                            $state = 2; // Start of double quoted string.
                             break;
 
                         case '/':
                             switch ($str[$i + 1]) {
                                 case '/':
                                     switch (true) {
-                                        // allow certain single line comments
+                                        // Allow certain single line comments.
                                         case substr($str, $i + 2, 9) == '<![CDATA[':
                                             $out .= substr($str, $i, 11);
                                             $i += 11;
@@ -467,17 +458,17 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                                             $i += 5;
                                             break;
                                         default:
-                                            $state = 3; // start of single line comment
+                                            $state = 3; // Start of single line comment.
                                             $i++;
                                             break;
                                     }
                                     break;
                                 case '*':
-                                    $state = 4; // start of multi-line comment
+                                    $state = 4; // Start of multi-line comment.
                                     $i++;
                                     break;
                                 default:
-                                    // a slash - could be start of RegExp ?!
+                                    // A slash - could be start of RegExp ?!
                                     $out .= $str[$i];
                             }
                             break;
@@ -494,25 +485,23 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
 
     /**
      * set_bodycontent
-     *
-     * @todo Finish documenting this function
      */
-    function set_bodycontent() {
+    public function set_bodycontent() {
         if (isset($this->bodycontent)) {
-            // content was fetched from cache
+            // Content was fetched from cache.
             return;
         }
 
-        // otherwise we need to generate new body content
+        // Otherwise we need to generate new body content.
 
         $this->bodycontent = '';
 
         if (! $this->set_htmlcontent()) {
-            // could not locate/generate html content
+            // Could not locate/generate html content.
             return;
         }
 
-        // extract <body> tag
+        // Extract <body> tag.
         if (! preg_match($this->tagpattern('body', 'onload'), $this->htmlcontent, $matches)) {
             return false;
         }
@@ -523,10 +512,10 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         $onload = $matches[3];
         $this->bodycontent = $this->remove_blank_lines($matches[5]);
 
-        // where necessary, add single space before javascript event handlers to make the syntax compatible with strict XHTML
+        // Where necessary, add single space before javascript event handlers to make the syntax compatible with strict XHTML.
         $this->bodycontent = preg_replace('/"(on(?:blur|click|focus|mouse(?:down|out|over|up)))/', '" $1', $this->bodycontent);
 
-        // ensure javascript onload routine for task is always executed
+        // Ensure javascript onload routine for task is always executed
         // $this->bodyattributes will only be inserted into the <body ...> tag
         // if it is included in the theme/$CFG->theme/header.html,
         // so some old or modified themes may not insert $this->bodyattributes
@@ -547,18 +536,15 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
 
     /**
      * fix_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
-        // this function is a hook that can be used by sub classes to fix up the bodycontent
+        // This function is a hook that can be used by sub classes to fix up the bodycontent.
     }
 
     /**
      * fix_bodycontent_rottmeier
      *
      * @param xxx $hideclozeform (optional, default=false)
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent_rottmeier($hideclozeform = false) {
     }
@@ -567,7 +553,6 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      * fix_js_functions
      *
      * @param xxx $names
-     * @todo Finish documenting this function
      */
     public function fix_js_functions($names) {
         if (is_string($names)) {
@@ -598,13 +583,13 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      * @param boolean $offset (optional, default=0) char position at which to start search
      * @return array($start, $finish) start and finish positions of js block within $str
      */
-    function locate_js_block($type, $name, &$str, $includewhitespace = false, $offset = 0) {
+    public function locate_js_block($type, $name, &$str, $includewhitespace = false, $offset = 0) {
         $start = 0;
         $finish = 0;
 
-        // set $search string to locate the start of this block $type
+        // Set $search string to locate the start of this block $type.
         switch ($type) {
-            // these blocks have an leading parenthetical phrase
+            // These blocks have an leading parenthetical phrase.
             case 'if':
             case 'for':
             case 'while':
@@ -612,12 +597,12 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                 $search = $type . '\s*\(' . preg_quote($name, '/') . '\)';
                 break;
 
-            // these blocks have a trailing parenthetical phrase
+            // These blocks have a trailing parenthetical phrase.
             case 'do':
                 $search = $type . '\s*(?=\{)';
                 break;
 
-            // functions
+            // Functions.
             case 'function':
                 $search = 'function\s+' . $name . '\s*\(.*?\)';
                 break;
@@ -632,94 +617,94 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
             // position of opening curly bracket (or thereabouts)
             $i = $start + strlen($match[0][0]);
 
-            // count how many opening curly brackets we have had so far
+            // Count how many opening curly brackets we have had so far.
             $count = 0;
 
-            // the parse state
+            // The parse state
             // 0 : javascript code
             // 1 : single-quoted string
             // 2 : double-quoted string
             // 3 : single line comment
-            // 4 : multi-line comment
+            // 4 : multi-line comment.
             $state = 0;
 
             $strlen = strlen($str);
             while ($i < $strlen && ! $finish) {
                 switch ($state) {
-                    case 1: // single-quoted string
+                    case 1: // Single-quoted string.
                         switch ($str[$i]) {
                             case "\\":
-                                $i++; // skip next char
+                                $i++; // Skip next char.
                                 break;
                             case "'":
-                                $state = 0; // end of this string
+                                $state = 0; // End of this string.
                                 break;
                         }
                         break;
 
-                    case 2: // double-quoted string
+                    case 2: // Double-quoted string.
                         switch ($str[$i]) {
                             case "\\":
-                                $i++; // skip next char
+                                $i++; // Skip next char.
                                 break;
                             case '"':
-                                $state = 0; // end of this string
+                                $state = 0; // End of this string.
                                 break;
                         }
                         break;
 
-                    case 3: // single line comment
+                    case 3: // Single line comment.
                         if ($str[$i] == "\n" || $str[$i] == "\r") {
-                            $state = 0; // end of this comment
+                            $state = 0; // End of this comment.
                         }
                         break;
 
-                    case 4: // multi-line comment
+                    case 4: // Multi-line comment.
                         if ($str[$i] == '*' && $str[$i + 1] == '/') {
-                            $state = 0; // end of this comment
+                            $state = 0; // End of this comment.
                             $i++;
                         }
                         break;
 
-                    case 0: // plain old JavaScript code
+                    case 0: // Plain old JavaScript code.
                     default:
                         switch ($str[$i]) {
                             case "'":
-                                $state = 1; // start of single quoted string
+                                $state = 1; // Start of single quoted string.
                                 break;
 
                             case '"':
-                                $state = 2; // start of double quoted string
+                                $state = 2; // Start of double quoted string.
                                 break;
 
                             case '/':
                                 switch ($str[$i + 1]) {
                                     case '/':
-                                        $state = 3; // start of single line comment
+                                        $state = 3; // Start of single line comment.
                                         $i++;
                                         break;
                                     case '*':
-                                        $state = 4; // start of multi-line comment
+                                        $state = 4; // Start of multi-line comment.
                                         $i++;
                                         break;
                                 }
                                 break;
 
                             case '{':
-                                $count++; // start of Javascript code block
+                                $count++; // Start of Javascript code block.
                                 break;
 
                             case '}':
-                                $count--; // end of Javascript code block
+                                $count--; // End of Javascript code block.
 
-                                // detect trailing blocks or phrases
+                                // Detect trailing blocks or phrases.
                                 switch ($type) {
                                     // "if" blocks may have trailing "else if" or "else" blocks
                                     case 'if':
                                         $search = '/^\s*else(?:\s+if\s*\(.*?\))?\s*\{/s';
                                         if (preg_match($search, substr($str, $i + 1), $match)) {
                                             $i += strlen($match[0]);
-                                            $count++; // continue parsing
+                                            $count++; // Continue parsing.
                                         }
                                         break;
 
@@ -732,7 +717,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
                                         break;
                                 }
 
-                                // detect trailing semicolon, if any
+                                // Detect trailing semicolon, if any.
                                 if ($str[$i + 1] == ';') {
                                     $i++;
                                 }
@@ -749,13 +734,12 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         return array($start, $finish);
     }
 
-    // does this output format allow task attempts to be reviewed?
+    // Does this output format allow task attempts to be reviewed?
 
     /**
      * provide_review
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function provide_review() {
         return true;
@@ -769,12 +753,11 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      * @uses $CFG
      * @param xxx $filename
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_template($filename) {
         global $CFG;
 
-        // check that some template folders have been specified to something sensible
+        // Check that some template folders have been specified to something sensible.
         if (! isset($this->templatesfolders)) {
             debugging('templatesfolders is not set', DEBUG_DEVELOPER);
             return '';
@@ -784,7 +767,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
             return '';
         }
 
-        // set the path to the template file
+        // Set the path to the template file.
         $filepath = '';
         foreach ($this->templatesfolders as $templatesfolder) {
             if (is_file("$CFG->dirroot/$templatesfolder/$filename")) {
@@ -793,24 +776,24 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
             }
         }
 
-        // check the template was found
+        // Check the template was found.
         if (! $filepath) {
             debugging('template not found: ' . $filename, DEBUG_DEVELOPER);
             return '';
         }
-        // check the template is readable
+        // Check the template is readable.
         if (! is_readable($filepath)) {
             debugging('template is not readable: ' . $filepath, DEBUG_DEVELOPER);
             return '';
         }
 
-        // try and read the template
+        // Try and read the template.
         if (! $template = file_get_contents($filepath)) {
             debugging('template is empty: ' . $filepath, DEBUG_DEVELOPER);
             return '';
         }
 
-        // expand the blocks and strings in the template
+        // Expand the blocks and strings in the template.
         $this->expand_blocks($template);
         $this->expand_strings($template);
 
@@ -822,13 +805,12 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      * expand_blocks
      *
      * @param xxx $template (passed by reference)
-     * @todo Finish documenting this function
      */
     public function expand_blocks(&$template) {
-        // expand conditional blocks
+        // Expand conditional blocks
         // [1] the full block name (including optional leading 'str' or 'incl')
         // [2] the short block name (without optional leading 'str' or 'incl')
-        // [3] the content of the block
+        // [3] the content of the block.
         $search = '/' . '\[((?:incl|str)?((?:\w|\.)+))\]' . '(.*?)' . '\[\/\\1\]' . '/is';
         $callback = array($this, 'expand_block');
         $template = preg_replace_callback($search, $callback, $template);
@@ -839,13 +821,12 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_block($match) {
         $blockname = $match[2];
         $blockcontent = $match[3];
 
-        // check expand method exists
+        // Check expand method exists.
         $method = 'expand_' . str_replace('.', '', $blockname);
         if (! method_exists($this, $method)) {
             debugging('expand block method not found: ' . $method, DEBUG_DEVELOPER);
@@ -854,7 +835,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
 
         // if condition is satisfied, return block content; otherwise return empty string
         if ($this->$method()) {
-            // expand any (sub) blocks within the block content
+            // Expand any (sub) blocks within the block content.
             $this->expand_blocks($blockcontent);
             return $blockcontent;
         } else {
@@ -867,11 +848,10 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      *
      * @param xxx $template (passed by reference)
      * @param xxx $search (optional, default='')
-     * @todo Finish documenting this function
      */
     public function expand_strings(&$template, $search = '') {
         if ($search == '') {
-            // default search string
+            // Default search string.
             $search = '/\[(?:bool|int|str)(\w+)\]/is';
         }
         $callback = array($this, 'expand_string');
@@ -883,7 +863,6 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_string($match) {
         $originalstring = $match[0];
@@ -903,11 +882,10 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      * @param xxx $x
      * @param xxx $y
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_halfway_color($x, $y) {
-        // returns the $color that is half way between $x and $y
-        $color = $x; // default
+        // Returns the $color that is half way between $x and $y.
+        $color = $x; // Default.
         $rgb = '/^\#?([0-9a-f])([0-9a-f])([0-9a-f])$/i';
         $rrggbb = '/^\#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i';
         if (preg_match($rgb, $x, $x_matches) || preg_match($rrggbb, $x, $x_matches)) {
@@ -923,7 +901,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         return $color;
     }
 
-    // functions to convert relative urls to absolute URLs
+    // Functions to convert relative urls to absolute URLs.
 
     /**
      * fix_relativeurls
@@ -931,20 +909,19 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      * @uses $DB
      * @param xxx $str (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_relativeurls($str = null) {
         global $DB;
 
         if (is_string($str)) {
-            // fix relative urls in $str(ing), and return
+            // Fix relative urls in $str(ing), and return.
             return parent::fix_relativeurls($str);
         }
 
         // do standard fixes relative urls in $this->headcontent and $this->bodycontent
         parent::fix_relativeurls();
 
-        // replace relative URLs in "PreloadImages(...);"
+        // Replace relative URLs in "PreloadImages(...);".
         $search = '/(PreloadImages\()' . '([^)]+?)' . '(\);)/is';
         $callback = array($this, 'convert_urls_preloadimages');
         $this->headcontent = preg_replace_callback($search, $callback, $this->headcontent);
@@ -956,7 +933,6 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      *
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function convert_urls_preloadimages($match) {
         $before = $match[1];
@@ -974,7 +950,6 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      * @uses $DB
      * @param xxx $match
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function convert_url_navbutton($match) {
         global $DB;
@@ -982,12 +957,12 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
         $url = $this->convert_url($match[1]);
         $source = $this->TC->task->get_source();
 
-        // is this a $url for another task in this chain ?
+        // Is this a $url for another task in this chain ?
         if (strpos($url, $source->baseurl . '/') === 0) {
             $sourcefile = substr($url, strlen($source->baseurl));
             $params = array('chainid' => $this->TC->chain->id, 'sourcefile' => $sourcefile);
             if ($records = $DB->get_records('taskchain_tasks', $params, 'sortorder', '*', 0, 1)) {
-                $record = reset($records); // first record - there could be more than one ?!
+                $record = reset($records); // First record - there could be more than one ?!
                 $params = array('taskid'        => $record->id,
                                 'tnumber'       => 0,
                                 'taskattemptid' => 0,
@@ -1005,7 +980,7 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
      *
      * @return string
      */
-    function get_send_results_event() {
+    public function get_send_results_event() {
         if ($this->TC->task->delay3 == mod_taskchain::TIME_AFTEROK) {
             return 'HP.EVENT_SETVALUES';
         } else {

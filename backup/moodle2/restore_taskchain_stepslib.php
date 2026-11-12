@@ -40,13 +40,12 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * define_structure
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function define_structure() {
 
         $paths = array();
 
-        $userinfo = $this->get_setting_value('userinfo'); // are we including userinfo?
+        $userinfo = $this->get_setting_value('userinfo'); // Are we including userinfo?
 
         ////////////////////////////////////////////////////////////////////////
         // XML interesting paths - non-user data
@@ -71,7 +70,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
             $paths[] = new restore_path_element('taskchain_response', '/activity/taskchain/chain/tasks/task/questions/question/responses/response');
         }
 
-        // Return the paths wrapped into standard activity structure
+        // Return the paths wrapped into standard activity structure.
         return $this->prepare_activity_structure($paths);
     }
 
@@ -80,7 +79,6 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * processed by the link decoder
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function define_decode_contents() {
         return array(
@@ -95,28 +93,27 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function process_taskchain($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         if (! $data->course = $this->get_courseid()) {
-            return false; // missing courseid - shouldn't happen !!
+            return false; // Missing courseid - shouldn't happen !!
         }
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('taskchain', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
 
-        // inmediately after inserting "activity" record, call this
+        // Inmediately after inserting "activity" record, call this.
         $this->apply_activity_instance($newid);
     }
 
@@ -126,29 +123,28 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function process_taskchain_chain($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         $data->parenttype = 0; // mod_taskchain::PARENTTYPE_ACTIVITY
         $data->parentid = $this->get_new_parentid('taskchain');
         $data->timeopen = $this->apply_date_offset($data->timeopen);
         $data->timeclose = $this->apply_date_offset($data->timeclose);
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('taskchain_chains', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
 
-        // store mapping from $oldid to $newid
+        // Store mapping from $oldid to $newid.
         $this->set_mapping('taskchain_chain', $oldid, $newid);
     }
 
@@ -158,18 +154,17 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function process_taskchain_task($data) {
         global $CFG, $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         $data->chainid = $this->get_new_parentid('taskchain_chain');
         $data->timeopen = $this->apply_date_offset($data->timeopen);
         $data->timeclose = $this->apply_date_offset($data->timeclose);
@@ -184,7 +179,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
             $title *= 2;
             $title += ($data->title & (mod_taskchain::TITLE_SOURCE >> 1));
             if (($title & mod_taskchain::TITLE_SOURCE) == mod_taskchain::TEXTSOURCE_SPECIFIC) {
-                // replace SPECIFIC with TASKNAME
+                // Replace SPECIFIC with TASKNAME.
                 $data->title = 0;
                 $data->title += ($title & mod_taskchain::TITLE_SORTORDER);
                 $data->title += ($title & mod_taskchain::TITLE_CHAINNAME);
@@ -194,12 +189,12 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
             }
         }
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('taskchain_tasks', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
 
-        // store mapping from $oldid to $newid
+        // Store mapping from $oldid to $newid.
         $this->set_mapping('taskchain_task', $oldid, $newid);
     }
 
@@ -209,28 +204,27 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function process_taskchain_condition($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         $data->taskid = $this->get_new_parentid('taskchain_task');
         if ($this->get_setting_value('userinfo')) {
             $data->groupid = $this->get_mappingid('group', $data->groupid);
         } else {
-            $data->groupid = 0; // no user data or groups available :-(
+            $data->groupid = 0; // No user data or groups available :-(.
         }
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('taskchain_conditions', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
     }
 
@@ -240,29 +234,28 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function process_taskchain_chaingrade($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         if (! $data->userid = $this->get_mappingid('user', $data->userid)) {
-            return false; // invalid userid - shouldn't happen !!
+            return false; // Invalid userid - shouldn't happen !!
         }
         if (! $data->parentid = $this->get_new_parentid('taskchain')) {
-            return false; // parentid not available - shouldn't happen !!
+            return false; // Parentid not available - shouldn't happen !!
         }
         $data->parenttype = 0; // mod_taskchain::PARENTTYPE_ACTIVITY
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('taskchain_chain_grades', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
     }
 
@@ -272,28 +265,27 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function process_taskchain_chainattempt($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         if (! $data->userid = $this->get_mappingid('user', $data->userid)) {
-            return false; // invalid userid - shouldn't happen !!
+            return false; // Invalid userid - shouldn't happen !!
         }
         if (! $data->chainid = $this->get_new_parentid('taskchain_chain')) {
-            return false; // parentid not available - shouldn't happen !!
+            return false; // Parentid not available - shouldn't happen !!
         }
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('taskchain_chain_attempts', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
     }
 
@@ -303,28 +295,27 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function process_taskchain_taskscore($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         if (! $data->userid = $this->get_mappingid('user', $data->userid)) {
-            return false; // invalid userid - shouldn't happen !!
+            return false; // Invalid userid - shouldn't happen !!
         }
         if (! $data->taskid = $this->get_new_parentid('taskchain_task')) {
-            return false; // taskid not available - shouldn't happen !!
+            return false; // Taskid not available - shouldn't happen !!
         }
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('taskchain_task_scores', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
     }
 
@@ -334,43 +325,42 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function process_taskchain_taskattempt($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         if (! $data->userid = $this->get_mappingid('user', $data->userid)) {
-            return false; // invalid userid - shouldn't happen !!
+            return false; // Invalid userid - shouldn't happen !!
         }
         if (! $data->taskid = $this->get_new_parentid('taskchain_task')) {
-            return false; // taskid not available - shouldn't happen !!
+            return false; // Taskid not available - shouldn't happen !!
         }
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('taskchain_task_attempts', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
 
-        // store mapping from $oldid to $newid
+        // Store mapping from $oldid to $newid.
         $this->set_mapping('taskchain_taskattempt', $oldid, $newid);
 
-        // reset clickreportid to point to parent attempt
+        // Reset clickreportid to point to parent attempt.
         if (empty($data->clickreportid) || $data->clickreportid == $oldid) {
             // clickreporting is not enabled (this is the usual case)
             $clickreportid = $newid;
         } else {
-            // clickreporting is enabled, so get main attempt id
+            // Clickreporting is enabled, so get main attempt id.
             $clickreportid = $this->get_mappingid('taskchain_taskattempt', $data->clickreportid);
         }
         if (empty($clickreportid)) {
-            $clickreportid = $newid; // old attempt id not avialable - shouldn't happen !!
+            $clickreportid = $newid; // Old attempt id not avialable - shouldn't happen !!
         }
         $DB->set_field('taskchain_task_attempts', 'clickreportid', $clickreportid, array('id' => $newid));
     }
@@ -381,30 +371,29 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function process_taskchain_question($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         if (! $data->taskid = $this->get_new_parentid('taskchain_task')) {
-            return false; // taskid not available - shouldn't happen !!
+            return false; // Taskid not available - shouldn't happen !!
         }
         $data->md5key = md5($data->name);
         $this->set_string_ids($data, array('text'), 0);
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('taskchain_questions', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
 
-        // store mapping from $oldid to $newid
+        // Store mapping from $oldid to $newid.
         $this->set_mapping('taskchain_question', $oldid, $newid);
     }
 
@@ -414,32 +403,31 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @uses $DB
      * @param xxx $data
      * @return xxx
-     * @todo Finish documenting this function
      */
     protected function process_taskchain_response($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         if (! $data->questionid = $this->get_new_parentid('taskchain_question')) {
-            return false; // questionid not available - shouldn't happen !!
+            return false; // Questionid not available - shouldn't happen !!
         }
         if (! isset($data->attemptid)) {
-            return false; // attemptid not set - shouldn't happen !!
+            return false; // Attemptid not set - shouldn't happen !!
         }
         if (! $data->attemptid = $this->get_mappingid('taskchain_taskattempt', $data->attemptid)) {
-            return false; // new attemptid not available - shouldn't happen !!
+            return false; // New attemptid not available - shouldn't happen !!
         }
         $this->set_string_ids($data, array('correct', 'wrong', 'ignored'));
 
-        // add new record
+        // Add new record.
         if (! $newid = $DB->insert_record('taskchain_responses', $data)) {
-            return false; // could not add new record - shouldn't happen !!
+            return false; // Could not add new record - shouldn't happen !!
         }
     }
 
@@ -448,29 +436,28 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      *
      * @uses $DB
      * @param xxx $data
-     * @todo Finish documenting this function
      */
     protected function process_taskchain_string($data) {
         global $DB;
 
-        // convert $data to object
+        // Convert $data to object.
         $data = (object)$data;
 
-        // save $oldid
+        // Save $oldid.
         $oldid = $data->id;
 
-        // fix fields
+        // Fix fields.
         $data->md5key = md5($data->string);
 
-        // add new record, if necessary
+        // Add new record, if necessary.
         $params = array('md5key' => $data->md5key);
         if (! $newid = $DB->get_field('taskchain_strings', 'id', $params)) {
             if (! $newid = $DB->insert_record('taskchain_strings', $data)) {
-                return false; // could not add new record - shouldn't happen !!
+                return false; // Could not add new record - shouldn't happen !!
             }
         }
 
-        // store mapping from $oldid to $newid
+        // Store mapping from $oldid to $newid.
         $this->set_mapping('taskchain_string', $oldid, $newid);
     }
 
@@ -480,7 +467,6 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @param xxx $data (passed by reference)
      * @param xxx $fieldnames
      * @param xxx $default (optional, default='')
-     * @todo Finish documenting this function
      */
     protected function set_string_ids(&$data, $fieldnames, $default = '') {
 
@@ -488,12 +474,12 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
             $newids = array();
             if (isset($data->$fieldname)) {
                 $oldids = explode(',', $data->$fieldname);
-                $oldids = array_filter($oldids); // remove blanks
+                $oldids = array_filter($oldids); // Remove blanks.
                 foreach ($oldids as $oldid) {
                     if ($newid = $this->get_mappingid('taskchain_string', $oldid)) {
                         $newids[] = $newid;
                     } else {
-                        // new string id not available - should we report it ?
+                        // New string id not available - should we report it ?
                     }
                 }
             }
@@ -514,7 +500,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
     protected function after_execute() {
         global $DB;
 
-        // restore files
+        // Restore files.
         $this->add_related_files('mod_taskchain', 'sourcefile', null);
         $this->add_related_files('mod_taskchain', 'configfile', null);
         $this->add_related_files('mod_taskchain', 'entrytext', null);
@@ -523,14 +509,14 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
         // get most recently restored taskchain chain record (there should only be one)
         $params = array('parenttype' => 0, 'parentid' => $this->task->get_activityid());
         if (! $chain = $DB->get_record('taskchain_chains', $params)) {
-            return false; // shouldn;t happen !!
+            return false; // Shouldn;t happen !!
         }
 
         // remap $chain->entrycm and $chain->exitcm
         $keys = array('entrycm' => 'course_module', 'exitcm' => 'course_module');
         $this->after_execute_foreignkeys($chain, 'taskchain_chains', $keys);
 
-        // select all recently restored conditions
+        // Select all recently restored conditions.
         $select = 'taskid IN (SELECT id FROM {taskchain_tasks} WHERE chainid = ?)';
         $rs = $DB->get_recordset_select('taskchain_conditions', $select, array($chain->id));
 
@@ -550,7 +536,6 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
      * @param string $tablename table from which $record was extracted
      * @param array $keys map record $field => $itemname
      * @return void, but may update $record and DB tables
-     * @todo Finish documenting this function
      */
     protected function after_execute_foreignkeys(&$record, $table, $keys, $default = 0) {
         global $DB;
@@ -559,7 +544,7 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
             if ($record->$field > 0) {
                 $record->$field = $this->get_mappingid($itemname, $record->$field);
                 if ($record->$field === false || $record->$field === null) {
-                    $record->$field = $default; // shouldn't happen !!
+                    $record->$field = $default; // Shouldn't happen !!
                 }
                 $update = true;
             }

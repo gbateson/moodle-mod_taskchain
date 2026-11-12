@@ -35,13 +35,13 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_string extends taskchain_base {
-    /** db field: id (primary key, default=null) */
+    /** @var mixed db field: id (primary key, default=null) */
     private $id                  = null;
 
-    /** db field: string (string, default='') */
+    /** @var string db field: string (string, default='') */
     private $string              = '';
 
-    /** db field: md5key (string (32), default='') */
+    /** @var string db field: md5key (string (32), default='') */
     private $md5key              = '';
 
     /**

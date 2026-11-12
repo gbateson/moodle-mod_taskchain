@@ -38,10 +38,13 @@ require_once($CFG->dirroot . '/mod/taskchain/report/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_renderer {
+    /** @var string */
     public $mode = 'taskscore';
 
+    /** @var array */
     protected $headerfields = array('user', 'chaingrade', 'chainattempt', 'task', 'taskscore');
 
+    /** @var array */
     public $tablecolumns = array(
         'taskattempttnumber', 'selected',
         'taskattemptpenalties',
@@ -49,15 +52,17 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
         'taskattemptduration', 'taskattempttimemodified',
     );
 
-    /** columns with this prefix will be suppressed (i.e. only shown once per user) */
+    /** @var string columns with this prefix will be suppressed (i.e. only shown once per user) */
     protected $suppressprefix = 'taskscore';
 
+    /** @var array */
     public $filterfields = array(
         'grade' => 1, 'timemodified' => 1, 'status' => 1, 'duration' => 1, 'score' => 1,
     );
 
-    /** id param name and table name */
+    /** @var string id param name and table name */
     public $id_param_name = 'taskscoreid';
+    /** @var string */
     public $id_param_table = 'taskchain_task_scores';
 
     /**
@@ -66,7 +71,6 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
      * @param xxx $userid (optional, default=0)
      * @param xxx $record (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function select_sql($userid = 0, $record = null) {
         $select = 'tc_tsk_att.id AS id, ' .
@@ -91,10 +95,10 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
         $where  = '';
         $params = array();
 
-        // restrict to a specific taskscore / user
+        // Restrict to a specific taskscore / user.
         $this->select_sql_record($select, $from, $where, $params, $userid, $record);
 
-        // add sql to select user fields
+        // Add sql to select user fields.
         $this->select_sql_user($select, $from, 'tc_tsk_scr');
 
         return array($select, $from, $where, $params);
@@ -110,7 +114,6 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
      * @param  integer  $userid  (optional, default=0)
      * @param  object   $record  (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function select_sql_record(&$select, &$from, &$where, &$params, $userid = 0, $record = null) {
         $from = '{taskchain_task_attempts} tc_tsk_att ' .
@@ -119,7 +122,7 @@ class mod_taskchain_report_taskscore_renderer extends mod_taskchain_report_rende
                                                              'tc_tsk_scr.taskid = tc_tsk.id AND ' .
                                                              'tc_tsk_scr.cnumber = tc_tsk_att.cnumber)';
 
-        // restrict sql to a specific taskscore /user
+        // Restrict sql to a specific taskscore /user.
         if ($record) {
             $where  = 'tc_tsk_scr.id = ?';
             $params = array($record->id);

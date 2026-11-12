@@ -38,26 +38,29 @@ require_once($CFG->dirroot . '/mod/taskchain/report/taskquestions/renderer.php')
  * @package    mod_taskchain
  */
 class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_taskquestions_renderer {
+    /** @var string */
     public $mode = 'taskanalysis';
 
+    /** @var array */
     public $tablecolumns = array('responsefield');
 
+    /** @var array */
     public $filterfields = array('status' => 0);
 
+    /** @var bool */
     public $has_questioncolumns = true;
 
     /**
      * add_responses_to_rawdata
      *
      * @param xxx $table (passed by reference)
-     * @todo Finish documenting this function
      */
     public function add_responses_to_rawdata(&$table) {
-        // attach each response to its parent attempt
-        // using the "add_response_to_rawdata()" method
+        // Attach each response to its parent attempt
+        // using the "add_response_to_rawdata()" method.
         parent::add_responses_to_rawdata($table);
 
-        // the fields we are interested in, in the order we want them
+        // The fields we are interested in, in the order we want them.
         $fields = array('correct', 'wrong', 'ignored', 'hints', 'clues', 'checks'); // , 'weighting'
         $string_fields = array('correct', 'wrong', 'ignored');
 
@@ -69,12 +72,12 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
 
         $question_columns = $this->get_question_columns(true);
 
-        // get hi and lo scores
+        // Get hi and lo scores.
         list($hi_score, $lo_score) = $this->get_hi_lo_scores($table->rawdata);
 
         // compile statistics about questions in attempts (=rows)
         foreach ($table->rawdata as $row) {
-            // is this a high score? or a low score?
+            // Is this a high score? or a low score?
             $score = 'taskattemptscore';
             $is_hi_score = ($row->$score >= $hi_score);
             $is_lo_score = ($row->$score < $lo_score);
@@ -89,7 +92,7 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
                 }
 
                 foreach ($row->$column as $response) {
-                    // increment counts of sums and totals
+                    // Increment counts of sums and totals.
                     $q[$id]['count']['sum'] += $response->score;
                     $q[$id]['count']['total']++;
 
@@ -102,7 +105,7 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
                         }
                     }
 
-                    // add field statistics
+                    // Add field statistics.
                     foreach ($fields as $field) {
                         if (! isset($f[$field])) {
                             $f[$field] = array('count' => 0);
@@ -132,50 +135,50 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
             } // end foreach ($question_columns as $id => $column)
         } // end foreach ($table->rawdata as $row)
 
-        // replace the rawdata array with a new array of statistics
+        // Replace the rawdata array with a new array of statistics.
         $table->rawdata = array();
 
         // we must also unset the table->use_pages property
         // which was automatically set by $table->query_db()
         // because it forces the creation of a paging bar
-        // which this report does not need or want
+        // which this report does not need or want.
         $table->pageable(false);
 
         $d_index_max = 10;
 
-        // initialize main rows in the statistics table
+        // Initialize main rows in the statistics table.
         foreach ($fields as $row => $field) {
             $table->rawdata[$row] = (object)array('responsefield' => $field);
         }
 
-        // set indexes for aggregate rows
+        // Set indexes for aggregate rows.
         $row_max = count($fields) - 1;
         $average_row = $row_max + 1;
         $percent_row = $row_max + 2;
         $d_index_row = $row_max + 3;
 
-        // add aggregate rows
+        // Add aggregate rows.
         $table->rawdata[$average_row] = (object)array('responsefield' => 'average');
         $table->rawdata[$percent_row] = (object)array('responsefield' => 'percent');
         $table->rawdata[$d_index_row] = (object)array('responsefield' => 'd_index');
 
-        // arrays used to detect empty rows and columns
+        // Arrays used to detect empty rows and columns.
         $delete_rows = array_fill(0, $d_index_row, true);
         $delete_columns = array();
 
-        // format the statistics
+        // Format the statistics.
         foreach ($question_columns as $id => $column) {
-            // assume this column is empty
+            // Assume this column is empty.
             $delete_columns[$column] = true;
 
-            // add details about each field
+            // Add details about each field.
             foreach ($fields as $row => $field) {
-                // detect if this field is a string field
+                // Detect if this field is a string field
                 // if it is, then the field values are string ids
-                // and will need to be converted to strings later
+                // and will need to be converted to strings later.
                 $is_string_field = in_array($field, $string_fields);
 
-                // get the value of each response to this field and the count of that value
+                // Get the value of each response to this field and the count of that value.
                 $values = array();
                 if (isset($q[$id])) {
                     foreach ($q[$id][$field] as $value => $count) {
@@ -193,7 +196,7 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
                 // sort the values by frequency (using user-defined function)
                 usort($values, array($this, 'usort_statistics'));
 
-                // add statistics values for this field
+                // Add statistics values for this field.
                 if (count($values)) {
                     $delete_rows[$row] = false;
                     $delete_columns[$column] = false;
@@ -204,18 +207,18 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
                     $table->rawdata[$row]->$column = '&nbsp;';
                 }
 
-                // set percent correct and discrimination index for this question
+                // Set percent correct and discrimination index for this question.
                 $average = '';
                 $percent = '';
                 $d_index = '';
                 if (isset($q[$id]['count'])) {
-                    // average and percent correct
+                    // Average and percent correct.
                     if ($q[$id]['count']['total']) {
                         $average = round($q[$id]['count']['sum'] / $q[$id]['count']['total']) . '%';
                         $percent = round(100 * $q[$id]['count']['correct'] / $q[$id]['count']['total']) . '%';
                         $percent .= ' (' . $q[$id]['count']['correct'] . '/' . $q[$id]['count']['total'] . ')';
                     }
-                    // discrimination index
+                    // Discrimination index.
                     if ($q[$id]['count']['lo']) {
                         $d_index = min($d_index_max, round($q[$id]['count']['hi'] / $q[$id]['count']['lo'], 1));
                     } else {
@@ -232,7 +235,7 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
             } // end foreach field
         }
 
-        // remove ununsed rows and columns
+        // Remove ununsed rows and columns.
         $table->delete_rows($delete_rows);
         $table->delete_columns($delete_columns);
     }
@@ -242,18 +245,17 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
      *
      * @param xxx $attempts (passed by reference)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_hi_lo_scores(&$attempts) {
 
-        // get attempt scores
+        // Get attempt scores.
         $scores = array();
         $score = 'taskattemptscore';
         foreach ($attempts as $attempt) {
             $scores[] = $attempt->$score;
         }
 
-        // sort and count attempt scores
+        // Sort and count attempt scores.
         sort($scores);
         $count = count($scores);
 
@@ -276,7 +278,6 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
      * @param xxx $attemptid
      * @param xxx $column
      * @param xxx $response (passed by reference)
-     * @todo Finish documenting this function
      */
     public function add_response_to_rawdata(&$table, $attemptid, $column, $response) {
         if (! is_array($table->rawdata[$attemptid]->$column)) {
@@ -295,9 +296,9 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
      */
     public function usort_statistics($a, $b) {
         // sorts by percent (descending( and text (ascending)
-        // assuming first chars in $a and $b are a percentage
+        // assuming first chars in $a and $b are a percentage.
 
-        // extract $a's percent and text
+        // Extract $a's percent and text.
         $a = strip_tags($a);
         if ($pos = strpos($a, '%')) {
             $a_percent = intval(substr($a, 0, $pos));
@@ -307,7 +308,7 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
             $a_text    = '';
         }
 
-        // extract $b's percent and text
+        // Extract $b's percent and text.
         $b = strip_tags($b);
         if ($pos = strpos($b, '%')) {
             $b_percent = intval(substr($b, 0, $pos));
@@ -333,7 +334,7 @@ class mod_taskchain_report_taskanalysis_renderer extends mod_taskchain_report_ta
             return -1;
         }
 
-        // percents and texts are equal - shouldn't happen !!
+        // Percents and texts are equal - shouldn't happen !!
         return 0;
     }
 }

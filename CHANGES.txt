@@ -2,6 +2,14 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-12 (23)
+ - fix PHP4-style calls to parent constructors in group and number filters for
+   reports, which cause fatal errors in Moodle >= 3.1
+ - coding style fixes reported by Moodle codechecker: declare visibility of
+   class methods, add @var docblocks for class properties, use public instead of
+   var, remove unfinished @todo lines, capitals and full stops in inline
+   comments, and remove duplicate array keys
+
 2026-11-12 (22)
  - fix 'Unknown column tc_tsk_scr.cnumber' SQL error, and missing fields for the
    select column, on the task attempt report

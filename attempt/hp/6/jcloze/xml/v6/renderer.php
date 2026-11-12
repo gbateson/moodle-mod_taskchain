@@ -42,7 +42,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_renderer extends mod_taskchain_at
      * List of source types which this renderer can handle
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public static function sourcetypes() {
         return array('hp_6_jcloze_xml');

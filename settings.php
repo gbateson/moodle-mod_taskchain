@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 /** Include required files */
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
-// admin_setting_xxx classes are defined in "lib/adminlib.php"
+// Admin_setting_xxx classes are defined in "lib/adminlib.php"
 // new admin_setting_xxx($name, $visiblename, $description, $defaultsetting);
 
 // show TaskChains on MyMoodle page (default=1)
@@ -47,12 +47,12 @@ $settings->add(
 
 // restrict cron job to certain hours of the day (default=never)
 if (class_exists('core_date') && method_exists('core_date', 'get_user_timezone')) {
-    // Moodle >= 2.9
+    // Moodle >= 2.9.
     $timezone = core_date::get_user_timezone(99);
     $datetime = new DateTime('now', new DateTimeZone($timezone));
     $timezone = ($datetime->getOffset() - dst_offset_on(time(), $timezone)) / (3600.0);
 } else {
-    // Moodle <= 2.8
+    // Moodle <= 2.8.
     $timezone = get_user_timezone_offset();
 }
 if (abs($timezone) > 13) {
@@ -78,7 +78,7 @@ $settings->add(
     new admin_setting_configcheckbox('taskchain_enableobfuscate', get_string('enableobfuscate', 'mod_taskchain'), get_string('configenableobfuscate', 'mod_taskchain'), 1)
 );
 
-// bodystyles
+// Bodystyles.
 $options = array(
     mod_taskchain::BODYSTYLES_BACKGROUND => get_string('bodystylesbackground', 'mod_taskchain'),
     mod_taskchain::BODYSTYLES_COLOR      => get_string('bodystylescolor', 'mod_taskchain'),
@@ -112,5 +112,5 @@ $setting = new admin_setting_configtext('taskchain_maxeventlength', get_string('
 $setting->set_updatedcallback('taskchain_refresh_events');
 $settings->add($setting);
 
-// dispose of temporary variables used above
+// Dispose of temporary variables used above.
 unset($str, $url, $link, $timezone, $datetime, $options, $i);

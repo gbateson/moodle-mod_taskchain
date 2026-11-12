@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// get parent class
+// Get parent class.
 require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/6/jmatch/xml/review.php');
 
 /**

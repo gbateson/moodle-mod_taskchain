@@ -31,7 +31,6 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @uses $CFG
  * @uses $DB
- * @todo Finish documenting this function
  */
 function xmldb_taskchain_install() {
     global $CFG, $DB;
@@ -42,7 +41,7 @@ function xmldb_taskchain_install() {
     // On Moodle 2.0, 2.1 and 2.2, we need to force the text fields to be "longtext"
     // if we add LENGTH="long" to install.xml, then we get an error in Moodle 2.3+
     if (floatval($CFG->release) <= 2.2) {
-        // get db manager
+        // Get db manager.
         $dbman = $DB->get_manager();
 
         $tables = array(
@@ -68,7 +67,7 @@ function xmldb_taskchain_install() {
             $table = new xmldb_table($tablename);
             foreach ($fields as $field) {
                 if ($dbman->field_exists($table, $field)) {
-                    // next two lines are not necessary if the module has just been installed
+                    // Next two lines are not necessary if the module has just been installed
                     // $fieldname = $field->getName();
                     // $DB->set_field_select($tablename, $fieldname, '', "$fieldname IS NULL");
                     $dbman->change_field_type($table, $field);
@@ -77,8 +76,8 @@ function xmldb_taskchain_install() {
         }
     }
 
-    // convert "quizport" to "taskchain" and "attforblock" to "attendance"
-    // in course section summaries using courselinks.js.php
+    // Convert "quizport" to "taskchain" and "attforblock" to "attendance"
+    // in course section summaries using courselinks.js.php.
     $update = '{course_sections}';
     $set    = 'summary = REPLACE(REPLACE(REPLACE(summary, ?, ?), ?, ?), ?, ?)';
     $where  = $DB->sql_like('summary', '?');

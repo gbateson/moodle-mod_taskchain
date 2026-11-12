@@ -49,8 +49,6 @@ class mod_taskchain_attempt_hp_6_jmix_html_renderer extends mod_taskchain_attemp
 
     /**
      * fix_bodycontent
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent() {
         $this->fix_bodycontent_DragAndDrop();

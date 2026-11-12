@@ -24,20 +24,20 @@
  */
 
 $logs = array(
-    // standard mod actions
+    // Standard mod actions.
     array('module' => 'taskchain', 'action' => 'add', 'mtable' => 'taskchain', 'field' => 'name'),
     array('module' => 'taskchain', 'action' => 'update', 'mtable' => 'taskchain', 'field' => 'name'),
     array('module' => 'taskchain', 'action' => 'view', 'mtable' => 'taskchain', 'field' => 'name'),
 
-    // attempt actions
+    // Attempt actions.
     array('module' => 'taskchain', 'action' => 'attempt', 'mtable' => 'taskchain', 'field' => 'name'),
     array('module' => 'taskchain', 'action' => 'submit', 'mtable' => 'taskchain', 'field' => 'name'),
 
-    // report actions
+    // Report actions.
     array('module' => 'taskchain', 'action' => 'report', 'mtable' => 'taskchain', 'field' => 'name'),
     array('module' => 'taskchain', 'action' => 'review', 'mtable' => 'taskchain', 'field' => 'name'),
 
-    // edit actions
+    // Edit actions.
     array('module' => 'taskchain', 'action' => 'editcolumnlists', 'mtable' => 'taskchain', 'field' => 'name'),
     array('module' => 'taskchain', 'action' => 'editcondition', 'mtable' => 'taskchain', 'field' => 'name'),
     array('module' => 'taskchain', 'action' => 'edittask', 'mtable' => 'taskchain', 'field' => 'name'),

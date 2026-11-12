@@ -40,12 +40,11 @@ class taskchain_get extends taskchain_base {
      *
      * @param string $type ("chain" or "unit")
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function cm($type) {
         global $DB;
 
-        // get entry/exit cm id
+        // Get entry/exit cm id.
         $cmid = $this->field('chain', $type . 'cm', self::ACTIVITY_NONE);
 
         if ($cmid == self::ACTIVITY_NONE) {
@@ -53,21 +52,21 @@ class taskchain_get extends taskchain_base {
         }
 
         if (! $modinfo = get_fast_modinfo($this->TC->course)) {
-            return false; // no modinfo - shouldn't happen !!
+            return false; // No modinfo - shouldn't happen !!
         }
 
-        // check current cm exists
+        // Check current cm exists.
         if (! $cm = $modinfo->get_cm($this->TC->coursemodule->id)) {
-            return false; // current cm not found - shouldn't happen !!
+            return false; // Current cm not found - shouldn't happen !!
         }
 
-        // set default search values
+        // Set default search values.
         $id = 0;
         $graded = false;
         $modname = '';
         $sectionnum = -1;
 
-        // restrict search values
+        // Restrict search values.
         if ($cmid > 0) {
             $id = $cmid;
         } else {
@@ -84,7 +83,7 @@ class taskchain_get extends taskchain_base {
 
         // get grade info, if required (we just need to know if an activity has a grade or not)
         if ($graded) {
-            // basic SQL to get grade items for graded activities
+            // Basic SQL to get grade items for graded activities.
             $select = 'cm.id, gi.courseid, gi.itemtype, gi.itemmodule, gi.iteminstance, gi.gradetype';
             $from   = '{grade_items} gi' .
                       ' LEFT JOIN {modules} m ON gi.itemmodule = m.name' .
@@ -92,7 +91,7 @@ class taskchain_get extends taskchain_base {
             $where  = "gi.courseid = ? AND gi.itemtype = ? AND gi.gradetype <> ?";
             $params = array($this->TC->course->id, 'mod', GRADE_TYPE_NONE);
 
-            // restrict results to current section, if we can
+            // Restrict results to current section, if we can.
             if ($sectionnum >= 0) {
                 $from  .= ' LEFT JOIN {course_sections} cs ON cs.id = cm.section';
                 $where .= ' AND cs.section = ?';
@@ -108,54 +107,54 @@ class taskchain_get extends taskchain_base {
             $coursemoduleids = array_reverse($coursemoduleids);
         }
 
-        // search for next, previous or specific course module
+        // Search for next, previous or specific course module.
         $found = false;
         foreach ($coursemoduleids as $coursemoduleid) {
             if ($id && $id != $coursemoduleid) {
-                continue; // wrong activity
+                continue; // Wrong activity.
             }
             if (! $coursemodule = $modinfo->get_cm($coursemoduleid)) {
-                continue; // shouldn't happen !!
+                continue; // Shouldn't happen !!
             }
             if ($sectionnum >= 0) {
                 if ($type == 'entry') {
                     if ($coursemodule->sectionnum > $sectionnum) {
-                        continue; // later section
+                        continue; // Later section.
                     }
                     if ($coursemodule->sectionnum < $sectionnum) {
-                        return false; // previous section
+                        return false; // Previous section.
                     }
                 } else { // exit (=next)
                     if ($coursemodule->sectionnum < $sectionnum) {
-                        continue; // earlier section
+                        continue; // Earlier section.
                     }
                     if ($coursemodule->sectionnum > $sectionnum) {
-                        return false; // later section
+                        return false; // Later section.
                     }
                 }
             }
             if ($graded && empty($graded_cmids[$coursemoduleid])) {
-                continue; // skip ungraded activity
+                continue; // Skip ungraded activity.
             }
             if ($modname && $coursemodule->modname != $modname) {
-                continue; // wrong module
+                continue; // Wrong module.
             }
             if ($coursemodule->modname == 'label') {
-                continue; // skip labels
+                continue; // Skip labels.
             }
             if ($found || $coursemoduleid == $id) {
                 if (class_exists('\core_availability\info_module')) {
-                    // Moodle >= 2.7
+                    // Moodle >= 2.7.
                     $is_visible = \core_availability\info_module::is_user_visible($coursemodule);
                 } else {
-                    // Moodle <= 2.6
+                    // Moodle <= 2.6.
                     $is_visible = coursemodule_visible_for_user($coursemodule);
                 }
                 if ($is_visible) {
                     return $coursemodule;
                 }
                 if ($coursemoduleid == $id) {
-                    // required cm is not visible to this user
+                    // Required cm is not visible to this user.
                     return false;
                 }
             }
@@ -164,7 +163,7 @@ class taskchain_get extends taskchain_base {
             }
         }
 
-        // next/prev cm not found
+        // Next/prev cm not found.
         return false;
     }
 
@@ -174,7 +173,6 @@ class taskchain_get extends taskchain_base {
      * @uses $CFG
      * @uses $USER
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function usergrade() {
         global $CFG;
@@ -189,11 +187,11 @@ class taskchain_get extends taskchain_base {
 
             if ($grades = grade_get_grades($courseid, 'mod', 'taskchain', $taskchainid, $userid)) {
                 if (isset($grades->items[0]) && $grades->items[0]->grademax > 0) {
-                    // this activity has a grade item
+                    // This activity has a grade item.
                     if (isset($grades->items[0]->grades[$userid])) {
                         $this->TC->usergrade = $grades->items[0]->grades[$userid];
                         // grade->grade is the adjusted grade, for a true percent
-                        // we need to shift and scale according to grademin and grademax
+                        // we need to shift and scale according to grademin and grademax.
                         $percent = $this->TC->usergrade->grade;
                         if ($grades->items[0]->grademax > 0) {
                             $percent = (($percent - $grades->items[0]->grademin) / $grades->items[0]->grademax);
@@ -215,7 +213,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $optional_param (optional, default=false)
      * @param xxx $param_type (optional, default=PARAM_INT)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function field($type, $field, $default, $optional_param = false, $param_type = PARAM_INT) {
         $value = false;
@@ -247,7 +244,6 @@ class taskchain_get extends taskchain_base {
      *
      * @param xxx $type
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function id($type) {
         return $this->field($type, 'id', 0);
@@ -257,7 +253,6 @@ class taskchain_get extends taskchain_base {
      * userid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function userid() {
         return $this->field('', 'userid', 0);
@@ -267,7 +262,6 @@ class taskchain_get extends taskchain_base {
      * courseid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function courseid() {
         return $this->id('course');
@@ -277,7 +271,6 @@ class taskchain_get extends taskchain_base {
      * coursemoduleid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function coursemoduleid() {
         return $this->id('coursemodule');
@@ -287,7 +280,6 @@ class taskchain_get extends taskchain_base {
      * taskchainid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskchainid() {
         return $this->id('taskchain');
@@ -297,7 +289,6 @@ class taskchain_get extends taskchain_base {
      * chainid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function chainid() {
         return $this->id('chain');
@@ -307,7 +298,6 @@ class taskchain_get extends taskchain_base {
      * chainattemptid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function chainattemptid() {
         return $this->id('chainattempt');
@@ -317,7 +307,6 @@ class taskchain_get extends taskchain_base {
      * chaingradeid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function chaingradeid() {
         return $this->id('chaingrade');
@@ -327,7 +316,6 @@ class taskchain_get extends taskchain_base {
      * conditionid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function conditionid() {
         return $this->id('condition');
@@ -337,7 +325,6 @@ class taskchain_get extends taskchain_base {
      * lastchainattemptid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function lastchainattemptid() {
         return $this->id('lastchainattempt');
@@ -347,7 +334,6 @@ class taskchain_get extends taskchain_base {
      * lasttaskattemptid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function lasttaskattemptid() {
         return $this->id('lasttaskattempt');
@@ -357,7 +343,6 @@ class taskchain_get extends taskchain_base {
      * taskid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskid() {
         if ($taskid = $this->TC->force_taskid()) {
@@ -371,7 +356,6 @@ class taskchain_get extends taskchain_base {
      * taskattemptid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskattemptid() {
         return $this->id('taskattempt');
@@ -381,7 +365,6 @@ class taskchain_get extends taskchain_base {
      * taskscoreid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskscoreid() {
         return $this->id('taskscore');
@@ -391,13 +374,12 @@ class taskchain_get extends taskchain_base {
      * cnumber
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function cnumber() {
-        // chain attempt number:
+        // Chain attempt number:
         // -1 : start new chain attempt
         // 0 : not set
-        // >0 : current chain attempt
+        // >0 : current chain attempt.
         if ($cnumber = $this->TC->force_cnumber()) {
             return $cnumber;
         } else {
@@ -409,13 +391,12 @@ class taskchain_get extends taskchain_base {
      * tnumber
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function tnumber() {
-        // task attempt number:
+        // Task attempt number:
         // -1 : start new task attempt
         // 0 : not set
-        // >0 : current task attempt
+        // >0 : current task attempt.
         if ($tnumber = $this->TC->force_tnumber()) {
             return $tnumber;
         } else {
@@ -427,7 +408,6 @@ class taskchain_get extends taskchain_base {
      * lastchainattempttime
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function lastchainattempttime() {
         return $this->field('lastchainattempt', 'timemodified', 0);
@@ -437,7 +417,6 @@ class taskchain_get extends taskchain_base {
      * lasttaskattempttime
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function lasttaskattempttime() {
         return max(
@@ -452,7 +431,6 @@ class taskchain_get extends taskchain_base {
      * conditiontype
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function conditiontype() {
         return $this->field('condition', 'conditiontype', 0, true);
@@ -462,7 +440,6 @@ class taskchain_get extends taskchain_base {
      * columnlisttype
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function columnlisttype() {
         return $this->field('', 'columnlisttype', '', true, PARAM_ALPHA);
@@ -472,7 +449,6 @@ class taskchain_get extends taskchain_base {
      * columnlistid
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function columnlistid() {
         return $this->field('', 'columnlistid', '', true, PARAM_ALPHANUM);
@@ -482,7 +458,6 @@ class taskchain_get extends taskchain_base {
      * columnlistname
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function columnlistname() {
         return $this->field('', 'columnlistname', '', true, PARAM_TEXT);
@@ -492,7 +467,6 @@ class taskchain_get extends taskchain_base {
      * popup
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function popup() {
         return $this->field('', 'popup', 0, true);
@@ -502,7 +476,6 @@ class taskchain_get extends taskchain_base {
      * tab
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function tab() {
         return $this->field('', 'tab', '', true, PARAM_ALPHA);
@@ -512,7 +485,6 @@ class taskchain_get extends taskchain_base {
      * mode
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function mode() {
         return $this->field('', 'mode', '', true, PARAM_ALPHA);
@@ -531,7 +503,6 @@ class taskchain_get extends taskchain_base {
      * @param string $type ("chains" or "tasks")
      * @param boolean $return_columns (optional, default=false)
      * @return array
-     * @todo Finish documenting this function
      */
     public function columnlists($type, $return_columns = false) {
         $columnlists = array();
@@ -568,7 +539,6 @@ class taskchain_get extends taskchain_base {
      * @param string $id   (optional, default='')
      * @param boolean $return_columns (optional, default=false)
      * @return array
-     * @todo Finish documenting this function
      */
     public function columnlist($type, $id = '', $return_columns = false) {
         $lists = $this->columnlists($type, $return_columns);
@@ -589,10 +559,9 @@ class taskchain_get extends taskchain_base {
      * @uses $USER
      * @param xxx $userid (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function mycourses($userid = 0) {
-        // get all courses in which this user can manage activities
+        // Get all courses in which this user can manage activities.
         global $DB, $USER;
         if ($userid) {
             $thisuser = false;
@@ -604,7 +573,7 @@ class taskchain_get extends taskchain_base {
         }
         if (is_null($mycourses)) {
             if ($this->TC->can->manageactivities(false, mod_taskchain::context(CONTEXT_SYSTEM))) {
-                $mycourses = get_courses(); // system admin
+                $mycourses = get_courses(); // System admin.
             } else {
                 $mycourses = enrol_get_users_courses($userid);
             }
@@ -618,7 +587,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $userid (optional, default=0)
      * @param xxx $mycourses (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function mytaskchains($userid = 0, $mycourses = null) {
         if ($userid) {
@@ -633,7 +601,7 @@ class taskchain_get extends taskchain_base {
             if (is_null($mycourses)) {
                 $mycourses = $this->mycourses($thisuser ? 0 : $userid);
             }
-            // get all instances of taskchains in all courses which this user can edit
+            // Get all instances of taskchains in all courses which this user can edit.
             if ($instances = get_all_instances_in_courses('taskchain', $mycourses, $userid)) {
                 $mytaskchains = array();
                 foreach ($instances as $instance) {
@@ -656,7 +624,6 @@ class taskchain_get extends taskchain_base {
      * @uses $CFG
      * @param xxx $userid (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskchains($userid = 0) {
         global $CFG;
@@ -669,7 +636,7 @@ class taskchain_get extends taskchain_base {
             $taskchains = &$this->TC->taskchains;
         }
         if (is_null($taskchains)) {
-            // get all taskchains in this course that are visible to this user
+            // Get all taskchains in this course that are visible to this user.
             $instances = get_all_instances_in_course('taskchain', $this->TC->course, $userid);
             if ($instances) {
                 $taskchains = array();
@@ -690,7 +657,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $userid (optional, default=0)
      * @param xxx $taskchains (optional, default=null)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function chains($userid = 0, $taskchains = null) {
         global $DB;
@@ -723,7 +689,6 @@ class taskchain_get extends taskchain_base {
      * @uses $DB
      * @param xxx $taskchainid (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function chain($taskchainid = 0) {
         global $DB;
@@ -750,7 +715,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $taskid (optional, default=0)
      * @param xxx $tnumber (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function chaingrades($userid = 0, $chainid = 0, $cnumber = 0, $taskid = 0, $tnumber = 0) {
         global $DB;
@@ -785,7 +749,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $taskid (optional, default=0)
      * @param xxx $tnumber (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function chaingrade($userid = 0, $chainid = 0, $cnumber = 0, $taskid = 0, $tnumber = 0) {
         global $DB;
@@ -827,7 +790,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $userid (optional, default=0)
      * @param xxx $chainid (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function chainattempts($userid = 0, $chainid = 0) {
         global $DB;
@@ -844,13 +806,13 @@ class taskchain_get extends taskchain_base {
             $select = "userid=$userid";
             $params = array();
             if (is_null($this->TC->coursemodule)) {
-                // all chain attempts at all chains in the course
+                // All chain attempts at all chains in the course.
                 if ($chains = $this->chains($thisuser ? 0 : $userid)) {
                     $chainids = implode(',', array_keys($chains));
                     $select .= " AND chainid IN ($chainids)";
                 }
             } else {
-                // all chain attempts at one particular cm/taskchain/chain in the course
+                // All chain attempts at one particular cm/taskchain/chain in the course.
                 if ($chainid) {
                     $select .= ' AND chainid = ?';
                     $params[] = $chainid;
@@ -865,7 +827,6 @@ class taskchain_get extends taskchain_base {
      * maxchainattemptgrade
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function maxchainattemptgrade() {
         if (is_null($this->TC->maxchainattemptgrade)) {
@@ -883,7 +844,6 @@ class taskchain_get extends taskchain_base {
      * chaincompleted
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function chaincompleted() {
         if (is_null($this->TC->chaincompleted)) {
@@ -907,7 +867,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $chainid (optional, default=0)
      * @param xxx $cnumber (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function chainattempt($userid = 0, $chainid = 0, $cnumber = 0) {
         global $DB;
@@ -946,7 +905,6 @@ class taskchain_get extends taskchain_base {
      * @uses $DB
      * @param xxx $chainid (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function tasks($chainid = 0) {
         global $DB;
@@ -962,13 +920,13 @@ class taskchain_get extends taskchain_base {
             $select = '';
             $params = array();
             if ($thisuser && is_null($this->TC->coursemodule)) {
-                // all tasks in all chains in the course
+                // All tasks in all chains in the course.
                 if ($chains = $this->TC->get_chains()) {
                     $chainids = implode(',', array_keys($chains));
                     $select = "chainid IN ($chainids)";
                 }
             } else {
-                // all tasks in one particular cm/taskchain/chain in the course
+                // All tasks in one particular cm/taskchain/chain in the course.
                 if ($chainid) {
                     $select = 'chainid = ?';
                     $params = array($chainid);
@@ -989,7 +947,6 @@ class taskchain_get extends taskchain_base {
      * @uses $CFG
      * @uses $DB
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function task() {
         global $CFG, $DB;
@@ -997,7 +954,7 @@ class taskchain_get extends taskchain_base {
         if (is_null($this->TC->task)) {
             $params = array('id' => $this->TC->get_taskid());
             if (! $task = $DB->get_record('taskchain_tasks', $params)) {
-                return false; // shouldn't happen - taskid was invalid !!
+                return false; // Shouldn't happen - taskid was invalid !!
             }
             $this->TC->task = new taskchain_task($task, array('TC' => &$this->TC));
             $this->TC->force_taskid(0);
@@ -1014,10 +971,9 @@ class taskchain_get extends taskchain_base {
      * @param xxx $chainid (optional, default=0)
      * @param xxx $cnumber (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskscores($userid = 0, $chainid = 0, $cnumber = 0) {
-        // get all scores by this user for tasks in this chain attempt
+        // Get all scores by this user for tasks in this chain attempt.
         global $DB;
         if ($userid) {
             $thisuser = false;
@@ -1052,7 +1008,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $cnumber (optional, default=0)
      * @param xxx $taskid (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskscore($userid = 0, $cnumber = 0, $taskid = 0) {
         global $DB;
@@ -1094,7 +1049,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $taskid (optional, default=0)
      * @param xxx $tnumber (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskattempts($userid = 0, $chainid = 0, $cnumber = 0, $taskid = 0, $tnumber = 0) {
         global $DB;
@@ -1143,7 +1097,7 @@ class taskchain_get extends taskchain_base {
                         $params[] = $cnumber;
                     }
                 }
-                // most recent last
+                // Most recent last.
                 $sort = 'resumestart ASC';
             }
             if ($select) {
@@ -1163,7 +1117,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $taskid (optional, default=0)
      * @param xxx $tnumber (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function taskattempt($userid = 0, $chainid = 0, $cnumber = 0, $taskid = 0, $tnumber = 0) {
         global $DB;
@@ -1207,7 +1160,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $taskid (optional, default=0)
      * @param xxx $tnumber (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function attempts($type, $userid = 0, $chainid = 0, $cnumber = 0, $taskid = 0, $tnumber = 0) {
         $attempts = "{$type}attempts";
@@ -1224,7 +1176,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $taskid (optional, default=0)
      * @param xxx $tnumber (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function attempt($type, $userid = 0, $chainid = 0, $cnumber = 0, $taskid = 0, $tnumber = 0) {
         $attempt = "{$type}attempt";
@@ -1241,7 +1192,6 @@ class taskchain_get extends taskchain_base {
      * @param xxx $taskid (optional, default=0)
      * @param xxx $tnumber (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function grade($type, $userid = 0, $chainid = 0, $cnumber = 0, $taskid = 0, $tnumber = 0) {
         if ($type == 'chain') {
@@ -1257,7 +1207,6 @@ class taskchain_get extends taskchain_base {
      *
      * @param xxx $type
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function lastattempt($type) {
 
@@ -1268,10 +1217,10 @@ class taskchain_get extends taskchain_base {
         if (is_null($this->TC->$lastattempt)) {
             if ($this->attempts($type)) {
                 if ($this->TC->get_taskid()) {
-                    // most recent attempt is first
+                    // Most recent attempt is first.
                     $this->TC->$lastattempt = reset($this->TC->$attempts);
                 } else {
-                    // most recent attempt is last
+                    // Most recent attempt is last.
                     $this->TC->$lastattempt = end($this->TC->$attempts);
                 }
             }
@@ -1287,20 +1236,19 @@ class taskchain_get extends taskchain_base {
      * @param xxx $taskid (optional, default=0)
      * @param xxx $allgroups (optional, default=0)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function conditions($conditiontype = 0, $taskid = 0, $allgroups = 0) {
         global $DB;
         static $groups;
 
         if (! isset($groups)) {
-            // get list of groups (if any) for this user
+            // Get list of groups (if any) for this user.
             if (empty($this->TC->coursemodule->groupmembersonly) || empty($this->TC->coursemodule->groupingid)) {
                 $groups = $allgroups;
             } else if ($this->TC->can('mod/taskchain:manage') || $this->TC->can('moodle/site:accessallgroups')) {
                 $groups = $allgroups;
             } else {
-                // groups in this course/grouping to which this user belongs
+                // Groups in this course/grouping to which this user belongs.
                 if ($groups = groups_get_all_groups($this->TC->course->id, $this->TC->userid, $this->TC->coursemodule->groupingid)) {
                     $groups = implode(',', array_keys($groups));
                 }
@@ -1319,26 +1267,26 @@ class taskchain_get extends taskchain_base {
                 $conditions = &$this->TC->cache_postconditions;
                 break;
             default:
-                $conditions[$taskid] = array(); // invalid $conditiontype - shouldn't happen !!
+                $conditions[$taskid] = array(); // Invalid $conditiontype - shouldn't happen !!
         }
 
         if (! isset($conditions[$taskid])) {
             $select = "taskid=$taskid AND conditiontype=$conditiontype";
             if ($groups) {
-                // restrict conditions to those for groups in this course/grouping to which this user belongs
+                // Restrict conditions to those for groups in this course/grouping to which this user belongs.
                 $select .= ' AND groupid IN (0,' . $groups . ')';
             } else if ($groups === 0) {
-                // only select conditions which apply to any and all groups
+                // Only select conditions which apply to any and all groups.
                 $select .= ' AND groupid=0';
             }
-            // conditionscore < 0 : the minimum score at which this condition is satisfied
+            // Conditionscore < 0 : the minimum score at which this condition is satisfied
             // conditionscore > 0 : the maximum score at which this condition is satisfied
             // The post-conditions will be ordered by conditionscore:
-            // -100 (highest min) ... (lowest min) 0 (lowest max) ... (highest max) 100
+            // -100 (highest min) ... (lowest min) 0 (lowest max) ... (highest max) 100.
             if (! $conditions[$taskid] = $DB->get_records_select('taskchain_conditions', $select, null, 'conditiontaskid,sortorder,conditionscore,attemptcount,attemptduration,attemptdelay')) {
                 $conditions[$taskid] = array();
             }
-            // store absolute values for settings which can be negative
+            // Store absolute values for settings which can be negative.
             foreach ($conditions[$taskid] as $condition) {
                 $conditions[$taskid][$condition->id]->abs_conditionscore = abs($condition->conditionscore);
                 $conditions[$taskid][$condition->id]->abs_attemptcount = abs($condition->attemptcount);
@@ -1356,7 +1304,6 @@ class taskchain_get extends taskchain_base {
      * @uses $DB
      * @param xxx $taskid
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function cache_taskattempts($taskid) {
         global $DB;
@@ -1365,7 +1312,7 @@ class taskchain_get extends taskchain_base {
             if (empty($cnumber) || $cnumber < 0) {
                 $this->TC->cache_taskattempts[$taskid] = false;
             } else {
-                // get attempts at $taskid in this cnumber
+                // Get attempts at $taskid in this cnumber.
                 $select = 'taskid = ? AND userid = ? AND cnumber = ?';
                 $params = array($taskid, $this->TC->userid, $cnumber);
                 $this->TC->cache_taskattempts[$taskid] = $DB->get_records_select('taskchain_task_attempts', $select, $params, 'resumestart DESC');
@@ -1383,25 +1330,24 @@ class taskchain_get extends taskchain_base {
      * available_tasks
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function available_tasks() {
         if (is_null($this->TC->availabletaskids)) {
-            // initialize array of ids of tasks which satisfy preconditions
+            // Initialize array of ids of tasks which satisfy preconditions.
             $this->TC->availabletaskids = array();
             $this->TC->countavailabletaskids = 0;
 
-            // get tasks, if any, in this chain
+            // Get tasks, if any, in this chain.
             if ($this->TC->get_tasks()) {
                 $previoustaskid = 0;
                 foreach ($this->TC->tasks as $task) {
                     $ok = $this->TC->check_conditions(taskchain::CONDITIONTYPE_PRE, $task->id, $previoustaskid);
                     if ($ok) {
-                        // all preconditions were satisfied, so store task id
+                        // All preconditions were satisfied, so store task id.
                         $previoustaskid = $task->id;
                         $this->TC->availabletaskids[] = $task->id;
                         $this->TC->countavailabletaskids++;
-                        // store the first (by sort order) available taskid
+                        // Store the first (by sort order) available taskid
                         // (used when post-condition specifies MENUNEXTONE or MENUALLONE)
                         if (! $this->TC->availabletaskid && ! $this->cache_taskattempts($task->id)) {
                             $this->TC->availabletaskid = $task->id;
@@ -1419,7 +1365,6 @@ class taskchain_get extends taskchain_base {
      *
      * @param xxx $taskid
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function available_task($taskid) {
         if (! isset($this->TC->cache_available_task[$taskid])) {
@@ -1434,9 +1379,8 @@ class taskchain_get extends taskchain_base {
      *
      * @uses $CFG
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function userlist() {
+    public function userlist() {
         global $CFG;
 
         static $userlist = array();
@@ -1452,29 +1396,29 @@ class taskchain_get extends taskchain_base {
             'others'   => get_string('other'),
         );
 
-        // get all users who have ever attempted this TaskChain
+        // Get all users who have ever attempted this TaskChain.
         $users = $this->users(true);
 
         if ($users) {
             $userlist[$str->groups]['users'] = get_string('allusers', 'mod_taskchain') . ' (' . count($users) . ')';
         } else {
-            // no users with attempts, but we want to force the "groups" to the top of the drop down list
-            // so we add a dummy option here (to create the option group), and then remove the dummy later
+            // No users with attempts, but we want to force the "groups" to the top of the drop down list
+            // so we add a dummy option here (to create the option group), and then remove the dummy later.
             $userlist[$str->groups]['dummy'] = 'dummy';
         }
 
-        // keep a running total of students and managers with grades
+        // Keep a running total of students and managers with grades.
         $count_participants = 0;
 
-        // get teachers and enrolled students
+        // Get teachers and enrolled students.
         $managers = $this->managers();
         $students = $this->students();
 
-        // current students
+        // Current students.
         if ($students) {
             $count = 0;
             foreach ($students as $user) {
-                // exclude mangers
+                // Exclude mangers.
                 if (empty($managers[$user->id])) {
                     $userlist[$str->students]["$user->id"] = fullname($user);
                     unset($users[$user->id]);
@@ -1491,7 +1435,7 @@ class taskchain_get extends taskchain_base {
         if ($managers) {
             $count = 0;
             foreach ($managers as $user) {
-                // only include managers who have attempted some of the tasks
+                // Only include managers who have attempted some of the tasks.
                 if (isset($users[$user->id])) {
                     $userlist[$str->managers]["$user->id"] = fullname($user);
                     unset($users[$user->id]);
@@ -1508,7 +1452,7 @@ class taskchain_get extends taskchain_base {
             $userlist[$str->groups]['participants'] = get_string('allparticipants') . " ($count_participants)";
         }
 
-        // groupings
+        // Groupings.
         if ($g = $this->all_groupings()) {
             foreach ($g as $gid => $grouping) {
                 if ($count = $this->count_grouping_members($gid)) {
@@ -1517,7 +1461,7 @@ class taskchain_get extends taskchain_base {
             }
         }
 
-        // groups
+        // Groups.
         if ($g = $this->all_groups()) {
             foreach ($g as $gid => $group) {
                 if ($count = $this->count_group_members($gid)) {
@@ -1526,7 +1470,7 @@ class taskchain_get extends taskchain_base {
             }
         }
 
-        // remaining $users are probably former students
+        // Remaining $users are probably former students.
         if ($users) {
             $count = 0;
             foreach ($users as $user) {
@@ -1548,9 +1492,8 @@ class taskchain_get extends taskchain_base {
      * managers
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function managers() {
+    public function managers() {
         static $managers = null;
         if (is_null($managers)) {
             $groupids = $this->groupids(false);
@@ -1563,9 +1506,8 @@ class taskchain_get extends taskchain_base {
      * students
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function students() {
+    public function students() {
         static $students = null;
         if (is_null($students)) {
             $groupids = $this->groupids(false);
@@ -1580,9 +1522,8 @@ class taskchain_get extends taskchain_base {
      * @uses $DB
      * @param xxx $returnnames (optional, default=false)
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function users($returnnames = false) {
+    public function users($returnnames = false) {
         global $DB;
 
         if ($returnnames) {
@@ -1609,9 +1550,8 @@ class taskchain_get extends taskchain_base {
      *
      * @param xxx $return_array (optional, default=true)
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function groupids($return_array = true) {
+    public function groupids($return_array = true) {
         if ($groups = $this->all_groups()) {
             $groupids = array_keys($groups);
         } else {
@@ -1638,9 +1578,8 @@ class taskchain_get extends taskchain_base {
      * @param xxx $AND (optional, default=' AND ')
      * @param xxx $field (optional, default='userid')
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function all_groups_sql($AND = ' AND ', $field = 'userid') {
+    public function all_groups_sql($AND = ' AND ', $field = 'userid') {
         if ($groupids = implode(',', $this->groupids())) {
             return $AND . $field . ' IN (SELECT DISTINCT gm.userid FROM {groups_members} gm WHERE gm.groupid IN (' . $groupids . '))';
         } else {
@@ -1652,18 +1591,17 @@ class taskchain_get extends taskchain_base {
      * all_groups
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function all_groups() {
+    public function all_groups() {
         if (empty($this->TC->course)) {
-            return array(); // shouldn't happen !!
+            return array(); // Shouldn't happen !!
         }
 
         if ($this->TC->can->accessallgroups()) {
-            // user can see any groups
+            // User can see any groups.
             $userid = 0;
         } else {
-            // user can only see own group(s) e.g. non-editing teacher
+            // User can only see own group(s) e.g. non-editing teacher.
             $userid = $this->userid();
         }
 
@@ -1682,12 +1620,11 @@ class taskchain_get extends taskchain_base {
      * @uses $CFG
      * @uses $DB
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function all_groupings() {
+    public function all_groupings() {
         global $CFG, $DB;
 
-        // groupings are ignored when not enabled
+        // Groupings are ignored when not enabled.
         if (empty($CFG->enablegroupings) || empty($this->TC->course)) {
             return false;
         }
@@ -1785,15 +1722,14 @@ class taskchain_get extends taskchain_base {
      * @param xxx $AND (optional, default=' AND ')
      * @param xxx $field (optional, default='userid')
      * @return xxx
-     * @todo Finish documenting this function
      */
-    function userfilter($AND = ' AND ', $field = 'userid') {
+    public function userfilter($AND = ' AND ', $field = 'userid') {
         global $CFG;
 
         $userlist = optional_param('userlist', get_user_preferences('userlist', 'users'), PARAM_ALPHANUM);
-        // group, grouping, users, participants, managers, students, others, specific userid
+        // Group, grouping, users, participants, managers, students, others, specific userid.
 
-        // check for groups and groupings
+        // Check for groups and groupings.
         $gid = 0;
         if (substr($userlist, 0, 5) == 'group') {
             if (substr($userlist, 5, 3) == 'ing') {
@@ -1806,37 +1742,37 @@ class taskchain_get extends taskchain_base {
                 $userlist = 'group';
             }
             if ($g && isset($g[$id])) {
-                $gid = $id; // id is valid
+                $gid = $id; // Id is valid.
             } else {
-                $userlist = 'users'; // default
+                $userlist = 'users'; // Default.
             }
         }
 
         $userids = array();
         switch ($userlist) {
             case 'users':
-                // anyone who has ever attempted TaskChains in this course
+                // Anyone who has ever attempted TaskChains in this course.
                 if ($users = $this->users()) {
                     $userids = array_keys($users);
                 }
                 break;
 
             case 'grouping':
-                // grouping members
+                // Grouping members.
                 if ($gid) {
                     $userids = $this->grouping_userids($gid);
                 }
                 break;
 
             case 'group':
-                // group members
+                // Group members.
                 if ($gid) {
                     $userids = $this->group_userids($gid);
                 }
                 break;
 
             case 'participants':
-                // all students + managers who have attempted a task
+                // All students + managers who have attempted a task.
                 if ($users = $this->users()) {
                     if ($students = $this->students()) {
                         $userids = array_keys($students);
@@ -1851,7 +1787,7 @@ class taskchain_get extends taskchain_base {
                 break;
 
             case 'managers':
-                // all course managers who have attempted a task
+                // All course managers who have attempted a task.
                 if ($users = $this->users()) {
                     if ($managers = $this->managers()) {
                         $userids = array_intersect(array_keys($managers), array_keys($users));
@@ -1860,7 +1796,7 @@ class taskchain_get extends taskchain_base {
                 break;
 
             case 'students':
-                // anyone currently allowed to attempt this TaskChain who is not a manager
+                // Anyone currently allowed to attempt this TaskChain who is not a manager.
                 if ($students = $this->students()) {
                     $userids = array_keys($students);
                     if ($managers = $this->managers()) {
@@ -1870,7 +1806,7 @@ class taskchain_get extends taskchain_base {
                 break;
 
             case 'others':
-                // anyone who has attempted the task, but is not currently a student or manager
+                // Anyone who has attempted the task, but is not currently a student or manager.
                 if ($users = $this->users()) {
                     $userids = array_keys($users);
                     if ($students = $this->students()) {
@@ -1882,7 +1818,7 @@ class taskchain_get extends taskchain_base {
                 }
                 break;
 
-            default: // specific user selected by teacher
+            default: // Specific user selected by teacher.
                 if (is_numeric($userlist)) {
                     $userids[] = $userlist;
                 }
@@ -1892,11 +1828,11 @@ class taskchain_get extends taskchain_base {
         $userids = implode(',', array_unique($userids));
 
         if ($userids == '') {
-            return $AND . 'userid > 0'; // no users
+            return $AND . 'userid > 0'; // No users.
         } else if (strpos($userids, ',') === false) {
-            return $AND . "$field = $userids"; // one user
+            return $AND . "$field = $userids"; // One user.
         } else {
-            return $AND . "$field IN ($userids)"; // many users
+            return $AND . "$field IN ($userids)"; // Many users.
         }
     }
 }

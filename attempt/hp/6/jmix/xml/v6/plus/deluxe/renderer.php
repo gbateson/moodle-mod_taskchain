@@ -43,19 +43,16 @@ class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_ta
      *
      * @param xxx $page
      * @param xxx $target
-     * @todo Finish documenting this function
      */
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // prepend templates for this output format
+        // Prepend templates for this output format.
         array_unshift($this->templatesfolders, 'mod/taskchain/attempt/hp/6/jmix/xml/v6/plus/deluxe/templates');
     }
 
     /**
      * fix_bodycontent_DragAndDrop
-     *
-     * @todo Finish documenting this function
      */
     public function fix_bodycontent_DragAndDrop($prefix = '', $suffix = '') {
         // user-string-1: prefix (optional)
@@ -69,7 +66,6 @@ class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_ta
       * fix_js_StartUp_DragAndDrop_DragArea
       *
       * @param xxx $substr (passed by reference)
-      * @todo Finish documenting this function
       */
     public function fix_js_StartUp_DragAndDrop_DragArea(&$substr) {
         // fix LeftCol (=left side of drag area)
@@ -92,7 +88,6 @@ class mod_taskchain_attempt_hp_6_jmix_xml_v6_plus_deluxe_renderer extends mod_ta
      * expand_SegmentArray
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_SegmentArray($more_values = array()) {
         // user-string-3: (optional)

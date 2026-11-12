@@ -28,7 +28,7 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 require_once($CFG->dirroot . '/mod/taskchain/edit/form/task.php');
 
-// create object to represent this TaskChain activity
+// Create object to represent this TaskChain activity.
 $TC = new mod_taskchain();
 
 if ($TC->task) {
@@ -37,7 +37,7 @@ if ($TC->task) {
     mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'edittask', 'edit/task.php?tc=' . $TC->taskchain->id, $TC->taskchain->id, $TC->coursemodule->id);
 }
 
-// Set editing mode
+// Set editing mode.
 mod_taskchain::set_user_editing();
 
 if (isset($TC->task->id)) {
@@ -65,35 +65,35 @@ if ($mform->is_cancelled()) {
 
 switch ($TC->action) {
     case 'deleteconfirmed':
-        // delete task
+        // Delete task.
         taskchain_delete_tasks($TC->task->id);
 
-        // unset task objects
+        // Unset task objects.
         $TC->task = null;
         $TC->taskscore = null;
         $TC->taskattempt = null;
         $TC->force_tnumber(0);
 
-        // set text confirming task deletion
+        // Set text confirming task deletion.
         $text = get_string('task', 'mod_taskchain');
         $text = mod_taskchain::textlib('strtolower', $text);
         $text = get_string('deletedactivity', '', $text);
 
-        // get url of next page
+        // Get url of next page.
         if ($TC->get_cnumber()) {
-            // resume the chain attempt
+            // Resume the chain attempt.
             $url = $TC->url->attempt();
         } else {
-            // resume editing tasks in chain
+            // Resume editing tasks in chain.
             $url = $TC->url->edit('tasks', array('taskid' => 0));
         }
 
-        // display simple page with $text and $url
+        // Display simple page with $text and $url.
         echo $output->page_quick($text, 'continue', $url);
         break;
 
     case 'delete':
-        // check the user really wants to delete this task
+        // Check the user really wants to delete this task.
         $text = get_string('confirmdeletetask', 'mod_taskchain');
         $params = $TC->merge_params(null, null, 'taskid');
         echo $output->page_delete($text, 'edit/task.php', $params);
@@ -102,10 +102,10 @@ switch ($TC->action) {
     case 'deletecancelled':
     case 'editcancelled':
         if ($TC->get_cnumber() || $TC->get_tnumber()) {
-            // resume the chain/task attempt
+            // Resume the chain/task attempt.
             redirect($TC->url->attempt());
         } else {
-            // resume editing tasks in chain
+            // Resume editing tasks in chain.
             redirect($TC->url->edit('tasks', array('taskid' => 0)));
         }
         break;
@@ -131,13 +131,13 @@ switch ($TC->action) {
         }
         unset($config);
 
-        // make sure outputformat is valid for this source file
+        // Make sure outputformat is valid for this source file.
         $list = taskchain_available::outputformats_list($newdata->sourcetype);
         if (isset($newdata->outputformat) && array_key_exists($newdata->outputformat, $list)) {
-            // do nothing - outputformat is valid
+            // Do nothing - outputformat is valid.
         } else {
-            // outputformat is (no longer) valid
-            // reset it to "Best" value e.g. "0"
+            // Outputformat is (no longer) valid
+            // reset it to "Best" value e.g. "0".
             $newdata->outputformat = key($list);
         }
         unset($list);
@@ -158,7 +158,7 @@ switch ($TC->action) {
                 $TC->task->scoreweighting = $newdata->scoreweighting;
             }
 
-            // set cache fields
+            // Set cache fields.
             $TC->task->title = $newdata->title;
             if (isset($newdata->stopbutton)) {
                 $TC->task->stopbutton = $newdata->stopbutton;
@@ -167,7 +167,7 @@ switch ($TC->action) {
                 $TC->task->stoptext = $newdata->stoptext;
             }
 
-            // update the TaskChain task record
+            // Update the TaskChain task record.
             if (! $DB->update_record('taskchain_tasks', $newdata)) {
                 throw new moodle_exception('error_updaterecord', 'taskchain', '', 'tasks');
             }
@@ -176,12 +176,12 @@ switch ($TC->action) {
             $TC->task = $DB->get_record('taskchain_tasks', array('id' => $newdata->id));
             $TC->task = new taskchain_task($TC->task, array('TC' => &$TC));
 
-            // regrade task, if necessary
+            // Regrade task, if necessary.
             if ($regrade) {
                 if ($taskscores = $DB->get_records('taskchain_task_scores', array('taskid' => $TC->task->id), '', 'id,cnumber,userid')) {
                     $userids = array();
                     foreach ($taskscores as $id => $taskscore) {
-                        // set task score from task attempts
+                        // Set task score from task attempts.
                         $TC->regrade_attempts('task', $TC->task, $taskscore->cnumber, $taskscore->userid);
                         if (! array_key_exists($taskscore->userid, $userids)) {
                             $userids[$taskscore->userid] = array();
@@ -190,25 +190,25 @@ switch ($TC->action) {
                     }
                     unset($taskscores);
 
-                    // array of tasks whose attempts are to be updated
+                    // Array of tasks whose attempts are to be updated.
                     $tasks = array($TC->task->id => &$TC->task);
 
-                    // transfer grade settings to taskchain record
+                    // Transfer grade settings to taskchain record
                     // required by taskchain_update_grades (in taskchain/lib.php)
                     $TC->taskchain->gradelimit = $TC->chain->gradelimit;
                     $TC->taskchain->gradeweighting = $TC->chain->gradeweighting;
 
-                    // update chain grades and attempts
+                    // Update chain grades and attempts.
                     foreach ($userids as $userid => $cnumbers) {
                         foreach ($cnumbers as $cnumber) {
-                            // set chain attempt from task score
+                            // Set chain attempt from task score.
                             $TC->regrade_chainattempt($TC->chain, $cnumber, $userid, $tasks);
                         }
 
-                        // set chain grade from chain attempts
+                        // Set chain grade from chain attempts.
                         $TC->regrade_attempts('chain', $TC->chain, 0, $userid);
 
-                        // update grades in Moodle gradebook
+                        // Update grades in Moodle gradebook.
                         taskchain_update_grades($TC->taskchain, $userid);
                     }
                     unset($userids, $tasks);
@@ -216,24 +216,24 @@ switch ($TC->action) {
             }
         }
 
-        // show the chain or task
+        // Show the chain or task.
         if ($TC->get_cnumber() || $TC->get_tnumber()) {
-            // resume the chain/task attempt
+            // Resume the chain/task attempt.
             redirect($TC->url->attempt());
         } else {
-            // resume editing tasks in chain
+            // Resume editing tasks in chain.
             redirect($TC->url->edit('tasks', array('taskid' => 0)));
         }
         break;
 
     case 'update':
     default:
-        // initizialize data in form
+        // Initizialize data in form.
         if ($TC->task) {
             // editing a task ($TC->task was set up in mod/taskchain/locallib.php)
             $defaults = (array)$TC->task->to_stdclass();
         } else {
-            // adding a new task to this chain
+            // Adding a new task to this chain.
             $defaults = array('chainid' => $TC->get_chainid());
         }
         $mform->data_preprocessing($defaults);
@@ -242,7 +242,7 @@ switch ($TC->action) {
 
         echo $output->header();
 
-        // display the form
+        // Display the form.
         $mform->display();
 
         echo $output->footer();

@@ -35,8 +35,12 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_mediaplayer_hbs_mp3_player extends taskchain_mediaplayer {
+    /** @var array */
     public $aliases = array('hbs');
+    /** @var string */
     public $playerurl = 'hbs_mp3_player/hbs_mp3_player.swf';
+    /** @var string */
     public $flashvars_paramname = 'TheSound';
+    /** @var array */
     public $more_options = array('width' => 24, 'height' => 17, 'flashvars' => '');
 }

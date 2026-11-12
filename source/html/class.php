@@ -38,14 +38,13 @@ require_once($CFG->dirroot . '/mod/taskchain/source/class.php');
  * @package    mod_taskchain
  */
 class taskchain_source_html extends taskchain_source {
-    // returns name of task that is displayed to user
+    // Returns name of task that is displayed to user.
 
     /**
      * get_name
      *
      * @param xxx $textonly (optional, default=true)
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_name() {
         if (! isset($this->name)) {
@@ -53,13 +52,13 @@ class taskchain_source_html extends taskchain_source {
             $this->title = '';
 
             if (! $this->get_filecontents()) {
-                // empty file - shouldn't happen !!
+                // Empty file - shouldn't happen !!
                 return false;
             }
 
             $search = '/<((?:h[1-6])|p|div|title)[^>]*>(.*?)<\/\1[^>]*>/is';
             if (preg_match_all($search, $this->filecontents, $matches)) {
-                // search string to match style and script blocks
+                // Search string to match style and script blocks.
                 $search = '/<(script|style)[^>]*>.*?<\/\1[^>]*>\s/is';
 
                 $i_max = count($matches[0]);
@@ -80,27 +79,25 @@ class taskchain_source_html extends taskchain_source {
      * get_title
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_title() {
-        $this->get_name(); // set name and title
+        $this->get_name(); // Set name and title.
         return $this->title;
     }
 
-    // returns the introduction text for a task
+    // Returns the introduction text for a task.
 
     /**
      * get_entrytext
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_entrytext() {
         if (! isset($this->entrytext)) {
             $this->entrytext = '';
 
             if (! $this->get_filecontents()) {
-                // empty file - shouldn't happen !!
+                // Empty file - shouldn't happen !!
                 return false;
             }
             if (preg_match('/<(div|p)[^>]*>\s*(.*?)\s*<\/$1>/is', $this->filecontents, $matches)) {

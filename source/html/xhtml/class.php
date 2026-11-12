@@ -38,10 +38,13 @@ require_once($CFG->dirroot . '/mod/taskchain/source/html/class.php');
  * @package    mod_taskchain
  */
 class taskchain_source_html_xhtml extends taskchain_source_html {
-    // the icon for this source file type
+    /** @var string the icon for this source file type */
     public $icon = 'pix/f/html.gif';
+    /** @var string */
     public $iconwidth = '16';
+    /** @var string */
     public $iconheight = '16';
+    /** @var string */
     public $iconclass = 'icon';
 
     /**
@@ -49,7 +52,6 @@ class taskchain_source_html_xhtml extends taskchain_source_html {
      *
      * @param xxx $sourcefile
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function is_taskfile() {
         if (preg_match('/\.html?$/', $this->file->get_filename())) {

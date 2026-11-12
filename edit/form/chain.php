@@ -39,7 +39,7 @@ require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/chain.php');
  */
 // class mod_taskchain_mod_form extends moodleform_mod {
 class mod_taskchain_edit_chain_form extends moodleform {
-    /** TaskChain form helper - see mod/taskchain/form/base.php **/
+    /** @var mixed TaskChain form helper - see mod/taskchain/form/base.php * */
     private $form_helper;
 
     /**
@@ -48,10 +48,10 @@ class mod_taskchain_edit_chain_form extends moodleform {
     public function definition() {
         global $TC;
 
-        // set up TaskChain form helper
+        // Set up TaskChain form helper.
         $this->form_helper = new taskchain_form_helper_chain($this->_form, $TC->coursemodule->context, $TC->chain);
 
-        // add form sections
+        // Add form sections.
         $this->form_helper->add_sections();
 
         // add standard buttons ("Save changes" and "Cancel")
@@ -110,7 +110,6 @@ class mod_taskchain_edit_chain_form extends moodleform {
      * @param xxx $data (passed by reference)
      * @param xxx $files
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
@@ -123,7 +122,6 @@ class mod_taskchain_edit_chain_form extends moodleform {
      *
      * @param array $data (passed by reference)
      * @return void may modify $this->record
-     * @todo Finish documenting this function
      */
     public function update_singlefield(&$data) {
         $this->form_helper->update_singlefield($data);
@@ -131,8 +129,6 @@ class mod_taskchain_edit_chain_form extends moodleform {
 
     /**
      * display_singlefield
-     *
-     * @todo Finish documenting this function
      */
     public function display_singlefield() {
         $this->form_helper->display_singlefield();

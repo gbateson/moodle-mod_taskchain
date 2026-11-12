@@ -42,9 +42,8 @@ class mod_taskchain_attempt_hp_6_rhubarb_review extends mod_taskchain_attempt_hp
      * attempt_fields
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function attempt_fields() {
+    public static function attempt_fields() {
         return array('tnumber', 'score', 'status', 'duration', 'timestart');
     }
 
@@ -52,9 +51,8 @@ class mod_taskchain_attempt_hp_6_rhubarb_review extends mod_taskchain_attempt_hp
      * response_text_fields
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function response_text_fields() {
+    public static function response_text_fields() {
         return array('correct', 'wrong');
     }
 
@@ -62,9 +60,8 @@ class mod_taskchain_attempt_hp_6_rhubarb_review extends mod_taskchain_attempt_hp
      * response_num_fields
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
-    static function response_num_fields() {
+    public static function response_num_fields() {
         return array('hints', 'checks');
     }
 }

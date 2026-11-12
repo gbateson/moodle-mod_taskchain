@@ -42,10 +42,9 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
      * get_js_functionnames
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function get_js_functionnames() {
-        // start list of function names
+        // Start list of function names.
         $names = parent::get_js_functionnames();
         $names .= ($names ? ',' : '') . 'CheckAnswer';
         return $names;
@@ -58,7 +57,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
      * @param xxx $start
      * @param xxx $length
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function fix_js_StartUp(&$str, $start, $length) {
         $this->jcloze_autoadvance_fix_js_StartUp($str, $start, $length);
@@ -66,19 +64,15 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
 
     /**
      * jcloze_autoadvance_gapid
-     *
-     * @todo Finish documenting this function
      */
-    function jcloze_autoadvance_gapid() {
+    public function jcloze_autoadvance_gapid() {
         return '^Gap([0-9]+)$';
     }
 
     /**
      * jcloze_autoadvance_gaptype
-     *
-     * @todo Finish documenting this function
      */
-    function jcloze_autoadvance_gaptype() {
+    public function jcloze_autoadvance_gaptype() {
         if ($this->use_DropDownList()) {
             return 'select';
         } else {
@@ -92,17 +86,16 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckAnswer(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
 
-        // make sure we trim answer as  well as response when checking for correctness
+        // Make sure we trim answer as  well as response when checking for correctness.
         $search = '/(?<=TrimString\(UpperGuess\) == )(UpperAnswer)/';
         $substr = preg_replace($search, 'TrimString($1)', $substr);
 
         if ($this->use_DropDownList()) {
-            // only treat 1st possible answer as correct
+            // Only treat 1st possible answer as correct.
             $substr = str_replace('I[GapNum][1].length', '1', $substr);
         }
 
@@ -115,7 +108,6 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
      * @param xxx $str (passed by reference)
      * @param xxx $start
      * @param xxx $length
-     * @todo Finish documenting this function
      */
     public function fix_js_CheckAnswers(&$str, $start, $length) {
         $substr = substr($str, $start, $length);
@@ -238,31 +230,30 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
      * expand_ClozeBody
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function expand_ClozeBody() {
         $str = '';
 
         $wordlist = $this->setup_wordlist();
 
-        // cache clues flag and caption
+        // Cache clues flag and caption.
         $includeclues = $this->expand_Clues();
         $cluecaption = $this->expand_ClueCaption();
 
-        // detect if cloze starts with gap
+        // Detect if cloze starts with gap.
         if (strpos($this->TC->task->source->filecontents, '<gap-fill><question-record>')) {
             $startwithgap = true;
         } else {
             $startwithgap = false;
         }
 
-        // initialize loop values
+        // Initialize loop values.
         $i = 0;
         $tags = 'data,gap-fill';
         $open_text = "$tags,open-text";
         $question_record = "$tags,question-record";
 
-        // loop through text and gaps
+        // Loop through text and gaps.
         $looping = true;
         while ($looping) {
             $gap = '';
@@ -275,12 +266,12 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
                 } else if ($wordlist) {
                     $gap .= '<select id="Gap' . $i . '"><option value=""></option>' . $wordlist . '</select>';
                 } else {
-                    // minimum gap size
+                    // Minimum gap size.
                     if (! $gapsize = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',minimum-gap-size')) {
                         $gapsize = 6;
                     }
 
-                    // increase gap size to length of longest answer for this gap
+                    // Increase gap size to length of longest answer for this gap.
                     $a = 0;
                     while (($answer = $item . "['answer'][$a]['#']") && $this->TC->task->source->xml_value($question_record, $answer)) {
                         $answertext = $this->TC->task->source->xml_value($question_record, $answer . "['text'][0]['#']");
@@ -307,12 +298,12 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
                 }
                 $i++;
             } else {
-                // no text or gap, so force end of loop
+                // No text or gap, so force end of loop.
                 $looping = false;
             }
         }
         if ($i == 0) {
-            // oops, no gaps found!
+            // Oops, no gaps found!
             return $this->TC->task->source->xml_value($tags);
         } else {
             return $str;
@@ -323,11 +314,10 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
      * setup_wordlist
      *
      * @return xxx
-     * @todo Finish documenting this function
      */
     public function setup_wordlist() {
 
-        // get drop down list of words
+        // Get drop down list of words.
         $words = array();
         $wordlists = array();
         $singlewordlist = true;
