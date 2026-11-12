@@ -1012,6 +1012,9 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                     $text = preg_replace('/^((<p>\s*<\/p>)|(<br[^>]*>)|\s)+/is', '', $text);
                     $text = preg_replace('/((<p>\s*<\/p>)|(<br[^>]*>)|\s)+$/is', '', $text);
 
+                    // sanitise HTML to prevent stored XSS
+                    $text = clean_text($text, $data->{$editorfield}['format']);
+
                     $data->$textfield = $text;
                     $data->$formatfield = $data->{$editorfield}['format'];
                 }

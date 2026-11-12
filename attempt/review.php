@@ -266,6 +266,7 @@ class mod_taskchain_attempt_review {
                 // question text
                 if (call_user_func(array($class, 'show_question_text'))) {
                     if ($text = mod_taskchain::get_question_text($questions[$response->questionid])) {
+                        $text = s($text);
                         $callback = array($class, 'add_question_text'); // PHP 5.2
                         call_user_func_array($callback, array(&$table, $text, $question_colspan));
                     }
@@ -281,7 +282,7 @@ class mod_taskchain_attempt_review {
                     $text = array();
                     if ($records = mod_taskchain::get_strings($response->$field)) {
                         foreach ($records as $record) {
-                            $text[] = $record->string;
+                            $text[] = s($record->string);
                         }
                     }
                     unset($records);

@@ -449,12 +449,26 @@ class mod_taskchain extends taskchain_base {
             switch ($pageid) {
                 case 'mod-taskchain-view':
                     $this->can->attempt() || $this->can->view(true);
+                    $this->require_own_attempt($this->can->reviewallattempts());
                     break;
                 case 'mod-taskchain-attempt':
                     $this->can->attempt(true);
+                    // users may only continue their own attempts
+                    $this->require_own_attempt(false);
+                    break;
+                case 'mod-taskchain-submit':
+                    // users may only submit results for their own attempts
+                    $this->require_own_attempt(false);
                     break;
                 case 'mod-taskchain-report':
                     $this->can->viewreports() || $this->can->reviewmyattempts(true);
+                    // users who can only review their own attempts may not see other users' attempts
+                    $this->require_own_attempt($this->can->viewreports() || $this->can->reviewallattempts());
+                    break;
+                case 'mod-taskchain-review':
+                    $this->can->reviewallattempts() || $this->can->reviewmyattempts(true);
+                    // "reviewmyattempts" only allows review of the user's own attempts
+                    $this->require_own_attempt($this->can->reviewallattempts());
                     break;
                 case 'mod-taskchain-edit-condition':
                 case 'mod-taskchain-edit-task':
@@ -534,6 +548,32 @@ class mod_taskchain extends taskchain_base {
             $this->time  = time();
 
         } // end if $pageid == mod-taskchain
+    }
+
+    /**
+     * require_own_attempt
+     *
+     * Throw an exception if any of the requested grade/attempt records
+     * belongs to another user, and the current user is not allowed
+     * to see other users' attempts.
+     *
+     * @param boolean $allowothers true if the current user may see other users' attempts
+     * @return void, but may throw a required_capability_exception
+     */
+    protected function require_own_attempt($allowothers) {
+        global $USER;
+        if ($allowothers) {
+            return;
+        }
+        $names = array('taskattempt', 'taskscore', 'chainattempt', 'chaingrade');
+        foreach ($names as $name) {
+            // Note: these are TaskChain record objects, so we use "get_userid()"
+            // because isset($this->$name->userid) would always return false
+            if (is_object($this->$name) && method_exists($this->$name, 'get_userid') && $this->$name->get_userid() != $USER->id) {
+                $context = (empty($this->coursemodule->context) ? $this->course->context : $this->coursemodule->context);
+                throw new required_capability_exception($context, 'mod/taskchain:reviewallattempts', 'nopermissions', '');
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -2133,10 +2173,14 @@ class mod_taskchain extends taskchain_base {
      * @todo Finish documenting this function
      */
     public function delete_selected_attempts() {
-        global $DB;
+        global $DB, $USER;
 
         if (! $this->confirmed) {
             return false; // show a confirm button ?
+        }
+
+        if (! $this->can->deleteattempts()) {
+            return false; // user cannot delete any attempts
         }
 
         if (! $selected = $this->selected) {
@@ -2144,8 +2188,21 @@ class mod_taskchain extends taskchain_base {
         }
         // $selected[$userid][chainid][cnumber][taskid][tnumber][taskattemptid]
 
-        if (! $userfilter = $this->get_userfilter('')) {
-            return false; // no users selected
+        if ($this->can->deleteallattempts()) {
+            if (! $userfilter = $this->get_userfilter('')) {
+                return false; // no users selected
+            }
+        } else {
+            // "deletemyattempts" only allows deletion of the user's own attempts
+            foreach (array_keys($selected) as $userid) {
+                if ($userid != $USER->id) {
+                    unset($selected[$userid]);
+                }
+            }
+            if (empty($selected)) {
+                return false; // no attempts selected
+            }
+            $userfilter = 'userid = '.intval($USER->id);
         }
 
         // TODO: get status from filters

@@ -1248,7 +1248,7 @@ class taskchain_report_table extends table_sql {
                 echo html_writer::tag('tr',
                     html_writer::tag('td', $this->format_header($column)).
                     html_writer::tag('td', $this->format_legend_index($i)).
-                    html_writer::tag('td', $response_string)
+                    html_writer::tag('td', s($response_string))
                 );
                 $column = '&nbsp;';
             }

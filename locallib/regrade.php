@@ -44,6 +44,10 @@ class taskchain_regrade extends taskchain_base {
      * @todo Finish documenting this function
      */
     public function selected_attempts() {
+        if (! $this->TC->can->regrade()) {
+            return false; // user cannot regrade attempts
+        }
+
         if (! $userfilter = $this->TC->get_userfilter('')) {
             return false; // no users selected
         }
