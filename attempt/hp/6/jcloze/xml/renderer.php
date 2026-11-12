@@ -194,7 +194,8 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_renderer extends mod_taskchain_attem
                 $append = "\n"
                     . "function AA_isNonStandardIE() {\n"
                     . "	if (typeof(window.isNonStandardIE)=='undefined') {\n"
-                    . "		if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
+                    .
+                        "		if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
                     . "			// either IE8+ (in compatability mode) or IE7, IE6, IE5 ...\n"
                     . "			window.isNonStandardIE = true;\n"
                     . "		} else {\n"

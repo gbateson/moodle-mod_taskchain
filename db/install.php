@@ -78,6 +78,7 @@ function xmldb_taskchain_install() {
     $update = '{course_sections}';
     $set    = 'summary = REPLACE(REPLACE(REPLACE(summary, ?, ?), ?, ?), ?, ?)';
     $where  = $DB->sql_like('summary', '?');
-    $params = array('quizport', 'taskchain', 'attforblock', 'attendance', 'id=([0-9]+)', 'id=([0-9]+(&section=[0-9]+)?)', '%/courselinks.js.php%');
+    $params = array('quizport', 'taskchain', 'attforblock', 'attendance', 'id=([0-9]+)', 'id=([0-9]+(&section=[0-9]+)?)',
+        '%/courselinks.js.php%');
     $DB->execute("UPDATE $update SET $set WHERE $where", $params);
 }

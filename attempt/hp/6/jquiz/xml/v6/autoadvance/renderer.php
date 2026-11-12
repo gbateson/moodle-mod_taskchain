@@ -223,7 +223,8 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
             $substr .= "\n"
                 . "function AA_isNonStandardIE() {\n"
                 . "	if (typeof(window.isNonStandardIE)=='undefined') {\n"
-                . "		if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
+                .
+                    "		if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
                 . "			// either IE8+ (in compatability mode) or IE7, IE6, IE5 ...\n"
                 . "			window.isNonStandardIE = true;\n"
                 . "		} else {\n"
@@ -721,7 +722,8 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
      */
     public function fix_js_CheckMultiSelAnswer(&$str, $start, $length) {
         $search = 'if (Matches == I[QNum][3].length){';
-        $insert = 'if (Matches < I[QNum][3].length && ( maximumTriesPerQuestion && State[QNum][2] >= maximumTriesPerQuestion)){' . "\n"
+        $insert = 'if (Matches < I[QNum][3].length && ( maximumTriesPerQuestion && State[QNum][2] >= maximumTriesPerQuestion)){' .
+            "\n"
             . $this->js_to_display_feedback('CalculateMultiSelQuestionScore')
             . "		for (var i=0; i<I[QNum][3].length; i++) {\n"
             . "			var Chk = document.getElementById('Q_'+QNum+'_'+i+'_Chk');\n"
@@ -755,7 +757,8 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
 
         $search = 'if (CA.CompleteMatch == true){';
         $search_insert[$search] = ''
-            . "if ((CA.CompleteMatch==false || CA.Score < 100) && ( maximumTriesPerQuestion && State[QNum][2] >= maximumTriesPerQuestion)){\n"
+            .
+                "if ((CA.CompleteMatch==false || CA.Score < 100) && ( maximumTriesPerQuestion && State[QNum][2] >= maximumTriesPerQuestion)){\n"
             . $this->js_to_display_feedback('CalculateShortAnsQuestionScore')
             . "		ShowMessage(CA.Feedback);\n"
             . "		ReplaceGuessBox(QNum, G);\n"
@@ -1110,7 +1113,8 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
                 if ($i) {
                     $cues .= ' ';
                 }
-                $cues .= '<span class="JumbledItem" id="Q_' . $q . '_JumbledItem_' . $index[$i] . '" onclick="MoveJumbledItem(this);">' . $item . '</span>';
+                $cues .= '<span class="JumbledItem" id="Q_' . $q . '_JumbledItem_' . $index[$i] .
+                    '" onclick="MoveJumbledItem(this);">' . $item . '</span>';
             }
 
             // Add Jumbled items div.

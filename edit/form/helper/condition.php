@@ -558,7 +558,8 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             // Modify the default conditions, if any, in the opening window.
             $js .= '        var obj = opener.document.getElementById("taskchain_' . $type . '_default");' . "\n";
             $js .= '        if (obj) {' . "\n";
-            $js .= '            obj.innerHTML = "' . $this->format_conditions($taskid, $conditiontype, false, true, false) . '";' . "\n";
+            $js .= '            obj.innerHTML = "' . $this->format_conditions($taskid, $conditiontype, false, true, false) .
+                '";' . "\n";
             $js .= '        }' . "\n";
 
             // Locate the conditions DIV in the opening window.
@@ -578,7 +579,8 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
             $js .= '            p = null;' . "\n";
 
             // Add the modified conditions.
-            $js .= '            obj.innerHTML = "' . $this->format_conditions($taskid, $conditiontype, false, true, true) . '";' . "\n";
+            $js .= '            obj.innerHTML = "' . $this->format_conditions($taskid, $conditiontype, false, true, true) .
+                '";' . "\n";
 
             // restore the conditions intro text (if necessary)
             $js .= '            if (intro) {' . "\n";

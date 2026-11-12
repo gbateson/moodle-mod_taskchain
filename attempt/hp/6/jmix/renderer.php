@@ -101,7 +101,8 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
         $replace = ''
             . "var myParentNode = null;\n"
             . "var myNextNode = null;\n"
-            . "if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
+            .
+                "if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
             . "	// IE8+ (compatible mode) IE7, IE6, IE5 ...\n"
             . "} else {\n"
             . "	// Firefox, Safari, Opera, IE8+\n"
@@ -154,7 +155,8 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             . "		div.innerHTML = '&nbsp;<br />&nbsp;';\n"
             . "		myParentNode.insertBefore(div, myNextNode);\n"
             . "	} else {\n"
-            . "		document.write('" . '<div id="' . "Drop' + i + '" . '" class="DropLine" align="center"' . ">&nbsp;<br />&nbsp;</div>');\n"
+            . "		document.write('" . '<div id="' . "Drop' + i + '" . '" class="DropLine" align="center"' .
+                ">&nbsp;<br />&nbsp;</div>');\n"
             . "	}\n"
             . "}";
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent, 1);
@@ -183,7 +185,8 @@ class mod_taskchain_attempt_hp_6_jmix_renderer extends mod_taskchain_attempt_hp_
             . "		div = myParentNode.insertBefore(div, myNextNode);\n"
             . "		HP_add_listener(div, 'mousedown', 'beginDrag(event, ' + i + ')');\n"
             . "	} else {\n"
-            . "		document.write('" . '<div id="' . "D' + i + '" . '" class="CardStyle" onmousedown="' . "beginDrag(event, ' + i + ')" . '"' . "></div>');\n"
+            . "		document.write('" . '<div id="' . "D' + i + '" . '" class="CardStyle" onmousedown="' .
+                "beginDrag(event, ' + i + ')" . '"' . "></div>');\n"
             . "	}\n"
             . "}\n";
         if ($suffix) {

@@ -178,16 +178,21 @@ class taskchain_mediafilter {
         $escape = '(?:\\\\)?';
 
         // Search string to extract <a> tags.
-        $this->link_search = '/' . $this->tagopen . 'a' . '\s+' . $this->tagchars . 'href=' . $escape . '"(' . $filepath . ')' . $escape . '"' . $this->tagchars . $this->tagclose . '.*?' . $this->tagreopen . $escape . '\/a' . $this->tagclose . '/is';
+        $this->link_search = '/' . $this->tagopen . 'a' . '\s+' . $this->tagchars . 'href=' . $escape . '"(' . $filepath . ')' .
+            $escape . '"' . $this->tagchars . $this->tagclose . '.*?' . $this->tagreopen . $escape . '\/a' . $this->tagclose .
+            '/is';
 
         // Search string to extract <object> or <embed> tags.
-        $this->object_search = '/' . $this->tagopen . '(object|embed)' . '\s' . $this->tagchars . $this->tagclose . '(.*?)(?:' . $this->tagreopen . '(?:\\\\)?' . '\/\3' . $this->tagclose . ')+/is';
+        $this->object_search = '/' . $this->tagopen . '(object|embed)' . '\s' . $this->tagchars . $this->tagclose . '(.*?)(?:' .
+            $this->tagreopen . '(?:\\\\)?' . '\/\3' . $this->tagclose . ')+/is';
 
         // Search Flashvars with specific names
         // $flashvars_paramnames e.g. TheSound
         // e.g. param name="Flashvars" value="TheSound=abc.mp3".
         if ($flashvars_paramnames = implode('|', array_keys($flashvars_paramnames))) {
-            $this->object_searches[] = '/' . $this->tagopen . 'param' . '\s+' . $this->tagchars . 'name=' . $escape . '"FlashVars' . $escape . '"' . $this->tagchars . 'value=' . $escape . '"(?:' . $flashvars_paramnames . ')=(' . $filepath . ')' . $escape . '"' . $this->tagchars . $this->tagclose . '/is';
+            $this->object_searches[] = '/' . $this->tagopen . 'param' . '\s+' . $this->tagchars . 'name=' . $escape .
+                '"FlashVars' . $escape . '"' . $this->tagchars . 'value=' . $escape . '"(?:' . $flashvars_paramnames . ')=(' .
+                $filepath . ')' . $escape . '"' . $this->tagchars . $this->tagclose . '/is';
         }
 
         // Html tags and attributes to search for urls.
@@ -204,10 +209,14 @@ class taskchain_mediafilter {
             $querystring_filepath = '[^"' . "'?]*" . '\?[^"' . "']*(?:$querystring_paramnames)=($filepath)" . '[^"' . "']*";
 
             if ($this->param_names) {
-                $this->object_searches[] = '/' . $this->tagopen . 'param' . '\s+' . $this->tagchars . 'name=' . $escape . '"(?:' . $this->param_names . ')' . $escape . '"' . $this->tagchars . 'value=' . $escape . '"' . $querystring_filepath . $escape . '"' . $this->tagchars . $this->tagclose . '/is';
+                $this->object_searches[] = '/' . $this->tagopen . 'param' . '\s+' . $this->tagchars . 'name=' . $escape .
+                    '"(?:' . $this->param_names . ')' . $escape . '"' . $this->tagchars . 'value=' . $escape . '"' .
+                    $querystring_filepath . $escape . '"' . $this->tagchars . $this->tagclose . '/is';
             }
             foreach ($tags as $tag => $attribute) {
-                $this->object_searches[] = '/' . $this->tagopen . $tag . '\s+' . $this->tagchars . $attribute . '=' . $escape . '"' . $querystring_filepath . $escape . '"' . $this->tagchars . $this->tagclose . '.*?' . $this->tagreopen . $escape . '\/' . $tag . $this->tagclose . '/is';
+                $this->object_searches[] = '/' . $this->tagopen . $tag . '\s+' . $this->tagchars . $attribute . '=' . $escape .
+                    '"' . $querystring_filepath . $escape . '"' . $this->tagchars . $this->tagclose . '.*?' .
+                    $this->tagreopen . $escape . '\/' . $tag . $this->tagclose . '/is';
             }
         }
 
@@ -217,10 +226,14 @@ class taskchain_mediafilter {
         // e.g. embed src="abc=abc.mp3"
         // e.g. a href="abc=abc.mp3".
         if ($this->param_names) {
-            $this->object_searches[] = '/' . $this->tagopen . 'param' . '\s+' . $this->tagchars . 'name=' . $escape . '"(?:' . $this->param_names . ')' . $escape . '"' . $this->tagchars . 'value=' . $escape . '"(' . $filepath . ')' . $escape . '"' . $this->tagchars . $this->tagclose . '/is';
+            $this->object_searches[] = '/' . $this->tagopen . 'param' . '\s+' . $this->tagchars . 'name=' . $escape . '"(?:' .
+                $this->param_names . ')' . $escape . '"' . $this->tagchars . 'value=' . $escape . '"(' . $filepath . ')' .
+                $escape . '"' . $this->tagchars . $this->tagclose . '/is';
         }
         foreach ($tags as $tag => $attribute) {
-            $this->object_searches[] = '/' . $this->tagopen . $tag . '\s+' . $this->tagchars . $attribute . '=' . $escape . '"(' . $filepath . ')' . $escape . '"' . $this->tagchars . $this->tagclose . '.*?' . $this->tagreopen . $escape . '\/' . $tag . $this->tagclose . '/is';
+            $this->object_searches[] = '/' . $this->tagopen . $tag . '\s+' . $this->tagchars . $attribute . '=' . $escape .
+                '"(' . $filepath . ')' . $escape . '"' . $this->tagchars . $this->tagclose . '.*?' . $this->tagreopen .
+                $escape . '\/' . $tag . $this->tagclose . '/is';
         }
 
         // Check player settings.
@@ -573,7 +586,8 @@ class taskchain_mediafilter {
                            "var h = Math.min(60, screen.height); " .
                            "var l = (screen.width - w) / 2; " .
                            "var t = (screen.height - h) / 2; " .
-                           "var newwin=window.open('" . $matches[1] . "', 'iconlink', 'menubar=0,location=0,scrollbars,resizable,width='+w+',height='+h+',top='+t+',left='+l);" .
+                           "var newwin=window.open('" . $matches[1] .
+                               "', 'iconlink', 'menubar=0,location=0,scrollbars,resizable,width='+w+',height='+h+',top='+t+',left='+l);" .
                            "if (newwin) newwin.focus(); " .
                            "newwin = null; " .
                            "return false;";

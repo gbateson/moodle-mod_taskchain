@@ -329,6 +329,7 @@ class taskchain_can extends taskchain_base {
         } else {
             $groupmode = groups_get_activity_groupmode($this->TC->coursemodule);
         }
-        return ($groupmode == NOGROUPS || $groupmode == VISIBLEGROUPS || $this->can('moodle/site:accessallgroups', false, $context));
+        return ($groupmode == NOGROUPS || $groupmode == VISIBLEGROUPS ||
+            $this->can('moodle/site:accessallgroups', false, $context));
     }
 }

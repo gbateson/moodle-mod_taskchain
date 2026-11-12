@@ -262,7 +262,12 @@ class taskchain_regrade extends taskchain_base {
                         // Post condition for last task attempt specifies end of chain.
                         $status = self::STATUS_COMPLETED;
                         $this->TC->chainattempt->status = $status;
-                        if (! $DB->set_field('taskchain_chain_attempts', 'status', $status, array('id' => $this->TC->chainattempt->id))) {
+                        if (! $DB->set_field(
+                            'taskchain_chain_attempts',
+                            'status',
+                            $status,
+                            array('id' => $this->TC->chainattempt->id)
+                        )) {
                             throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_chain_attempts');
                         }
                     } else if ($nexttaskid == $record->id) {
@@ -370,7 +375,12 @@ class taskchain_regrade extends taskchain_base {
             if ($use_this_tasks) {
                 $chains[$chain->id]->tasks = &$this->TC->tasks;
             } else {
-                $chains[$chain->id]->tasks = $DB->get_records('taskchain_tasks', array('chainid' => $chain->id), 'sortorder', 'id,scoreweighting');
+                $chains[$chain->id]->tasks = $DB->get_records(
+                    'taskchain_tasks',
+                    array('chainid' => $chain->id),
+                    'sortorder',
+                    'id,scoreweighting'
+                );
             }
             if ($chains[$chain->id]->tasks) {
                 foreach ($chains[$chain->id]->tasks as $task) {
@@ -515,12 +525,15 @@ class taskchain_regrade extends taskchain_base {
                             }
                             break;
                         case self::GRADEMETHOD_LASTTIMEDOUT:
-                            if ($timemodified < $taskscore->timemodified && ($taskscore->status == self::STATUS_COMPLETED || $taskscore->status == self::STATUS_TIMEDOUT)) {
+                            if ($timemodified < $taskscore->timemodified &&
+                                ($taskscore->status == self::STATUS_COMPLETED || $taskscore->status == self::STATUS_TIMEDOUT)) {
                                 $grade = $weightedscore;
                             }
                             break;
                         case self::GRADEMETHOD_LASTABANDONED:
-                            if ($timemodified < $taskscore->timemodified && ($taskscore->status == self::STATUS_COMPLETED || $taskscore->status == self::STATUS_TIMEDOUT || $taskscore->status == self::STATUS_ABANDONED)) {
+                            if ($timemodified < $taskscore->timemodified &&
+                                ($taskscore->status == self::STATUS_COMPLETED || $taskscore->status == self::STATUS_TIMEDOUT ||
+                                    $taskscore->status == self::STATUS_ABANDONED)) {
                                 $grade = $weightedscore;
                             }
                             break;
@@ -595,7 +608,8 @@ class taskchain_regrade extends taskchain_base {
                 } else {
                     $status = self::STATUS_TIMEDOUT;
                 }
-            } else if ($counttasks && $counttasks == $counttaskscores && $minstatus == self::STATUS_COMPLETED && $maxstatus == self::STATUS_COMPLETED) {
+            } else if ($counttasks && $counttasks == $counttaskscores && $minstatus == self::STATUS_COMPLETED &&
+                $maxstatus == self::STATUS_COMPLETED) {
                 // All tasks are completed.
                 if ($chain->manualcompletion) {
                     $status = self::STATUS_PENDING;
@@ -603,7 +617,8 @@ class taskchain_regrade extends taskchain_base {
                     $status = self::STATUS_COMPLETED;
                 }
             } else if ($thisuser) {
-                if ($chain->allowresume == self::ALLOWRESUME_NO && $this->TC->get_lastattempt('task') && $this->TC->lasttaskattempt->status == self::STATUS_ABANDONED) {
+                if ($chain->allowresume == self::ALLOWRESUME_NO && $this->TC->get_lastattempt('task') &&
+                    $this->TC->lasttaskattempt->status == self::STATUS_ABANDONED) {
                     // Chain may not be resumed and last task attempt was abandoned.
                     $status = self::STATUS_ABANDONED;
                 } else if ($counttasks && $counttasks == $counttaskscores) {

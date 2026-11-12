@@ -262,7 +262,14 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
         $strlen = strlen($this->TC->task->source->baseurl);
 
         foreach ($matches[1] as $i => $match) {
-            $url = $this->convert_url_relative($this->TC->task->source->baseurl, $this->TC->task->source->filepath, '', $match[0], '', '');
+            $url = $this->convert_url_relative(
+                $this->TC->task->source->baseurl,
+                $this->TC->task->source->filepath,
+                '',
+                $match[0],
+                '',
+                ''
+            );
             if (strpos($url, $this->TC->task->source->baseurl . '/') === 0) {
                 $urls[$i] = substr($url, $strlen + 1);
             }

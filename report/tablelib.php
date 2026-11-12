@@ -215,7 +215,10 @@ class taskchain_report_table extends table_sql {
             . "} else {"
                 . "return false;"
             . "}";
-        echo html_writer::empty_tag('input', array('type' => 'submit', 'onclick' => $onclick, 'name' => 'delete', 'value' => get_string('deleteattempts', 'mod_taskchain')));
+        echo html_writer::empty_tag(
+            'input',
+            array('type' => 'submit', 'onclick' => $onclick, 'name' => 'delete', 'value' => get_string('deleteattempts', 'mod_taskchain'))
+        );
         echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'confirmed', 'value' => '0')) . "\n";
         echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'action', 'value' => 'deleteselected')) . "\n";
 
@@ -534,7 +537,8 @@ class taskchain_report_table extends table_sql {
             if ($gradeweighting != 100) {
                 $grademethod = $gradeweighting . " x $grademethod/100";
             }
-            $grade .= html_writer::empty_tag('br') . html_writer::tag('span', '(' . $grademethod . ')', array('class' => 'grademethod'));
+            $grade .= html_writer::empty_tag('br') .
+                html_writer::tag('span', '(' . $grademethod . ')', array('class' => 'grademethod'));
         }
 
         return $grade;
@@ -642,7 +646,8 @@ class taskchain_report_table extends table_sql {
             case 'taskscores':
             case 'taskattempt':
             case 'taskattempts':
-                return '[' . $row->userid . '][' . $row->taskscorechainid . '][' . $row->taskattemptcnumber . '][' . $row->taskattempttaskid . '][' . $row->taskattempttnumber . '][' . $row->id . ']';
+                return '[' . $row->userid . '][' . $row->taskscorechainid . '][' . $row->taskattemptcnumber . '][' .
+                    $row->taskattempttaskid . '][' . $row->taskattempttnumber . '][' . $row->id . ']';
 
             default:
                 return ''; // Shouldn't happen !!

@@ -301,10 +301,12 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             . "		if (cs.getPropertyValue('box-sizing')=='content-box') {\n"
             . "			switch (type){\n"
             . "				case 'Height':\n"
-            . "					var p = new Array('margin-top', 'margin-bottom', 'border-width-top', 'border-width-bottom', 'padding-top', 'padding-bottom');\n"
+            .
+                "					var p = new Array('margin-top', 'margin-bottom', 'border-width-top', 'border-width-bottom', 'padding-top', 'padding-bottom');\n"
             . "					break;\n"
             . "				case 'Width':\n"
-            . "					var p = new Array('margin-left', 'margin-right', 'border-width-left', 'border-width-right', 'padding-left', 'padding-right');\n"
+            .
+                "					var p = new Array('margin-left', 'margin-right', 'border-width-left', 'border-width-right', 'padding-left', 'padding-right');\n"
             . "					break;\n"
             . "			}\n"
             . "		}\n"
@@ -2102,7 +2104,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_AlsoCorrect() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',also-correct');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',also-correct');
     }
 
     /**
@@ -2120,7 +2123,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_CapitalizeFirst() {
-        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',capitalize-first-letter');
+        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',capitalize-first-letter');
     }
 
     /**
@@ -2147,7 +2151,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_CorrectIndicator() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,correct-indicator');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software .
+            '-config-file,global,correct-indicator');
     }
 
     /**
@@ -2174,7 +2179,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_CaseSensitive() {
-        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',case-sensitive');
+        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',case-sensitive');
     }
 
     /**
@@ -2183,7 +2189,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ClickToAdd() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',click-to-add');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',click-to-add');
     }
 
     /**
@@ -2202,7 +2209,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      */
     public function expand_Clues() {
         // Note: WinTaskChain6 uses "include-clues", but JavaTaskChainatoes6 uses "include-clue" (missing "s")
-        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-clues');
+        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',include-clues');
     }
 
     /**
@@ -2211,7 +2219,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_Contents() {
-        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,global,include-contents');
+        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software .
+            '-config-file,global,include-contents');
     }
 
     /**
@@ -2234,7 +2243,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         } else {
             $tag = 'guess-correct';
         }
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',' . $tag);
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',' . $tag);
     }
 
     /**
@@ -2243,7 +2253,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_DeleteCaption() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',delete-caption');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',delete-caption');
     }
 
     /**
@@ -2309,7 +2320,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ExerciseSubtitle() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',exercise-subtitle');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',exercise-subtitle');
     }
 
     /**
@@ -2357,7 +2369,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      */
     public function expand_FullVersionInfo() {
         global $CFG;
-        return $this->TC->task->source->xml_value('version') . '.x (Moodle ' . $CFG->release . ', TaskChain ' . mod_taskchain::get_version_info('release') . ')';
+        return $this->TC->task->source->xml_value('version') . '.x (Moodle ' . $CFG->release . ', TaskChain ' .
+            mod_taskchain::get_version_info('release') . ')';
     }
 
     /**
@@ -2388,7 +2401,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_GiveHint() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',next-correct-letter');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',next-correct-letter');
     }
 
     /**
@@ -2406,7 +2420,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_GuessCorrect() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',guess-correct');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',guess-correct');
     }
 
     /**
@@ -2415,7 +2430,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_GuessIncorrect() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',guess-incorrect');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',guess-incorrect');
     }
 
     /**
@@ -2433,7 +2449,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_Hint() {
-        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-hint');
+        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',include-hint');
     }
 
     /**
@@ -2456,7 +2473,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         } else {
             $tag = 'guess-incorrect';
         }
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',' . $tag);
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',' . $tag);
     }
 
     /**
@@ -2465,7 +2483,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_IncorrectIndicator() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,incorrect-indicator');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software .
+            '-config-file,global,incorrect-indicator');
     }
 
     /**
@@ -2474,7 +2493,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_Instructions() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',instructions');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',instructions');
     }
 
     /**
@@ -2672,7 +2692,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_NextCaption() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',next-caption');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',next-caption');
     }
 
     /**
@@ -2686,7 +2707,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         } else {
             $tag = 'next-correct-part'; // Jmix.
         }
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',' . $tag);
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',' . $tag);
     }
 
     /**
@@ -2695,7 +2717,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_NextEx() {
-        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,global,include-next-ex');
+        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software .
+            '-config-file,global,include-next-ex');
     }
 
     /**
@@ -2704,7 +2727,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_NextExCaption() {
-        $caption = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,next-ex-caption');
+        $caption = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software .
+            '-config-file,global,next-ex-caption');
         return ($caption == '=>' ? '=&gt;' : $caption);
     }
 
@@ -2723,7 +2747,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_NextExURL() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',next-ex-url');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',next-ex-url');
     }
 
     /**
@@ -2835,7 +2860,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_Restart() {
-        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-restart');
+        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',include-restart');
     }
 
     /**
@@ -2882,7 +2908,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ShowAllQuestionsCaption() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,show-all-questions-caption');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software .
+            '-config-file,global,show-all-questions-caption');
     }
 
     /**
@@ -2891,7 +2918,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ShowAnswer() {
-        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-show-answer');
+        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',include-show-answer');
     }
 
     /**
@@ -2900,7 +2928,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_SolutionCaption() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,solution-caption');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software .
+            '-config-file,global,solution-caption');
     }
 
     /**
@@ -2909,7 +2938,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ShowOneByOneCaption() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,show-one-by-one-caption');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software .
+            '-config-file,global,show-one-by-one-caption');
     }
 
     /**
@@ -2936,7 +2966,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_TheseAnswersToo() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',also-correct');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',also-correct');
     }
 
     /**
@@ -2945,7 +2976,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ThisMuch() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',this-much-correct');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',this-much-correct');
     }
 
     /**
@@ -2996,7 +3028,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_Undo() {
-        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-undo');
+        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',include-undo');
     }
 
     /**
@@ -3060,10 +3093,14 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      */
     public function expand_Keypad() {
         $str = '';
-        if ($this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-keypad')) {
+        if ($this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',include-keypad')) {
             // These characters must always be in the keypad.
             $chars = array();
-            $this->add_keypad_chars($chars, $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,keypad-characters'));
+            $this->add_keypad_chars(
+                $chars,
+                $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,global,keypad-characters')
+            );
 
             // Append other characters used in the answers.
             switch ($this->TC->task->source->hbs_tasktype) {
@@ -3103,7 +3140,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
             // Create keypad buttons for each character.
             foreach ($chars as $char) {
-                $str .= '<button onclick="' . "TypeChars('" . $this->TC->task->source->js_value_safe($char, true) . "');" . 'return false;">' . $char . '</button>';
+                $str .= '<button onclick="' . "TypeChars('" . $this->TC->task->source->js_value_safe($char, true) . "');" .
+                    'return false;">' . $char . '</button>';
             }
         }
         return $str;
@@ -3297,25 +3335,30 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     $gap .= '<select id="Gap' . $i . '"><option value=""></option>' . $dropdownlist . '</select>';
                 } else {
                     // Minimum gap size.
-                    if (! $gapsize = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',minimum-gap-size')) {
+                    if (! $gapsize = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software .
+                        '-config-file,' . $this->TC->task->source->hbs_tasktype .
+                        ',minimum-gap-size')) {
                         $gapsize = 6;
                     }
 
                     // Increase gap size to length of longest answer for this gap.
                     $a = 0;
-                    while (($answer = $item . "['answer'][$a]['#']") && $this->TC->task->source->xml_value($question_record, $answer)) {
+                    while (($answer = $item . "['answer'][$a]['#']") &&
+                        $this->TC->task->source->xml_value($question_record, $answer)) {
                         $answertext = $this->TC->task->source->xml_value($question_record, $answer . "['text'][0]['#']");
                         $answertext = preg_replace('/&[#a-zA-Z0-9]+;/', 'x', $answertext);
                         $gapsize = max($gapsize, strlen($answertext));
                         $a++;
                     }
 
-                    $gap .= '<input type="text" id="Gap' . $i . '" onfocus="TrackFocus(' . $i . ')" onblur="LeaveGap()" class="GapBox" size="' . $gapsize . '"></input>';
+                    $gap .= '<input type="text" id="Gap' . $i . '" onfocus="TrackFocus(' . $i .
+                        ')" onblur="LeaveGap()" class="GapBox" size="' . $gapsize . '"></input>';
                 }
                 if ($includeclues) {
                     $clue = $this->TC->task->source->xml_value($question_record, $item . "['clue'][0]['#']");
                     if (strlen((string)$clue)) {
-                        $gap .= '<button style="line-height: 1.0" class="FuncButton" onfocus="FuncBtnOver(this)" onmouseover="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="ShowClue(' . $i . ')">' . $cluecaption . '</button>';
+                        $gap .= '<button style="line-height: 1.0" class="FuncButton" onfocus="FuncBtnOver(this)" onmouseover="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="ShowClue(' .
+                            $i . ')">' . $cluecaption . '</button>';
                     }
                 }
                 $gap .= '</span>';
@@ -3370,7 +3413,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function include_WordList() {
-        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-word-list');
+        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',include-word-list');
     }
 
     /**
@@ -3379,7 +3423,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function use_DropDownList() {
-        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',use-drop-down-list');
+        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',use-drop-down-list');
     }
 
     /**
@@ -3433,7 +3478,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_CluesAcrossLabel() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',clues-across');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',clues-across');
     }
 
     /**
@@ -3442,7 +3488,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_CluesDownLabel() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',clues-down');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',clues-down');
     }
 
     /**
@@ -3451,7 +3498,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_EnterCaption() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',enter-caption');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',enter-caption');
     }
 
     /**
@@ -3460,7 +3508,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ShowHideClueList() {
-        $value = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-clue-list');
+        $value = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',include-clue-list');
         return empty($value) ? ' style="display: none;"' : '';
     }
 
@@ -3519,7 +3568,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                         $i++;
                     }
                     if ($def) {
-                        $str .= '<tr><td class="ClueNum">' . $clue_i . '. </td><td id="Clue_' . $direction . '_' . $clue_i . '" class="Clue">' . $def . '</td></tr>';
+                        $str .= '<tr><td class="ClueNum">' . $clue_i . '. </td><td id="Clue_' . $direction . '_' . $clue_i .
+                            '" class="Clue">' . $def . '</td></tr>';
                     }
                 }
             }
@@ -3625,7 +3675,10 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                         $str .= '<td class="LetterOnlyCell"><span id="L_' . $r . '_' . $c . '">&nbsp;</span></td>';
                     } else {
                         $i++; // Increment clue index.
-                        $str .= '<td class="NumLetterCell"><a href="javascript:void(0);" class="GridNum" onclick="ShowClue(' . $i . ',' . $r . ',' . $c . ')">' . $i . '</a><span class="NumLetterCellText" id="L_' . $r . '_' . $c . '" onclick="ShowClue(' . $i . ',' . $r . ',' . $c . ')">&nbsp;&nbsp;&nbsp;</span></td>';
+                        $str .= '<td class="NumLetterCell"><a href="javascript:void(0);" class="GridNum" onclick="ShowClue(' .
+                            $i . ',' . $r . ',' . $c . ')">' . $i . '</a><span class="NumLetterCellText" id="L_' . $r . '_' .
+                            $c . '" onclick="ShowClue(' . $i . ',' . $r . ',' . $c .
+                            ')">&nbsp;&nbsp;&nbsp;</span></td>';
                     }
                 }
             }
@@ -3754,7 +3807,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ShuffleQs() {
-        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',shuffle-questions');
+        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',shuffle-questions');
     }
 
     /**
@@ -3763,9 +3817,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_QsToShow() {
-        $i = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',show-limited-questions');
+        $i = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',show-limited-questions');
         if ($i) {
-            $i = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',questions-to-show');
+            $i = $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+                $this->TC->task->source->hbs_tasktype . ',questions-to-show');
         }
         if (empty($i)) {
             $i = 0;
@@ -3796,7 +3852,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         $l_keys = $this->shuffle_jmatch_items($this->l_items);
         $r_keys = $this->shuffle_jmatch_items($this->r_items);
 
-        $options = '<option value="x">' . $this->TC->task->source->xml_value('data,matching-exercise,default-right-item') . '</option>' . "\n";
+        $options = '<option value="x">' . $this->TC->task->source->xml_value('data,matching-exercise,default-right-item') .
+            '</option>' . "\n";
 
         foreach ($r_keys as $key) {
             // only add the first occurrence of the text (i.e. skip duplicates)
@@ -3968,7 +4025,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
         $this->set_jmatch_items();
         $i_max = count($this->l_items);
         for ($i = 0; $i < $i_max; $i++) {
-            $str .= '<tr class="FlashcardRow" id="I_' . $i . '"><td id="L_' . $i . '">' . $this->l_items[$i]['text'] . '</td><td id="R_' . $i . '">' . $this->r_items[$i]['text'] . '</td></tr>' . "\n";
+            $str .= '<tr class="FlashcardRow" id="I_' . $i . '"><td id="L_' . $i . '">' . $this->l_items[$i]['text'] .
+                '</td><td id="R_' . $i . '">' . $this->r_items[$i]['text'] . '</td></tr>' . "\n";
         }
         return $str;
     }
@@ -4264,7 +4322,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_RemainingWords() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',remaining-words');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',remaining-words');
     }
 
     /**
@@ -4298,7 +4357,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
 
         $q = 0;
         $tags = 'data,questions,question-record';
-        while (($question = "[$q]['#']") && $this->TC->task->source->xml_value($tags, $question) && ($answers = $question . "['answers'][0]['#']") && $this->TC->task->source->xml_value($tags, $answers)) {
+        while (($question = "[$q]['#']") && $this->TC->task->source->xml_value($tags, $question) &&
+            ($answers = $question . "['answers'][0]['#']") &&
+            $this->TC->task->source->xml_value($tags, $answers)) {
             // Get question.
             $question_text = $this->TC->task->source->xml_value($tags, $question . "['question'][0]['#']");
             $question_type = $this->TC->task->source->xml_value_int($tags, $question . "['question-type'][0]['#']");
@@ -4346,14 +4407,19 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     // get prefix, suffix and maximum size of ShortAnswer box (default = 9)
                     list($prefix, $suffix, $size) = $this->expand_jquiz_textbox_details($tags, $answers, $q);
 
-                    $str .= '<div class="ShortAnswer" id="Q_' . $q . '_SA"><form method="post" action="" onsubmit="return false;"><div>';
+                    $str .= '<div class="ShortAnswer" id="Q_' . $q .
+                        '_SA"><form method="post" action="" onsubmit="return false;"><div>';
                     $str .= $prefix;
                     if ($size <= 25) {
                         // Text box.
-                        $str .= '<input type="text" id="Q_' . $q . '_Guess" onfocus="TrackFocus(' . "'" . 'Q_' . $q . '_Guess' . "'" . ')" onblur="LeaveGap()" class="ShortAnswerBox" size="' . $size . '"></input>';
+                        $str .= '<input type="text" id="Q_' . $q . '_Guess" onfocus="TrackFocus(' . "'" . 'Q_' . $q . '_Guess' .
+                            "'" . ')" onblur="LeaveGap()" class="ShortAnswerBox" size="' . $size .
+                            '"></input>';
                     } else {
                         // textarea (29 cols wide)
-                        $str .= '<textarea id="Q_' . $q . '_Guess" onfocus="TrackFocus(' . "'" . 'Q_' . $q . '_Guess' . "'" . ')" onblur="LeaveGap()" class="ShortAnswerBox" cols="29" rows="' . ceil($size / 25) . '"></textarea>';
+                        $str .= '<textarea id="Q_' . $q . '_Guess" onfocus="TrackFocus(' . "'" . 'Q_' . $q . '_Guess' . "'" .
+                            ')" onblur="LeaveGap()" class="ShortAnswerBox" cols="29" rows="' . ceil($size / 25) .
+                            '"></textarea>';
                     }
                     $str .= $suffix;
                     $str .= '<br /><br />';
@@ -4384,11 +4450,18 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                             if ($question_type == 1 || $question_type == 3) {
                                 // MULTICHOICE or HYBRID: button.
                                 if ($this->TC->task->source->xml_value_int($tags, $answer . "['include-in-mc-options'][0]['#']")) {
-                                    $str .= '<li id="Q_' . $q . '_' . $aa . '"><button class="FuncButton" onfocus="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseover="FuncBtnOver(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" id="Q_' . $q . '_' . $aa . '_Btn" onclick="CheckMCAnswer(' . $q . ',' . $aa . ',this)">&nbsp;&nbsp;?&nbsp;&nbsp;</button>&nbsp;&nbsp;' . $text . '</li>' . "\n";
+                                    $str .= '<li id="Q_' . $q . '_' . $aa .
+                                        '"><button class="FuncButton" onfocus="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseover="FuncBtnOver(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" id="Q_' .
+                                        $q . '_' . $aa . '_Btn" onclick="CheckMCAnswer(' . $q . ',' . $aa .
+                                        ',this)">&nbsp;&nbsp;?&nbsp;&nbsp;</button>&nbsp;&nbsp;' . $text . '</li>' .
+                                        "\n";
                                 }
                             } else if ($question_type == 4) {
                                 // MULTISELECT: checkbox.
-                                $str .= '<li id="Q_' . $q . '_' . $aa . '"><form method="post" action="" onsubmit="return false;"><div><input type="checkbox" id="Q_' . $q . '_' . $aa . '_Chk" class="MSelCheckbox" />' . $text . '</div></form></li>' . "\n";
+                                $str .= '<li id="Q_' . $q . '_' . $aa .
+                                    '"><form method="post" action="" onsubmit="return false;"><div><input type="checkbox" id="Q_' .
+                                    $q . '_' . $aa . '_Chk" class="MSelCheckbox" />' . $text . '</div></form></li>' .
+                                    "\n";
                             }
                             $aa++;
                         }
@@ -4448,7 +4521,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_jquiz_button($caption, $onclick) {
-        return '<button class="FuncButton" onfocus="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseover="FuncBtnOver(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="' . $onclick . '">' . $caption . '</button>';
+        return '<button class="FuncButton" onfocus="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseover="FuncBtnOver(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="' .
+            $onclick . '">' . $caption . '</button>';
     }
 
     /**
@@ -4505,7 +4579,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_CompletedSoFar() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,completed-so-far');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software .
+            '-config-file,global,completed-so-far');
     }
 
     /**
@@ -4514,7 +4589,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ContinuousScoring() {
-        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',continuous-scoring');
+        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',continuous-scoring');
     }
 
     /**
@@ -4523,7 +4599,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_CorrectFirstTime() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,correct-first-time');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software .
+            '-config-file,global,correct-first-time');
     }
 
     /**
@@ -4532,7 +4609,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ExerciseCompleted() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,exercise-completed');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software .
+            '-config-file,global,exercise-completed');
     }
 
     /**
@@ -4541,7 +4619,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ShowCorrectFirstTime() {
-        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',show-correct-first-time');
+        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',show-correct-first-time');
     }
 
     /**
@@ -4550,7 +4629,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ShuffleAs() {
-        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',shuffle-answers');
+        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',shuffle-answers');
     }
 
     /**
@@ -4577,7 +4657,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ShowAllQuestionsCaptionJS() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,show-all-questions-caption');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software .
+            '-config-file,global,show-all-questions-caption');
     }
 
     /**
@@ -4586,7 +4667,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ShowOneByOneCaptionJS() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,show-one-by-one-caption');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software .
+            '-config-file,global,show-one-by-one-caption');
     }
 
     /**
@@ -4595,7 +4677,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_CorrectList() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',correct-answers');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',correct-answers');
     }
 
     /**
@@ -4604,7 +4687,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_HybridTries() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',short-answer-tries-on-hybrid-q');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',short-answer-tries-on-hybrid-q');
     }
 
     /**
@@ -4613,7 +4697,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_PleaseEnter() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',enter-a-guess');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',enter-a-guess');
     }
 
     /**
@@ -4622,7 +4707,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_PartlyIncorrect() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',partly-incorrect');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',partly-incorrect');
     }
 
     /**
@@ -4631,7 +4717,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ShowAnswerCaption() {
-        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',show-answer-caption');
+        return $this->TC->task->source->xml_value($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',show-answer-caption');
     }
 
     /**
@@ -4640,7 +4727,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * @return xxx
      */
     public function expand_ShowAlsoCorrect() {
-        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software . '-config-file,global,show-also-correct');
+        return $this->TC->task->source->xml_value_bool($this->TC->task->source->hbs_software .
+            '-config-file,global,show-also-correct');
     }
 
     // Textoys stylesheets (tt3.cs_)
@@ -4653,7 +4741,8 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     public function expand_isRTL() {
         // this may require some clever detection of RTL languages (e.g. Hebrew)
         // but for now we just check the RTL setting in Options -> Configure Output
-        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,global,process-for-rtl');
+        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software .
+            '-config-file,global,process-for-rtl');
     }
 
     /**

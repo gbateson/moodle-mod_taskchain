@@ -220,7 +220,8 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
             . "	}\n"
             . "\n"
             . "	if (typeof(window.isNonStandardIE)=='undefined') {\n"
-            . "		if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
+            .
+                "		if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
             . "			// either IE8+ (in compatability mode) or IE7, IE6, IE5 ...\n"
             . "			window.isNonStandardIE = true;\n"
             . "		} else {\n"
@@ -267,7 +268,8 @@ class mod_taskchain_attempt_hp_6_jcloze_renderer extends mod_taskchain_attempt_h
             . "							// a word\n"
             . "							var SpanNode = document.createElement('span');\n"
             . "							var myClassName = 'GapSpan';\n"
-            . "							var myFunction = 'CheckText(false,'+Math.max(0,CurrentGapId)+',this.childNodes[0].nodeValue)';\n"
+            .
+                "							var myFunction = 'CheckText(false,'+Math.max(0,CurrentGapId)+',this.childNodes[0].nodeValue)';\n"
             . "							if (window.isNonStandardIE) {\n"
             . "								SpanNode.setAttribute('className', myClassName);\n"
             . "								SpanNode.setAttribute('onclick', new Function(myFunction));\n"

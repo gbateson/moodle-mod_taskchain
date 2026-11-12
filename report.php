@@ -35,7 +35,14 @@ if ($TC->action == 'deleteselected') {
 }
 
 // Log this request.
-mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'report', 'report.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log(
+    $TC->course->id,
+    'taskchain',
+    'report',
+    'report.php?id=' . $TC->coursemodule->id,
+    $TC->taskchain->id,
+    $TC->coursemodule->id
+);
 
 $PAGE->set_url($TC->url->report($TC->mode));
 $PAGE->set_title($TC->taskchain->name);
@@ -83,8 +90,6 @@ require_once($CFG->dirroot . '/mod/taskchain/' . $subdir . '/renderer.php');
 // Create the renderer for this attempt.
 $output = $PAGE->get_renderer('mod_taskchain', $subtype);
 
-/*//////////////////////////////////////////////////////////////////////////////
-// Output starts here
-//////////////////////////////////////////////////////////////////////////////*/
+// Output starts here.
 
 echo $output->render_report($TC);

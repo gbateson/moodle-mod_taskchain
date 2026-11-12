@@ -2729,7 +2729,8 @@ class mod_taskchain extends taskchain_base {
                 foreach ($modinfo->cms as $cmid => $mod) {
                     if ($mod->modname == 'taskchain') {
                         $taskchainid = $mod->instance;
-                        if (array_key_exists($taskchainid, $taskchains) && $this->can->$capability(false, self::context(CONTEXT_MODULE, $cmid))) {
+                        if (array_key_exists($taskchainid, $taskchains) &&
+                            $this->can->$capability(false, self::context(CONTEXT_MODULE, $cmid))) {
                             // User can delete attempts, so save the taskchain id
                             // we don't need to get the full taskchain/coursemodule record.
                             $taskchains[$taskchainid] = (object)array(
@@ -3133,8 +3134,10 @@ class mod_taskchain extends taskchain_base {
      * @return void, but may update completion status of course_module record for this TaskChain activity
      */
     public function update_completion_state($completion) {
-        if ($this->taskchain->completionmingrade > 0.0 || $this->taskchain->completionpass || $this->taskchain->completioncompleted) {
-            if ($completion->is_enabled($this->coursemodule) && ($this->coursemodule->completion == COMPLETION_TRACKING_AUTOMATIC)) {
+        if ($this->taskchain->completionmingrade > 0.0 || $this->taskchain->completionpass ||
+            $this->taskchain->completioncompleted) {
+            if ($completion->is_enabled($this->coursemodule) &&
+                ($this->coursemodule->completion == COMPLETION_TRACKING_AUTOMATIC)) {
                 $completion->update_state($this->coursemodule);
             }
         }

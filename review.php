@@ -31,7 +31,14 @@ require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 $TC = new mod_taskchain();
 
 // Log this request.
-mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'report', 'review.php?id=' . $TC->taskattempt->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log(
+    $TC->course->id,
+    'taskchain',
+    'report',
+    'review.php?id=' . $TC->taskattempt->id,
+    $TC->taskchain->id,
+    $TC->coursemodule->id
+);
 
 $PAGE->set_url($TC->url->review());
 $PAGE->set_title($TC->taskchain->name);
@@ -77,9 +84,7 @@ $output = $PAGE->get_renderer('mod_taskchain');
 $subtype = $TC->get_attempt_subtype();
 $TC->load_class($subtype, 'review.php');
 
-/*//////////////////////////////////////////////////////////////////////////////
-// Output starts here
-//////////////////////////////////////////////////////////////////////////////*/
+// Output starts here.
 
 echo $output->header();
 

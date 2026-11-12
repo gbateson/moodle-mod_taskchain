@@ -90,16 +90,32 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
 
         return array(
             new convert_path('taskchain', $taskchain, array('dropfields' => array('modtype', 'course'))),
-            new convert_path('taskchain_unit', $taskchain . '/UNIT', array('newfields' => array('entryformat' => '0', 'exitformat' => '0'))),
+            new convert_path(
+                'taskchain_unit',
+                $taskchain . '/UNIT',
+                array('newfields' => array('entryformat' => '0', 'exitformat' => '0'))
+            ),
             new convert_path('taskchain_quizzes', $taskchain . '/UNIT/QUIZZES'),
             new convert_path('taskchain_quiz', $taskchain . '/UNIT/QUIZZES/QUIZ'),
             new convert_path('taskchain_conditions', $taskchain . '/UNIT/QUIZZES/QUIZ/CONDITIONS'),
-            new convert_path('taskchain_condition', $taskchain . '/UNIT/QUIZZES/QUIZ/CONDITIONS/CONDITION', array('renamefields' => array('conditionquizid' => 'conditiontaskid', 'nextquizid' => 'nexttaskid'))),
+            new convert_path(
+                'taskchain_condition',
+                $taskchain . '/UNIT/QUIZZES/QUIZ/CONDITIONS/CONDITION',
+                array('renamefields' => array('conditionquizid' => 'conditiontaskid', 'nextquizid' => 'nexttaskid'))
+            ),
             // The paths below this line contain the user info.
             new convert_path('taskchain_quizscores', $taskchain . '/UNIT/QUIZZES/QUIZ/QUIZ_SCORES'),
-            new convert_path('taskchain_quizscore', $taskchain . '/UNIT/QUIZZES/QUIZ/QUIZ_SCORES/QUIZ_SCORE', array('renamefields' => array('unumber' => 'cnumber'))),
+            new convert_path(
+                'taskchain_quizscore',
+                $taskchain . '/UNIT/QUIZZES/QUIZ/QUIZ_SCORES/QUIZ_SCORE',
+                array('renamefields' => array('unumber' => 'cnumber'))
+            ),
             new convert_path('taskchain_quizattempts', $taskchain . '/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS'),
-            new convert_path('taskchain_quizattempt', $taskchain . '/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT', array('renamefields' => array('unumber' => 'cnumber', 'qnumber' => 'tnumber'))),
+            new convert_path(
+                'taskchain_quizattempt',
+                $taskchain . '/UNIT/QUIZZES/QUIZ/QUIZ_ATTEMPTS/QUIZ_ATTEMPT',
+                array('renamefields' => array('unumber' => 'cnumber', 'qnumber' => 'tnumber'))
+            ),
             // RESPONSES need to be merged (by question id) and relocated
             // Moodle1: TASKCHAIN/.../QUIZ/QUIZ_ATETMPTS/QUIZ_ATTEMPT/RESPONSES
             // Moodle2: TASKCHAIN/.../QUIZ/QUESTIONS/QUESTION/RESPONSES.
@@ -109,9 +125,17 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
             // STRINGS need to be merged and relocated
             // Moodle1: TASKCHAIN/UNIT/QUIZZES/QUIZ/STRINGS
             // Moodle2: TASKCHAIN/STRINGS.
-            new convert_path('taskchain_string', $taskchain . '/UNIT/QUIZZES/QUIZ/STRINGS/STRING', array('dropfields' => array('md5key'))),
+            new convert_path(
+                'taskchain_string',
+                $taskchain . '/UNIT/QUIZZES/QUIZ/STRINGS/STRING',
+                array('dropfields' => array('md5key'))
+            ),
             new convert_path('taskchain_unitattempts', $taskchain . '/UNIT/UNIT_ATTEMPTS'),
-            new convert_path('taskchain_unitattempt', $taskchain . '/UNIT/UNIT_ATTEMPTS/UNIT_ATTEMPT', array('renamefields' => array('unumber' => 'cnumber'))),
+            new convert_path(
+                'taskchain_unitattempt',
+                $taskchain . '/UNIT/UNIT_ATTEMPTS/UNIT_ATTEMPT',
+                array('renamefields' => array('unumber' => 'cnumber'))
+            ),
             new convert_path('taskchain_unitgrades', $taskchain . '/UNIT_GRADES'),
             new convert_path('taskchain_unitgrade', $taskchain . '/UNIT_GRADES/UNIT_GRADE'),
         );
@@ -134,7 +158,10 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
 
         // Start writing taskchain.xml.
         $this->open_xml_writer($this->xmlfolder . '/taskchain.xml');
-        $this->xmlwriter->begin_tag('activity', array('id' => $this->instanceid, 'moduleid' => $this->moduleid, 'modulename' => 'taskchain', 'contextid' => $this->contextid));
+        $this->xmlwriter->begin_tag(
+            'activity',
+            array('id' => $this->instanceid, 'moduleid' => $this->moduleid, 'modulename' => 'taskchain', 'contextid' => $this->contextid)
+        );
         $this->xmlwriter->begin_tag('taskchain', array('id' => $this->instanceid));
 
         // Write out $data fields to the xml file.
@@ -623,8 +650,12 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function convert_quizport_to_taskchain() {
 
         // These are the substitutions we want to make in moodle.xml.
-        $search   = array('<NAME>quizport</NAME>', 'mod/quizport/', 'mod/quizport:', '<TYPE>quizport</TYPE>', '<NAME>mod_quizport_', '<NAME>quizport_', '<ITEMMODULE>quizport</ITEMMODULE>', '<MODTYPE>quizport</MODTYPE>', '<USEMEDIAFILTER>quizport</USEMEDIAFILTER>');
-        $replace  = array('<NAME>taskchain</NAME>', 'mod/taskchain/', 'mod/taskchain:', '<TYPE>taskchain</TYPE>', '<NAME>mod_taskchain_', '<NAME>taskchain_', '<ITEMMODULE>taskchain</ITEMMODULE>', '<MODTYPE>taskchain</MODTYPE>', '<USEMEDIAFILTER>taskchain</USEMEDIAFILTER>');
+        $search   = array('<NAME>quizport</NAME>', 'mod/quizport/', 'mod/quizport:', '<TYPE>quizport</TYPE>',
+            '<NAME>mod_quizport_', '<NAME>quizport_', '<ITEMMODULE>quizport</ITEMMODULE>', '<MODTYPE>quizport</MODTYPE>',
+            '<USEMEDIAFILTER>quizport</USEMEDIAFILTER>');
+        $replace  = array('<NAME>taskchain</NAME>', 'mod/taskchain/', 'mod/taskchain:', '<TYPE>taskchain</TYPE>',
+            '<NAME>mod_taskchain_', '<NAME>taskchain_', '<ITEMMODULE>taskchain</ITEMMODULE>', '<MODTYPE>taskchain</MODTYPE>',
+            '<USEMEDIAFILTER>taskchain</USEMEDIAFILTER>');
 
         $tempdir = $this->converter->get_tempdir_path();
         $moodle_xml = $tempdir . '/moodle.xml';

@@ -48,7 +48,9 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_renderer extends mod_taskchain_attemp
         $qq = 0;
         $str = 'I=new Array();' . "\n";
         $tags = 'data,questions,question-record';
-        while (($question = "[$q]['#']") && $this->TC->task->source->xml_value($tags, $question) && ($answers = $question . "['answers'][0]['#']") && $this->TC->task->source->xml_value($tags, $answers)) {
+        while (($question = "[$q]['#']") && $this->TC->task->source->xml_value($tags, $question) &&
+            ($answers = $question . "['answers'][0]['#']") &&
+            $this->TC->task->source->xml_value($tags, $answers)) {
             $question_type = $this->TC->task->source->xml_value_int($tags, $question . "['question-type'][0]['#']");
             $weighting = $this->TC->task->source->xml_value_int($tags, $question . "['weighting'][0]['#']");
             $clue = $this->TC->task->source->xml_value_js($tags, $question . "['clue'][0]['#']");

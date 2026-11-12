@@ -102,7 +102,8 @@ class mod_taskchain_attempt_hp_6_jcross_renderer extends mod_taskchain_attempt_h
      */
     public function fix_bodycontent() {
         // We must add a false return value to clue links in order not to trigger the onbeforeunload event handler.
-        $search = '/(?<=' . '<a href="javascript:void\(0\);" class="GridNum" onclick="' . ')' . 'ShowClue\([^)]*\)' . '(?=' . '">' . ')/';
+        $search = '/(?<=' . '<a href="javascript:void\(0\);" class="GridNum" onclick="' . ')' . 'ShowClue\([^)]*\)' . '(?=' .
+            '">' . ')/';
         $replace = '$0; return false;';
         $this->bodycontent = preg_replace($search, $replace, $this->bodycontent);
 

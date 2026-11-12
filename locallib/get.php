@@ -73,7 +73,8 @@ class taskchain_get extends taskchain_base {
             if ($cmid == self::ACTIVITY_COURSE_TASKCHAIN || $cmid == self::ACTIVITY_SECTION_TASKCHAIN) {
                 $modname = 'taskchain';
             }
-            if ($cmid == self::ACTIVITY_SECTION_ANY || $cmid == self::ACTIVITY_SECTION_GRADED || $cmid == self::ACTIVITY_SECTION_TASKCHAIN) {
+            if ($cmid == self::ACTIVITY_SECTION_ANY || $cmid == self::ACTIVITY_SECTION_GRADED ||
+                $cmid == self::ACTIVITY_SECTION_TASKCHAIN) {
                 $sectionnum = $cm->sectionnum;
             }
         }
@@ -1246,7 +1247,11 @@ class taskchain_get extends taskchain_base {
                 $groups = $allgroups;
             } else {
                 // Groups in this course/grouping to which this user belongs.
-                if ($groups = groups_get_all_groups($this->TC->course->id, $this->TC->userid, $this->TC->coursemodule->groupingid)) {
+                if ($groups = groups_get_all_groups(
+                    $this->TC->course->id,
+                    $this->TC->userid,
+                    $this->TC->coursemodule->groupingid
+                )) {
                     $groups = implode(',', array_keys($groups));
                 }
             }
@@ -1280,7 +1285,12 @@ class taskchain_get extends taskchain_base {
             // conditionscore > 0 : the maximum score at which this condition is satisfied
             // The post-conditions will be ordered by conditionscore:
             // -100 (highest min) ... (lowest min) 0 (lowest max) ... (highest max) 100.
-            if (! $conditions[$taskid] = $DB->get_records_select('taskchain_conditions', $select, null, 'conditiontaskid,sortorder,conditionscore,attemptcount,attemptduration,attemptdelay')) {
+            if (! $conditions[$taskid] = $DB->get_records_select(
+                'taskchain_conditions',
+                $select,
+                null,
+                'conditiontaskid,sortorder,conditionscore,attemptcount,attemptduration,attemptdelay'
+            )) {
                 $conditions[$taskid] = array();
             }
             // Store absolute values for settings which can be negative.
@@ -1312,7 +1322,12 @@ class taskchain_get extends taskchain_base {
                 // Get attempts at $taskid in this cnumber.
                 $select = 'taskid = ? AND userid = ? AND cnumber = ?';
                 $params = array($taskid, $this->TC->userid, $cnumber);
-                $this->TC->cache_taskattempts[$taskid] = $DB->get_records_select('taskchain_task_attempts', $select, $params, 'resumestart DESC');
+                $this->TC->cache_taskattempts[$taskid] = $DB->get_records_select(
+                    'taskchain_task_attempts',
+                    $select,
+                    $params,
+                    'resumestart DESC'
+                );
             }
             $this->TC->cache_taskattemptsusort[$taskid] = 'time_desc';
         }
@@ -1453,7 +1468,8 @@ class taskchain_get extends taskchain_base {
         if ($g = $this->all_groupings()) {
             foreach ($g as $gid => $grouping) {
                 if ($count = $this->count_grouping_members($gid)) {
-                    $userlist[$str->groups]["grouping$gid"] = get_string('grouping', 'group') . ': ' . format_string($grouping->name) . ' (' . $count . ')';
+                    $userlist[$str->groups]["grouping$gid"] = get_string('grouping', 'group') . ': ' .
+                        format_string($grouping->name) . ' (' . $count . ')';
                 }
             }
         }
@@ -1462,7 +1478,8 @@ class taskchain_get extends taskchain_base {
         if ($g = $this->all_groups()) {
             foreach ($g as $gid => $group) {
                 if ($count = $this->count_group_members($gid)) {
-                    $userlist[$str->groups]["group$gid"] = get_string('group') . ': ' . format_string($group->name) . ' (' . $count . ')';
+                    $userlist[$str->groups]["group$gid"] = get_string('group') . ': ' . format_string($group->name) . ' (' .
+                        $count . ')';
                 }
             }
         }
@@ -1494,7 +1511,15 @@ class taskchain_get extends taskchain_base {
         static $managers = null;
         if (is_null($managers)) {
             $groupids = $this->groupids(false);
-            $managers = users_by_capability($this->TC->course->context, 'mod/taskchain:grade', 'u.id,u.firstname,u.lastname', 'u.lastname,u.firstname', '', '', $groupids);
+            $managers = users_by_capability(
+                $this->TC->course->context,
+                'mod/taskchain:grade',
+                'u.id,u.firstname,u.lastname',
+                'u.lastname,u.firstname',
+                '',
+                '',
+                $groupids
+            );
         }
         return $managers;
     }
@@ -1508,7 +1533,15 @@ class taskchain_get extends taskchain_base {
         static $students = null;
         if (is_null($students)) {
             $groupids = $this->groupids(false);
-            $students = users_by_capability($this->TC->course->context, 'mod/taskchain:attempt', 'u.id,u.firstname,u.lastname', 'u.lastname,u.firstname', '', '', $groupids);
+            $students = users_by_capability(
+                $this->TC->course->context,
+                'mod/taskchain:attempt',
+                'u.id,u.firstname,u.lastname',
+                'u.lastname,u.firstname',
+                '',
+                '',
+                $groupids
+            );
         }
         return $students;
     }
@@ -1578,7 +1611,8 @@ class taskchain_get extends taskchain_base {
      */
     public function all_groups_sql($AND = ' AND ', $field = 'userid') {
         if ($groupids = implode(',', $this->groupids())) {
-            return $AND . $field . ' IN (SELECT DISTINCT gm.userid FROM {groups_members} gm WHERE gm.groupid IN (' . $groupids . '))';
+            return $AND . $field . ' IN (SELECT DISTINCT gm.userid FROM {groups_members} gm WHERE gm.groupid IN (' . $groupids .
+                '))';
         } else {
             return '';
         }

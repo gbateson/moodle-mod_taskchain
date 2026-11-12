@@ -30,7 +30,14 @@ require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 $TC = new mod_taskchain();
 
 // Write to log.
-mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'attempt', 'view.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log(
+    $TC->course->id,
+    'taskchain',
+    'attempt',
+    'view.php?id=' . $TC->coursemodule->id,
+    $TC->taskchain->id,
+    $TC->coursemodule->id
+);
 
 // Set editing mode.
 mod_taskchain::set_user_editing();
@@ -78,9 +85,7 @@ if ($warnings = $output->warnings('chain')) {
     exit;
 }
 
-/*//////////////////////////////////////////////////////////////////////////////
-// Output starts here
-//////////////////////////////////////////////////////////////////////////////*/
+// Output starts here.
 
 if (empty($TC->task)) {
     echo $output->header();

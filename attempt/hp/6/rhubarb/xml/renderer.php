@@ -62,7 +62,8 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * @return xxx
      */
     public function expand_GuessHere() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,type-your-guess-here');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software .
+            '-config-file,global,type-your-guess-here');
     }
 
     /**
@@ -71,7 +72,8 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * @return xxx
      */
     public function expand_IncorrectWords() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',incorrect-words');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',incorrect-words');
     }
 
     /**
@@ -80,7 +82,8 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * @return xxx
      */
     public function expand_PreparingExercise() {
-        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software . '-config-file,global,preparing-exercise');
+        return $this->TC->task->source->xml_value_js($this->TC->task->source->hbs_software .
+            '-config-file,global,preparing-exercise');
     }
 
     /**
@@ -89,7 +92,8 @@ class mod_taskchain_attempt_hp_6_rhubarb_xml_renderer extends mod_taskchain_atte
      * @return xxx
      */
     public function expand_Solution() {
-        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-solution');
+        return $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' .
+            $this->TC->task->source->hbs_tasktype . ',include-solution');
     }
 
     /**

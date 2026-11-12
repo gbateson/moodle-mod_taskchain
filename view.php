@@ -31,7 +31,14 @@ require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 $TC = new mod_taskchain();
 
 // Log this request.
-mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'view', 'view.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log(
+    $TC->course->id,
+    'taskchain',
+    'view',
+    'view.php?id=' . $TC->coursemodule->id,
+    $TC->taskchain->id,
+    $TC->coursemodule->id
+);
 
 $completion = new completion_info($TC->course);
 $completion->set_module_viewed($TC->coursemodule);
@@ -63,9 +70,7 @@ $TC->set_preferred_pagelayout($PAGE);
 
 $output = $PAGE->get_renderer('mod_taskchain');
 
-/*//////////////////////////////////////////////////////////////////////////////
-// Output starts here
-//////////////////////////////////////////////////////////////////////////////*/
+// Output starts here.
 
 echo $output->header();
 

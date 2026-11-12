@@ -62,9 +62,15 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
             $paths[] = new restore_path_element('taskchain_chaingrade', '/activity/taskchain/chain/chaingrades/chaingrade');
             $paths[] = new restore_path_element('taskchain_chainattempt', '/activity/taskchain/chain/chainattempts/chainattempt');
             $paths[] = new restore_path_element('taskchain_taskscore', '/activity/taskchain/chain/tasks/task/taskscores/taskscore');
-            $paths[] = new restore_path_element('taskchain_taskattempt', '/activity/taskchain/chain/tasks/task/taskattempts/taskattempt');
+            $paths[] = new restore_path_element(
+                'taskchain_taskattempt',
+                '/activity/taskchain/chain/tasks/task/taskattempts/taskattempt'
+            );
             $paths[] = new restore_path_element('taskchain_question', '/activity/taskchain/chain/tasks/task/questions/question');
-            $paths[] = new restore_path_element('taskchain_response', '/activity/taskchain/chain/tasks/task/questions/question/responses/response');
+            $paths[] = new restore_path_element(
+                'taskchain_response',
+                '/activity/taskchain/chain/tasks/task/questions/question/responses/response'
+            );
         }
 
         // Return the paths wrapped into standard activity structure.

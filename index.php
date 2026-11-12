@@ -42,11 +42,11 @@ $PAGE->set_title($course->fullname);
 $PAGE->set_heading($course->shortname);
 $PAGE->navbar->add(get_string('modulenameplural', 'mod_taskchain'));
 
-/// Output starts here.
+// Output starts here.
 
 echo $OUTPUT->header();
 
-/// Get all the appropriate data.
+// Get all the appropriate data.
 
 if (! $taskchains = get_all_instances_in_course('taskchain', $course)) {
     echo $OUTPUT->heading(get_string('notaskchains', 'mod_taskchain'), 2);
@@ -103,7 +103,7 @@ if ($usesections) {
     }
 }
 
-/// Print the list of instances (your module will probably extend this)
+// Print the list of instances (your module will probably extend this)
 
 $strsectionname = get_string('sectionname', 'format_' . $course->format);
 $strname        = get_string('name');
@@ -166,6 +166,6 @@ foreach ($taskchains as $taskchain) {
 echo $OUTPUT->heading(get_string('modulenameplural', 'mod_taskchain'), 2);
 echo html_writer::table($table);
 
-/// Finish the page.
+// Finish the page.
 
 echo $OUTPUT->footer();

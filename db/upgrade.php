@@ -263,7 +263,15 @@ function xmldb_taskchain_upgrade($oldversion) {
             $update = '{course_sections}';
             $set    = 'summary = REPLACE(REPLACE(REPLACE(summary, ?, ?), ?, ?), ?, ?)';
             list($where, $params) = $DB->get_in_or_equal(array_keys($ids));
-            array_unshift($params, 'quizport', 'taskchain', 'attforblock', 'attendance', 'id=([0-9]+)', 'id=([0-9]+(&section=[0-9]+)?)');
+            array_unshift(
+                $params,
+                'quizport',
+                'taskchain',
+                'attforblock',
+                'attendance',
+                'id=([0-9]+)',
+                'id=([0-9]+(&section=[0-9]+)?)'
+            );
             $DB->execute("UPDATE $update SET $set WHERE id $where", $params);
 
             // Rebuild caches for any affected courses.
@@ -471,7 +479,16 @@ function xmldb_taskchain_upgrade($oldversion) {
     $newversion = 2015081181;
     if ($oldversion < $newversion) {
         $table = new xmldb_table('taskchain');
-        $fields = array('completionpass' => new xmldb_field('completionpassed', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, 'completionmingrade'));
+        $fields = array('completionpass' => new xmldb_field(
+            'completionpassed',
+            XMLDB_TYPE_INTEGER,
+            '1',
+            null,
+            XMLDB_NOTNULL,
+            null,
+            0,
+            'completionmingrade'
+        ));
         xmldb_taskchain_rename_fields($dbman, $table, $fields);
         upgrade_mod_savepoint(true, "$newversion", 'taskchain');
     }

@@ -1090,7 +1090,8 @@ abstract class taskchain_form_helper_record extends taskchain_form_helper_base {
      *
      * @return xxx
      */
-    public function format_conditions($taskid, $conditiontype, $return_intro = true, $return_js = false, $return_commands = true, $default = '') {
+    public function format_conditions($taskid, $conditiontype, $return_intro = true, $return_js = false,
+        $return_commands = true, $default = '') {
         $str = '';
 
         if ($conditions = $this->TC->get_conditions($conditiontype, $taskid)) {

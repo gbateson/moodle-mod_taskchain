@@ -58,8 +58,10 @@ $count_tasks = $DB->count_records('taskchain');
 echo $OUTPUT->box_start();
 
 echo '<table style="margin:auto"><tbody>' . "\n";
-echo '<tr><th style="text-align:right;">' . get_string('tasks', 'mod_taskchain') . ':</th><td>' . $count_tasks . '</td></tr>' . "\n";
-echo '<tr><th style="text-align:right;">' . get_string('cacherecords', 'mod_taskchain') . ':</th><td>' . $count_cache . '</td></tr>' . "\n";
+echo '<tr><th style="text-align:right;">' . get_string('tasks', 'mod_taskchain') . ':</th><td>' . $count_tasks . '</td></tr>' .
+    "\n";
+echo '<tr><th style="text-align:right;">' . get_string('cacherecords', 'mod_taskchain') . ':</th><td>' . $count_cache .
+    '</td></tr>' . "\n";
 if ($count_cache) {
     echo '<tr><td colspan="2" style="text-align:center;">';
     echo '<form action="' . $CFG->wwwroot . $SCRIPT . '" method="post">';

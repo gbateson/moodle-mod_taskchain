@@ -87,10 +87,14 @@ class taskchain_require extends taskchain_base {
                 $password = optional_param('taskchainpassword', '', PARAM_TEXT);
                 if (strcmp($record->password, $password)) {
                     // Password is missing or invalid.
-                    $error = html_writer::start_tag('form', array('id' => 'taskchainpasswordform', 'method' => 'post', 'action' => $this->TC->url->attempt())) . "\n";
+                    $error = html_writer::start_tag('form', array('id' => 'taskchainpasswordform', 'method' => 'post', 'action' => $this->TC->url->attempt())) .
+                        "\n";
                     $error .= html_writer::tag('p', get_string($type . 'requirepasswordmessage', 'mod_taskchain'));
                     $error .= html_writer::tag('b', get_string('password')) . ': ';
-                    $error .= html_writer::empty_tag('input', array('name' => 'taskchainpassword', 'type' => 'password', 'value' => ''));
+                    $error .= html_writer::empty_tag(
+                        'input',
+                        array('name' => 'taskchainpassword', 'type' => 'password', 'value' => '')
+                    );
                     $error .= html_writer::empty_tag('input', array('type' => 'submit', 'value' => get_string('ok')));
                     $error .= html_writer::end_tag('form') . "\n";
                     if ($password) {
@@ -239,7 +243,8 @@ class taskchain_require extends taskchain_base {
         }
 
         if ($cnumber == 0) {
-            if (($this->TC->tab == 'info' || $this->TC->tab == 'preview' || $this->TC->tab == 'attempt') && $this->TC->can->preview()) {
+            if (($this->TC->tab == 'info' || $this->TC->tab == 'preview' || $this->TC->tab == 'attempt') &&
+                $this->TC->can->preview()) {
                 // Teacher can always view the entry page.
                 return false;
             }
@@ -656,7 +661,8 @@ class taskchain_require extends taskchain_base {
             $url = new moodle_url('/mod/taskchain/view.php', $params);
             $options = implode(',', preg_grep('/^moodle/i', explode(',', $this->TC->chain->get_popupoptions()), PREG_GREP_INVERT));
             $onclick = "this.target='$target'; return window.open('$url','$target','$options');";
-            $link = "\n" . '<a href="' . $url . '" onclick="' . $onclick . '">' . format_string($this->TC->taskchain->name) . '</a>' . "\n";
+            $link = "\n" . '<a href="' . $url . '" onclick="' . $onclick . '">' . format_string($this->TC->taskchain->name) .
+                '</a>' . "\n";
             return get_string('popupresource', 'resource') . '<br />' . get_string('popupresourcelink', 'resource', $link);
         }
         return false; // Popup link not required.
@@ -669,7 +675,8 @@ class taskchain_require extends taskchain_base {
      * @return xxx
      */
     public function chain_availability() {
-        if (($this->TC->tab == 'info' || $this->TC->tab == 'preview' || $this->TC->tab == 'attempt' || $this->TC->tab == 'submit') && $this->TC->can->preview()) {
+        if (($this->TC->tab == 'info' || $this->TC->tab == 'preview' || $this->TC->tab == 'attempt' || $this->TC->tab == 'submit') &&
+            $this->TC->can->preview()) {
             // Teacher can always view the entry page.
             return false;
         }

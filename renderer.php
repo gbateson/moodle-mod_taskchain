@@ -121,7 +121,8 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                     if ($this->TC->tasks[$taskid]->scorelimit && $this->TC->tasks[$taskid]->scoreweighting) {
                         $score_column = true;
                     }
-                    if ($this->TC->tasks[$taskid]->taskscore->status == taskchain::STATUS_INPROGRESS && $this->TC->tasks[$taskid]->allowresume) {
+                    if ($this->TC->tasks[$taskid]->taskscore->status == taskchain::STATUS_INPROGRESS &&
+                        $this->TC->tasks[$taskid]->allowresume) {
                         // $resume_column = true;
                     }
                     $counttaskscores++;
@@ -858,8 +859,16 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
         $text = '';
         if (trim(strip_tags($this->TC->chain->$textfield))) {
-            $options = (object)array('noclean' => true, 'para' => false, 'filter' => true, 'context' => $this->TC->coursemodule->context);
-            $text = file_rewrite_pluginfile_urls($this->TC->chain->$textfield, 'pluginfile.php', $this->TC->coursemodule->context->id, 'mod_taskchain', $type, null);
+            $options = (object)array('noclean' => true, 'para' => false, 'filter' => true,
+                'context' => $this->TC->coursemodule->context);
+            $text = file_rewrite_pluginfile_urls(
+                $this->TC->chain->$textfield,
+                'pluginfile.php',
+                $this->TC->coursemodule->context->id,
+                'mod_taskchain',
+                $type,
+                null
+            );
             $text = trim(format_text($text, $this->TC->chain->$formatfield, $options, null));
         }
 
@@ -1174,7 +1183,8 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                     if ($attempt->status == mod_taskchain::STATUS_INPROGRESS || $attempt->status == mod_taskchain::STATUS_PENDING) {
                         if ($this->TC->$type->timelimit == 0 || $attempt->duration < $this->TC->$type->timelimit) {
                             $params = array('tab' => $resumetab, $type . 'attemptid' => $attempt->id);
-                            $params = array('class' => 'resumeattempt', 'href' => $this->format_url('attempt.php', 'coursemoduleid', $params));
+                            $params = array('class' => 'resumeattempt',
+                                'href' => $this->format_url('attempt.php', 'coursemoduleid', $params));
                             $cell = html_writer::tag('a', $this->pix_icon('t/preview', $strresume) . ' ' . $strresume, $params);
                         }
                     }
@@ -1285,12 +1295,21 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
                 $table->data[] = new html_table_row(array(
                     get_string('selectattempts', 'mod_taskchain') . ':',
-                    html_writer::select($options, 'selectattempts', '', '', array('onchange' => 'return taskchain_set_checked_attempts(this)')),
+                    html_writer::select(
+                        $options,
+                        'selectattempts',
+                        '',
+                        '',
+                        array('onchange' => 'return taskchain_set_checked_attempts(this)')
+                    ),
                 ));
 
                 $table->data[] = new html_table_row(array(
                     $this->notext,
-                    html_writer::empty_tag('input', array('type' => 'submit', 'value' => get_string('deleteattempts', 'mod_taskchain'))),
+                    html_writer::empty_tag(
+                        'input',
+                        array('type' => 'submit', 'value' => get_string('deleteattempts', 'mod_taskchain'))
+                    ),
                 ));
 
                 $output .= html_writer::table($table) . "\n";
@@ -1437,7 +1456,8 @@ class mod_taskchain_renderer extends plugin_renderer_base {
         $exitoptions = $this->TC->chain->exitoptions;
 
         if ($this->TC->chain->gradeweighting == 0) {
-            if ($exitoptions & mod_taskchain::EXITOPTIONS_ATTEMPTSCORE || $exitoptions & mod_taskchain::EXITOPTIONS_TASKCHAINGRADE) {
+            if ($exitoptions & mod_taskchain::EXITOPTIONS_ATTEMPTSCORE ||
+                $exitoptions & mod_taskchain::EXITOPTIONS_TASKCHAINGRADE) {
                 $text = get_string('exit_nograde', 'mod_taskchain');
                 $feedback[] = html_writer::tag('li', $text);
             }
@@ -1467,11 +1487,16 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                     case mod_taskchain::GRADEMETHOD_HIGHEST:
                         if ($this->TC->chainattempt->grade < $this->TC->usergrade->percent) {
                             // Current attempt is less than the highest so far.
-                            $text = get_string('exit_taskchaingrade_highest', 'mod_taskchain', $this->TC->usergrade->percent . $percentsign);
+                            $text = get_string('exit_taskchaingrade_highest', 'mod_taskchain', $this->TC->usergrade->percent .
+                                $percentsign);
                             $feedback[] = html_writer::tag('li', $text);
                         } else if ($this->TC->chainattempt->grade == 0) {
                             // Zero score is best so far.
-                            $text = get_string('exit_taskchaingrade_highest_zero', 'mod_taskchain', $this->TC->chainattempt->grade . $percentsign);
+                            $text = get_string(
+                                'exit_taskchaingrade_highest_zero',
+                                'mod_taskchain',
+                                $this->TC->chainattempt->grade . $percentsign
+                            );
                             $feedback[] = html_writer::tag('li', $text);
                         } else if ($this->TC->get_chainattempts()) {
                             // Current attempt is highest so far.
@@ -1491,7 +1516,8 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                                 $text = get_string('exit_taskchaingrade_highest_equal', 'mod_taskchain');
                                 $feedback[] = html_writer::tag('li', $text);
                             } else {
-                                $text = get_string('exit_taskchaingrade_highest_previous', 'mod_taskchain', $maxgrade . $percentsign);
+                                $text = get_string('exit_taskchaingrade_highest_previous', 'mod_taskchain', $maxgrade .
+                                    $percentsign);
                                 $feedback[] = html_writer::tag('li', $text);
                             }
                         } else {
@@ -1499,7 +1525,8 @@ class mod_taskchain_renderer extends plugin_renderer_base {
                         }
                         break;
                     case mod_taskchain::GRADEMETHOD_AVERAGE:
-                        $text = get_string('exit_taskchaingrade_average', 'mod_taskchain', $this->TC->usergrade->percent . $percentsign);
+                        $text = get_string('exit_taskchaingrade_average', 'mod_taskchain', $this->TC->usergrade->percent .
+                            $percentsign);
                         $feedback[] = html_writer::tag('li', $text);
                         break;
                     // case mod_taskchain::GRADEMETHOD_TOTAL:
@@ -1550,7 +1577,8 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
         if ($this->TC->chain->exitoptions & mod_taskchain::EXITOPTIONS_RETRY) {
             // Retry this taskchain, if allowed.
-            if ($this->TC->chain->attemptlimit == 0 || empty($this->TC->chainattempts) || $this->TC->chain->attemptlimit < count($this->TC->chainattempts)) {
+            if ($this->TC->chain->attemptlimit == 0 || empty($this->TC->chainattempts) ||
+                $this->TC->chain->attemptlimit < count($this->TC->chainattempts)) {
                 $table->data[] = new html_table_row(array(
                     new html_table_cell(html_writer::link($this->TC->url->view(), get_string('exit_retry', 'mod_taskchain'))),
                     new html_table_cell(html_writer::link($this->TC->url->view(), format_string($this->TC->taskchain->name))),
@@ -1607,9 +1635,15 @@ class mod_taskchain_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_tag('div', array('class' => 'buttons'));
         $output .= html_writer::tag('p', $message);
-        $output .= html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'deleteconfirmedbutton', 'value' => get_string('yes')));
+        $output .= html_writer::empty_tag(
+            'input',
+            array('type' => 'submit', 'name' => 'deleteconfirmedbutton', 'value' => get_string('yes'))
+        );
         $output .= ' ';
-        $output .= html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'deletecancelledbutton', 'value' => get_string('no')));
+        $output .= html_writer::empty_tag(
+            'input',
+            array('type' => 'submit', 'name' => 'deletecancelledbutton', 'value' => get_string('no'))
+        );
         $output .= html_writer::end_tag('div');
         $output .= $this->form_end();
 

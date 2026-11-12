@@ -267,25 +267,30 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
                     $gap .= '<select id="Gap' . $i . '"><option value=""></option>' . $wordlist . '</select>';
                 } else {
                     // Minimum gap size.
-                    if (! $gapsize = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',minimum-gap-size')) {
+                    if (! $gapsize = $this->TC->task->source->xml_value_int($this->TC->task->source->hbs_software .
+                        '-config-file,' . $this->TC->task->source->hbs_tasktype .
+                        ',minimum-gap-size')) {
                         $gapsize = 6;
                     }
 
                     // Increase gap size to length of longest answer for this gap.
                     $a = 0;
-                    while (($answer = $item . "['answer'][$a]['#']") && $this->TC->task->source->xml_value($question_record, $answer)) {
+                    while (($answer = $item . "['answer'][$a]['#']") &&
+                        $this->TC->task->source->xml_value($question_record, $answer)) {
                         $answertext = $this->TC->task->source->xml_value($question_record, $answer . "['text'][0]['#']");
                         $answertext = preg_replace('/&[#a-zA-Z0-9]+;/', 'x', $answertext);
                         $gapsize = max($gapsize, strlen($answertext));
                         $a++;
                     }
 
-                    $gap .= '<input type="text" id="Gap' . $i . '" onfocus="TrackFocus(' . $i . ')" onblur="LeaveGap()" class="GapBox" size="' . $gapsize . '"></input>';
+                    $gap .= '<input type="text" id="Gap' . $i . '" onfocus="TrackFocus(' . $i .
+                        ')" onblur="LeaveGap()" class="GapBox" size="' . $gapsize . '"></input>';
                 }
                 if ($includeclues) {
                     $clue = $this->TC->task->source->xml_value($question_record, $item . "['clue'][0]['#']");
                     if (strlen((string)$clue)) {
-                        $gap .= '<button style="line-height: 1.0" class="FuncButton" onfocus="FuncBtnOver(this)" onmouseover="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="ShowClue(' . $i . ')">' . $cluecaption . '</button>';
+                        $gap .= '<button style="line-height: 1.0" class="FuncButton" onfocus="FuncBtnOver(this)" onmouseover="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="ShowClue(' .
+                            $i . ')">' . $cluecaption . '</button>';
                     }
                 }
                 $gap .= '</span>';

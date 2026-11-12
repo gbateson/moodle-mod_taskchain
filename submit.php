@@ -30,7 +30,14 @@ require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 $TC = new mod_taskchain();
 
 // Log this request.
-mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'submit', 'view.php?id=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+mod_taskchain::add_to_log(
+    $TC->course->id,
+    'taskchain',
+    'submit',
+    'view.php?id=' . $TC->coursemodule->id,
+    $TC->taskchain->id,
+    $TC->coursemodule->id
+);
 
 // Set editing mode.
 mod_taskchain::set_user_editing();
@@ -81,7 +88,8 @@ $TC->update_completion_state($completion);
 
 // do the stuff the $TC->task->output->redirect() used to do
 
-if ($TC->task->delay3 == mod_taskchain::TIME_DISABLE || $TC->taskattempt->status == mod_taskchain::STATUS_INPROGRESS || $TC->taskattempt->redirect == 0) {
+if ($TC->task->delay3 == mod_taskchain::TIME_DISABLE || $TC->taskattempt->status == mod_taskchain::STATUS_INPROGRESS ||
+    $TC->taskattempt->redirect == 0) {
     // We need some check here to see if the user is trying to navigate away
     // from the page in which case we should just die and not send the header.
     header("HTTP/1.0 204 No Response");
@@ -160,9 +168,7 @@ if (! $TC->has_exitpage()) {
     }
 }
 
-/*//////////////////////////////////////////////////////////////////////////////
-// Output starts here
-//////////////////////////////////////////////////////////////////////////////*/
+// Output starts here.
 
 echo $output->header();
 

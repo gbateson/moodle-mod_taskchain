@@ -523,7 +523,8 @@ class taskchain_source {
      * @param boolean $recursive
      * @return void, but may append items to $sources
      */
-    public static function get_sources_from_chainfolder_external(&$data, $context, $component, $filearea, &$sources, $mainfile, $recursive) {
+    public static function get_sources_from_chainfolder_external(&$data, $context, $component, $filearea, &$sources, $mainfile,
+        $recursive) {
         global $DB;
 
         // get repository - cautiously :-)
@@ -676,7 +677,14 @@ class taskchain_source {
             $file_record['filepath'] = preg_replace($search, $replace, $file_record['filepath'], 1);
 
             // Skip files that have already been fetched from the repository to this $filearea.
-            if ($fs->get_file($file_record['contextid'], $component, $filearea, 0, $file_record['filepath'], $file_record['filename'])) {
+            if ($fs->get_file(
+                $file_record['contextid'],
+                $component,
+                $filearea,
+                0,
+                $file_record['filepath'],
+                $file_record['filename']
+            )) {
                 continue; // File is already in $filearea.
             }
 
@@ -873,7 +881,8 @@ class taskchain_source {
         } else {
             $icon = $CFG->wwwroot . '/' . $this->icon;
         }
-        return '<img src="' . $icon . '" width="' . $this->iconwidth . '" height="' . $this->iconheight . '" class="' . $this->iconclass . '" />';
+        return '<img src="' . $icon . '" width="' . $this->iconwidth . '" height="' . $this->iconheight . '" class="' .
+            $this->iconclass . '" />';
     }
 
     // Property access functions.
@@ -991,7 +1000,8 @@ class taskchain_source {
 
             if (! $this->filecontents = $this->file->get_content()) {
                 if (! $path = $this->get_real_path()) {
-                    throw new moodle_exception('could not fetch file contents: class=' . get_class($this->file) . ', file=' . $this->file->get_filepath() . $this->file->get_filename());
+                    throw new moodle_exception('could not fetch file contents: class=' . get_class($this->file) . ', file=' .
+                        $this->file->get_filepath() . $this->file->get_filename());
                     return false;
                 }
                 $this->filecontents = file_get_contents($path);

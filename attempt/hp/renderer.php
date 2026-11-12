@@ -222,7 +222,12 @@ class mod_taskchain_attempt_hp_renderer extends mod_taskchain_attempt_renderer {
             if (preg_match($this->tagpattern('!DOCTYPE', '', false), $this->htmlcontent, $matches)) {
                 $this->doctype = $this->single_line($matches[0]) . "\n";
                 // convert short dtd to full dtd (short dtd not allowed in xhtml 1.1)
-                $this->doctype = preg_replace('/"xhtml(\d+)(-\w+)?.dtd"/i', '"http://www.w3.org/TR/xhtml$1/DTD/xhtml$1$2.dtd"', $this->doctype, 1);
+                $this->doctype = preg_replace(
+                    '/"xhtml(\d+)(-\w+)?.dtd"/i',
+                    '"http://www.w3.org/TR/xhtml$1/DTD/xhtml$1$2.dtd"',
+                    $this->doctype,
+                    1
+                );
             }
             if (preg_match($this->tagpattern('html', '', false), $this->htmlcontent, $matches)) {
                 $this->htmlattributes = ' ' . $this->single_line($matches[1]) . "\n";

@@ -45,7 +45,8 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     protected $sections = array(
         'general'    => array('sortorder', 'edit', 'defaultrecord', 'selectrecord', 'name'),
         'tasks'      => array('sourcefile', 'sourcetype', 'sourcelocation', 'configfile', 'configlocation', 'addtype', 'tasknames'),
-        'display'    => array('outputformat', 'navigation', 'title', 'titletext', 'stopbutton', 'stoptext', 'allowpaste', 'usefilters', 'useglossary', 'usemediafilter', 'studentfeedback', 'studentfeedbackurl'),
+        'display'    => array('outputformat', 'navigation', 'title', 'titletext', 'stopbutton', 'stoptext', 'allowpaste',
+            'usefilters', 'useglossary', 'usemediafilter', 'studentfeedback', 'studentfeedbackurl'),
         'time'       => array('timeopen', 'timeclose', 'timelimit', 'delay1', 'delay2', 'delay3'),
         'attempts'   => array('attemptlimit', 'allowresume'),
         'security'   => array('password', 'subnet'),
@@ -569,9 +570,17 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
                 );
             } else {
                 // Moodle <= 3.2.
-                $allnone .= html_writer::tag('a', get_string('all'), array('onclick' => 'select_all_in("DIV", "fitem", "' . $groupid . '")'));
+                $allnone .= html_writer::tag(
+                    'a',
+                    get_string('all'),
+                    array('onclick' => 'select_all_in("DIV", "fitem", "' . $groupid . '")')
+                );
                 $allnone .= ' / ';
-                $allnone .= html_writer::tag('a', get_string('none'), array('onclick' => 'deselect_all_in("DIV", "fitem", "' . $groupid . '")'));
+                $allnone .= html_writer::tag(
+                    'a',
+                    get_string('none'),
+                    array('onclick' => 'deselect_all_in("DIV", "fitem", "' . $groupid . '")')
+                );
             }
 
             $elements = array();

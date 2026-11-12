@@ -59,7 +59,8 @@ class mod_taskchain_report_taskresponses_renderer extends mod_taskchain_report_t
                 'wrong'   => get_string('wrong', 'mod_taskchain'),
                 'ignored' => get_string('ignored', 'mod_taskchain'),
                 'score'   => get_string('score', 'mod_taskchain'),
-                'hintsclueschecks' => get_string('clues', 'mod_taskchain') . ',' . get_string('hints', 'mod_taskchain') . ',' . get_string('checks', 'mod_taskchain'),
+                'hintsclueschecks' => get_string('clues', 'mod_taskchain') . ',' . get_string('hints', 'mod_taskchain') . ',' .
+                    get_string('checks', 'mod_taskchain'),
             );
         }
 

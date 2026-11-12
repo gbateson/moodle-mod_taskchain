@@ -33,9 +33,23 @@ $TC = new mod_taskchain();
 ;
 
 if (isset($TC->condition->id)) {
-    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editcondition', 'edit/condition.php?id=' . $TC->condition->id, $TC->taskchain->id, $TC->coursemodule->id);
+    mod_taskchain::add_to_log(
+        $TC->course->id,
+        'taskchain',
+        'editcondition',
+        'edit/condition.php?id=' . $TC->condition->id,
+        $TC->taskchain->id,
+        $TC->coursemodule->id
+    );
 } else {
-    mod_taskchain::add_to_log($TC->course->id, 'taskchain', 'editcondition', 'edit/condition.php?cm=' . $TC->coursemodule->id, $TC->taskchain->id, $TC->coursemodule->id);
+    mod_taskchain::add_to_log(
+        $TC->course->id,
+        'taskchain',
+        'editcondition',
+        'edit/condition.php?cm=' . $TC->coursemodule->id,
+        $TC->taskchain->id,
+        $TC->coursemodule->id
+    );
 }
 
 // Set editing mode.

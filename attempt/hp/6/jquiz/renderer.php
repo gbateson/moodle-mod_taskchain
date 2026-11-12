@@ -113,7 +113,8 @@ class mod_taskchain_attempt_hp_6_jquiz_renderer extends mod_taskchain_attempt_hp
     public function get_js_functionnames() {
         // Start list of function names.
         $names = parent::get_js_functionnames();
-        $names .= ($names ? ',' : '') . 'TypeChars,ShowHint,ShowAnswers,ChangeQ,ShowHideQuestions,CheckMCAnswer,CheckMultiSelAnswer,CheckShortAnswer,CheckFinished,SwitchHybridDisplay,SetUpQuestions,CalculateOverallScore';
+        $names .= ($names ? ',' : '') .
+            'TypeChars,ShowHint,ShowAnswers,ChangeQ,ShowHideQuestions,CheckMCAnswer,CheckMultiSelAnswer,CheckShortAnswer,CheckFinished,SwitchHybridDisplay,SetUpQuestions,CalculateOverallScore';
         return $names;
     }
 
@@ -157,7 +158,8 @@ class mod_taskchain_attempt_hp_6_jquiz_renderer extends mod_taskchain_attempt_hp
         // hide/show bottom border of questions (override class="QuizQuestion")
         $n = "\n\t\t\t\t";
         if ($pos = strpos($substr, "QArray[i].style.display = '';")) {
-            $substr = substr_replace($substr, 'if ((i+1)<QArray.length){' . $n . "\t" . "QArray[i].style.borderWidth = '';" . $n . '}' . $n, $pos, 0);
+            $substr = substr_replace($substr, 'if ((i+1)<QArray.length){' . $n . "\t" . "QArray[i].style.borderWidth = '';" .
+                $n . '}' . $n, $pos, 0);
         }
         if ($pos = strpos($substr, "if (i != CurrQNum){")) {
             $substr = substr_replace($substr, "QArray[i].style.borderWidth = '0px';" . $n, $pos, 0);
@@ -190,7 +192,8 @@ class mod_taskchain_attempt_hp_6_jquiz_renderer extends mod_taskchain_attempt_hp
             . "			if (Q.tagName=='LI') {\n"
             . "				QList.push(Q);\n"
             . "			} else {\n"
-            . "				alert('Sorry, SetUpQuestions() failed.\\n\\n'+'Perhaps there are some invalid\\n'+'HTML tags in question ' + QList.length + ' ?');\n"
+            .
+                "				alert('Sorry, SetUpQuestions() failed.\\n\\n'+'Perhaps there are some invalid\\n'+'HTML tags in question ' + QList.length + ' ?');\n"
             . "			}\n"
             . "		}\n"
             . "	}\n";
@@ -381,7 +384,12 @@ class mod_taskchain_attempt_hp_6_jquiz_renderer extends mod_taskchain_attempt_hp
 
         $substr = preg_replace('/(\s*)var TotalScore = 0;/s', '$0$1' . 'var TotalCount = 0;', $substr, 1);
         $substr = preg_replace('/(\s*)TotalScore \+= [^;]*;/s', '$0$1' . 'TotalCount ++;', $substr, 1);
-        $substr = preg_replace('/(\s*)\}\s*else\s*\{/s', '$1} else if (TotalCount==0) {$1' . "\t" . 'Score = 0;' . '$0', $substr, 1);
+        $substr = preg_replace(
+            '/(\s*)\}\s*else\s*\{/s',
+            '$1} else if (TotalCount==0) {$1' . "\t" . 'Score = 0;' . '$0',
+            $substr,
+            1
+        );
 
         $str = substr_replace($str, $substr, $start, $length);
     }

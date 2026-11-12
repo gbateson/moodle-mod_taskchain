@@ -44,7 +44,8 @@ class taskchain_create extends taskchain_base {
      * @param xxx $userid (optional, default=0)
      * @return xxx
      */
-    public function chaingrade($grade = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $chainid = 0, $cnumber = 0, $userid = 0) {
+    public function chaingrade($grade = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $chainid = 0, $cnumber = 0,
+        $userid = 0) {
         global $DB;
 
         if ($userid == 0 && $this->TC->get_chaingrade()) {
@@ -99,7 +100,8 @@ class taskchain_create extends taskchain_base {
      * @param xxx $userid (optional, default=0)
      * @return xxx
      */
-    public function chainattempt($grade = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $chainid = 0, $cnumber = 0, $userid = 0) {
+    public function chainattempt($grade = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $chainid = 0, $cnumber = 0,
+        $userid = 0) {
         global $DB;
 
         if ($userid == 0 && $this->TC->get_chainattempt()) {
@@ -143,8 +145,20 @@ class taskchain_create extends taskchain_base {
         $params  = array($chainid, $cnumber, $userid, self::STATUS_INPROGRESS);
 
         // Set status of previous chain attempts (and their task_attempts and task_scores) to adandoned.
-        $DB->set_field_select('taskchain_task_attempts', 'status', self::STATUS_ABANDONED, "taskid IN ($taskids) AND $select", $params);
-        $DB->set_field_select('taskchain_task_scores', 'status', self::STATUS_ABANDONED, "taskid IN ($taskids) AND $select", $params);
+        $DB->set_field_select(
+            'taskchain_task_attempts',
+            'status',
+            self::STATUS_ABANDONED,
+            "taskid IN ($taskids) AND $select",
+            $params
+        );
+        $DB->set_field_select(
+            'taskchain_task_scores',
+            'status',
+            self::STATUS_ABANDONED,
+            "taskid IN ($taskids) AND $select",
+            $params
+        );
         $DB->set_field_select('taskchain_chain_attempts', 'status', self::STATUS_ABANDONED, "chainid = ? AND $select", $params);
 
         // Set status of previous PENDING chain attempts to COMPLETED.
@@ -178,7 +192,8 @@ class taskchain_create extends taskchain_base {
      * @param xxx $userid (optional, default=0)
      * @return xxx
      */
-    public function taskscore($score = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $taskid = 0, $cnumber = 0, $userid = 0) {
+    public function taskscore($score = 0, $status = self::STATUS_INPROGRESS, $duration = 0, $taskid = 0, $cnumber = 0,
+        $userid = 0) {
         global $DB;
 
         if ($userid == 0 && $this->TC->get_taskscore()) {

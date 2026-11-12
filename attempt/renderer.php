@@ -632,10 +632,12 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         // print the html element to hold the embedded html page
         // Note: the iframe in IE needs a "name" attribute for the resizing to work.
         echo '<!--[if IE]>' . "\n";
-        echo '<iframe name="' . $id . '" id="' . $id . '" src="' . $src . '" width="' . $width . '" height="' . $height . '"></iframe>' . "\n";
+        echo '<iframe name="' . $id . '" id="' . $id . '" src="' . $src . '" width="' . $width . '" height="' . $height .
+            '"></iframe>' . "\n";
         echo '<![endif]-->' . "\n";
         echo '<!--[if !IE]> <-->' . "\n";
-        echo '<object id="' . $id . '" type="text/html" data="' . $src . '" width="' . $width . '" height="' . $height . '"></object>' . "\n";
+        echo '<object id="' . $id . '" type="text/html" data="' . $src . '" width="' . $width . '" height="' . $height .
+            '"></object>' . "\n";
         echo '<!--> <![endif]-->' . "\n";
 
         // Javascript to add onload event handler - we do this here because
@@ -1286,7 +1288,8 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             }
 
             // remove the internal </script><script ... > joins from the inline javascripts (js_inline)
-            $search = '/(?:\s*\/\/\]\]>)?' . '\s*<\/script>\s*<script type="text\/javascript">' . '(?:\s*\/\/<!\[CDATA\[[ \t]*)?/is';
+            $search = '/(?:\s*\/\/\]\]>)?' . '\s*<\/script>\s*<script type="text\/javascript">' .
+                '(?:\s*\/\/<!\[CDATA\[[ \t]*)?/is';
             $mediafilter->js_inline = preg_replace($search, '', $mediafilter->js_inline);
 
             // extract urls of deferred scripts from $mediafilter->js_external
@@ -1629,7 +1632,8 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
             '%coursepage%' => $CFG->wwwroot . '/course/view.php?id=' . $this->TC->course->id,
             '%coursefiles%' => $CFG->wwwroot . '/' . $file_php . '/' . $this->TC->course->id,
             '%modulepage%' => $CFG->wwwroot . '/mod/taskchain/view.php?id=' . $this->TC->coursemodule->id,
-            '%modulefiles%' => $CFG->wwwroot . '/' . $pluginfile_php . '/' . $this->TC->coursemodule->context->id . '/mod_taskchain/sourcefile',
+            '%modulefiles%' => $CFG->wwwroot . '/' . $pluginfile_php . '/' . $this->TC->coursemodule->context->id .
+                '/mod_taskchain/sourcefile',
         );
         $url = strtr($url, $replace_pairs);
 

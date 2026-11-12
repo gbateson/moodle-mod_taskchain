@@ -451,7 +451,12 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                 $condition->taskid = $recordid;
                 if ($condition->id = array_shift($conditionids)) {
                     if (! $DB->update_record('taskchain_conditions', $condition)) {
-                        throw new moodle_exception('error_updaterecord', 'taskchain', '', "taskchain_conditions (id=$condition->id)");
+                        throw new moodle_exception(
+                            'error_updaterecord',
+                            'taskchain',
+                            '',
+                            "taskchain_conditions (id=$condition->id)"
+                        );
                     }
                 } else {
                     unset($condition->id);
@@ -594,7 +599,11 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
                 if (! $ok) {
                     $TC->print_error(get_string('error_getrecord', 'mod_taskchain', "taskchain (id=$taskchainid)"));
                 }
-                if (! $chainid = $DB->get_field('taskchain_chains', 'id', array('parenttype' => TASKCHAIN_PARENTTYPE_ACTIVITY, 'parentid' => $taskchainid))) {
+                if (! $chainid = $DB->get_field(
+                    'taskchain_chains',
+                    'id',
+                    array('parenttype' => TASKCHAIN_PARENTTYPE_ACTIVITY, 'parentid' => $taskchainid)
+                )) {
                     $TC->print_error(get_string('error_getrecord', 'mod_taskchain', "taskchain_chains (parentid=$taskchainid)"));
                 }
                 $tables = ''

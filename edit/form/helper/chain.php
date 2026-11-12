@@ -52,7 +52,8 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         'time'       => array('timeopen', 'timeclose', 'timelimit', 'delay1', 'delay2'),
         'attempts'   => array('attemptlimit', 'allowresume', 'allowfreeaccess', 'manualcompletion'),
         'security'   => array('password', 'subnet'),
-        'assessment' => array('attemptgrademethod', 'grademethod', 'gradeignore', 'gradelimit', 'gradeweighting', 'gradepass', 'gradecategory'),
+        'assessment' => array('attemptgrademethod', 'grademethod', 'gradeignore', 'gradelimit', 'gradeweighting', 'gradepass',
+            'gradecategory'),
         // Note: "hidden" section will be added by mod_moodleform.
     );
 
@@ -159,7 +160,10 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
             if (empty($record->instance)) {
                 // Add a new taskchain.
             } else {
-                $chain = $DB->get_record('taskchain_chains', array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY, 'parentid' => $record->instance));
+                $chain = $DB->get_record(
+                    'taskchain_chains',
+                    array('parenttype' => mod_taskchain::PARENTTYPE_ACTIVITY, 'parentid' => $record->instance)
+                );
                 foreach ($chain as $field => $value) {
                     $this->record->$field = $value;
                 }
@@ -967,7 +971,15 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
                 if (isset($data->{$editorfield}['text'])) {
                     // Get the text that was sent from the browser.
                     $options = mod_taskchain::filearea_options();
-                    $text = file_save_draft_area_files($itemid, $this->context->id, 'mod_taskchain', $type, 0, $options, $data->{$editorfield}['text']);
+                    $text = file_save_draft_area_files(
+                        $itemid,
+                        $this->context->id,
+                        'mod_taskchain',
+                        $type,
+                        0,
+                        $options,
+                        $data->{$editorfield}['text']
+                    );
 
                     // remove leading and trailing white space,
                     // - empty html paragraphs (from IE)

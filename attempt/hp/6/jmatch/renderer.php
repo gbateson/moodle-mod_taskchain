@@ -123,7 +123,8 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
         $search = '/for \(var i=0; i<F\.length; i\+\+\)\{.*?\}/s';
         $replace = ''
             . "var myParentNode = null;\n"
-            . "if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
+            .
+                "if (navigator.appName=='Microsoft Internet Explorer' && (document.documentMode==null || document.documentMode<8)) {\n"
             . "	// IE8+ (compatible mode) IE7, IE6, IE5 ...\n"
             . "} else {\n"
             . "	// Firefox, Safari, Opera, IE8+\n"
@@ -174,7 +175,8 @@ class mod_taskchain_attempt_hp_6_jmatch_renderer extends mod_taskchain_attempt_h
             . "		div = myParentNode.appendChild(div);\n"
             . "		HP_add_listener(div, 'mousedown', 'beginDrag(event, ' + i + ')');\n"
             . "	} else {\n"
-            . "		document.write('" . '<div id="' . "D' + i + '" . '" class="CardStyle" onmousedown="' . "beginDrag(event, ' + i + ')" . '"' . "></div>');\n"
+            . "		document.write('" . '<div id="' . "D' + i + '" . '" class="CardStyle" onmousedown="' .
+                "beginDrag(event, ' + i + ')" . '"' . "></div>');\n"
             . "	}\n"
             . "}\n"
             . "div = myParentNode = null;";

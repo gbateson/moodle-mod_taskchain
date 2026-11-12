@@ -53,7 +53,8 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * @return xxx
      */
     public function expand_NumberOfOptions() {
-        $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',number-of-options';
+        $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype .
+            ',number-of-options';
         return $this->TC->task->source->xml_value_int($tags);
     }
 
@@ -73,7 +74,8 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * @return xxx
      */
     public function expand_Solution() {
-        $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',include-solution';
+        $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype .
+            ',include-solution';
         return $this->TC->task->source->xml_value_int($tags);
     }
 
@@ -103,7 +105,8 @@ class mod_taskchain_attempt_hp_6_sequitur_xml_renderer extends mod_taskchain_att
      * @return xxx
      */
     public function expand_WholeText() {
-        $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',show-whole-text';
+        $tags = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype .
+            ',show-whole-text';
         return $this->TC->task->source->xml_value($tags);
     }
 

@@ -78,7 +78,7 @@ class taskchain_source_hp extends taskchain_source {
      *
      * @var array
      */
-    static $utf8_decrement = array(
+    public static $utf8_decrement = array(
         1 => 0,
         2 => 192,
         3 => 224,
@@ -86,7 +86,7 @@ class taskchain_source_hp extends taskchain_source {
     );
 
     /** @var array the number of bits to shift each utf8 character by */
-    static $utf8_shift = array(
+    public static $utf8_shift = array(
         1 => array(0 => 0),
         2 => array(0 => 6, 1 => 0),
         3 => array(0 => 12, 1 => 6, 2 => 0),
