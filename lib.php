@@ -65,7 +65,6 @@ function taskchain_supports($feature) {
         'FEATURE_GROUPINGS'        => true, // default=false
         'FEATURE_GROUPS'           => true,
         'FEATURE_IDNUMBER'         => true,
-        'FEATURE_MOD_ARCHETYPE'    => MOD_ARCHETYPE_OTHER,
         'FEATURE_MOD_INTRO'        => false, // default=true
         'FEATURE_MODEDIT_DEFAULT_COMPLETION' => true,
         'FEATURE_NO_VIEW_LINK'     => false,
@@ -75,10 +74,16 @@ function taskchain_supports($feature) {
         'FEATURE_USES_QUESTIONS'   => false,
         'FEATURE_CAN_DISPLAY'      => true, // Moodle >= 5.0
     );
+    if (defined('MOD_ARCHETYPE_OTHER')) {
+        $constants['FEATURE_MOD_ARCHETYPE'] = MOD_ARCHETYPE_OTHER; // Moodle >= 2.x
+    }
     if (! class_exists('\\core_availability\\info')) {
         $constants['FEATURE_GROUPMEMBERSONLY'] = true; // Moodle <= 2.6
         // Moodle >= 2.7 uses the availability API (\core_availability\info)
         // Moodle >= 5.x treats any plugin that declares this feature as broken.
+    }
+    if (defined('MOD_PURPOSE_ASSESSMENT')) {
+        $constants['FEATURE_MOD_PURPOSE'] = MOD_PURPOSE_ASSESSMENT; // Moodle >= 4.x
     }
     foreach ($constants as $constant => $value) {
         if (defined($constant) && $feature==constant($constant)) {

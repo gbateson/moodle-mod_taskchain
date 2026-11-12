@@ -2,6 +2,12 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-12 (20)
+ - add monologo.svg icon (two interlocking squares, like the original icon) for
+   Moodle >= 4.0
+ - declare FEATURE_MOD_PURPOSE as MOD_PURPOSE_ASSESSMENT (Moodle >= 4.0), and
+   only declare FEATURE_MOD_ARCHETYPE if MOD_ARCHETYPE_OTHER is defined
+
 2026-11-12 (19)
  - send results using navigator.sendBeacon() when the student leaves a task
    page, because modern browsers block synchronous XMLHttpRequests during page
