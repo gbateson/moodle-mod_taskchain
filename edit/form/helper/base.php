@@ -435,7 +435,12 @@ abstract class taskchain_form_helper_base {
         }
         $value = $this->get_preference($field);
         if (isset($value)) {
-            return $value;
+            // Ignore empty preferences for numeric fields. These were saved
+            // by earlier versions of TaskChain on sites where the preference
+            // "value" field is TEXT, and would enable date fields (e.g. timeopen)
+            if ($value !== '' || ! isset($this->defaultvalues[$field]) || ! is_numeric($this->defaultvalues[$field])) {
+                return $value;
+            }
         }
         if (isset($this->defaultvalues[$field])) {
             return $this->defaultvalues[$field];
@@ -609,6 +614,8 @@ abstract class taskchain_form_helper_base {
         $columns = $DB->get_columns($table);
 
         if (array_key_exists($field, $columns) && isset($columns[$field]->max_length)) {
+            // Note: "max_length" is -1 for TEXT fields, which have no maximum length
+            // (e.g. in Moodle 5.x, "user_preferences.value" is a TEXT field)
             return $columns[$field]->max_length;
         } else {
             return $default; // shouldn't happen !!
@@ -769,7 +776,7 @@ abstract class taskchain_form_helper_base {
             }
 
             // make sure $value is not too long for "user_preferences.value" field
-            if (mod_taskchain::textlib('strlen', $value) > $length) {
+            if ($length > 0 && mod_taskchain::textlib('strlen', $value) > $length) {
                 $this->truncate_string($value, $length);
             }
 
@@ -2235,13 +2242,25 @@ abstract class taskchain_form_helper_base {
                     'columnlistid' =>'', 'columnlisttype' =>'', 'tab'      => ''
                 );
 
-                $commands[] = 'update';
-                $scripts[] = $CFG->wwwroot.'/course/modedit.php';
-                $params[] = array_merge($base_params, array('update' => $this->TC->coursemodule->id, 'return' => 1));
+                // On the "edit/chains.php" page, there is no main coursemodule,
+                // so we get the coursemodule for each chain from its parent TaskChain.
+                if (isset($this->TC->coursemodule->id)) {
+                    $cmid = $this->TC->coursemodule->id;
+                } else if ($this->get_fieldvalue('parenttype')==mod_taskchain::PARENTTYPE_ACTIVITY && ($cm = get_coursemodule_from_instance('taskchain', $this->get_fieldvalue('parentid')))) {
+                    $cmid = $cm->id;
+                } else {
+                    $cmid = 0; // shouldn't happen !!
+                }
 
-                $commands[] = 'delete';
-                $scripts[] = $CFG->wwwroot.'/course/mod.php';
-                $params[] = array_merge($base_params, array('delete' => $this->TC->coursemodule->id));
+                if ($cmid) {
+                    $commands[] = 'update';
+                    $scripts[] = $CFG->wwwroot.'/course/modedit.php';
+                    $params[] = array_merge($base_params, array('update' => $cmid, 'return' => 1));
+
+                    $commands[] = 'delete';
+                    $scripts[] = $CFG->wwwroot.'/course/mod.php';
+                    $params[] = array_merge($base_params, array('delete' => $cmid));
+                }
 
                 $commands[] = 'preview';
                 $scripts[] = 'view.php';

@@ -305,7 +305,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
         $data[$field] = $this->get_originalvalue($field, $this->get_defaultvalue($field));
 
         $window_options = mod_taskchain::window_options();
-        $options = explode(',', strtolower($data[$field]));
+        $options = explode(',', strtolower((string) $data[$field]));
         foreach ($options as $option) {
             if (preg_match('/^([a-z]+)(?:=(.*))?$/', $option, $matches)) {
                 $name = $matches[1];
@@ -372,7 +372,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
         // prepare boolean switches for page options
         foreach (mod_taskchain::text_page_options($type) as $name => $mask) {
-            $data[$type.'_'.$name] = $data[$options] & $mask;
+            $data[$type.'_'.$name] = intval($data[$options]) & $mask;
         }
 
         // prepare text editor
@@ -1247,7 +1247,7 @@ class taskchain_form_helper_chain extends taskchain_form_helper_record {
 
             $elements = array();
             foreach ($names as $name => $mask) {
-                if ($value & $mask) {
+                if (intval($value) & $mask) {
                     $name = ($name=='title' ? $name : $type.'_'.$name);
                     $texts[] = get_string($name, 'mod_taskchain');
                 }

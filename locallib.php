@@ -230,6 +230,14 @@ class mod_taskchain extends taskchain_base {
                         case 'taskscore'    : $taskscoreid    = optional_param('id', 0, PARAM_INT); break;
                     }
                     break;
+                case 'course-bulkcompletion':
+                case 'course-defaultcompletion':
+                case 'course-editbulkcompletion':
+                    // Moodle >= 3.3: "Bulk edit activity completion" and "Default activity completion"
+                    // (these pages create a TaskChain mod form in order to add the completion rules)
+                    $courseid = optional_param('id', $courseid, PARAM_INT);
+                    $set_page_context = false;
+                    break;
                 case 'admin-index':
                     if (isset($dbrecord)) {
                         $taskchainid = $dbrecord->id;
@@ -702,7 +710,7 @@ class mod_taskchain extends taskchain_base {
      *        array('flagged', 'question')
      *    )
      */
-    static public function get_js_module(array $requires=null, array $strings=null) {
+    static public function get_js_module($requires=null, $strings=null) {
         return array('name'     => 'mod_taskchain',
                      'fullpath' => '/mod/taskchain/module.js',
                      'requires' => $requires,
@@ -1122,9 +1130,10 @@ class mod_taskchain extends taskchain_base {
             //   $pageid    : mod-taskchain-view
             //   $pageclass : mod-taskchain
 
-            $strpos = strrpos($SCRIPT, '/');
-            $strpos = strpos($SCRIPT, '.', $strpos);
-            $str = substr($SCRIPT, 1, $strpos -1 );
+            $script = (string) $SCRIPT; // $SCRIPT is null in CLI scripts
+            $strpos = strrpos($script, '/');
+            $strpos = strpos($script, '.', $strpos);
+            $str = substr($script, 1, $strpos -1 );
             //$str = substr($SCRIPT, 1, -4);
             $str = str_replace('/', '-', $str);
             $pos = strrpos($str, '-');
@@ -2063,7 +2072,7 @@ class mod_taskchain extends taskchain_base {
 
             // seed the random number generator
             list($usec, $sec) = explode(' ', microtime());
-            $srand((float) $sec + ((float) $usec * 100000));
+            $srand((int) ((float) $sec + ((float) $usec * 100000)));
         }
         return $rand($min, $max);
     }
@@ -2107,7 +2116,7 @@ class mod_taskchain extends taskchain_base {
         // delete DB records
         list($select, $params) = $DB->get_in_or_equal($ids);
         if (! $DB->delete_records_select($tablename, "id $select", $params)) {
-            throw new moodle_exception('error_deleterecords', 'taskchain', $tablename);
+            throw new moodle_exception('error_deleterecords', 'taskchain', '', $tablename);
         }
 
         // delete cached records
@@ -2576,7 +2585,7 @@ class mod_taskchain extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function count_records_select($table, $select, array $params=null, $countitem="COUNT('x')") {
+    public function count_records_select($table, $select, $params=null, $countitem="COUNT('x')") {
         if ($select) {
             $select = "WHERE $select";
         }
@@ -2593,7 +2602,7 @@ class mod_taskchain extends taskchain_base {
      * @return xxx
      * @todo Finish documenting this function
      */
-    public function count_records_sql($sql, array $params=null) {
+    public function count_records_sql($sql, $params=null) {
         global $DB;
         if ($count = $DB->get_field_sql($sql, $params)) {
             return (int)$count;

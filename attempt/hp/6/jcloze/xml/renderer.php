@@ -63,7 +63,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_renderer extends mod_taskchain_attem
 
             while (($answer=$question."['answer'][$a]['#']") && $this->TC->task->source->xml_value($tags, $answer)) {
                 $text = $this->TC->task->source->xml_value_js($tags,  $answer."['text'][0]['#']");
-                if (strlen($text)) {
+                if (strlen((string)$text)) {
                     if ($aa==0) { // first time only
                         $str .= "\n";
                         $str .= "I[$qq] = new Array();\n";

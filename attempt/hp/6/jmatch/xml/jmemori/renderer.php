@@ -250,7 +250,8 @@ class mod_taskchain_attempt_hp_6_jmatch_xml_jmemori_renderer extends mod_taskcha
      */
     function expand_CaptionJS($name, $suffix='Caption')  {
         $method = 'expand_'.$name.$suffix;
-        $caption = call_user_func(array($this, 'parent::'.$method));
+        // Note: call_user_func(array($this, 'parent::'.$method)) is deprecated in PHP >= 8.2
+        $caption = parent::$method();
         return $this->TC->task->source->js_value_safe($caption, true);
     }
 }

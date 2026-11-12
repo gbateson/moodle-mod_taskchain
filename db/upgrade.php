@@ -582,6 +582,23 @@ function xmldb_taskchain_upgrade($oldversion) {
         }
     }
 
+    $newversion = 2026111218;
+    if ($oldversion < $newversion) {
+        // On sites where "user_preferences.value" is a TEXT field,
+        // the TaskChain form helper removed the last character
+        // of every preference it saved, e.g. gradelimit "100" => "1"
+        // These preferences only hold the default values for TaskChain
+        // forms, so we remove them, except the column lists, which are
+        // saved in a different way and so were not truncated.
+        $columns = $DB->get_columns('user_preferences');
+        if (isset($columns['value']->max_length) && $columns['value']->max_length <= 0) {
+            $select = $DB->sql_like('name', '?').' AND '.$DB->sql_like('name', '?', true, true, true);
+            $params = array($DB->sql_like_escape('taskchain_').'%', '%'.$DB->sql_like_escape('_columnlist').'%');
+            $DB->delete_records_select('user_preferences', $select, $params);
+        }
+        upgrade_mod_savepoint(true, "$newversion", 'taskchain');
+    }
+
     if ($empty_cache) {
         $DB->delete_records('taskchain_cache');
     }

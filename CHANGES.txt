@@ -2,6 +2,22 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-12 (18)
+ - fix PHP 8.x errors and deprecation warnings: null passed to string functions,
+   bitwise operators on empty strings, float passed to srand(), 'parent::'
+   callables, and implicitly nullable parameters
+ - save completionmingrade, completionpass and completioncompleted from the mod
+   form (previously these completion rules were never saved)
+ - allow TaskChain mod form on 'Default activity completion' and 'Bulk edit
+   activity completion' pages
+ - fix form preferences being truncated where user_preferences.value is a TEXT
+   field (e.g. Moodle 5.x), and remove previously truncated preferences during
+   upgrade
+ - fix update/delete links and column lists link on course chains page
+   (edit/chains.php)
+ - add missing error strings, and fix arguments for 'error_deleterecords'
+   exception
+
 2026-11-12 (17)
  - add custom_completion class, and customcompletionrules in
    taskchain_get_coursemodule_info(), because completion rules were ignored in

@@ -231,6 +231,13 @@ function taskchain_process_formdata(stdclass $data, $mform) {
             }
 
             $parent->timemodified = $time;
+
+            // custom completion rules (these are not set if completion settings are locked)
+            foreach (array('completionmingrade', 'completionpass', 'completioncompleted') as $field) {
+                if (isset($data->$field)) {
+                    $parent->$field = $data->$field;
+                }
+            }
             break;
 
         case 'block_taskchain_edit_form':

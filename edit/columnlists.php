@@ -41,7 +41,7 @@ mod_taskchain::set_user_editing();
 
 // initialize $PAGE (and compute blocks)
 $PAGE->set_url($TC->url->edit('columnlists', array('id' => $TC->get_courseid(), 'columnlisttype' => $TC->columnlisttype)));
-$PAGE->set_title($TC->taskchain->name);
+$PAGE->set_title(isset($TC->taskchain->name) ? $TC->taskchain->name : $TC->course->fullname);
 $PAGE->set_heading($TC->course->fullname);
 
 if ($TC->inpopup) {

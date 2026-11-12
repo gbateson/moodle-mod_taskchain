@@ -201,7 +201,13 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             // Create "command" element to initiate popup for editing a columnlist
             // command($type, $taskchainscriptname, $id, $params, $popup=false)
             $popup = array('width' => 300, 'fullheight' => true);
-            $command = $output->command('edit', 'edit/columnlists.php', $this->recordtype, array(), $popup);
+            if ($this->recordtype=='course') {
+                // on the "edit/chains.php" page, there is no chain, so we need the course id
+                $params = array('id' => $this->TC->get_courseid());
+            } else {
+                $params = array();
+            }
+            $command = $output->command('edit', 'edit/columnlists.php', $this->recordtype, $params, $popup);
 
             $elements = array(
                 $this->mform->createElement('select', $name, '', $list),

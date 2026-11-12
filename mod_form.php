@@ -260,14 +260,37 @@ class mod_taskchain_mod_form extends moodleform_mod {
      * @param stdClass $data passed by reference
      */
     public function data_postprocessing($data) {
-        // Remove completionmingrade, if it is not enabled and greater than 0.0
+        // If completion settings are locked (because some users have
+        // already completed this activity), the completion fields are
+        // disabled and not submitted, so we leave them unchanged.
+        if (empty($data->completionunlocked)) {
+            return $data;
+        }
+
         $suffix = $this->get_completion_suffix();
+        $completion = 'completion'.$suffix;
+        $automatic = (isset($data->$completion) && $data->$completion==COMPLETION_TRACKING_AUTOMATIC);
+
+        // Remove completionmingrade, if it is not enabled and greater than 0.0
         $enabled = 'completionmingradeenabled'.$suffix;
         $name = 'completionmingrade'.$suffix;
-        if (empty($data->$enabled) || empty($data->$name) || floatval($data->$name)==0.0) {
+        if ($automatic==false || empty($data->$enabled) || empty($data->$name) || floatval($data->$name)==0.0) {
             $data->$enabled = 0;
             $data->$name = 0.0;
+        } else {
+            $data->$name = floatval($data->$name);
         }
+
+        // Unchecked checkboxes are not submitted, so set them to 0 explicitly.
+        foreach (array('completionpass', 'completioncompleted') as $name) {
+            $name .= $suffix;
+            if ($automatic==false || empty($data->$name)) {
+                $data->$name = 0;
+            } else {
+                $data->$name = 1;
+            }
+        }
+
         return $data;
     }
 }

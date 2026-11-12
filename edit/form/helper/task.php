@@ -126,7 +126,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function prepare_field_title(&$data) {
         $field = 'title';
-        $value = $this->get_fieldvalue($field);
+        $value = intval($this->get_fieldvalue($field));
 
         $name = $this->get_fieldname($field.'source');
         $data[$name] = ($value & mod_taskchain::TITLE_SOURCE);
@@ -154,7 +154,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     protected function prepare_field_reviewoptions(&$data) {
         $name = $this->get_fieldname('reviewoptions');
-        $value = $this->get_fieldvalue('reviewoptions');
+        $value = intval($this->get_fieldvalue('reviewoptions'));
 
         $times = taskchain_available::reviewoptions_list('times');
         $items = taskchain_available::reviewoptions_list('items');

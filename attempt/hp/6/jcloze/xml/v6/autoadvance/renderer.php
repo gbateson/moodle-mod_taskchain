@@ -299,13 +299,13 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
                 }
                 if ($includeclues) {
                     $clue = $this->TC->task->source->xml_value($question_record, $item."['clue'][0]['#']");
-                    if (strlen($clue)) {
+                    if (strlen((string)$clue)) {
                         $gap .= '<button style="line-height: 1.0" class="FuncButton" onfocus="FuncBtnOver(this)" onmouseover="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="ShowClue('.$i.')">'.$cluecaption.'</button>';
                     }
                 }
                 $gap .= '</span>';
             }
-            if (strlen($text) || strlen($gap)) {
+            if (strlen((string)$text) || strlen($gap)) {
                 if ($startwithgap) {
                     $str .= $gap.$text;
                 } else {
@@ -346,7 +346,7 @@ class mod_taskchain_attempt_hp_6_jcloze_xml_v6_autoadvance_renderer extends mod_
                 $aa = 0;
                 while (($answer=$question."['answer'][$a]['#']") && $this->TC->task->source->xml_value($tags, $answer)) {
                     $text = $this->TC->task->source->xml_value($tags,  $answer."['text'][0]['#']");
-                    if (strlen($text)) {
+                    if (strlen((string)$text)) {
                         $wordlists[$q][$aa] = $text;
                         $words[] = $text;
                         $aa++;

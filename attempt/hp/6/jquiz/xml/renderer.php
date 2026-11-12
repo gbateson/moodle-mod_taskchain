@@ -67,7 +67,7 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_renderer extends mod_taskchain_attemp
                 $correct  = $this->TC->task->source->xml_value_int($tags, $answer."['correct'][0]['#']");
                 $percent  = $this->TC->task->source->xml_value_int($tags, $answer."['percent-correct'][0]['#']");
                 $include  = $this->TC->task->source->xml_value_int($tags, $answer."['include-in-mc-options'][0]['#']");
-                if (strlen($text)) {
+                if (strlen((string)$text)) {
                     if ($aa==0) { // first time only
                         $str .= "\n";
                         $str .= "I[$qq] = new Array();\n";

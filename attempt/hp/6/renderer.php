@@ -3471,7 +3471,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                 }
                 if ($includeclues) {
                     $clue = $this->TC->task->source->xml_value($question_record, $item."['clue'][0]['#']");
-                    if (strlen($clue)) {
+                    if (strlen((string)$clue)) {
                         $gap .= '<button style="line-height: 1.0" class="FuncButton" onfocus="FuncBtnOver(this)" onmouseover="FuncBtnOver(this)" onblur="FuncBtnOut(this)" onmouseout="FuncBtnOut(this)" onmousedown="FuncBtnDown(this)" onmouseup="FuncBtnOut(this)" onclick="ShowClue('.$i.')">'.$cluecaption.'</button>';
                     }
                 }
@@ -3480,7 +3480,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             if ($text === null) {
                 $text = '';
             }
-            if (strlen($text) || strlen($gap)) {
+            if (strlen((string)$text) || strlen($gap)) {
                 if ($startwithgap) {
                     $str .= $gap.$text;
                 } else {
@@ -3567,7 +3567,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     while (($answer=$question."['answer'][$a]['#']") && $this->TC->task->source->xml_value($tags, $answer)) {
                         $text = $this->TC->task->source->xml_value($tags,  $answer."['text'][0]['#']");
                         $correct =  $this->TC->task->source->xml_value_int($tags, $answer."['correct'][0]['#']");
-                        if (strlen($text) && $correct) { // $correct is always true
+                        if (strlen((string)$text) && $correct) { // $correct is always true
                             $this->wordlist[] = $text;
                             $aa++;
                         }
@@ -4147,7 +4147,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     public function seed_random_number_generator()  {
         static $seeded = false;
         if (! $seeded) {
-            srand((double) microtime() * 1000000);
+            srand((int) ((double) microtime() * 1000000));
             $seeded = true;
         }
     }
@@ -4592,7 +4592,7 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
                     $aa = 0;
                     while (($answer = $answers."['answer'][$a]['#']") && $this->TC->task->source->xml_value($tags, $answer)) {
                         $text = $this->TC->task->source->xml_value($tags, $answer."['text'][0]['#']");
-                        if (strlen($text)) {
+                        if (strlen((string)$text)) {
                             if ($question_type==1 || $question_type==3) {
                                 // MULTICHOICE or HYBRID: button
                                 if ($this->TC->task->source->xml_value_int($tags, $answer."['include-in-mc-options'][0]['#']")) {
