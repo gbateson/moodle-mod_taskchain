@@ -23,9 +23,6 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * TaskChain MoodleQuickForm renderer
  *
@@ -128,7 +125,6 @@ class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
      * @param    mixed       Element label (if using an array of labels, you should set the appropriate template)
      * @param    bool        Whether an element is required
      * @param    string      Error message associated with the element
-     * @access   private
      * @see      renderElement()
      * @return   string      Html for element
      */

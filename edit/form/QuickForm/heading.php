@@ -21,8 +21,12 @@
  *
  * @package   core_form
  * @author    Gordon Bateson <gordonbateson@gmail.com> (based on "warning" by Jamie Pratt)
+ * @copyright 2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
+
 require_once('HTML/QuickForm/static.php');
 
 /**
@@ -69,6 +73,14 @@ class MoodleQuickForm_heading extends HTML_QuickForm_static{
 
     /*
      * Old constructor for Moodle <= 2.9
+     */
+    /**
+     * MoodleQuickForm_heading
+     *
+     * @param mixed $text (optional, default=null)
+     * @param mixed $level (optional, default=null)
+     * @param mixed $class (optional, default=null)
+     * @param mixed $cssid (optional, default=null)
      */
     public function MoodleQuickForm_heading($text = null, $level = null, $class = null, $cssid = null) {
         parent::HTML_QuickForm_static(null, null, $text); // Name=null, label=null.

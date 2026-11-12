@@ -23,7 +23,7 @@
  * @since      Moodle 2.0
  */
 
-/** Include required files */
+// Include required files.
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
@@ -77,9 +77,9 @@ $output = $PAGE->get_renderer('mod_taskchain');
 $subtype = $TC->get_attempt_subtype();
 $TC->load_class($subtype, 'review.php');
 
-////////////////////////////////////////////////////////////////////////////////
-// Output starts here                                                         //
-////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
+// Output starts here
+//////////////////////////////////////////////////////////////////////////////*/
 
 echo $output->header();
 

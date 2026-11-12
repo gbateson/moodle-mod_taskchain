@@ -2,6 +2,15 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-12 (24)
+ - fix status of abandoned chain grades, chain attempts and task scores in
+   storage.php ('==' was used instead of '=')
+ - coding style fixes reported by Moodle codechecker: docblocks for constants,
+   functions, classes and lang files, multi-line comments for section banners,
+   fall-through comments in switch statements, '||' and '&&' instead of 'or' and
+   'and', MOODLE_INTERNAL checks only where needed, and parentheses for
+   include/require
+
 2026-11-12 (23)
  - fix PHP4-style calls to parent constructors in group and number filters for
    reports, which cause fatal errors in Moodle >= 3.1

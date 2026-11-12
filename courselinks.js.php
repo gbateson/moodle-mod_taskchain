@@ -27,7 +27,7 @@ if (! headers_sent()) {
     header('Content-type: application/javascript');
 }
 
-/** Include required files */
+// Include required files.
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/taskchain/lib.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
@@ -371,6 +371,13 @@ function print_courselinks() {
     return $result;
 }
 
+/**
+ * get_groupid_groupingid
+ *
+ * @param mixed $course
+ * @param mixed $groupmode
+ * @return mixed
+ */
 function get_groupid_groupingid($course, $groupmode) {
     global $SESSION;
     if (class_exists('block_taskchain_navigation')) {

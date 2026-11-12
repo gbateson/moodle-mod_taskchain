@@ -25,9 +25,6 @@
 
 namespace mod_taskchain\event;
 
-/** prevent direct access to this script */
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The tasks_edited event class.
  *

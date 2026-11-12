@@ -23,6 +23,8 @@
  * @since      Moodle 2.0
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 $subplugins = array(
     'taskchainattempt' => 'mod/taskchain/attempt',
     'taskchainsource'  => 'mod/taskchain/source',

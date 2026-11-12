@@ -23,21 +23,20 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/chain.php');
 
 /**
- * mod_taskchain_mod_form
+ * mod_taskchain_edit_chain_form
  *
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
  * @package    mod_taskchain
  */
-// class mod_taskchain_mod_form extends moodleform_mod {
 class mod_taskchain_edit_chain_form extends moodleform {
     /** @var mixed TaskChain form helper - see mod/taskchain/form/base.php * */
     private $form_helper;

@@ -23,10 +23,10 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 require_once($CFG->dirroot . '/lib/gradelib.php');
 require_once($CFG->dirroot . '/mod/taskchain/lib.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib/base.php');
@@ -382,16 +382,20 @@ class mod_taskchain extends taskchain_base {
                 case $taskattemptid > 0:
                     $tablenames['taskchain_task_attempts'] = 'tc_tsk_att';
                     $select[] = 'tc_tsk_att.taskid=tc_tsk_scr.taskid AND tc_tsk_att.cnumber=tc_tsk_scr.cnumber AND tc_tsk_att.userid=tc_tsk_scr.userid';
+                    // Fall through.
                 case $taskscoreid > 0:
                     $tablenames['taskchain_task_scores'] = 'tc_tsk_scr';
                     $select[] = 'tc_tsk_scr.taskid=tc_tsk.id AND tc_tsk.chainid=tc_chn_att.chainid AND tc_tsk_scr.cnumber=tc_chn_att.cnumber AND tc_tsk_scr.userid=tc_chn_att.userid';
                     $jointask = true;
+                    // Fall through.
                 case $chainattemptid > 0:
                     $tablenames['taskchain_chain_attempts'] = 'tc_chn_att';
                     $select[] = 'tc_chn_att.chainid=tc_chn.id AND tc_chn_att.userid=tc_chn_grd.userid';
+                    // Fall through.
                 case $chaingradeid > 0:
                     $tablenames['taskchain_chain_grades'] = 'tc_chn_grd';
                     $select[] = 'tc_chn_grd.parenttype=tc_chn.parenttype AND tc_chn_grd.parentid=tc_chn.parentid';
+                    // Fall through.
                 case $taskchainid > 0:
                 case $coursemoduleid > 0:
                     $joinchain = true;
@@ -401,10 +405,12 @@ class mod_taskchain extends taskchain_base {
                 case $conditionid > 0:
                     $tablenames['taskchain_conditions'] = 'tc_cnd';
                     $select[] = 'tc_cnd.taskid=tc_tsk.id';
+                    // Fall through.
                 case $jointask:
                 case $taskid > 0:
                     $tablenames['taskchain_tasks'] = 'tc_tsk';
                     $select[] = 'tc_tsk.chainid=tc_chn.id';
+                    // Fall through.
                 case $joinchain:
                 case $chainid > 0:
                     $tablenames['taskchain_chains'] = 'tc_chn';
@@ -415,6 +421,7 @@ class mod_taskchain extends taskchain_base {
                     $select[] = "m.name='taskchain'";
                     $tablenames['course_modules'] = 'cm';
                     $select[] = 'cm.course=c.id';
+                    // Fall through.
                 case $courseid > 0:
                     $tablenames['course'] = 'c';
             }
@@ -706,9 +713,9 @@ class mod_taskchain extends taskchain_base {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // Magic methods                                                              //
-    ////////////////////////////////////////////////////////////////////////////////
+    /*//////////////////////////////////////////////////////////////////////////////
+    // Magic methods
+    //////////////////////////////////////////////////////////////////////////////*/
 
     /**
      * __call
@@ -756,9 +763,9 @@ class mod_taskchain extends taskchain_base {
         return call_user_func_array($callback, $params);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // Static methods                                                             //
-    ////////////////////////////////////////////////////////////////////////////////
+    /*//////////////////////////////////////////////////////////////////////////////
+    // Static methods
+    //////////////////////////////////////////////////////////////////////////////*/
 
     // - set_user_editing()
 
@@ -1254,9 +1261,9 @@ class mod_taskchain extends taskchain_base {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // TaskChain API                                                              //
-    ////////////////////////////////////////////////////////////////////////////////
+    /*//////////////////////////////////////////////////////////////////////////////
+    // TaskChain API
+    //////////////////////////////////////////////////////////////////////////////*/
 
     // - get_pageid_pageclass()
     // - has_entrypage()
@@ -1644,12 +1651,15 @@ class mod_taskchain extends taskchain_base {
             case isset($all_params['taskattemptid']) && $all_params['taskattemptid'] > 0:
                 $unset[] = 'taskscoreid';
                 $unset[] = 'tnumber';
+                // Fall through.
             case isset($all_params['taskscoreid']) && $all_params['taskscoreid'] > 0:
                 $unset[] = 'chainattemptid';
                 $unsettask = true;
+                // Fall through.
             case isset($all_params['chainattemptid']) && $all_params['chainattemptid'] > 0:
                 $unset[] = 'chaingradeid';
                 $unset[] = 'cnumber';
+                // Fall through.
             case isset($all_params['chaingradeid']) && $all_params['chaingradeid'] > 0:
                 $unsetchain = true;
         }
@@ -1657,13 +1667,17 @@ class mod_taskchain extends taskchain_base {
             case isset($all_params['conditionid']) && $all_params['conditionid'] > 0:
             case $unsettask:
                 $unset[] = 'taskid';
+                // Fall through.
             case isset($all_params['taskid']) && $all_params['taskid'] > 0:
             case $unsetchain:
                 $unset[] = 'chainid';
+                // Fall through.
             case isset($all_params['chainid']) && $all_params['chainid'] > 0:
                 $unset[] = 'taskchainid';
+                // Fall through.
             case isset($all_params['taskchainid']) && $all_params['taskchainid'] > 0:
                 $unset[] = 'coursemoduleid';
+                // Fall through.
             case isset($all_params['coursemoduleid']) && $all_params['coursemoduleid'] > 0:
                 $unset[] = 'courseid';
         }
@@ -1937,7 +1951,7 @@ class mod_taskchain extends taskchain_base {
         } // end foreach $conditions
 
         return $ok;
-    } // end function : check_conditions
+    }
 
     /**
      * check_condition_score

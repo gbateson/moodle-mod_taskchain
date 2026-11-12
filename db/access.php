@@ -23,6 +23,8 @@
  * @since      Moodle 2.0
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 $capabilities = array(
 
     // Ability to add a new TaskChain to the course.

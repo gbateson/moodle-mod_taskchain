@@ -23,7 +23,7 @@
  * @since      Moodle 2.0
  */
 
-/** Include required files */
+// Include required files.
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
@@ -83,8 +83,8 @@ require_once($CFG->dirroot . '/mod/taskchain/' . $subdir . '/renderer.php');
 // Create the renderer for this attempt.
 $output = $PAGE->get_renderer('mod_taskchain', $subtype);
 
-////////////////////////////////////////////////////////////////////////////////
-// Output starts here                                                         //
-////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
+// Output starts here
+//////////////////////////////////////////////////////////////////////////////*/
 
 echo $output->render_report($TC);

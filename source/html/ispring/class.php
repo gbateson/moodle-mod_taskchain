@@ -23,10 +23,10 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 require_once($CFG->dirroot . '/mod/taskchain/source/html/class.php');
 
 /**
@@ -91,4 +91,4 @@ class taskchain_source_html_ispring extends taskchain_source_html {
     public function get_entrytext() {
         return '';
     }
-} // end class
+}

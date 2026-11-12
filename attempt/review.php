@@ -23,9 +23,6 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * mod_taskchain_attempt_review
  *

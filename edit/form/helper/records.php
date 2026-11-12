@@ -23,10 +23,10 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/base.php');
 
 /**
@@ -46,20 +46,32 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
     /** constants for filtering task strings */
     const FILTER_NONE           = 0;
+    /** @var int */
     const FILTER_CONTAINS       = 1;
+    /** @var int */
     const FILTER_NOT_CONTAINS   = 2;
+    /** @var int */
     const FILTER_EQUALS         = 3;
+    /** @var int */
     const FILTER_NOT_EQUALS     = 4;
+    /** @var int */
     const FILTER_STARTSWITH     = 5;
+    /** @var int */
     const FILTER_NOT_STARTSWITH = 6;
+    /** @var int */
     const FILTER_ENDSWITH       = 7;
+    /** @var int */
     const FILTER_NOT_ENDSWITH   = 8;
+    /** @var int */
     const FILTER_EMPTY          = 9;
+    /** @var int */
     const FILTER_NOT_EMPTY      = 10;
 
     /** constants for filtering tasks by position within chain */
     const FILTER_POSITION_ANY   = 0;
+    /** @var int */
     const FILTER_POSITION_START = 1;
+    /** @var int */
     const FILTER_POSITION_END   = 2;
 
     /** @var array array to store $records in form */

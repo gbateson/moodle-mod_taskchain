@@ -23,10 +23,10 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/renderer.php');
 
 /**
@@ -38,15 +38,15 @@ require_once($CFG->dirroot . '/mod/taskchain/attempt/hp/renderer.php');
  * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_renderer {
-    /**#@+
+    /*
      * internal codes for filter actions
-     *
-     * @var integer
      */
+    /** @var int */
     const FILTER_ACTION_ADD    = 1;
+    /** @var int */
     const FILTER_ACTION_KEEP   = 0;
+    /** @var int */
     const FILTER_ACTION_REMOVE = -1;
-    /**#@-*/
 
     /** @var string string ID of the navigation bar */
     protected $navbarid = '';
@@ -1576,9 +1576,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
     public function fix_filters() {
         global $CFG;
 
-        ////////////////////////////////////////////////
+        /*//////////////////////////////////////////////
         // adjust filters
-        ////////////////////////////////////////////////
+        //////////////////////////////////////////////*/
 
         $context = $this->TC->coursemodule->context;
 
@@ -1643,16 +1643,16 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             // unset($FILTERLIB_PRIVATE->active[$context->id]);
         }
 
-        ////////////////////////////////////////////////
+        /*//////////////////////////////////////////////
         // filter the content
-        ////////////////////////////////////////////////
+        //////////////////////////////////////////////*/
 
         $this->filter_text_headcontent();
         $this->filter_text_bodycontent();
 
-        ////////////////////////////////////////////////
+        /*//////////////////////////////////////////////
         // reset filters
-        ////////////////////////////////////////////////
+        //////////////////////////////////////////////*/
 
         list($newactives, $configs) = filter_get_all_local_settings($context->id);
         if ($newactives === false) {
@@ -1672,9 +1672,9 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
             filter_set_local_state($active->filter, $context->id, TEXTFILTER_INHERIT);
         }
 
-        ////////////////////////////////////////////////
+        /*//////////////////////////////////////////////
         // tidy up
-        ////////////////////////////////////////////////
+        //////////////////////////////////////////////*/
 
         // Fix unwanted conversions by the Moodle's Tex filter
         // http://moodle.org/mod/forum/discuss.php?d=68435
@@ -4130,6 +4130,11 @@ class mod_taskchain_attempt_hp_6_renderer extends mod_taskchain_attempt_hp_rende
      * but it can be added manually, for example to a HP config file
      *
      * @return xxx
+     */
+    /**
+     * expand_ForceLowercase
+     *
+     * @return mixed
      */
     public function expand_ForceLowercase() {
         $tag = $this->TC->task->source->hbs_software . '-config-file,' . $this->TC->task->source->hbs_tasktype . ',force-lowercase';

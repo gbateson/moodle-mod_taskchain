@@ -23,7 +23,7 @@
  * @since      Moodle 2.0
  */
 
-/** Include required files */
+// Include required files.
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
@@ -78,9 +78,9 @@ if ($warnings = $output->warnings('chain')) {
     exit;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Output starts here                                                         //
-////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
+// Output starts here
+//////////////////////////////////////////////////////////////////////////////*/
 
 if (empty($TC->task)) {
     echo $output->header();

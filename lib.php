@@ -23,9 +23,9 @@
  * @since      Moodle 2.0
  */
 
-////////////////////////////////////////////////////////////////////////////////
-// Moodle core API                                                            //
-////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
+// Moodle core API
+//////////////////////////////////////////////////////////////////////////////*/
 
 /**
  * Returns the information if the module supports a feature
@@ -39,9 +39,6 @@
  * @param string $feature FEATURE_xx constant for requested feature
  * @return mixed true if the feature is supported, null if unknown
  */
-
-/** Prevent direct access to this script */
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * taskchain_supports
@@ -680,9 +677,9 @@ function taskchain_delete_tasks($taskids) {
     $DB->delete_records_list('taskchain_tasks', 'id', $taskids);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Course page links API                                                      //
-////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
+// Course page links API
+//////////////////////////////////////////////////////////////////////////////*/
 
 /*
 * Given a course_module object, this function returns any
@@ -706,6 +703,12 @@ function taskchain_delete_tasks($taskids) {
 *                 allows a different icon for different subtypes of the module
 *                 allows a different icon depending on the status of a taskchain
 */
+/**
+ * taskchain_get_coursemodule_info
+ *
+ * @param mixed $cm
+ * @return mixed
+ */
 function taskchain_get_coursemodule_info($cm) {
     global $CFG, $DB;
     require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
@@ -760,9 +763,9 @@ function taskchain_get_coursemodule_info($cm) {
     return $info;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// User activity reports API                                                  //
-////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
+// User activity reports API
+//////////////////////////////////////////////////////////////////////////////*/
 
 /**
  * Return a small object with summary information about what a
@@ -1250,6 +1253,11 @@ function taskchain_print_recent_mod_activity($activity, $courseid, $detail, $mod
  * This function is called from: {@link course/report/participation/index.php}
  * @return array(string) of text strings used to log TaskChain VIEW actions
  */
+/**
+ * taskchain_get_view_actions
+ *
+ * @return mixed
+ */
 function taskchain_get_view_actions() {
     return array('view', 'index', 'report', 'review');
 }
@@ -1264,6 +1272,11 @@ function taskchain_get_view_actions() {
  *
  * This function is called from: {@link course/report/participation/index.php}
  * @return array(string) of text strings used to log TaskChain POST actions
+ */
+/**
+ * taskchain_get_post_actions
+ *
+ * @return mixed
  */
 function taskchain_get_post_actions() {
     return array('submit');
@@ -1286,6 +1299,12 @@ function taskchain_get_post_actions() {
  *                 which TaskChains have not been completed yet
  *                 the time remaining for incomplete TaskChains
  * @return no return value is required, but $htmlarray may be updated
+ */
+/**
+ * taskchain_print_overview
+ *
+ * @param mixed $courses
+ * @param mixed $htmlarray
  */
 function taskchain_print_overview($courses, &$htmlarray) {
     global $CFG, $DB, $USER;
@@ -1476,9 +1495,9 @@ function taskchain_get_extra_capabilities() {
     return array('moodle/site:accessallgroups');
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Gradebook API                                                              //
-////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
+// Gradebook API
+//////////////////////////////////////////////////////////////////////////////*/
 
 /**
  * add gradelimit and gradeweighting to taskchain record
@@ -1673,9 +1692,9 @@ function taskchain_grade_item_delete($taskchain) {
     return grade_update('mod/taskchain', $taskchain->course, 'mod', 'taskchain', $taskchain->id, 0, null, array('deleted' => 1));
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// File API                                                                   //
-////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
+// File API
+//////////////////////////////////////////////////////////////////////////////*/
 
 /**
  * Returns the lists of all browsable file areas within the given module context
@@ -1748,13 +1767,13 @@ function mod_taskchain_pluginfile($course, $cm, $context, $filearea, $args, $for
         send_stored_file($file, $lifetime, 0);
     }
 
-    /////////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////////
     // If we get to this point, it is because the requested file
     // is not where is was supposed to be, so we will search for
     // it in some other likely locations.
     // If we find it, we will copy it across to where it is
     // supposed to be, so it can be found more quickly next time
-    /////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////*/
 
     $file_record = array(
         'contextid' => $context->id, 'component' => 'mod_taskchain', 'filearea' => $filearea,
@@ -2153,9 +2172,9 @@ function taskchain_pluginfile_mainfile($context, $component, $filearea, $itemid 
 function taskchain_get_file_info($browser, $areas, $course, $cm, $context, $filearea, $itemid, $filepath, $filename) {
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Navigation API                                                             //
-////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
+// Navigation API
+//////////////////////////////////////////////////////////////////////////////*/
 
 /**
  * Extends the global navigation tree by adding taskchain nodes if there is a relevant content
@@ -2376,9 +2395,9 @@ function taskchain_extend_settings_navigation(settings_navigation $settingsnav, 
     }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Reset API                                                                  //
-////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////
+// Reset API
+//////////////////////////////////////////////////////////////////////////////*/
 
 /**
  * taskchain_reset_course_form_definition
@@ -2506,6 +2525,12 @@ function taskchain_reset_userdata($data) {
 *
 * @param int $courseid : relative path (below $CFG->dirroot) of folder holding class definitions
 */
+/**
+ * taskchain_refresh_events
+ *
+ * @param int $courseid (optional, default=0)
+ * @return mixed
+ */
 function taskchain_refresh_events($courseid = 0) {
     global $CFG, $DB;
 

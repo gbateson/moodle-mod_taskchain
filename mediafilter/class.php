@@ -23,10 +23,10 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 // Get the standard Moodle mediaplugin filter.
 if (! class_exists('\\filter_mediaplugin\\text_filter')) {
     // Moodle <= 4.4 (this file was deprecated in Moodle 4.5)

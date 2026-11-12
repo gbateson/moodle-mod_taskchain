@@ -23,10 +23,10 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 require_once($CFG->dirroot . '/mod/taskchain/mediafilter/class.php');
 
 /**
@@ -44,6 +44,14 @@ class taskchain_mediafilter_moodle extends taskchain_mediafilter {
      * @param xxx $taskchain
      * @param xxx $text
      * @param xxx $options (optional, ddefault=array())
+     */
+    /**
+     * mediaplugin_filter
+     *
+     * @param mixed $taskchain
+     * @param mixed $text
+     * @param array $options (optional, default=array())
+     * @return mixed
      */
     public function mediaplugin_filter($taskchain, $text, $options = array()) {
         global $CFG, $PAGE;

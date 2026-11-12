@@ -23,9 +23,6 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * taskchain_can
  *
@@ -89,9 +86,9 @@ class taskchain_can extends taskchain_base {
     /** string prefix for capabilities */
     const PREFIX                    = 'mod/taskchain';
 
-    /////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////
     // "magic" methods
-    /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////*/
 
     /**
      * Constructor function
@@ -143,15 +140,16 @@ class taskchain_can extends taskchain_base {
         return false; // Shouldn't happen.
     }
 
-    /////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////
     // public API
-    /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////*/
 
     /**
      * Determine whether or not the current user has the required capability
      *
-     * @type string the name of the required capability (optionally without leading "mod/taskchain:")
-     * @require boolean true if capability is required, false otherwise
+     * @param string $type the name of the required capability (optionally without leading "mod/taskchain:")
+     * @param boolean $require true if capability is required, false otherwise
+     * @param object $context (optional, default=null) the context in which to check the capability
      * @return boolean true of user has required capability, otherwise false
      */
     public function can($type, $require = false, $context = null) {

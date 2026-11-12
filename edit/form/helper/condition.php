@@ -23,10 +23,10 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 require_once($CFG->dirroot . '/mod/taskchain/edit/form/helper/record.php');
 
 /**
@@ -521,9 +521,9 @@ class taskchain_form_helper_condition extends taskchain_form_helper_record {
         }
     }
 
-    /////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////
     // get javascript
-    /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////*/
 
     /**
      * return javascript to be inserted in footer of "page_quick" page

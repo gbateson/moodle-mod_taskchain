@@ -23,9 +23,6 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * taskchain_available
  *
@@ -35,9 +32,9 @@ defined('MOODLE_INTERNAL') || die();
  * @package    mod_taskchain
  */
 class taskchain_available extends taskchain_base {
-    /////////////////////////////////////////////////////////
+    /*///////////////////////////////////////////////////////
     // static API
-    /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////*/
 
 
     /**

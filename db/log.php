@@ -23,6 +23,8 @@
  * @since      Moodle 2.0
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 $logs = array(
     // Standard mod actions.
     array('module' => 'taskchain', 'action' => 'add', 'mtable' => 'taskchain', 'field' => 'name'),

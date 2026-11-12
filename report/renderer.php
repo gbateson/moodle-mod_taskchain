@@ -23,10 +23,10 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 require_once($CFG->dirroot . '/mod/taskchain/renderer.php');
 require_once($CFG->dirroot . '/mod/taskchain/report/tablelib.php');
 require_once($CFG->dirroot . '/mod/taskchain/report/userfiltering.php');
@@ -161,6 +161,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
             switch ($type) {
                 case 'taskattempt':
                     $data[] = '(' . $record->tnumber . ')';
+                    // Fall through.
                 case 'taskscore':
                     $data[] = $record->score . '%';
                     break;
@@ -169,6 +170,7 @@ class mod_taskchain_report_renderer extends mod_taskchain_renderer {
                     break;
                 case 'chainattempt':
                     $data[] = '(' . $record->cnumber . ')';
+                    // Fall through.
                 case 'chaingrade':
                     $data[] = $record->grade . '%';
                     break;

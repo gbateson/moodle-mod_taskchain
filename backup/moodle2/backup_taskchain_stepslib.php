@@ -24,9 +24,6 @@
  * @see http://docs.moodle.org/en/Development:Hotpot for XML structure diagram
  */
 
-/** Prevent direct access to this script */
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * backup_taskchain_activity_structure_step
  * Defines the complete taskchain structure for backup, with file and id annotations
@@ -36,7 +33,6 @@ defined('MOODLE_INTERNAL') || die();
  * @since     Moodle 2.0
  * @package    mod_taskchain
  */
-
 class backup_taskchain_activity_structure_step extends backup_activity_structure_step {
     /** maximum number of questions to retrieve in one DB query */
     const GET_QUESTIONS_LIMIT = 100;
@@ -51,9 +47,9 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         // Are we including userinfo?
         $userinfo = $this->get_setting_value('userinfo');
 
-        ////////////////////////////////////////////////////////////////////////
+        /*//////////////////////////////////////////////////////////////////////
         // XML nodes declaration - non-user data
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////*/
 
         // Taskchain.
         $fieldnames = array('id', 'course'); // Excluded fields.
@@ -77,9 +73,9 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
         $fieldnames = $this->get_fieldnames('taskchain_conditions', $fieldnames);
         $condition  = new backup_nested_element('condition', array('id'), $fieldnames);
 
-        ////////////////////////////////////////////////////////////////////////
+        /*//////////////////////////////////////////////////////////////////////
         // XML nodes declaration - user data
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////*/
 
         if ($userinfo) {
             // Chain grades.
@@ -125,9 +121,9 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
             $string     = new backup_nested_element('string', array('id'), $fieldnames);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        /*//////////////////////////////////////////////////////////////////////
         // build the tree in the order needed for restore
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////*/
 
         if ($userinfo) {
             // Strings must come before chain.
@@ -167,18 +163,18 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
             $responses->add_child($response);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        /*//////////////////////////////////////////////////////////////////////
         // data sources - non-user data
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////*/
 
         $taskchain->set_source_table('taskchain', array('id' => backup::VAR_ACTIVITYID));
         $chain->set_source_table('taskchain_chains', array('parentid' => backup::VAR_PARENTID));
         $task->set_source_table('taskchain_tasks', array('chainid' => backup::VAR_PARENTID));
         $condition->set_source_table('taskchain_conditions', array('taskid' => backup::VAR_PARENTID));
 
-        ////////////////////////////////////////////////////////////////////////
+        /*//////////////////////////////////////////////////////////////////////
         // data sources - user related data
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////*/
 
         if ($userinfo) {
             // Chain grades.
@@ -212,9 +208,9 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
             $string->set_source_sql("SELECT * FROM {taskchain_strings} WHERE id $filter", $params);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        /*//////////////////////////////////////////////////////////////////////
         // id annotations (foreign keys on non-parent tables)
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////*/
 
         $chain->annotate_ids('course_modules', 'entrycm');
         $chain->annotate_ids('course_modules', 'exitcm');
@@ -231,9 +227,9 @@ class backup_taskchain_activity_structure_step extends backup_activity_structure
             $response->annotate_ids('taskchain_task_attempts', 'attemptid');
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        /*//////////////////////////////////////////////////////////////////////
         // file annotations
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////*/
 
         $taskchain->annotate_files('mod_taskchain', 'sourcefile', null);
         $taskchain->annotate_files('mod_taskchain', 'configfile', null);

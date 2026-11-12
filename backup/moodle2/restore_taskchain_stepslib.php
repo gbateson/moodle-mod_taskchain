@@ -23,9 +23,6 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
-defined('MOODLE_INTERNAL') || die();
-
 
 /**
  * restore_taskchain_activity_structure_step
@@ -47,18 +44,18 @@ class restore_taskchain_activity_structure_step extends restore_activity_structu
 
         $userinfo = $this->get_setting_value('userinfo'); // Are we including userinfo?
 
-        ////////////////////////////////////////////////////////////////////////
+        /*//////////////////////////////////////////////////////////////////////
         // XML interesting paths - non-user data
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////*/
 
         $paths[] = new restore_path_element('taskchain', '/activity/taskchain');
         $paths[] = new restore_path_element('taskchain_chain', '/activity/taskchain/chain');
         $paths[] = new restore_path_element('taskchain_task', '/activity/taskchain/chain/tasks/task');
         $paths[] = new restore_path_element('taskchain_condition', '/activity/taskchain/chain/tasks/task/conditions/condition');
 
-        ////////////////////////////////////////////////////////////////////////
+        /*//////////////////////////////////////////////////////////////////////
         // XML interesting paths - user data
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////*/
 
         if ($userinfo) {
             $paths[] = new restore_path_element('taskchain_string', '/activity/taskchain/strings/string');

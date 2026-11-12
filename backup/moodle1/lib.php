@@ -192,12 +192,22 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function on_taskchain_unit_start() {
         $this->xmlwriter->begin_tag('chain');
     }
+
+    /**
+     * process_taskchain_unit
+     *
+     * @param mixed $data
+     */
     public function process_taskchain_unit($data) {
         $data['id'] = $this->get_new_chainid();
         foreach ($data as $field => $value) {
             $this->xmlwriter->full_tag($field, $value);
         }
     }
+
+    /**
+     * on_taskchain_unit_end
+     */
     public function on_taskchain_unit_end() {
         $this->xmlwriter->end_tag('chain');
     }
@@ -208,19 +218,37 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function on_taskchain_quizzes_start() {
         $this->xmlwriter->begin_tag('tasks');
     }
+
+    /**
+     * on_taskchain_quiz_start
+     */
     public function on_taskchain_quiz_start() {
         $this->responses = array();
         $this->xmlwriter->begin_tag('task');
     }
+
+    /**
+     * process_taskchain_quiz
+     *
+     * @param mixed $data
+     */
     public function process_taskchain_quiz($data) {
         $this->fix_fileareas($data);
         foreach ($data as $field => $value) {
             $this->xmlwriter->full_tag($field, $value);
         }
     }
+
+    /**
+     * on_taskchain_quiz_end
+     */
     public function on_taskchain_quiz_end() {
         $this->xmlwriter->end_tag('task');
     }
+
+    /**
+     * on_taskchain_quizzes_end
+     */
     public function on_taskchain_quizzes_end() {
         $this->xmlwriter->end_tag('tasks');
     }
@@ -233,18 +261,36 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function on_taskchain_conditions_start() {
         $this->xmlwriter->begin_tag('conditions');
     }
+
+    /**
+     * on_taskchain_condition_start
+     */
     public function on_taskchain_condition_start() {
         $this->xmlwriter->begin_tag('condition');
     }
+
+    /**
+     * process_taskchain_condition
+     *
+     * @param mixed $data
+     */
     public function process_taskchain_condition($data) {
         $data['id'] = $this->get_new_conditionid();
         foreach ($data as $field => $value) {
             $this->xmlwriter->full_tag($field, $value);
         }
     }
+
+    /**
+     * on_taskchain_condition_end
+     */
     public function on_taskchain_condition_end() {
         $this->xmlwriter->end_tag('condition');
     }
+
+    /**
+     * on_taskchain_conditions_end
+     */
     public function on_taskchain_conditions_end() {
         $this->xmlwriter->end_tag('conditions');
     }
@@ -255,17 +301,35 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function on_taskchain_quizscores_start() {
         $this->xmlwriter->begin_tag('taskscores');
     }
+
+    /**
+     * on_taskchain_quizscore_start
+     */
     public function on_taskchain_quizscore_start() {
         $this->xmlwriter->begin_tag('taskscore');
     }
+
+    /**
+     * process_taskchain_quizscore
+     *
+     * @param mixed $data
+     */
     public function process_taskchain_quizscore($data) {
         foreach ($data as $field => $value) {
             $this->xmlwriter->full_tag($field, $value);
         }
     }
+
+    /**
+     * on_taskchain_quizscore_end
+     */
     public function on_taskchain_quizscore_end() {
         $this->xmlwriter->end_tag('taskscore');
     }
+
+    /**
+     * on_taskchain_quizscores_end
+     */
     public function on_taskchain_quizscores_end() {
         $this->xmlwriter->end_tag('taskscores');
     }
@@ -276,9 +340,19 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function on_taskchain_quizattempts_start() {
         $this->xmlwriter->begin_tag('taskattempts');
     }
+
+    /**
+     * on_taskchain_quizattempt_start
+     */
     public function on_taskchain_quizattempt_start() {
         $this->xmlwriter->begin_tag('taskattempt');
     }
+
+    /**
+     * process_taskchain_quizattempt
+     *
+     * @param mixed $data
+     */
     public function process_taskchain_quizattempt($data) {
         $this->attemptid  = $data['id'];
         $this->attemptuserid  = $data['userid'];
@@ -286,9 +360,17 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
             $this->xmlwriter->full_tag($field, $value);
         }
     }
+
+    /**
+     * on_taskchain_quizattempt_end
+     */
     public function on_taskchain_quizattempt_end() {
         $this->xmlwriter->end_tag('taskattempt');
     }
+
+    /**
+     * on_taskchain_quizattempts_end
+     */
     public function on_taskchain_quizattempts_end() {
         $this->xmlwriter->end_tag('taskattempts');
     }
@@ -320,9 +402,19 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function on_taskchain_questions_start() {
         $this->xmlwriter->begin_tag('questions');
     }
+
+    /**
+     * on_taskchain_question_start
+     */
     public function on_taskchain_question_start() {
         $this->xmlwriter->begin_tag('question');
     }
+
+    /**
+     * process_taskchain_question
+     *
+     * @param mixed $data
+     */
     public function process_taskchain_question($data) {
         // Add <QUESTION> fields.
         foreach ($data as $field => $value) {
@@ -344,9 +436,17 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
             }
         }
     }
+
+    /**
+     * on_taskchain_question_end
+     */
     public function on_taskchain_question_end() {
         $this->xmlwriter->end_tag('question');
     }
+
+    /**
+     * on_taskchain_questions_end
+     */
     public function on_taskchain_questions_end() {
         $this->xmlwriter->end_tag('questions');
     }
@@ -369,17 +469,35 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function on_taskchain_unitattempts_start() {
         $this->xmlwriter->begin_tag('chainattempts');
     }
+
+    /**
+     * on_taskchain_unitattempt_start
+     */
     public function on_taskchain_unitattempt_start() {
         $this->xmlwriter->begin_tag('chainattempt');
     }
+
+    /**
+     * process_taskchain_unitattempt
+     *
+     * @param mixed $data
+     */
     public function process_taskchain_unitattempt($data) {
         foreach ($data as $field => $value) {
             $this->xmlwriter->full_tag($field, $value);
         }
     }
+
+    /**
+     * on_taskchain_unitattempt_end
+     */
     public function on_taskchain_unitattempt_end() {
         $this->xmlwriter->end_tag('chainattempt');
     }
+
+    /**
+     * on_taskchain_unitattempts_end
+     */
     public function on_taskchain_unitattempts_end() {
         $this->xmlwriter->end_tag('chainattempts');
     }
@@ -390,17 +508,35 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
     public function on_taskchain_unitgrades_start() {
         $this->xmlwriter->begin_tag('chaingrades');
     }
+
+    /**
+     * on_taskchain_unitgrade_start
+     */
     public function on_taskchain_unitgrade_start() {
         $this->xmlwriter->begin_tag('chaingrade');
     }
+
+    /**
+     * process_taskchain_unitgrade
+     *
+     * @param mixed $data
+     */
     public function process_taskchain_unitgrade($data) {
         foreach ($data as $field => $value) {
             $this->xmlwriter->full_tag($field, $value);
         }
     }
+
+    /**
+     * on_taskchain_unitgrade_end
+     */
     public function on_taskchain_unitgrade_end() {
         $this->xmlwriter->end_tag('chaingrade');
     }
+
+    /**
+     * on_taskchain_unitgrades_end
+     */
     public function on_taskchain_unitgrades_end() {
         $this->xmlwriter->end_tag('chaingrades');
     }
@@ -480,6 +616,9 @@ class moodle1_mod_taskchain_handler extends moodle1_mod_handler {
      *
      * open moodle.xml and convert all references to the QuizPort module
      * or QuizPort activities, to refer instead to the TaskChain module
+     */
+    /**
+     * convert_quizport_to_taskchain
      */
     public function convert_quizport_to_taskchain() {
 

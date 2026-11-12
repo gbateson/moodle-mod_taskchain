@@ -24,9 +24,6 @@
 
 namespace mod_taskchain\event;
 
-/** prevent direct access to this script */
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Event for when a taskchain activity is viewed.
  *

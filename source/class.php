@@ -23,10 +23,10 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 require_once($CFG->dirroot . '/mod/taskchain/lib.php');
 
 /**
@@ -230,6 +230,15 @@ class taskchain_source {
      * @param string $filearea typically 'configfile'
      * @return stdclass $config
      */
+    /**
+     * get_config
+     *
+     * @param mixed $data
+     * @param mixed $context
+     * @param mixed $component
+     * @param mixed $filearea
+     * @return mixed
+     */
     public static function get_config(&$data, $context, $component, $filearea) {
         $config = (object)array(
             'url' => '',
@@ -257,6 +266,16 @@ class taskchain_source {
      * @param string $filearea typically 'sourcefile'
      * @param int $type see "available_addtypes_list()" in locallib.php
      * @return array $sources array of recognized TaskChain files
+     */
+    /**
+     * get_sources
+     *
+     * @param mixed $data
+     * @param mixed $context
+     * @param mixed $component
+     * @param mixed $filearea
+     * @param mixed $type
+     * @return mixed
      */
     public static function get_sources(&$data, $context, $component, $filearea, $type) {
 
@@ -295,6 +314,15 @@ class taskchain_source {
      * within this filearea, or false if no sources are found
      *
      * @return an array of sources if any are found, or false otherwise
+     */
+    /**
+     * get_sources_from_taskfile
+     *
+     * @param mixed $data
+     * @param mixed $context
+     * @param mixed $component
+     * @param mixed $filearea
+     * @return mixed
      */
     public static function get_sources_from_taskfile(&$data, $context, $component, $filearea) {
         if (! $mainfile = taskchain_pluginfile_mainfile($context, $component, $filearea)) {
@@ -388,6 +416,16 @@ class taskchain_source {
      * array $sources TaskChain task files in this folder
      * boolean : false : no task files found
      */
+    /**
+     * get_sources_from_chainfolder
+     *
+     * @param mixed $data
+     * @param mixed $context
+     * @param mixed $component
+     * @param mixed $filearea
+     * @param bool $recursive (optional, default=false)
+     * @return mixed
+     */
     public static function get_sources_from_chainfolder(&$data, $context, $component, $filearea, $recursive = false) {
 
         if (! $mainfile = taskchain_pluginfile_mainfile($context, $component, $filearea)) {
@@ -457,6 +495,12 @@ class taskchain_source {
      * or, if the $file is not a packed file, an empty string
      *
      * @return string
+     */
+    /**
+     * get_file_packer_mimetype
+     *
+     * @param mixed $file
+     * @return mixed
      */
     public static function get_file_packer_mimetype($file) {
         $filetype = $file->get_filename();
@@ -665,6 +709,14 @@ class taskchain_source {
      * @param stored_file $file
      * @return string : $class name if $file is the required type; otherwise ""
      */
+    /**
+     * is
+     *
+     * @param mixed $methodname
+     * @param mixed $file
+     * @param mixed $data
+     * @return mixed
+     */
     public static function is($methodname, $file, &$data) {
         $classes = mod_taskchain::get_classes('taskchainsource');
         foreach ($classes as $class) {
@@ -715,6 +767,12 @@ class taskchain_source {
      * @param string a taskchain file/output class name
      * @return string class name without the leading "taskchain_source_"
      */
+    /**
+     * get_type
+     *
+     * @param string $class (optional, default='')
+     * @return mixed
+     */
     public function get_type($class = '') {
         if ($class == '') {
             $class = get_class($this);
@@ -728,6 +786,11 @@ class taskchain_source {
      * @param stdclass $sourcefile a Moodle stored_file object representing the source file
      * @return boolean true if the file is a recognized task file, or false otherwise
      */
+    /**
+     * is_taskfile
+     *
+     * @return mixed
+     */
     public function is_taskfile() {
         return false;
     }
@@ -737,6 +800,11 @@ class taskchain_source {
      *
      * @param stdclass $sourcefile a Moodle stored_file object representing the source file
      * @return boolean true if the file is a recognized task file, or false otherwise
+     */
+    /**
+     * is_chainfile
+     *
+     * @return mixed
      */
     public function is_chainfile() {
         return false;

@@ -25,9 +25,19 @@ namespace mod_taskchain\plugininfo;
 
 use core\plugininfo\base;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Subplugin info class for taskchainreport subplugins of mod_taskchain
+ *
+ * @package    mod_taskchain
+ * @copyright  2014 Gordon Bateson (gordon.bateson@gmail.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class taskchainreport extends base {
+    /**
+     * is_uninstall_allowed
+     *
+     * @return mixed
+     */
     public function is_uninstall_allowed() {
         return true;
     }

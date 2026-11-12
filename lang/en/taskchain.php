@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+/**
+ * Strings for component 'mod_taskchain', language 'en'
+ *
+ * @package    mod_taskchain
+ * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 // ===================
 // essential strings
 // ===================

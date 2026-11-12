@@ -23,7 +23,7 @@
  * @since      Moodle 2.0
  */
 
-/** Include required files */
+// Include required files.
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 require_once($CFG->dirroot . '/mod/taskchain/edit/form/task.php');

@@ -23,9 +23,6 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * taskchain_get
  *
@@ -614,9 +611,9 @@ class taskchain_get extends taskchain_base {
         return $mytaskchains;
     }
 
-    ///////////////////////////////////////////////////////
+    /*/////////////////////////////////////////////////////
     // get records from TaskChain tables in the Moodle DB
-    ///////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////*/
 
     /**
      * taskchains

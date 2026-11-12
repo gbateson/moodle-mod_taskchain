@@ -23,10 +23,10 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 require_once($CFG->dirroot . '/mod/taskchain/source/class.php');
 
 /**
@@ -476,6 +476,13 @@ class taskchain_source_hp extends taskchain_source {
         }
     }
 
+    /**
+     * utf8_char_to_html_entity
+     *
+     * @param mixed $char
+     * @param string $ampersand (optional, default='&')
+     * @return mixed
+     */
     public function utf8_char_to_html_entity($char, $ampersand = '&') {
         // Thanks to: http://www.zend.com/codex.php?id=835&single=1.
         if (is_array($char)) {
@@ -716,4 +723,4 @@ class taskchain_source_hp extends taskchain_source {
             return true;
         }
     }
-} // end class
+}

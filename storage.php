@@ -23,10 +23,10 @@
  * @since      Moodle 2.0
  */
 
-/** Prevent direct access to this script */
+// Prevent direct access to this script.
 defined('MOODLE_INTERNAL') || die();
 
-/** Include required files */
+// Include required files.
 require_once($CFG->dirroot . '/mod/taskchain/lib.php');
 
 /**
@@ -43,7 +43,9 @@ class mod_taskchain_storage {
      * and the xml tag within the details that holds the results
      */
     const scorefield = 'mark';
+    /** @var string */
     const detailsfield = 'detail';
+    /** @var string */
     const xmlresultstag = 'hpjsresult';
 
     /**
@@ -52,6 +54,7 @@ class mod_taskchain_storage {
      *     resumestart/resumefinish are recorded by the server (but include transfer time to and from client)
      */
     const durationstartfield = 'timestart';
+    /** @var string */
     const durationfinishfield = 'timefinish';
 
     // Functions to store responses returned from browser.
@@ -175,20 +178,23 @@ class mod_taskchain_storage {
         if ($TC->taskattempt->status == mod_taskchain::STATUS_ABANDONED) {
             switch (self::can_continue($TC)) {
                 case mod_taskchain::CONTINUE_ABANDONCHAIN:
-                    $TC->chaingrade->status == mod_taskchain::STATUS_ABANDONED;
+                    $TC->chaingrade->status = mod_taskchain::STATUS_ABANDONED;
                     if (! $DB->set_field('taskchain_chain_grades', 'status', mod_taskchain::STATUS_ABANDONED, array('id' => $TC->chaingrade->id))) {
                         throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_chain_grades');
                     }
+                    // Fall through.
                 case mod_taskchain::CONTINUE_RESTARTCHAIN:
-                    $TC->chainattempt->status == mod_taskchain::STATUS_ABANDONED;
+                    $TC->chainattempt->status = mod_taskchain::STATUS_ABANDONED;
                     if (! $DB->set_field('taskchain_chain_attempts', 'status', mod_taskchain::STATUS_ABANDONED, array('id' => $TC->chainattempt->id))) {
                         throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_chain_attempts');
                     }
+                    // Fall through.
                 case mod_taskchain::CONTINUE_RESTARTTASK:
-                    $TC->taskscore->status == mod_taskchain::STATUS_ABANDONED;
+                    $TC->taskscore->status = mod_taskchain::STATUS_ABANDONED;
                     if (! $DB->set_field('taskchain_task_scores', 'status', mod_taskchain::STATUS_ABANDONED, array('id' => $TC->taskscore->id))) {
                         throw new moodle_exception('error_updaterecord', 'taskchain', '', 'taskchain_task_scores');
                     }
+                    // Fall through.
                 case mod_taskchain::CONTINUE_RESUMETASK:
                     // $TC->taskattempt has already been updated
                     // so we don't need to do anything here
