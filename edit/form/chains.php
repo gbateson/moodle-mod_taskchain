@@ -18,8 +18,7 @@
 /**
  * mod/taskchain/edit/chains.form.php
  *
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
@@ -37,8 +36,7 @@ require_once($CFG->dirroot.'/mod/taskchain/edit/form/helper/chains.php');
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  */
 class mod_taskchain_edit_chains_form extends moodleform {
     /** TaskChain form helper - see mod/taskchain/form/base.php **/

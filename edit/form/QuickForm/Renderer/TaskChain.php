@@ -18,8 +18,7 @@
 /**
  * mod/taskchain/form/QuickForm/Renderer/TaskChain.php
  *
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
@@ -39,8 +38,7 @@ defined('MOODLE_INTERNAL') || die();
  *             based on MoodleQuickForm_Renderer by Jamie Pratt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  */
 class TaskChain_MoodleQuickForm_Renderer extends MoodleQuickForm_Renderer{
 

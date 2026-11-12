@@ -18,8 +18,7 @@
 /**
  * mod/taskchain/mediafilter/class.php
  *
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
@@ -61,8 +60,7 @@ function taskchain_get_mediaplugin_filter($context, $localconfig = array()) {
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  */
 class taskchain_mediafilter {
 

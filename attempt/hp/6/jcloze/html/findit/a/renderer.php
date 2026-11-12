@@ -18,8 +18,7 @@
 /**
  * mod/taskchain/attempt/hp/6/jcloze/html/findit/a/renderer.php
  *
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
@@ -37,8 +36,7 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/hp/6/jcloze/html/findit/rende
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  */
 class mod_taskchain_attempt_hp_6_jcloze_html_findit_a_renderer extends mod_taskchain_attempt_hp_6_jcloze_html_findit_renderer {
 

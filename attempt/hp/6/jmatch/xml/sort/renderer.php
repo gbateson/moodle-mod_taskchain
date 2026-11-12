@@ -19,7 +19,7 @@
  * Render an attempt at a TaskChain quiz
  * Output format: hp_6_jmatch_xml_sort
  *
- * @package   mod-taskchain
+ * @package   mod_taskchain
  * @copyright 2010 Gordon Bateson <gordon.bateson@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

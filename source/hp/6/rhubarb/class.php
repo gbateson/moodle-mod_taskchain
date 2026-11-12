@@ -18,8 +18,7 @@
 /**
  * mod/taskchain/source/hp/6/rhubarb/class.php
  *
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
@@ -37,8 +36,7 @@ require_once($CFG->dirroot.'/mod/taskchain/source/hp/6/class.php');
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  */
 class taskchain_source_hp_6_rhubarb extends taskchain_source_hp_6 {
     public $icon = 'mod/taskchain/file/hp/6/rhubarb/rhb.gif';

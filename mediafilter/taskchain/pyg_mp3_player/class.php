@@ -18,8 +18,7 @@
 /**
  * mod/taskchain/mediafilter/taskchain/pyg_mp3_player/class.php
  *
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
@@ -34,8 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2010 Gordon Bateson (gordon.bateson@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.0
- * @package    mod
- * @subpackage taskchain
+ * @package    mod_taskchain
  */
 class taskchain_mediaplayer_pyg_mp3_player extends taskchain_mediaplayer {
     public $aliases = array('pyg');
