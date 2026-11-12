@@ -2,6 +2,17 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-12 (19)
+ - send results using navigator.sendBeacon() when the student leaves a task
+   page, because modern browsers block synchronous XMLHttpRequests during page
+   unload
+ - rename the global 'M' array in JMemori tasks to 'JMemoriM', so that it no
+   longer overwrites Moodle's global 'M' object
+ - only call GetGuessSequence() in drag-and-drop JMix, and only call
+   AA_PlaySound() in autoadvance JQuiz if it is defined
+ - load hp.js for plain HTML tasks, and declare htmlcontent property (PHP 8.2)
+ - fix fmod() TypeError in duration filter on report pages (CONTRIB-9156)
+
 2026-11-12 (18)
  - fix PHP 8.x errors and deprecation warnings: null passed to string functions,
    bitwise operators on empty strings, float passed to srand(), 'parent::'

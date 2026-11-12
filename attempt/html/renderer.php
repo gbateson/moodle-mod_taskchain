@@ -42,6 +42,9 @@ require_once($CFG->dirroot.'/mod/taskchain/attempt/renderer.php');
  */
 class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer {
 
+    /** @var string the HTML content of the source file */
+    public $htmlcontent;
+
     // strings to mark beginning and end of submission form
     protected $BeginSubmissionForm = '<!-- BeginSubmissionForm -->';
     protected $EndSubmissionForm = '<!-- EndSubmissionForm -->';
@@ -306,6 +309,9 @@ class mod_taskchain_attempt_html_renderer extends mod_taskchain_attempt_renderer
     public function postprocessing()  {
         $this->fix_title_icons();
         $this->fix_submissionform();
+        // fix_onload() adds javascript that uses HP_send_results(),
+        // which is defined in hp.js (HP_add_listener() is in event.js)
+        array_push($this->javascripts, 'mod/taskchain/attempt/hp/hp.js');
         parent::postprocessing();
     }
 

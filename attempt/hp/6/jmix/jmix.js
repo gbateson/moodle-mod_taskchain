@@ -84,7 +84,8 @@ function JMix(sendallclicks, ajax) {
         }
 
         // update the GuessSequence array
-        if (setScores) {
+        // (only drag-and-drop JMix has a GetGuessSequence function)
+        if (setScores && window.GetGuessSequence) {
             GetGuessSequence();
         }
 

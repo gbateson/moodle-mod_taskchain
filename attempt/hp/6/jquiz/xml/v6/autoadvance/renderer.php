@@ -137,7 +137,10 @@ class mod_taskchain_attempt_hp_6_jquiz_xml_v6_autoadvance_renderer extends mod_t
             $insert .= "	AA_SetProgressBar();\n";
         }
         if ($this->expand_UserDefined2()) {
-            $insert .= "	setTimeout('AA_PlaySound(0,0)', 500);";
+            // Note: AA_PlaySound() is not defined by TaskChain, so check it exists.
+            $insert .= "	if (window.AA_PlaySound) {\n"
+                      . "		setTimeout('AA_PlaySound(0,0)', 500);\n"
+                      . "	}\n";
         }
         if ($insert) {
             $pos = strrpos($substr, '}');
