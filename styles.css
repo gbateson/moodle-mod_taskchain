@@ -357,6 +357,10 @@
     .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .commands {
         white-space: nowrap;
     }
+    /* reduce the space between the action icons (the default margin on ".icon" is "0 .5rem 0 0") */
+    .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .commands .icon {
+        margin: 0 .25rem 0 0;
+    }
     /* center the radio buttons for choosing the default record
        (in recent versions of Moodle, these form items have no "id") */
     .mform.mod-taskchain-edit-records .fitem:has(input[name=defaultrecord]) .form-check {
