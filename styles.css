@@ -340,6 +340,33 @@
         padding-left: 6px;
         padding-right: 6px;
     }
+    /* the labels (.fitemtitle) are hidden, so the form fields (.col-md-9) can use the full width */
+    .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .fitem > .col-md-9 {
+        flex: 0 0 100%;
+        width: 100%;
+    }
+    /* remove the vertical space between rows (Boost adds "mb-3" to every form item) */
+    .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .fitem.mb-3 {
+        margin-bottom: 0px !important;
+    }
+    /* add some space between the last row and the "Actions" section */
+    .mform.mod-taskchain-edit-records #actionshdr {
+        margin-top: 1rem;
+    }
+    /* keep the action icons (update, delete, preview) on a single line */
+    .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .commands {
+        white-space: nowrap;
+    }
+    /* center the radio buttons for choosing the default record
+       (in recent versions of Moodle, these form items have no "id") */
+    .mform.mod-taskchain-edit-records .fitem:has(input[name=defaultrecord]) .form-check {
+        justify-content: center !important;
+        padding-left: 0px;
+    }
+    .mform.mod-taskchain-edit-records .fitem:has(input[name=defaultrecord]) .form-check-input {
+        float: none;
+        margin-left: 0px;
+    }
     /** reduce column with on page to edit tasks or chains */
     .mform.mod-taskchain-edit-records > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem {
         width: 180px;

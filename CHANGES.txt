@@ -2,6 +2,11 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-14 (29)
+ - tidy the layout of the 'Edit tasks' and 'Edit chains' pages on medium and
+   wide screens: remove the vertical space between rows, show the action icons
+   on a single line, and center the 'Default' radio buttons
+
 2026-11-14 (28)
  - make the columns in the heading rows and the task/chain rows line up on the
    'Edit tasks' and 'Edit chains' pages (they did not line up in recent versions
