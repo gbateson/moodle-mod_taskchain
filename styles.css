@@ -318,9 +318,9 @@
     .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .fcontainer {
         display: flex !important;
     }
-    /* align headings to the bottom of their container */
+    /* stretch the heading cells to the height of the tallest heading */
     .mform.mod-taskchain-edit-records #labelshdr > .fcontainer  {
-        align-items: flex-end;
+        align-items: stretch;
     }
     /* set the display, and remove margins on a "row" */
     .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .row {

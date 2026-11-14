@@ -2,6 +2,10 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-14 (32)
+ - make all the cells in the top heading row the same height on the 'Edit tasks'
+   and 'Edit chains' pages
+
 2026-11-14 (31)
  - remove the vertical space between the filters in the 'Actions' section of the
    'Edit tasks' and 'Edit chains' pages
