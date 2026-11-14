@@ -2,6 +2,13 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-14 (36)
+ - fix the Hot Potatoes Masher source classes, so that 'Add all files listed in
+   selected file' creates a chain of tasks from a Masher file (*.jms) or a
+   Masher index page (they had not worked since Moodle 2.0); for each exercise
+   in a Masher file, the exported html file is used if it has been uploaded,
+   otherwise the original data file
+
 2026-11-14 (35)
  - fix the row of checkboxes for selecting columns overlapping the first task on
    the 'Edit tasks' and 'Edit chains' pages in Moodle <= 4.5 (Bootstrap 4)
