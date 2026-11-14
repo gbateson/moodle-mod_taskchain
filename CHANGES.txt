@@ -2,6 +2,10 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-14 (33)
+ - align the text of the headings in the top row to the bottom of their cells on
+   the 'Edit tasks' and 'Edit chains' pages
+
 2026-11-14 (32)
  - make all the cells in the top heading row the same height on the 'Edit tasks'
    and 'Edit chains' pages

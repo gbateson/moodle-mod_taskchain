@@ -322,6 +322,16 @@
     .mform.mod-taskchain-edit-records #labelshdr > .fcontainer  {
         align-items: stretch;
     }
+    /* align the text of each heading to the bottom of its cell
+       (these selectors must be more specific than the ".fitem" and ".col-md-9" rules below) */
+    .mform.mod-taskchain-edit-records fieldset#labelshdr:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+    .mform.mod-taskchain-edit-records fieldset#labelshdr:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem > .col-md-9 {
+        flex: 0 0 auto;
+    }
     /* set the display, and remove margins on a "row" */
     .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) .row {
         display: block !important;
