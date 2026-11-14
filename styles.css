@@ -122,6 +122,12 @@
     max-width: 160px;
 }
 
+/* remove the vertical space between the filters in the "Actions" section
+   (Boost adds "mb-3" to every form item), but keep the space after the last filter */
+.mform.mod-taskchain-edit-records #actionshdr .fitem.mb-3[id*=_filter]:has(+ .fitem[id*=_filter]) {
+    margin-bottom: 0px !important;
+}
+
 .mform.mod-taskchain-edit-tasks input[type=text][name^=sortorder] {
     /* .form-control sets height to calc(1.5em + 0.75rem + 2px) */ 
     height: 2rem;
