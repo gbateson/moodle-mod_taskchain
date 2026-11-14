@@ -2,6 +2,13 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-14 (35)
+ - fix the row of checkboxes for selecting columns overlapping the first task on
+   the 'Edit tasks' and 'Edit chains' pages in Moodle <= 4.5 (Bootstrap 4)
+ - center the 'Default' radio buttons exactly in all versions of Moodle
+ - only add a top border to the box of filters when the box does not already
+   start above the filters (as it does in Moodle 3.x)
+
 2026-11-14 (34)
  - add a top border and rounded top corners to the box of filters in the
    'Actions' section of the 'Edit tasks' and 'Edit chains' pages, to match the

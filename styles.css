@@ -209,9 +209,11 @@
     padding-top: 4px;
 }
 /* TOP filter (the box of filters also needs a top border and rounded corners,
-   because in recent versions of Moodle, the "applydefaults_selected" item has no "id") */
-.mform.mod-taskchain-edit-tasks #fitem_id_applydefaults_filtercoursename,
-.mform.mod-taskchain-edit-chains #fitem_id_applydefaults_filtercoursename {
+   because in recent versions of Moodle, the "applydefaults_selected" and "applydefaults_filtered"
+   items have no "id", so the "TOP action detail" above does not apply to them; but in older versions
+   of Moodle, these items do have an "id", so the box starts higher up and we do not add a top border here) */
+.mform.mod-taskchain-edit-tasks :not(#fitem_id_applydefaults_filteredtasks) + #fitem_id_applydefaults_filtercoursename,
+.mform.mod-taskchain-edit-chains :not(#fitem_id_applydefaults_filteredchains) + #fitem_id_applydefaults_filtercoursename {
     border-top: 1px solid #333333;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
@@ -395,6 +397,20 @@
     .mform.mod-taskchain-edit-records .fitem:has(input[name=defaultrecord]) .form-check-input {
         float: none;
         margin-left: 0px;
+        position: static; /* Bootstrap 4 (Moodle <= 4.5) positions radio buttons absolutely */
+    }
+    .mform.mod-taskchain-edit-records .fitem:has(input[name=defaultrecord]) .form-check-label {
+        margin: 0px;
+        padding: 0px;
+    }
+    /* hide the (empty) div that follows the radio button, so that it does not affect the centering */
+    .mform.mod-taskchain-edit-records .fitem:has(input[name=defaultrecord]) .form-check > div {
+        display: none !important; /* override "d-flex" */
+    }
+    /* In Bootstrap 4 (Moodle <= 4.5), checkboxes are positioned absolutely, so their labels have no height,
+       and the row of checkboxes for selecting columns overlaps the first record, unless we set a height */
+    .mform.mod-taskchain-edit-records fieldset:not(#filtershdr):not(#actionshdr) label.form-check {
+        min-height: 1.5rem;
     }
     /** reduce column with on page to edit tasks or chains */
     .mform.mod-taskchain-edit-records > fieldset:not(#filtershdr):not(#actionshdr) > .fcontainer > .fitem {
