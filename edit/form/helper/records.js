@@ -153,6 +153,102 @@ M.mod_taskchain_edit_form_helper_records = {
     },
 
     /**
+     * align_columns
+     *
+     * Make the columns in the heading rows and the record rows line up.
+     *
+     * Each row is a fieldset, and each "cell" is a div.fitem in that fieldset.
+     * The cells in each row are matched by position, i.e. the first cell
+     * in every row is in the first column, and so on. The width of each column
+     * is set to the width of the widest cell in that column.
+     *
+     * On small screens, the heading rows are hidden and the cells in each record
+     * are stacked, so the columns are not aligned.
+     *
+     * @param object Y (YUI object, not used)
+     */
+    align_columns : function(Y) {
+        var self = M.mod_taskchain_edit_form_helper_records;
+        self.align_columns_now();
+        if (self.align_columns_resize === undefined) {
+            self.align_columns_resize = null;
+            window.addEventListener("resize", function(){
+                if (self.align_columns_resize) {
+                    clearTimeout(self.align_columns_resize);
+                }
+                self.align_columns_resize = setTimeout(self.align_columns_now, 200);
+            });
+        }
+    },
+
+    /**
+     * align_columns_now
+     *
+     * Do the work for align_columns (see above).
+     */
+    align_columns_now : function() {
+        var s = "fieldset[id^=labels],"
+              + "fieldset[id^=defaults],"
+              + "fieldset[id^=selects],"
+              + "fieldset[id^=record]";
+
+        // Get the cells in each row.
+        var rows = [];
+        document.querySelectorAll(s).forEach(function(fieldset){
+            var fcontainer = fieldset.querySelector("div.fcontainer");
+            if (fcontainer) {
+                var cells = [];
+                for (var i = 0; i < fcontainer.children.length; i++) {
+                    if (fcontainer.children[i].classList.contains("fitem")) {
+                        cells.push(fcontainer.children[i]);
+                    }
+                }
+                rows.push({"fieldset": fieldset, "cells": cells});
+            }
+        });
+
+        // Remove widths from a previous alignment, so that we get the natural width of each cell.
+        rows.forEach(function(row){
+            row.cells.forEach(function(cell){
+                cell.style.removeProperty("flex");
+                cell.style.removeProperty("width");
+                cell.style.removeProperty("max-width");
+            });
+        });
+
+        // The heading rows are hidden on small screens, in which case we do nothing.
+        var headings = document.querySelector("fieldset[id^=labels]");
+        if (headings === null || headings.offsetWidth == 0) {
+            return;
+        }
+
+        // Get the width of the widest cell in each column.
+        var widths = [];
+        rows.forEach(function(row){
+            if (row.fieldset.offsetWidth == 0) {
+                return; // Hidden row.
+            }
+            row.cells.forEach(function(cell, i){
+                var w = Math.ceil(cell.getBoundingClientRect().width);
+                if (widths[i] === undefined || widths[i] < w) {
+                    widths[i] = w;
+                }
+            });
+        });
+
+        // Set all the cells in each column to the same width.
+        rows.forEach(function(row){
+            row.cells.forEach(function(cell, i){
+                if (widths[i]) {
+                    cell.style.setProperty("flex", "0 0 " + widths[i] + "px");
+                    cell.style.setProperty("width", widths[i] + "px");
+                    cell.style.setProperty("max-width", widths[i] + "px");
+                }
+            });
+        });
+    },
+
+    /**
      * set_fitem_heights_and_widths
      *
      * @param

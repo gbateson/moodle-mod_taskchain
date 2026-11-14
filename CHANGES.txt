@@ -2,6 +2,11 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-14 (28)
+ - make the columns in the heading rows and the task/chain rows line up on the
+   'Edit tasks' and 'Edit chains' pages (they did not line up in recent versions
+   of Moodle, because the javascript to set the column widths had been disabled)
+
 2026-11-12 (27)
  - add PHPUnit tests (supported features, detection of source files, output
    formats, creating chains, completion rules, and rendering of HP6 and HP7

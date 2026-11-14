@@ -334,6 +334,9 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
             $PAGE->requires->js_init_call("$M.setup_selectall", array('id_selectrecord_all'), false, $module);
             $PAGE->requires->js_init_call("$M.setup_action_elements", $options, false, $module);
 
+            // Make the columns in the heading rows and the record rows line up.
+            $PAGE->requires->js_init_call("$M.align_columns", null, true, $module);
+
             if (empty($this->bootstrap)) {
                 // Add javascript to fix some dimensions and borders
                 // $PAGE->requires->js_init_call("$M.set_fitem_heights_and_widths", null, false, $module);
