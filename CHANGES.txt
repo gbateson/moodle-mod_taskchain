@@ -2,6 +2,11 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-14 (34)
+ - add a top border and rounded top corners to the box of filters in the
+   'Actions' section of the 'Edit tasks' and 'Edit chains' pages, to match the
+   bottom of the box
+
 2026-11-14 (33)
  - align the text of the headings in the top row to the bottom of their cells on
    the 'Edit tasks' and 'Edit chains' pages
