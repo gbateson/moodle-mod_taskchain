@@ -23,3 +23,4 @@
  */
 
 $string['pluginname'] = 'Qedoc output formats';
+$string['privacy:metadata'] = 'This output format stores no personal data. Attempts, scores and grades are stored by the TaskChain activity.';

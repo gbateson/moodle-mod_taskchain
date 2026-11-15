@@ -2,6 +2,12 @@
 Change log for mod_taskchain
 ========================================
 
+2026-11-15 (00)
+ - add a privacy provider, which describes, exports and deletes each student's
+   chain grades, chain attempts, task scores, task attempts, attempt details and
+   responses; and privacy providers for the attempt, source and report
+   subplugins, which store no personal data themselves
+
 2026-11-14 (36)
  - fix the Hot Potatoes Masher source classes, so that 'Add all files listed in
    selected file' creates a chain of tasks from a Masher file (*.jms) or a

@@ -23,3 +23,4 @@
  */
 
 $string['pluginname'] = 'Click trail';
+$string['privacy:metadata'] = 'This report shows data stored by the TaskChain activity, and stores no personal data itself.';

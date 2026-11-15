@@ -23,3 +23,4 @@
  */
 
 $string['pluginname'] = 'Qedoc source files';
+$string['privacy:metadata'] = 'This file type stores no personal data. Attempts, scores and grades are stored by the TaskChain activity.';
