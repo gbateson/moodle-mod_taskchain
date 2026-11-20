@@ -2789,8 +2789,9 @@ class mod_taskchain extends taskchain_base {
         foreach ($tasks as $taskid => $task) {
             if (empty($chains[$task->chainid])) {
                 unset($tasks[$taskid]);
+            } else {
+                $tasks[$taskid]->userids = array();
             }
-            $tasks[$taskid]->userids = array();
         }
 
         // Remove task attempts that this user is not allowed to delete.
