@@ -73,27 +73,6 @@ class taskchain_source_hp extends taskchain_source {
     public $search_unicode_chars = '/[\xc0-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xff][\x80-\xbf]{3}|[\x00-\xff]/';
 
     /**
-     * array used to figure what number to decrement from character order value
-     * according to number of characters used to map unicode to ascii by utf-8
-     *
-     * @var array
-     */
-    public static $utf8_decrement = array(
-        1 => 0,
-        2 => 192,
-        3 => 224,
-        4 => 240,
-    );
-
-    /** @var array the number of bits to shift each utf8 character by */
-    public static $utf8_shift = array(
-        1 => array(0 => 0),
-        2 => array(0 => 6, 1 => 0),
-        3 => array(0 => 12, 1 => 6, 2 => 0),
-        4 => array(0 => 18, 1 => 12, 2 => 6, 3 => 0),
-    );
-
-    /**
      * is_html
      *
      * @return xxx
@@ -443,6 +422,11 @@ class taskchain_source_hp extends taskchain_source {
 
     /**
      * pre_xmlize_filecontents
+     *
+     * Prepare the contents of a HotPotatoes file for taskchain_xmlize():
+     * - encode ampersands that are not part of an entity, e.g. "Q&A", which the XML parser cannot read,
+     * - convert files that are not UTF-8 to UTF-8, treating them as Windows-1252 (UTF-8 files are not changed),
+     * - remove the control characters that are not allowed in XML.
      */
     public function pre_xmlize_filecontents() {
         if ($this->filecontents) {
@@ -452,20 +436,11 @@ class taskchain_source_hp extends taskchain_source {
             $search = '/&(?!(?:[a-zA-Z]+|#[0-9]+|#x[0-9a-fA-F]+);)/';
             $this->filecontents = preg_replace($search, '&amp;', $this->filecontents);
 
-            // Unicode characters can be detected by checking the hex value of a character
-            // 00 - 7F : ascii char (control chars + roman alphabet + punctuation)
-            // 80 - BF : byte 2, 3 or 4 of a unicode char
-            // C0 - DF : 1st byte of 2-byte char
-            // E0 - EF : 1st byte of 3-byte char
-            // F0 - FF : 1st byte of 4-byte char
-            // if the string doesn't match the above, it might be
-            // 80 - FF : single-byte, non-ascii char.
-            $search = '/' . '[\xc0-\xdf][\x80-\xbf]{1}' . '|' .
-                          '[\xe0-\xef][\x80-\xbf]{2}' . '|' .
-                          '[\xf0-\xff][\x80-\xbf]{3}' . '|' .
-                          '[\x80-\xff]' . '/';
-            $callback = array($this, 'utf8_char_to_html_entity');
-            $this->filecontents = preg_replace_callback($search, $callback, $this->filecontents);
+            // Convert a file that is not UTF-8 to UTF-8, treating it as Windows-1252 (Western European),
+            // the usual encoding of HotPotatoes files that are not Unicode. UTF-8 files are not changed.
+            if (function_exists('mb_check_encoding') && ! mb_check_encoding($this->filecontents, 'UTF-8')) {
+                $this->filecontents = mb_convert_encoding($this->filecontents, 'UTF-8', 'Windows-1252');
+            }
 
             // The following control characters are not allowed in XML
             // and need to be removed because they will break taskchain_xmlize()
@@ -474,29 +449,6 @@ class taskchain_source_hp extends taskchain_source {
             $search = '/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]/';
             $this->filecontents = preg_replace($search, '', $this->filecontents);
         }
-    }
-
-    /**
-     * utf8_char_to_html_entity
-     *
-     * @param mixed $char
-     * @param string $ampersand (optional, default='&')
-     * @return mixed
-     */
-    public function utf8_char_to_html_entity($char, $ampersand = '&') {
-        // Thanks to: http://www.zend.com/codex.php?id=835&single=1.
-        if (is_array($char)) {
-            $char = $char[0];
-        }
-        $dec = 0;
-        $len = strlen($char);
-        for ($pos = 0; $pos < $len; $pos++) {
-            $ord = ord($char[$pos]);
-            $ord -= ($pos ? 128 : $this->utf8_decrement[$len]);
-            $dec += ($ord << $this->utf8_shift[$len][$pos]);
-        }
-
-        return $ampersand . '#x' . sprintf('%04X', $dec) . ';';
     }
 
     /**
