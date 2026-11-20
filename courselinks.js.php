@@ -105,9 +105,11 @@ function print_courselinks() {
             $value = "#$value";
         }
         if ($name == 'gradelinewidth' && preg_match('/^[0-9]+$/', $value)) {
-            $value += 'px';
+            $value .= 'px';
         }
-        echo "{$tab}TC.$name = '$value';{$nl}";
+        // Encode the value: the block's settings are not cleaned (optional_param() does not clean its default).
+        $value = json_encode((string)$value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+        echo "{$tab}TC.$name = $value;{$nl}";
     }
 
     $numsections = 0;
