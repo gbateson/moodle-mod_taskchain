@@ -282,19 +282,84 @@ class taskchain_require extends taskchain_base {
     /**
      * valid_tnumber
      *
-     * @return xxx
+     * @param boolean $requested (optional, default=false) true if the task id was in the request
+     * @return mixed false if the user may resume or start the task attempt, otherwise an error message
      */
-    public function valid_tnumber() {
+    public function valid_tnumber($requested = false) {
+        // Resume only an existing task attempt: canresume() would create a new attempt
+        // for a tnumber that does not exist (e.g. 0 or a made-up number in the URL),
+        // without the checks in canstart() (attempt limit, delays).
         $tnumber = $this->TC->get_tnumber();
-        if ($tnumber >= 0) {
+        if ($tnumber > 0 && $this->TC->get_taskattempt()) {
             if (! $this->canresume('task')) {
                 // no error (i.e. we can resume this chain/task attempt)
                 return false;
             }
-            // We cannot resume this chain/task attempt, so try and start a new one.
-            $this->TC->force_tnumber(self::FORCE_NEW_ATTEMPT);
+        }
+        // We cannot resume a task attempt, so try and start a new one.
+        $this->TC->force_tnumber(self::FORCE_NEW_ATTEMPT);
+        if ($requested && ($error = $this->requested_task())) {
+            return $error;
         }
         return $this->canstart('task');
+    }
+
+    /**
+     * requested_task
+     *
+     * Check that the user may start a new attempt at a task whose id was in the request
+     * (e.g. attempt.php?taskid=...). The task must satisfy its pre-conditions, either as they
+     * are checked for the task menu, or as the post-conditions check them after the user's last
+     * finished task attempt (the task chosen by the post-conditions comes back to attempt.php
+     * in the URL). Teachers who can preview are not checked, and a user who already has an
+     * attempt in progress at this task (e.g. after reloading the page) may go on.
+     *
+     * @return mixed false if the user may start the task, otherwise an error message
+     */
+    public function requested_task() {
+        global $DB;
+
+        if ($this->TC->can->preview()) {
+            return false;
+        }
+
+        $taskid = $this->TC->get_taskid();
+        $cnumber = $this->TC->get_cnumber();
+        $userid = $this->TC->userid;
+
+        if ($cnumber > 0) {
+            $params = array(
+                'taskid' => $taskid,
+                'cnumber' => $cnumber,
+                'userid' => $userid,
+                'status' => self::STATUS_INPROGRESS,
+            );
+            if ($DB->record_exists('taskchain_task_attempts', $params)) {
+                return false;
+            }
+        }
+
+        // Pre-conditions as checked for the task menu.
+        $this->TC->get_available_tasks();
+        if (in_array($taskid, $this->TC->availabletaskids)) {
+            return false;
+        }
+
+        // Pre-conditions as checked by the post-conditions of the last finished task attempt in this chain attempt.
+        if ($cnumber > 0) {
+            $select = 'cnumber = ? AND userid = ? AND status > ? '
+                    . 'AND taskid IN (SELECT id FROM {taskchain_tasks} WHERE chainid = ?)';
+            $params = array($cnumber, $userid, self::STATUS_INPROGRESS, $this->TC->get_chainid());
+            $sort = 'timestart DESC, id DESC';
+            if ($records = $DB->get_records_select('taskchain_task_attempts', $select, $params, $sort, 'id, taskid', 0, 1)) {
+                $previoustaskid = reset($records)->taskid;
+                if ($this->TC->check_conditions(self::CONDITIONTYPE_PRE, $taskid, $previoustaskid)) {
+                    return false;
+                }
+            }
+        }
+
+        return get_string('preconditionsnotsatisfied', 'mod_taskchain');
     }
 
     /**
@@ -818,6 +883,9 @@ class taskchain_require extends taskchain_base {
      * next_task
      */
     public function next_task() {
+        // A task id in the request (e.g. attempt.php?taskid=...) has to be checked (see requested_task()).
+        $requested = ($this->TC->force_taskid() > 0);
+
         // if chain attempt number is >=0, we can
         // try to restart from the last task attempt.
         $cnumber = $this->TC->get_cnumber();
@@ -826,6 +894,14 @@ class taskchain_require extends taskchain_base {
         // Check the chain attempt number, if any.
         if ($error = $this->valid_cnumber()) {
             $this->TC->print_error($error);
+        }
+
+        // No chain attempt yet: valid_cnumber() found a chain attempt that can be resumed,
+        // but the user should choose on the entry page whether to resume it or start a new one
+        // (e.g. attempt.php?id=... from a bookmark), so go there. Otherwise, task attempts
+        // would be created with cnumber=0, without the checks on the user's chain attempt.
+        if ($this->TC->get_cnumber() == 0 && ! $this->TC->can->preview()) {
+            redirect($this->TC->url->view());
         }
 
         // This should be somewhere else, shouldn't it?
@@ -901,7 +977,7 @@ class taskchain_require extends taskchain_base {
                 }
 
                 // Check tnumber is valid.
-                if ($error = $this->valid_tnumber()) {
+                if ($error = $this->valid_tnumber($requested)) {
                     $this->TC->print_error($error);
                 }
             }

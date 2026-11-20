@@ -938,6 +938,7 @@ $string['postconditions_help'] = 'After finishing the task, the action of the *f
 $string['precondition'] = 'Pre-condition';
 $string['preconditions'] = 'Pre-conditions';
 $string['preconditions_help'] = 'This task may only be taken if *all* the pre-conditions in this list are satisfied.';
+$string['preconditionsnotsatisfied'] = 'Sorry, you cannot start this task yet: its pre-conditions are not satisfied.';
 $string['pressoktocontinue'] = 'Press OK to continue, or Cancel to stay on the current page.';
 $string['preview'] = 'Preview';
 $string['previewchainnow'] = 'Preview TaskChain activity now';
