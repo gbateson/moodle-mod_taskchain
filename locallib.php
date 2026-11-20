@@ -581,6 +581,7 @@ class mod_taskchain extends taskchain_base {
                     $this->require_own_attempt(false);
                     break;
                 case 'mod-taskchain-submit':
+                    $this->can->attempt(true);
                     // Users may only submit results for their own attempts.
                     $this->require_own_attempt(false);
                     break;
