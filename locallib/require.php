@@ -58,7 +58,9 @@ class taskchain_require extends taskchain_base {
         if (! $record->subnet) {
             return false;
         }
-        if (isset($_SERVER['REMOTE_ADDR']) && address_in_subnet($_SERVER['REMOTE_ADDR'], $record->subnet)) {
+        // Use getremoteaddr() (not $_SERVER['REMOTE_ADDR']) to get the user's IP address,
+        // also when the site is behind a proxy (see the site setting "getremoteaddrconf"), as the quiz does.
+        if (address_in_subnet(getremoteaddr(), $record->subnet)) {
             return false;
         }
         // User's IP address is missing or does not match required subnet mask.
