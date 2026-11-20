@@ -179,6 +179,9 @@ function print_courselinks() {
         $showaverages = false;
     }
 
+    // Students do not see grades that are hidden in the gradebook (the grade item, or their own grade).
+    $canviewhidden = has_capability('moodle/grade:viewhidden', $course->context);
+
     if ($showaverages) {
         // A teacher - or at least someone who can view all users' grades.
         $userids = array();
@@ -345,6 +348,12 @@ function print_courselinks() {
                     $grades = grade_get_grades($course->id, 'mod', $cm->modname, $cm->instance, $userids);
                     if (empty($grades->items[0]->grademax) || floatval($grades->items[0]->grademax) == 0) {
                         $zero_grade = true;
+                    } else if (! $showaverages && ! $canviewhidden) {
+                        // A hidden grade item, or the user's own grade is hidden ("hidden" includes "hidden until").
+                        $item = $grades->items[0];
+                        if (! empty($item->hidden) || ! empty($item->grades[$USER->id]->hidden)) {
+                            $zero_grade = true;
+                        }
                     }
                 }
                 if ($zero_grade) {
