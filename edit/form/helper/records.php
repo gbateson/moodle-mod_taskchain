@@ -806,6 +806,32 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
     }
 
     /**
+     * get_applydefaults_courses
+     *
+     * Get the courses whose TaskChain activities "Apply selected default values"
+     * may change, i.e. the user's courses in which the user may manage activities.
+     *
+     * @return array of course records, indexed by course id
+     */
+    protected function get_applydefaults_courses() {
+        $courses = array();
+        $courseid = $this->TC->get_courseid();
+        if (! $mycourses = $this->TC->get_mycourses()) {
+            $mycourses = array();
+        }
+        if (! array_key_exists($courseid, $mycourses)) {
+            $mycourses[$courseid] = $this->TC->course;
+        }
+        foreach ($mycourses as $id => $course) {
+            $context = context_course::instance($id, IGNORE_MISSING);
+            if ($context && has_capability('moodle/course:manageactivities', $context)) {
+                $courses[$id] = $course;
+            }
+        }
+        return $courses;
+    }
+
+    /**
      * fix_action_applydefaults
      *
      * @param object $data the recently submitted form $data
@@ -865,11 +891,21 @@ abstract class taskchain_form_helper_records extends taskchain_form_helper_base 
 
             case 'filtered' . $this->recordstype . 's':
                 $ids = array(); // Taskchain ids.
-                if (empty($data->coursenamefilter)) {
-                    $courses = $DB->get_records('course');
-                } else {
-                    $courses = $DB->get_records('course', array('id' => $data->coursenamefilter));
+
+                // Only courses in which the user may manage activities,
+                // either all of them or the one selected in the course filter.
+                // Note: the form drops a course id that is not in its menu,
+                // so the course id is read from the request itself.
+                $courses = $this->get_applydefaults_courses();
+                $courseid = optional_param('applydefaults_filtercoursename', 0, PARAM_INT);
+                if ($courseid) {
+                    if (array_key_exists($courseid, $courses)) {
+                        $courses = array($courseid => $courses[$courseid]);
+                    } else {
+                        $courses = array(); // Not one of this user's courses.
+                    }
                 }
+
                 if ($courses) {
                     if ($instances = get_all_instances_in_courses('taskchain', $courses, $USER->id, true)) {
                         foreach ($instances as $instance) {

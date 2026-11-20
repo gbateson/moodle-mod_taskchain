@@ -78,7 +78,8 @@ class mod_taskchain_storage {
         }
 
         // Update task attempt fields using incoming data.
-        $TC->taskattempt->score    = max(0, optional_param(self::scorefield, 0, PARAM_INT));
+        // The score is a percentage.
+        $TC->taskattempt->score    = min(100, max(0, optional_param(self::scorefield, 0, PARAM_INT)));
         $TC->taskattempt->status   = max(0, optional_param('status', 0, PARAM_INT));
         $TC->taskattempt->redirect = max(0, optional_param('redirect', 0, PARAM_INT));
         $TC->taskattempt->details  = optional_param(self::detailsfield, '', PARAM_RAW);

@@ -29,6 +29,10 @@ require_once($CFG->dirroot . '/mod/taskchain/locallib.php');
 
 $TC = new mod_taskchain();
 
+// The task's results form sends the session key (see form_start() in renderer.php),
+// so that other sites cannot send results for a user who has a task open.
+require_sesskey();
+
 // Log this request.
 mod_taskchain::add_to_log(
     $TC->course->id,

@@ -105,9 +105,11 @@ function print_courselinks() {
             $value = "#$value";
         }
         if ($name == 'gradelinewidth' && preg_match('/^[0-9]+$/', $value)) {
-            $value += 'px';
+            $value .= 'px';
         }
-        echo "{$tab}TC.$name = '$value';{$nl}";
+        // Encode the value: the block's settings are not cleaned (optional_param() does not clean its default).
+        $value = json_encode((string)$value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+        echo "{$tab}TC.$name = $value;{$nl}";
     }
 
     $numsections = 0;
@@ -178,6 +180,9 @@ function print_courselinks() {
         }
         $showaverages = false;
     }
+
+    // Students do not see grades that are hidden in the gradebook (the grade item, or their own grade).
+    $canviewhidden = has_capability('moodle/grade:viewhidden', $course->context);
 
     if ($showaverages) {
         // A teacher - or at least someone who can view all users' grades.
@@ -345,6 +350,12 @@ function print_courselinks() {
                     $grades = grade_get_grades($course->id, 'mod', $cm->modname, $cm->instance, $userids);
                     if (empty($grades->items[0]->grademax) || floatval($grades->items[0]->grademax) == 0) {
                         $zero_grade = true;
+                    } else if (! $showaverages && ! $canviewhidden) {
+                        // A hidden grade item, or the user's own grade is hidden ("hidden" includes "hidden until").
+                        $item = $grades->items[0];
+                        if (! empty($item->hidden) || ! empty($item->grades[$USER->id]->hidden)) {
+                            $zero_grade = true;
+                        }
                     }
                 }
                 if ($zero_grade) {
