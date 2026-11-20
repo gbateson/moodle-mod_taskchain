@@ -1807,24 +1807,18 @@ function mod_taskchain_pluginfile($course, $cm, $context, $filearea, $args, $for
 
     require_course_login($course, true, $cm);
 
-    switch ($filearea) {
-        case 'entry':
-            $capability = 'mod/taskchain:view';
-            break;
-        case 'sourcefile':
-            $capability = 'mod/taskchain:attempt';
-            break;
-        case 'configfile':
-            $capability = 'mod/taskchain:attempt';
-            break;
-        case 'exit':
-            $capability = 'mod/taskchain:attempt';
-            break;
-        default:
-            send_file_not_found(); // Invalid $filearea !!
+    // The capability needed to see the files in each file area.
+    $capabilities = array(
+        'entry'      => 'mod/taskchain:view',
+        'sourcefile' => 'mod/taskchain:attempt',
+        'configfile' => 'mod/taskchain:attempt',
+        'exit'       => 'mod/taskchain:attempt',
+    );
+    if (empty($capabilities[$filearea])) {
+        send_file_not_found(); // Invalid file area.
     }
 
-    require_capability($capability, $context);
+    require_capability($capabilities[$filearea], $context);
 
     $fs = get_file_storage();
     $filename = array_pop($args);
@@ -1877,6 +1871,9 @@ function mod_taskchain_pluginfile($course, $cm, $context, $filearea, $args, $for
     foreach ($other_fileareas as $other_filearea) {
         if ($other_filearea == $filearea) {
             continue; // We have already checked this filearea.
+        }
+        if (! has_capability($capabilities[$other_filearea], $context)) {
+            continue; // The user may not see these files (e.g. the quiz files, from the entry page's file area).
         }
         if ($file = $fs->get_file($context->id, 'mod_taskchain', $other_filearea, 0, $filepath, $filename)) {
             if ($file = $fs->create_file_from_storedfile($file_record, $file)) {
