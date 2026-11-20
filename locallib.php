@@ -2336,6 +2336,13 @@ class mod_taskchain extends taskchain_base {
 
         list($taskchains, $chains, $tasks, $taskattempts) = $this->clean_selected($selected, 'deleteattempts');
 
+        // Delete only the records of the selected users (clean_selected() has removed
+        // the attempts that this user may not delete), not those of every user in the report.
+        if (empty($selected)) {
+            return false; // No attempts selected.
+        }
+        $userfilter = 'userid IN (' . implode(',', array_map('intval', array_keys($selected))) . ')';
+
         if (count($taskchains)) {
             $parentfilter = 'parentid IN (' . implode(',', array_keys($taskchains)) . ')';
         } else {
@@ -2382,14 +2389,15 @@ class mod_taskchain extends taskchain_base {
         }
 
         // Remove all chain_attempts which have no task scores by users in $userfilter.
+        // Note: the task scores of ALL the tasks in the chain count, not just those of the selected tasks.
         $select = "id IN (
             SELECT ua.id FROM {taskchain_chain_attempts} ua
             LEFT JOIN (
                 SELECT taskid,cnumber,userid,q.chainid,score FROM {taskchain_task_scores}
-                LEFT JOIN (
+                JOIN (
                     SELECT id,chainid FROM {taskchain_tasks} WHERE $chainfilter
                 ) q ON taskid=q.id
-                WHERE $userfilter AND $taskfilter
+                WHERE $userfilter
             ) qs ON ua.chainid=qs.chainid AND ua.cnumber=qs.cnumber AND ua.userid=qs.userid
             WHERE ua.$userfilter AND ua.$chainfilter AND qs.score IS NULL
         )";
