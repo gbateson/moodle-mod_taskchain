@@ -83,6 +83,9 @@ class taskchain_can extends taskchain_base {
     /** @var object current context */
     public $context                 = null;
 
+    /** @var array capability => bool, cache for capabilities without a property of their own (see can()) */
+    protected $othercapabilities    = array();
+
     /** string prefix for capabilities */
     const PREFIX                    = 'mod/taskchain';
 
@@ -169,15 +172,26 @@ class taskchain_can extends taskchain_base {
             }
         }
 
-        if (is_null($this->$field)) {
-            $this->$field = has_capability($capability, $this->context);
+        // Cache the result. Capabilities without a property of their own,
+        // e.g. "moodle/course:manageactivities", are cached in $this->othercapabilities.
+        if (property_exists($this, $field)) {
+            if (is_null($this->$field)) {
+                $this->$field = has_capability($capability, $this->context);
+            }
+            $result = $this->$field;
+        } else {
+            if (! array_key_exists($capability, $this->othercapabilities)) {
+                $this->othercapabilities[$capability] = has_capability($capability, $this->context);
+            }
+            $result = $this->othercapabilities[$capability];
         }
 
-        if ($require && $this->$field == false) {
-            throw new required_capability_exception($context, $capability, 'nopermissions', '');
+        if ($require && $result == false) {
+            // Note: $context is null here, because the capability was checked in this page's context.
+            throw new required_capability_exception($this->context, $capability, 'nopermissions', '');
         }
 
-        return $this->$field;
+        return $result;
     }
 
 

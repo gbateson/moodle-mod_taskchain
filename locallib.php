@@ -600,6 +600,10 @@ class mod_taskchain extends taskchain_base {
                 case 'course-modedit':
                     $this->can->manage(true);
                     break;
+                case 'mod-taskchain-edit-chains':
+                    // This page shows and changes the settings of all the TaskChain activities in the course.
+                    $this->can->manageactivities(true);
+                    break;
                 case 'mod-taskchain-index':
                     $this->can->view(true);
                     break;
