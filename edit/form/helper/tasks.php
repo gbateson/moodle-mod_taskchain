@@ -145,7 +145,7 @@ class taskchain_form_helper_tasks extends taskchain_form_helper_records {
 
             if ($filter == 'coursename') {
                 $courseid = $this->TC->get_courseid();
-                if ($mycourses = $this->TC->get_mycourses()) {
+                if ($mycourses = $this->get_applydefaults_courses()) {
                     $list = array();
                     if (count($mycourses) > 1) {
                         $list[0] = get_string('all');
