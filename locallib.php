@@ -2362,6 +2362,9 @@ class mod_taskchain extends taskchain_base {
             }
             if ($records = $DB->get_records_select('taskchain_task_attempts', $select, null, 'id', 'id')) {
                 $this->delete_records('taskchain_task_attempts', 'taskattempts', 'taskattempt', $records);
+                // Delete the responses and raw details of the deleted attempts too.
+                $DB->delete_records_list('taskchain_responses', 'attemptid', array_keys($records));
+                $DB->delete_records_list('taskchain_details', 'attemptid', array_keys($records));
             }
         }
 
